@@ -25,7 +25,8 @@
   },
 
   "dependencies": {
-    "express": "~3.4.4"
+    "express": "~3.4.4",
+    "convnetjs": ">=0.1.0"
   },
   "devDependencies": {},
   "bundleDependencies": [],
