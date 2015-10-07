@@ -69,4 +69,4 @@ class MyApplication(web.application):
         return web.httpserver.runsimple(func, ('0.0.0.0', port))
 def run():
     app = MyApplication(urls, globals())
-    app.run(port=8080)
+    app.run(port=8000)
