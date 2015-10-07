@@ -32,7 +32,8 @@ class h:
 
 class index:
     def GET(self, path):
-
+	if path=="":
+		return "Hello world!"
 
         return path
 
