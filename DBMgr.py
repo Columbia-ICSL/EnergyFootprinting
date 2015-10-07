@@ -52,7 +52,7 @@ class DBMgr(object):
 			}
 		}
 		#for post in posts.find(condition):
-		self.col.update(condition,action)
+		self.col.update(condition,action,{"multi":True})
 		return id
 
 	def QueryRealtime(self,room):
