@@ -7,43 +7,63 @@ class DBMgr(object):
 		self.timeout=900
 		self.name="DB Manager"
 		self.dbc=pymongo.MongoClient()
-		self.col=self.dbc.db.energy_logs
+		self.engcol=self.dbc.db.energy_logs
 		self.poscol=self.dbc.db.position_logs
+		self.pwrcol=self.dbc.db.realtime_pwr
 
-	def SaveEnergy(self,room,description,watts,timestamp=0):
+	def _time(self,timestamp=0):
 		if timestamp==0:
-			timestamp=datetime.datetime.utcnow()
+			return datetime.datetime.utcnow()
 		else:
-			timestamp=datetime.datetime.utcfromtimestamp(timestamp)
+			return datetime.datetime.utcfromtimestamp(timestamp)
 
-		doc = {
+	def SaveEnergyPower(self,room,description,watts,kwhs,timestamp=0):
+		e_doc = {
 			"room": room,
-			"energy": watts,
-			"timestamp": timestamp,
+			"energy": kwhs,
+			"timestamp": self._time(timestamp),
 			"occupants": [],
 			"description": description
+			}	
+		p_cond = {
+			"room": room,
+			"description": description
+		}
+		p_doc = {
+			"room": room,
+			"power": kwhs,
+			"timestamp": self._time(timestamp),
+			"occupants": {},
+			"description": description
 			}
-		return self.col.insert_one(doc).inserted_id
 
-	def SavePosition(self,person,room,timestamp=0):
-		if timestamp==0:
-			timestamp=datetime.datetime.utcnow()
+		return [
+			self.engcol.insert_one(e_doc).inserted_id,
+			self.pwrcol.update(p_cond,p_doc,True)
+			]
+		#Note: the pwr update doesn't consider timestamp sequence!!
+		# client should always report data using timed sequence, otherwise server should compare timestamp before updating.
+
+
+
+	def SavePosition(self,person,room,timestamp=0,since=False):
+		if since!=False:
+			since=self._time(since)
 		else:
-			timestamp=datetime.datetime.utcfromtimestamp(timestamp)
-		prev_time=timestamp+datetime.timedelta(seconds=-self.timeout)
+			since=self._time(timestamp)+datetime.timedelta(seconds=-self.timeout)
 
 		doc = {
 			"person": person,
 			"room": room,
-			"timestamp": timestamp
+			"timestamp": self._time(timestamp)
 		}
 		id=self.poscol.insert_one(doc).inserted_id
 
 		condition = {
 			"room":room,
 			"timestamp":{
-				"$gte":prev_time,
-				"$lt":timestamp
+				"$gte":since,
+				"$lt":self._time(timestamp)
 			}
 		}
 		action = {
@@ -52,21 +72,41 @@ class DBMgr(object):
 			}
 		}
 		#for post in posts.find(condition):
-		self.col.update(condition,action,{"multi":True})
-		return id
-
-	def QueryRealtime(self,room):
-		timestamp=datetime.datetime.utcnow()
-		prev_time=timestamp+datetime.timedelta(seconds=-self.timeout)
-
+		self.engcol.update_many(condition,action)
 		condition = {
-			"room":room,
-			"timestamp":{
-				"$gte":prev_time,
-				"$lt":timestamp
+			"room":room 
+			#not considering timestamp freshness!
+		}
+		action = {
+			"$set"	:{
+				"occupants."+person:self._time(timestamp)
 			}
 		}
-		return self.col.find(condition)
+		self.pwrcol.update_many(condition,action)
+		return id
+
+
+	def QueryRealtime(self,room,description=False):
+		condition = {
+			"room":room
+		}
+		since=self._time(0)+datetime.timedelta(seconds=-self.timeout)
+
+		if description:
+			condition["description"]=description
+		query=self.pwrcol.find(condition)
+
+		ret=[]
+		for roomitem in query:
+			#check roomitem.occupants
+			#for k, v in roomitem.occupants.iteritems():
+    		#if v<since:
+        	#	del roomitem.occupants[k]
+        	#save the updates too?
+			ret+=[roomitem]
+		return ret
+
+
 
 	def QueryPerson(self,person,start,end):
 		result=[]
@@ -78,12 +118,25 @@ class DBMgr(object):
 			}
 		}
 
-		for log in self.col.find(condition):
+		for log in self.engcol.find(condition):
 			log["value"]=log["energy"]/len(log["occupants"])
 			result+=[log]
 		return result
 		#add the "value" value from all array items, to get total energy
 
-	def QueryPersonRecent(self,person):
-		s=(datetime.datetime.utcnow() - datetime.datetime(1970,1,1)).total_seconds()
-		return self.QueryPerson(person,s-900,s)
+	def QueryPersonRealtime(self,person):
+		since=self._time(0)+datetime.timedelta(seconds=-self.timeout)
+		condition = {
+			"occupants."+person: {
+				"$gte":since
+			}
+		}
+		
+		query=self.pwrcol.find(condition)
+
+		ret=[]
+		for pwritem in query:
+			#timestamp sanitation!!!
+			pwritem['value']=pwritem['power']/len(pwritem['occupants'])
+			ret+=[pwritem]
+		return ret
