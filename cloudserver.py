@@ -51,6 +51,15 @@ class room:
         return db.QueryRoomRealtime(room)
 
 
+class SaveHVAC:
+    def POST(self):
+        pass
+        return 0
+class SaveLight:
+    def POST(self):
+        pass
+        return 0
+
 
 class SaveEnergy:
     def POST(self):
