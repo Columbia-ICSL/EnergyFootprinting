@@ -33,7 +33,7 @@ class h:
 class index:
     def GET(self, path):
 	if path=="":
-		return "Hello world!"
+		return "Hello world! this is the icsl energy foot-print api; try out /api/query/room/* "
 
         return path
 
