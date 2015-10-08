@@ -7,9 +7,12 @@ import blog
 import DBMgr
 
 urls = (
-    "/api/smartthings/SaveEnergy","SaveEnergy",
-    "/api/smartthings/SavePeople","SavePosition",
-    "/api/query/room/(.*)","room",
+    "/api/EnergyReport/(.+)/Plug","SaveEnergy", #raw values: watts, kwh
+    "/api/EnergyReport/(.+)/HVAC","SaveHVAC",  #raw values: pressure+temp
+    "/api/EnergyReport/(.+)/Light","SaveLight", #raw values: on or off / watts
+    "/api/LocationReport/(.+)","SavePosition", #room ID, +(timestamp)?
+    "/api/QueryRoom/(.*)","QueryRoom", #room ID + time range
+    "/api/QueryPerson/(.*)","QueryPerson", #person ID + 
     "/blog",blog.app_blog,
 
     "/(.*)","index"
