@@ -110,7 +110,6 @@ class DBMgr(object):
 		for log in self.engcol.find(condition).sort([
     			("timestamp", pymongo.DESCENDING)
 			]):
-			log["value"]=log["energy"]/len(log["occupants"])
 			result+=[log]
 		return result
 
@@ -125,6 +124,7 @@ class DBMgr(object):
 		}
 
 		for log in self.engcol.find(condition):
+			log["value"]=log["energy"]/len(log["occupants"])
 			result+=[log]
 		return result
 		#add the "value" value from all array items, to get total energy
