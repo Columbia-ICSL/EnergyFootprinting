@@ -10,7 +10,7 @@ class DBMgr(object):
 		self.col=self.dbc.db.energy_logs
 		self.poscol=self.dbc.db.position_logs
 
-	def SaveEnergy(self,room,description,watts,timestamp=0):
+	def SaveEnergy(self,room,description,energy,watts,timestamp=0):
 		if timestamp==0:
 			timestamp=datetime.datetime.utcnow()
 		else:
@@ -18,7 +18,8 @@ class DBMgr(object):
 
 		doc = {
 			"room": room,
-			"energy": watts,
+			"energy": energy,
+			"power":watts,
 			"timestamp": timestamp,
 			"occupants": [],
 			"description": description

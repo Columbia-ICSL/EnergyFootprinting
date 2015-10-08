@@ -11,7 +11,7 @@ urls = (
     "/api/smartthings/SavePeople","SavePosition",
     "/api/query/room/(.*)","room",
     "/blog",blog.app_blog,
-    
+
     "/(.*)","index"
 
 )
@@ -56,7 +56,8 @@ class SaveEnergy:
         room=data["room"]
         description=data["name"]
         energy=data["energy"]
-        db.SaveEnergy(room,description,energy)
+        power=data["power"]
+        db.SaveEnergy(room,description,energy,power)
 
         return "200 OK"
 class SavePosition:
