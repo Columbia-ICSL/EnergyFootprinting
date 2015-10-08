@@ -45,7 +45,7 @@ class room:
         print room
 
         #return input+" {0}".format(name)
-        return db.QueryRealtime(room)
+        return db.QueryRoomRealtime(room)
 
 
 
@@ -57,7 +57,7 @@ class SaveEnergy:
         description=data["name"]
         energy=data["energy"]
         power=data["power"]
-        db.SaveEnergy(room,description,energy,power)
+        db.SaveEnergyPower(room,description,energy,power)
 
         return "200 OK"
 class SavePosition:
