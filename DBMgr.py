@@ -24,7 +24,7 @@ class DBMgr(object):
 			"energy": kwhs,
 			"timestamp": self._time(timestamp),
 			"occupants": [],
-			"description": description
+			"description": "Plug:"+description
 			}
 
 		raw_data = {
@@ -50,7 +50,7 @@ class DBMgr(object):
 			"energy": kwhs,
 			"timestamp": self._time(timestamp),
 			"occupants": [],
-			"description": description
+			"description": "HVAC:"+description
 			}
 
 		raw_data = {
