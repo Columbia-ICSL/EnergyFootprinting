@@ -11,7 +11,7 @@ urls = (
     "/api/smartthings/SavePeople","SavePosition",
     "/api/query/room/(.*)","room",
     "/blog",blog.app_blog,
-    "/(h|H)","h",
+    
     "/(.*)","index"
 
 )
