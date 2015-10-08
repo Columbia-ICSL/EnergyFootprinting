@@ -17,21 +17,21 @@ class DBMgr(object):
 		else:
 			return datetime.datetime.utcfromtimestamp(timestamp)
 
-	def SaveEnergyPower(self,room,description,watts,kwhs,timestamp=0):
+	def SaveEnergyPower(self,room,description,kwhs,watts,timestamp=0):
 		e_doc = {
 			"room": room,
 			"energy": kwhs,
 			"timestamp": self._time(timestamp),
 			"occupants": [],
 			"description": description
-			}	
+			}
 		p_cond = {
 			"room": room,
 			"description": description
 		}
 		p_doc = {
 			"room": room,
-			"power": kwhs,
+			"power": watts,
 			"timestamp": self._time(timestamp),
 			"occupants": {},
 			"description": description
@@ -74,7 +74,7 @@ class DBMgr(object):
 		#for post in posts.find(condition):
 		self.engcol.update_many(condition,action)
 		condition = {
-			"room":room 
+			"room":room
 			#not considering timestamp freshness!
 		}
 		action = {
@@ -131,7 +131,7 @@ class DBMgr(object):
 				"$gte":since
 			}
 		}
-		
+
 		query=self.pwrcol.find(condition)
 
 		ret=[]
