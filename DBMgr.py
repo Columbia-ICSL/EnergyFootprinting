@@ -35,6 +35,7 @@ class DBMgr(object):
 			"data":{
 				"power":watts,
 				"energy":kwhs
+				}
 			}
 
 		return [
@@ -60,6 +61,7 @@ class DBMgr(object):
 			"data":{
 				"temperature":temp,
 				"pressure":pres
+				}
 			}
 
 		return [
