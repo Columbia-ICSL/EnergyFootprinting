@@ -12,7 +12,7 @@ urls = (
     "/api/EnergyReport/(.+)/Light","SaveLight", #raw values: on or off / watts
     "/api/LocationReport/(.+)","SavePosition", #room ID, +(timestamp)?
     "/api/QueryRoom/(.*)","QueryRoom", #room ID + time range
-    "/api/QueryPerson/(.*)","QueryPerson", #person ID + 
+    "/api/QueryPerson/(.*)","QueryPerson", #person ID +
     "/blog",blog.app_blog,
 
     "/(.*)","index"
@@ -27,9 +27,6 @@ urls = (
 #db = client.test_database
 db=DBMgr.DBMgr()
 
-class h:
-    def GET(self):
-        return "test haha"
 
 
 
@@ -48,7 +45,7 @@ class room:
         print room
 
         #return input+" {0}".format(name)
-        return db.QueryRoomRealtime(room)
+        return db.QueryRoom(room,0,2**32)
 
 
 class SaveHVAC:
