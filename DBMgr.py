@@ -9,7 +9,8 @@ class DBMgr(object):
 		self.dbc=pymongo.MongoClient()
 		self.engcol=self.dbc.db.energy_logs
 		self.poscol=self.dbc.db.position_logs
-		self.pwrcol=self.dbc.db.realtime_pwr
+		self.raw_data=self.dbc.db.raw_data_logs
+		#self.pwrcol=self.dbc.db.realtime_pwr
 
 	def _time(self,timestamp=0):
 		if timestamp==0:
@@ -17,7 +18,7 @@ class DBMgr(object):
 		else:
 			return datetime.datetime.utcfromtimestamp(timestamp)
 
-	def SaveEnergyPower(self,room,description,kwhs,watts,timestamp=0):
+	def SavePlug(self,room,description,kwhs,watts,timestamp=0):
 		e_doc = {
 			"room": room,
 			"energy": kwhs,
@@ -25,25 +26,46 @@ class DBMgr(object):
 			"occupants": [],
 			"description": description
 			}
-		p_cond = {
-			"room": room,
-			"description": description
-		}
-		p_doc = {
-			"room": room,
-			"power": watts,
+
+		raw_data = {
+			"room":room,
+			"description":description,
 			"timestamp": self._time(timestamp),
-			"occupants": {},
-			"description": description
+			"type":"Plug",
+			"data":{
+				"power":watts,
+				"energy":kwhs
 			}
 
 		return [
-			self.engcol.insert_one(e_doc).inserted_id,
-			self.pwrcol.update(p_cond,p_doc,True)
+			self.engcol.insert_one(e_doc),
+			self.raw_data.insert_one(raw_data)
 			]
-		#Note: the pwr update doesn't consider timestamp sequence!!
-		# client should always report data using timed sequence, otherwise server should compare timestamp before updating.
+		
+	def SaveHVAC(self,room,description,temp,pres,timestamp=0):
+		kwhs= pres*2.1444 #arbitraty
+		e_doc = {
+			"room": room,
+			"energy": kwhs,
+			"timestamp": self._time(timestamp),
+			"occupants": [],
+			"description": description
+			}
 
+		raw_data = {
+			"room":room,
+			"description":description,
+			"timestamp": self._time(timestamp),
+			"type":"HVAC_Approximation",
+			"data":{
+				"temperature":temp,
+				"pressure":pres
+			}
+
+		return [
+			self.engcol.insert_one(e_doc),
+			self.raw_data.insert_one(raw_data)
+			]
 
 
 	def SavePosition(self,person,room,timestamp=0,since=False):
@@ -73,40 +95,24 @@ class DBMgr(object):
 		}
 		#for post in posts.find(condition):
 		self.engcol.update_many(condition,action)
-		condition = {
-			"room":room
-			#not considering timestamp freshness!
-		}
-		action = {
-			"$set"	:{
-				"occupants."+person:self._time(timestamp)
-			}
-		}
-		self.pwrcol.update_many(condition,action)
 		return id
 
-
-	def QueryRoomRealtime(self,room,description=False):
+	def QueryRoom(self,room,start,end):
+		result=[]
 		condition = {
-			"room":room
+			"room":room,
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
 		}
-		since=self._time(0)+datetime.timedelta(seconds=-self.timeout)
 
-		if description:
-			condition["description"]=description
-		query=self.pwrcol.find(condition)
-
-		ret=[]
-		for roomitem in query:
-			#check roomitem.occupants
-			#for k, v in roomitem.occupants.iteritems():
-    		#if v<since:
-        	#	del roomitem.occupants[k]
-        	#save the updates too?
-			ret+=[roomitem]
-		return ret
-
-
+		for log in self.engcol.find(condition).sort([
+    			("timestamp", pymongo.DESCENDING)
+			]):
+			log["value"]=log["energy"]/len(log["occupants"])
+			result+=[log]
+		return result
 
 	def QueryPerson(self,person,start,end):
 		result=[]
@@ -119,24 +125,6 @@ class DBMgr(object):
 		}
 
 		for log in self.engcol.find(condition):
-			log["value"]=log["energy"]/len(log["occupants"])
 			result+=[log]
 		return result
 		#add the "value" value from all array items, to get total energy
-
-	def QueryPersonRealtime(self,person):
-		since=self._time(0)+datetime.timedelta(seconds=-self.timeout)
-		condition = {
-			"occupants."+person: {
-				"$gte":since
-			}
-		}
-
-		query=self.pwrcol.find(condition)
-
-		ret=[]
-		for pwritem in query:
-			#timestamp sanitation!!!
-			pwritem['value']=pwritem['power']/len(pwritem['occupants'])
-			ret+=[pwritem]
-		return ret
