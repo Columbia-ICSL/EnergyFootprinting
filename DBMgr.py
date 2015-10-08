@@ -86,7 +86,7 @@ class DBMgr(object):
 		return id
 
 
-	def QueryRealtime(self,room,description=False):
+	def QueryRoomRealtime(self,room,description=False):
 		condition = {
 			"room":room
 		}
