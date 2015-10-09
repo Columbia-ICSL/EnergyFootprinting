@@ -7,15 +7,15 @@ import blog
 import DBMgr
 
 urls = (
-    "/api/EnergyReport/(.+)/Plug","SaveEnergy", #raw values: watts, kwh
-    "/api/EnergyReport/(.+)/HVAC","SaveHVAC",  #raw values: pressure+temp
-    "/api/EnergyReport/(.+)/Light","SaveLight", #raw values: on or off / watts
+    "/api/EnergyReport/(.+)/SavePlug","SavePlug", #raw values: watts, kwh
+    "/api/EnergyReport/(.+)/SaveHVAC","SaveHVAC",  #raw values: pressure+temp
+    "/api/EnergyReport/(.+)/SaveLight","SaveLight", #raw values: on or off / watts
     "/api/LocationReport/(.+)","SavePosition", #room ID, +(timestamp)?
     "/api/QueryRoom/(.*)","QueryRoom", #room ID + time range
     "/api/QueryPerson/(.*)","QueryPerson", #person ID +
     "/blog",blog.app_blog,
 
-    "/(.*)","index"
+    "/(.+)/index","index"
 
 )
 
@@ -32,10 +32,12 @@ db=DBMgr.DBMgr()
 
 class index:
     def GET(self, path):
-	if path=="":
-		return "Hello world from bitbucket! this is the icsl energy foot-print api; try out /api/query/room/* "
+	    if path=="":
+		    return "Hello world from bitbucket! this is the icsl energy foot-print api; try out /api/query/room/* "
 
         return path
+    def POST(self,query):
+        return str(query)
 
         #return "Hello {0}".format(name)
 class room:
@@ -58,7 +60,7 @@ class SaveLight:
         return 0
 
 
-class SaveEnergy:
+class SavePlug:
     def POST(self):
         raw_data = web.data() # you can get data use this method
         data=json.loads(raw_data)
@@ -66,7 +68,7 @@ class SaveEnergy:
         description=data["name"]
         energy=data["energy"]
         power=data["power"]
-        db.SaveEnergyPower(room,description,energy,power)
+        db.SavePlug(room,description,energy,power)
 
         return "200 OK"
 class SavePosition:
