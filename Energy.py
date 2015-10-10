@@ -1,6 +1,8 @@
 import json
 import web
 
+import cloudserver
+
 
 urls = (
 "/(.+)/SavePlug","SavePlug", #raw values: watts, kwh
@@ -28,7 +30,7 @@ class SavePlug:
         description=data["name"]
         energy=data["energy"]
         power=data["power"]
-        db.SavePlug(room,description,energy,power)
+        cloudserver.db.SavePlug(room,description,energy,power)
 
         return "200 OK"
 EnergyReport = web.application(urls, locals())
