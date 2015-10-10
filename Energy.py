@@ -1,6 +1,8 @@
 import json
 import web
-from cloudserver import *
+import DBMgr
+import cloudserver
+
 urls = (
 "/(.+)/SavePlug","SavePlug", #raw values: watts, kwh
 "/(.+)/SaveHVAC","SaveHVAC",  #raw values: pressure+temp
@@ -27,7 +29,7 @@ class SavePlug:
         description=data["name"]
         energy=data["energy"]
         power=data["power"]
-        db.SavePlug(room,description,energy,power)
+        cloudserver.db.SavePlug(room,description,energy,power)
 
         return "200 OK"
 EnergyReport = web.application(urls, locals())
