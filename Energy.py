@@ -1,6 +1,6 @@
 import json
 import web
-
+from cloudserver import db
 urls = (
 "/(.+)/SavePlug","SavePlug", #raw values: watts, kwh
 "/(.+)/SaveHVAC","SaveHVAC",  #raw values: pressure+temp
