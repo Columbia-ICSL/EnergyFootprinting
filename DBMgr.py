@@ -70,7 +70,7 @@ class DBMgr(object):
 			]
 
 
-	def SavePosition(self,person,room,timestamp=0,since=False):
+	def SaveLocation(self,person,room,confidence,timestamp=0,since=False):
 		if since!=False:
 			since=self._time(since)
 		else:
@@ -79,6 +79,7 @@ class DBMgr(object):
 		doc = {
 			"person": person,
 			"room": room,
+			"confidence":confidence,
 			"timestamp": self._time(timestamp)
 		}
 		id=self.poscol.insert_one(doc).inserted_id
