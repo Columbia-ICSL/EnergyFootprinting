@@ -16,7 +16,8 @@ class QueryRoom:
         return "position is: " +position
 class QueryPerson:
     def all(self,person):
-        "person name: {0}".format(person)
+        return """[{"type":"Plug","unit":"watts","value":15,"description":"plugmeter"},{"type":"HVAC","value":10,"unit":"watts","description":"Approximation from Pressure&Temperature"}]"""
+        #"person name: {0}".format(person)
     def POST(self,person):
         return self.all(person)
     def GET(self,person):
