@@ -69,7 +69,17 @@ class DBMgr(object):
 			self.raw_data.insert_one(raw_data)
 			]
 
-
+	def CheckLocation(self,person):
+		condition = {
+			"person":person
+		}
+		ret=[]
+		for log in self.poscol.find(condition).sort([
+    			("timestamp", pymongo.DESCENDING)
+			]):
+			ret+=[log]
+		return ret
+	
 	def SaveLocation(self,person,room,confidence,timestamp=0,since=False):
 		if since!=False:
 			since=self._time(since)
