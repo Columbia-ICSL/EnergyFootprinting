@@ -40,7 +40,7 @@ class index:
 
         #return "Hello {0}".format(name)
 class frontend:
-    def GET(self,people):
+    def GET(self,person):
         result = cloudserver.db.QueryPerson(person,0,2**10)
         data=json.dumps(result)
         
