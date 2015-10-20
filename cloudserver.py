@@ -13,7 +13,7 @@ urls = (
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
-    "/api",Query.test,
+   
 
     "/(.+)/index","index"
 

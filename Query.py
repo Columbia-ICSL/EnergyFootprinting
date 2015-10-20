@@ -18,7 +18,10 @@ class QueryPerson:
     def all(self,person):
         if person=="":
             return "[]"
-        return """[{"type":"Plug","unit":"watts","value":15,"description":"plugmeter"},{"type":"HVAC","value":10,"unit":"watts","description":"Approximation from Pressure&Temperature"}]"""
+        print person
+        result = cloudserver.db.QueryPerson(person,0,2**30)
+       # return """[{"type":"Plug","unit":"watts","value":15,"description":"plugmeter"},{"type":"HVAC","value":10,"unit":"watts","description":"Approximation from Pressure&Temperature"}]"""
+        return result
         #"person name: {0}".format(person)
     def POST(self,person):
         return self.all(person)
@@ -28,10 +31,4 @@ class QueryPerson:
 #
 query = web.application(urls, locals())
 
-urls2=(
-"/bb","bb"
-)
-class bb:
-    def GET(self):
-        return "test sucess "
-test=web.application(urls2,locals())
+
