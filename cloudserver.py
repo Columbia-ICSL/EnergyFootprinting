@@ -10,7 +10,7 @@ import Energy
 import Location
 import Query
 
-from pymongo.objectid import ObjectId
+from bson import ObjectId
 
 urls = (
     "/api/EnergyReport",Energy.EnergyReport,
