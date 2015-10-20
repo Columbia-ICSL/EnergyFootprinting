@@ -9,6 +9,9 @@ import DBMgr
 import Energy
 import Location
 import Query
+
+from bson import ObjectId
+
 urls = (
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
@@ -18,6 +21,18 @@ urls = (
 
 )
 
+class MongoJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        elif isinstance(obj, datetime.date):
+            return obj.isoformat()
+        elif isinstance(obj, datetime.timedelta):
+            return (datetime.datetime.min + obj).time().isoformat()
+        elif isinstance(obj, ObjectId):
+            return str(obj)
+        else:
+            return super(MongoJsonEncoder, self).default(obj)
 
 
 
@@ -42,9 +57,9 @@ class index:
 class frontend:
     def GET(self,person):
         
-        result = db.QueryPerson(person,0,2**10)
-        data=json.dumps(result)
-        
+        result = db.QueryPerson(person,0,2**31)
+        #data=json.dumps(result)
+	data=MongoJsonEncoder().encode(result) 
         return render.chart(data)
 class room:
     def GET(self,room):
