@@ -52,7 +52,7 @@ class index:
 class frontend:
     def GET(self,person):
         
-        result = db.QueryPerson(person,0,2**10)
+        result = db.QueryPerson(person,0,2**31)
         #data=json.dumps(result)
 	data=DateTimeEncoder().encode(result) 
         return render.chart(data)
