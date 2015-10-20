@@ -9,6 +9,9 @@ import DBMgr
 import Energy
 import Location
 import Query
+
+from pymongo.objectid import ObjectId
+
 urls = (
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
