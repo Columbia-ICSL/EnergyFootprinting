@@ -18,7 +18,7 @@ urls = (
 
 )
 
-class DateTimeEncoder(json.JSONEncoder):
+class MongoJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
@@ -26,8 +26,10 @@ class DateTimeEncoder(json.JSONEncoder):
             return obj.isoformat()
         elif isinstance(obj, datetime.timedelta):
             return (datetime.datetime.min + obj).time().isoformat()
+        elif isinstance(obj, ObjectId):
+            return str(obj)
         else:
-            return super(DateTimeEncoder, self).default(obj)
+            return super(MongoJsonEncoder, self).default(obj)
 
 
 
@@ -54,7 +56,7 @@ class frontend:
         
         result = db.QueryPerson(person,0,2**31)
         #data=json.dumps(result)
-	data=DateTimeEncoder().encode(result) 
+	data=MongoJsonEncoder().encode(result) 
         return render.chart(data)
 class room:
     def GET(self,room):
