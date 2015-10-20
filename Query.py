@@ -12,14 +12,15 @@ class QueryRoom:
         data = web.data()
         pass
         return "success"
-    def GET(self,position):
-        return "position is: " +position
+    def GET(self,room):
+        result=cloudserver.db.QueryRoom(room,0,2**31)
+        return result
 class QueryPerson:
     def all(self,person):
         if person=="":
-            return "[]"
+            return "no name []"
         print person
-        result = cloudserver.db.QueryPerson(person,0,2**30)
+        result = cloudserver.db.QueryPerson(person,0,2**31)
        # return """[{"type":"Plug","unit":"watts","value":15,"description":"plugmeter"},{"type":"HVAC","value":10,"unit":"watts","description":"Approximation from Pressure&Temperature"}]"""
         return result
         #"person name: {0}".format(person)
