@@ -41,7 +41,7 @@ class index:
         #return "Hello {0}".format(name)
 class frontend:
     def GET(self,person):
-        result = cloudserver.db.QueryPerson(person,0,2**10)
+        result = db.QueryPerson(person,0,2**10)
         data=json.dumps(result)
         
         return render.chart(data)
