@@ -18,6 +18,16 @@ urls = (
 
 )
 
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        elif isinstance(obj, datetime.date):
+            return obj.isoformat()
+        elif isinstance(obj, datetime.timedelta):
+            return (datetime.datetime.min + obj).time().isoformat()
+        else:
+            return super(DateTimeEncoder, self).default(obj)
 
 
 
@@ -43,8 +53,8 @@ class frontend:
     def GET(self,person):
         
         result = db.QueryPerson(person,0,2**10)
-        data=json.dumps(result)
-        
+        #data=json.dumps(result)
+	data=DateTimeEncoder().encode(result) 
         return render.chart(data)
 class room:
     def GET(self,room):
