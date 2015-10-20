@@ -20,7 +20,7 @@ class QueryPerson:
         if person=="":
             return "no name []"
         print person
-        result = cloudserver.db.QueryPerson(person,0,2**31)
+        result = cloudserver.db.QueryPerson(person,0,2**10)
        # return """[{"type":"Plug","unit":"watts","value":15,"description":"plugmeter"},{"type":"HVAC","value":10,"unit":"watts","description":"Approximation from Pressure&Temperature"}]"""
         return result
         #"person name: {0}".format(person)

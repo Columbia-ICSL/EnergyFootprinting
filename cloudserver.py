@@ -13,7 +13,7 @@ urls = (
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
-   
+    "/frontend/(.+)", frontend,
 
     "/(.+)/index","index"
 
@@ -27,7 +27,7 @@ urls = (
 #db = client.test_database
 db=DBMgr.DBMgr()
 
-
+render = web.template.render('templates/')
 
 
 class index:
@@ -40,6 +40,12 @@ class index:
 
 
         #return "Hello {0}".format(name)
+class frontend:
+    def GET(self,people):
+        result = cloudserver.db.QueryPerson(person,0,2**10)
+        data=json.dumps(result)
+        
+    return render.chart(data)
 class room:
     def GET(self,room):
         input=str(web.input())
