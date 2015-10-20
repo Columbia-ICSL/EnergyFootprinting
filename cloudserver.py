@@ -45,7 +45,7 @@ class frontend:
         result = cloudserver.db.QueryPerson(person,0,2**10)
         data=json.dumps(result)
         
-    return render.chart(data)
+        return render.chart(data)
 class room:
     def GET(self,room):
         input=str(web.input())
