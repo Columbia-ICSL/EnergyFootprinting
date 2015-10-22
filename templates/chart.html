@@ -9,7 +9,7 @@ $def with (data)
 var data=$:data
 </script>
 <script>
-if(data.length==0)data=[{"room":"nwc1008","timestamp":"2015-10-08T18:16:54.826000","energy":0.033,"occupants":"fengyi","value":0.0055000000000000005,"_id":"5616b316549aca9183e6044c","description":"switch"},{"room":"nwc1008-fakedata","timestamp":"2015-10-08T13:16:57.392000","energy":0.023,"occupants":"fengyi","value":0.0055000000000000005,"_id":"5616b319549aca9183e6044d","description":"plug"},{"room":"nwc1008-fakedata","timestamp":"2015-10-08T15:18:29.198000","energy":0.034,"occupants":"fengyi","value":0.005666666666666667,"_id":"5616b375549aca9183e6044e","description":"switch"},{"room":"nwc1008-fakedata","timestamp":"2015-10-08T18:21:57.357000","energy":0.001,"occupants":"fengyi","value":0.00016666666666666666,"_id":"5616b445549aca9183e60451","description":"switch"},{"room":"nwc1008-fakedata","timestamp":"2015-10-08T19:27:10.618000","energy":0.001,"occupants":"HVAC","value":0.00016666666666666666,"_id":"5616b57e549aca9183e60452","description":"switch-fakedata"}];
+if(data.length==0)data=[{"room":"nwc1008","timestamp":1445559805,"energy":0.033,"occupants":"fengyi","value":0.0055000000000000005,"_id":"5616b316549aca9183e6044c","description":"switch"},{"room":"nwc1008-fakedata","timestamp":1445559818+3600,"energy":0.023,"occupants":"fengyi","value":0.0055000000000000005,"_id":"5616b319549aca9183e6044d","description":"plug"},{"room":"nwc1008-fakedata","timestamp":1445559818-3600,"energy":0.034,"occupants":"fengyi","value":0.005666666666666667,"_id":"5616b375549aca9183e6044e","description":"switch"},{"room":"nwc1008-fakedata","timestamp":1445559818-3600*5,"energy":0.001,"occupants":"fengyi","value":0.00016666666666666666,"_id":"5616b445549aca9183e60451","description":"switch"},{"room":"nwc1008-fakedata","timestamp":1445559818,"energy":0.001,"occupants":"HVAC","value":0.00016666666666666666,"_id":"5616b57e549aca9183e60452","description":"switch-fakedata"}];
 </script>
 <meta charset="utf-8">
 <title>Hello...</title>
@@ -157,7 +157,7 @@ p.long{
 
       function drawTimeChart(){
       	var mapped_data=data.map(function(s){
-      		var hour=new Date(Date.parse(s.timestamp)).getHours();
+      		var hour=(new Date(s.timestamp)).getHours();
       		s["hour"]=hour+":00";
       		return s;
       	});
