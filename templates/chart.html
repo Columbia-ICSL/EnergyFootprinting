@@ -66,125 +66,134 @@ p.long{
 </p>
 <div id="chart_div" height="500px" width="100%"></div>
 
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-    function _accumulateByKey(data,index_to_classify,index_to_accumulate){
-    	var result={};
-    	data.map(function(s){
-    		var classify=s[index_to_classify], value=s[index_to_accumulate];
-    		result[classify] = result[classify] || 0;
-    		result[classify]+=value;
-    	});
-    	return result;
-    }
-    function _transformAccToCols(result){
-    	var ret=[];
-    	for(var i in result)
-    		ret.push([i,result[i]]);
-    	return ret;
-    }
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+ function _accumulateByKey(data, index_to_classify, index_to_accumulate) {
+     var result = {};
+     data.map(function(s) {
+         var classify = s[index_to_classify],
+             value = s[index_to_accumulate];
+         result[classify] = result[classify] || 0;
+         result[classify] += value;
+     });
+     return result;
+ }
+
+ function _transformAccToCols(result) {
+     var ret = [];
+     for (var i in result)
+         ret.push([i, result[i]]);
+     return ret;
+ }
 
 
 
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart']});
+ // Load the Visualization API and the piechart package.
+ google.load('visualization', '1.0', {
+     'packages': ['corechart']
+ });
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawTypeChart);
+ // Set a callback to run when the Google Visualization API is loaded.
+ google.setOnLoadCallback(drawTypeChart);
 
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawTypeChart() {
+ // Callback that creates and populates a data table,
+ // instantiates the pie chart, passes in the data and
+ // draws it.
+ function drawTypeChart() {
 
-        // Create the data table.
-        var table = new google.visualization.DataTable();
-        table.addColumn('string', 'Type');
-        table.addColumn('number', 'kWh');
-        /*data.addRows([
-          ['Plug', 3.31],
-          ['HVAC', 1.5],
-          ['Lights', 0.1],
-          ['Misc', 0.1]
-        ]);*/
-		table.addRows(
-			_transformAccToCols(
-				_accumulateByKey(data,"description","energy")
-				)
-			);
+     // Create the data table.
+     var table = new google.visualization.DataTable();
+     table.addColumn('string', 'Type');
+     table.addColumn('number', 'kWh');
+     /*data.addRows([
+       ['Plug', 3.31],
+       ['HVAC', 1.5],
+       ['Lights', 0.1],
+       ['Misc', 0.1]
+     ]);*/
+     table.addRows(
+         _transformAccToCols(
+             _accumulateByKey(data, "description", "energy")
+         )
+     );
 
-        // Set chart options
-		var options = {
-		  'legend':'bottom',
-		  //'title':'My Big Pie Chart',
-		  'is3D':true,
-		  //'width':400,
-		  //'height':300
-		}
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-        chart.draw(table, options);
-      }
+     // Set chart options
+     var options = {
+             'legend': 'bottom',
+             //'title':'My Big Pie Chart',
+             'is3D': true,
+             //'width':400,
+             //'height':300
+         }
+         // Instantiate and draw our chart, passing in some options.
+     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+     chart.draw(table, options);
+ }
 
- 		function drawSpaceChart() {
+ function drawSpaceChart() {
 
-        // Create the data table.
-        var table = new google.visualization.DataTable();
-        table.addColumn('string', 'Space ID');
-        table.addColumn('number', 'kWh');
-        /*table.addRows([
-          ['nwc1008', 13.31],
-          ['nwc1000m', 1.5],
-        ]);*/
-		table.addRows(
-			_transformAccToCols(
-				_accumulateByKey(data,"room","energy")
-				)
-			);
+     // Create the data table.
+     var table = new google.visualization.DataTable();
+     table.addColumn('string', 'Space ID');
+     table.addColumn('number', 'kWh');
+     /*table.addRows([
+       ['nwc1008', 13.31],
+       ['nwc1000m', 1.5],
+     ]);*/
+     table.addRows(
+         _transformAccToCols(
+             _accumulateByKey(data, "room", "energy")
+         )
+     );
 
-        // Set chart options
-		var options = {
-		  'legend':'bottom',
-		  //'title':'My Big Pie Chart',
-		  'is3D':true,
-		  //'width':400,
-		  //'height':300
-		}
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-        chart.draw(table, options);
-      }
+     // Set chart options
+     var options = {
+             'legend': 'bottom',
+             //'title':'My Big Pie Chart',
+             'is3D': true,
+             //'width':400,
+             //'height':300
+         }
+         // Instantiate and draw our chart, passing in some options.
+     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+     chart.draw(table, options);
+ }
 
-      function drawTimeChart(){
-        var mapped_data=data.map(function(s){
-          var hour=(new Date(s.timestamp*1000)).getHours();
-          s["hour"]=hour+":00";
-          return s;
-        });
+ function drawTimeChart() {
+     var mapped_data = data.map(function(s) {
+         var hour = (new Date(s.timestamp * 1000)).getHours();
+         s["hour"] = hour + ":00";
+         return s;
+     });
 
-        var table = new google.visualization.DataTable();
-            table.addColumn('string', 'Hour');
-            table.addColumn('number', 'kWh');
-            
-        table.addRows(
-          _transformAccToCols(
-            _accumulateByKey(data,"hour","energy")
-            ).sort(function(a,b){return (a[0].split(":")[0])-(b[0].split(":")[0]);})
-          );
+     var table = new google.visualization.DataTable();
+     table.addColumn('string', 'Hour');
+     table.addColumn('number', 'kWh');
 
-        var options = {
-          title: 'Accumulative energy consumption over time',
-          vAxis: {title: 'Power/ kWh'},
-          isStacked: true
-        };
+     table.addRows(
+         _transformAccToCols(
+             _accumulateByKey(data, "hour", "energy")
+         ).sort(function(a, b) {
+             return (a[0].split(":")[0]) - (b[0].split(":")[0]);
+         })
+     );
 
-        var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+     var options = {
+         title: 'Accumulative energy consumption over time',
+         vAxis: {
+             title: 'Power/ kWh'
+         },
+         isStacked: true
+     };
 
-        chart.draw(table, options);
+     var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
 
-      }
+     chart.draw(table, options);
 
-    </script>
+ }
+   
+</script>
 
 </body>
 </html>
