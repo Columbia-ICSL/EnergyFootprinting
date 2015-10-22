@@ -157,7 +157,7 @@ p.long{
 
       function drawTimeChart(){
       	var mapped_data=data.map(function(s){
-      		var hour=(new Date(s.timestamp)).getHours();
+      		var hour=(new Date(s.timestamp*1000)).getHours();
       		s["hour"]=hour+":00";
       		return s;
       	});
