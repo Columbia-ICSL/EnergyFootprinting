@@ -2,6 +2,7 @@ import web
 import json
 import os
 import datetime
+import time
 import pymongo
 
 import blog
@@ -56,8 +57,8 @@ class index:
         #return "Hello {0}".format(name)
 class frontend:
     def GET(self,person):
-        
-        result = db.QueryPerson(person,0,2**31)
+	t = time.time() 
+        result = db.QueryPerson(person,t-86400+1,t)
         #data=json.dumps(result)
 	data=MongoJsonEncoder().encode(result) 
         return render.chart(data)
