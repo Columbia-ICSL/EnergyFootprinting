@@ -156,40 +156,21 @@ p.long{
       }
 
       function drawTimeChart(){
-      	var mapped_data=data.map(function(s){
-      		var hour=(new Date(s.timestamp*1000)).getHours();
-      		s["hour"]=hour+":00";
-      		return s;
-      	});
+        var mapped_data=data.map(function(s){
+          var hour=(new Date(s.timestamp*1000)).getHours();
+          s["hour"]=hour+":00";
+          return s;
+        });
 
-		var table = new google.visualization.DataTable();
-        table.addColumn('string', 'Hour');
-        table.addColumn('number', 'kWh');
-        /*table.addRows([
-          ['nwc1008', 13.31],
-          ['nwc1000m', 1.5],
-        ]);*/
-		table.addRows(
-			_transformAccToCols(
-				_accumulateByKey(data,"hour","energy")
-				)
-			);
-
-      	/*
- 		var table = google.visualization.arrayToDataTable([
-          ['Time',  'Plug', 'HVAC','Light'],
-          ["8", 10,0,0.1],
-          [9, 17,5,0.5],
-          [10, 25,5,0.5],
-          [11, 27,6,0.5],
-          [12, 35,7,0.5],
-          [13, 25,6,0.5],
-          [14, 35,6,0.5],
-          [15, 25,5,0.5],
-          [16, 35,3,0.5],
-          [17, 25,1,0.0],
-          [18, 0,0,0.0]
-        ]);*/
+        var table = new google.visualization.DataTable();
+            table.addColumn('string', 'Hour');
+            table.addColumn('number', 'kWh');
+            
+        table.addRows(
+          _transformAccToCols(
+            _accumulateByKey(data,"hour","energy")
+            ).sort(function(a,b){return (a[0].split(":")[0])-(b[0].split(":")[0]);})
+          );
 
         var options = {
           title: 'Accumulative energy consumption over time',
