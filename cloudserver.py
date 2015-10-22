@@ -58,7 +58,7 @@ class index:
 class frontend:
     def GET(self,person):
 	t = time.time() 
-        result = db.QueryPerson(person,t-86400+1,t)
+        result = db.QueryPerson(person,t-86400*7+1,t)
         #data=json.dumps(result)
 	data=MongoJsonEncoder().encode(result) 
         return render.chart(data)
