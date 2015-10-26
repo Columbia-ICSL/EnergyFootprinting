@@ -3,6 +3,7 @@ import json
 import os
 import datetime
 import time
+import calendar
 import pymongo
 
 import blog
@@ -25,7 +26,9 @@ urls = (
 class MongoJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
-            return obj.isoformat()
+            #return obj.isoformat()
+            utc_seconds = calendar.timegm(obj.utctimetuple())
+            return utc_seconds
         elif isinstance(obj, datetime.date):
             return obj.isoformat()
         elif isinstance(obj, datetime.timedelta):
