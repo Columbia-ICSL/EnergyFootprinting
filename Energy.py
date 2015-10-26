@@ -13,9 +13,10 @@ urls = (
 class SaveHVAC:
     def POST(self,room):
         raw_data=web.data()
-        description=raw_data['description']
-        temperature=raw_data['temperature']
-        presure=raw_data['presure']
+        data=json.loads(raw_data)
+        description=data['description']
+        temperature=data['temperature']
+        presure=data['presure']
         cloudserver.db.SaveHVAC(room,description,temperature,presure)
         
         return "200 OK"
