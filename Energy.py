@@ -28,8 +28,9 @@ class SaveLight:
         return 0
 
 class SaveLigth:
-    pass
-    return 0
+    def POST:
+        pass
+        return 0
 
 class SavePlug:
     def POST(self,room):
