@@ -16,7 +16,7 @@ class SaveHVAC:
         data=json.loads(raw_data)
         description=data['description']
         temperature=data['temperature']
-        presure=data['presure']
+        presure=data['pressure']
         cloudserver.db.SaveHVAC(room,description,temperature,presure)
         
         return "200 OK"
