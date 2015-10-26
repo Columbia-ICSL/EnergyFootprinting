@@ -22,10 +22,8 @@ class SaveHVAC:
         return "200 OK"
     def GET(self,room):
         return "{0}".format(room)
-class SaveLight:
-    def POST(self,room):
-        pass
-        return 0
+
+
 
 class SaveLight:
     def POST:
