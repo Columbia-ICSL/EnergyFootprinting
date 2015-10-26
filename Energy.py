@@ -12,8 +12,9 @@ urls = (
 
 class SaveHVAC:
     def POST(self,room):
-        pass
-        return 0
+        raw_data=web.data()
+        print raw_data
+        return "200 OK"
     def GET(self,room):
         return "{0}".format(room)
 class SaveLight:
