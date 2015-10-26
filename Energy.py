@@ -25,11 +25,6 @@ class SaveHVAC:
 
 
 
-class SaveLight:
-    def POST:
-        pass
-        return 0
-
 class SavePlug:
     def POST(self,room):
         raw_data = web.data() # you can get data use this method
