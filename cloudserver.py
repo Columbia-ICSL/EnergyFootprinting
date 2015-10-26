@@ -57,10 +57,11 @@ class index:
         #return "Hello {0}".format(name)
 class frontend:
     def GET(self,person):
-	t = time.time() 
+        print person
+        t = time.time() 
         result = db.QueryPerson(person,t-86400*7+1,t)
         #data=json.dumps(result)
-	data=MongoJsonEncoder().encode(result) 
+        data=MongoJsonEncoder().encode(result) 
         return render.chart(data)
 class room:
     def GET(self,room):
