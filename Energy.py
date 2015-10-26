@@ -27,7 +27,7 @@ class SaveLight:
         pass
         return 0
 
-class SaveLigth:
+class SaveLight:
     def POST:
         pass
         return 0
