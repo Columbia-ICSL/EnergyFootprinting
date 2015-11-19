@@ -11,15 +11,18 @@ import DBMgr
 import Energy
 import Location
 import Query
-
+import Manage
 from bson import ObjectId
 
 urls = (
+ 
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
     "/frontend/(.+)", "frontend",
+    "/manage",Manage.Manager,
     "/(.+)/index","index"
+
 
 )
 
@@ -46,6 +49,7 @@ class MongoJsonEncoder(json.JSONEncoder):
 db=DBMgr.DBMgr()
 
 render = web.template.render('templates/')
+
 
 
 class index:

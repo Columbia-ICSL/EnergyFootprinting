@@ -32,7 +32,7 @@ class DBMgr(object):
 		#get roomID from config database
 		#save raw data to raw database
 		#save latest value into tree (in memory)
-		"maintenance tree's energy value"
+		return "maintenance tree's energy value"
 
 
 	def ReportLocationAssociation(self,userID, roomID, raw_data):
@@ -40,13 +40,13 @@ class DBMgr(object):
 		#change the tree; 
 			#add to new location, remove from old location. maintenance the tree from both leaf.
 				#need to update: number_of_users in these nodes.			
-		"maintenance each user's value"
+		return "maintenance each user's value"
 
 	def SaveShot(self, any_additional_data):
 		#transform the tree
 		#save into database, with: timestamp, additional data
-		"insert the tree into tree_collections"
+		return "insert the tree into tree_collections"
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
 	#db=DBMgr()
 	#db._TEST()
