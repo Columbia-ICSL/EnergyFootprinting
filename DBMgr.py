@@ -5,10 +5,17 @@ import calendar
 from bson import ObjectId
 
 class DBMgr(object):
+	def GetConfigValue(self,key):
+		return self.config_col.find_one({"_id":key})["value"]
+	def SetConfigValue(self,key,value):
+		self.config_col.replace_one({"_id":key},{"value":value},True)
 
 	def __init__(self):
-		"""self.T=900
 		self.name="DB Manager"
+		self.dbc=pymongo.MongoClient()
+		self.config_col=self.dbc.db.config
+
+		"""self.T=900
 		self.dbc=pymongo.MongoClient()
 		self.engcol=self.dbc.db.energy_logs
 		#standardized energy consumption, by each appliance, (each incidence)
@@ -48,5 +55,6 @@ class DBMgr(object):
 		"insert the tree into tree_collections"
 
 if __name__ == "__main__":
+	"a"
 	#db=DBMgr()
 	#db._TEST()
