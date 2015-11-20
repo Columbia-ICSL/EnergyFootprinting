@@ -13,8 +13,8 @@ class QueryRoom:
         pass
         return "success"
     def GET(self,room):
-        result=cloudserver.db.QueryRoom(room,0,2**31)
-        return result
+        print room
+        return room
 class QueryPerson:
     def all(self,person):
         if person=="":
