@@ -21,9 +21,8 @@ urls = (
     "/api/Query",Query.query, #room ID + time range
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
+    "/debug","Debug",
     "/(.+)/index","index"
-
-
 )
 
 class MongoJsonEncoder(json.JSONEncoder):
@@ -50,7 +49,9 @@ db=DBMgr.DBMgr()
 
 render = web.template.render('templates/')
 
-
+class Debug:
+    def GET(self):
+        return DBMgr.dump_log()
 
 class index:
     def GET(self, path):
