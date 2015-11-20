@@ -251,11 +251,35 @@ class DBMgr(object):
 		"3. possible accumulation at different tier?? like every 600 seconds?"
 
 	def QueryRoom(self,room,start,end):
-		return '{"result":"Query not finished yet."}'
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"data."+room:1}
+		iterator = a.tree_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			if room in shot['data']:
+				result+=[shot['data'][room]]
+		print result
+		#return '{"result":"Query not finished yet."}'
 
 	def QueryPerson(self,person,start,end):
-		return '{"result":"Query not finished yet."}'
-
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"data."+person:1}
+		iterator = self.personal_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			if person in shot["data"]:
+				result+=[shot["data"][person]]
+		return result
 
 if __name__ == "__main__":
 	dbm=DBMgr()
