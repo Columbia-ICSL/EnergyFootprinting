@@ -171,6 +171,13 @@ class DBMgr(object):
 			"raw":raw_data
 			})
 		"!!! if roomID='' means he's out of tracking scope. maybe set to CUROOT?? "
+		if !(roomID in self.tree_of_space):
+			add_log("illegitimate roomID",{
+					"p":personID,
+					"r":roomID,
+					"d":raw_data
+				})
+			return
 
 		try:
 			if personID in self.people_in_space:
