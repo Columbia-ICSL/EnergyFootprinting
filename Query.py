@@ -2,7 +2,7 @@ import json
 import web
 import cloudserver
 urls = (
-    "/QueryRoom/(.*)","QueryRoom", #room ID + time range
+    "/QueryRoom/(.?)","QueryRoom", #room ID + time range
     "/QueryPerson/(.*)","QueryPerson" #person ID +
 
 )
