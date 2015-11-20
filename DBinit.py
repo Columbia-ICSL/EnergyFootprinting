@@ -107,8 +107,8 @@ class DBInit(object):
 				"manufacturer":"Keen Home",
 				"channel":"SmartThings Hub 2.0"
 			},
-			"nwc1008_bulb1":{
-				"type":"bulb",
+			"nwc1008_light1":{
+				"type":"lightbulb",
 				"room":"nwc1008",
 				"seq":1,
 				"manufacturer":"Cree",
