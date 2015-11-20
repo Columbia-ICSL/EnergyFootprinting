@@ -31,7 +31,7 @@ class QueryRoom:
             start=raw_time['start']
             
         
-        return db.QueryRoom(room,start,end)
+        return cloudserver.db.QueryRoom(room,start,end)
 
 class QueryPerson:
     def all(self,person):
