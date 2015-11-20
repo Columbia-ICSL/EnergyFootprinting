@@ -114,20 +114,34 @@ class DBInit(object):
 				"manufacturer":"Cree",
 				"channel":"SmartThings Hub 2.0"
 			},
-			"nwc1003b_plug1":{
-				"type":"plug",
-				"room":"nwc1003b",
-				"seq":1,
-				"manufacturer":"AEOTEC by AEON LABS",
-				"channel":"SmartThings Hub 2.0"
-			},
-			"nwc1003b_plug2":{
-				"type":"plug",
-				"room":"nwc1003b",
-				"seq":2,
-				"manufacturer":"AEOTEC by AEON LABS",
-				"channel":"SmartThings Hub 2.0"
-			}
+            "nwc1003b_plug1":{
+                "type":"plug",
+                "room":"nwc1003b",
+                "seq":1,
+                "manufacturer":"AEOTEC by AEON LABS",
+                "channel":"SmartThings Hub 2.0"
+            },
+            "nwc1003b_plug2":{
+                "type":"plug",
+                "room":"nwc1003b",
+                "seq":2,
+                "manufacturer":"AEOTEC by AEON LABS",
+                "channel":"SmartThings Hub 2.0"
+            },
+            "nwc1000_plug1":{
+                "type":"plug",
+                "room":"nwc1000",
+                "seq":1,
+                "manufacturer":"AEOTEC by AEON LABS",
+                "channel":"SmartThings Hub 2.0"
+            },
+            "nwc1000_plug2":{
+                "type":"plug",
+                "room":"nwc1000",
+                "seq":2,
+                "manufacturer":"AEOTEC by AEON LABS",
+                "channel":"SmartThings Hub 2.0"
+            }
 		}
 		self._SetConfigValue("ENERGYDEVICE_DEFINITION",self.ENERGYDEVICE_DEFINITION)
 
