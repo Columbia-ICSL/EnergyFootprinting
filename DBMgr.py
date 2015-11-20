@@ -176,11 +176,21 @@ class DBMgr(object):
 				if(roomID==oldS): 
 					return;
 				self.tree_of_space[oldS]["occupants"].remove(personID)
-				self.updateTreeOccNum(oldS)
+				try:	
+					self.updateTreeOccNum(oldS)
+				except:
+					add_log("error while updateTreeOccNum",oldS)
+					print "error while updateTreeOccNum"+oldS
+					print self.tree_of_space[oldS]
 
 			self.people_in_space[personID]=roomID
 			self.tree_of_space[roomID]["occupants"]+=[personID]
-			self.updateTreeOccNum(roomID)
+			try:	
+				self.updateTreeOccNum(roomID)
+			except:
+				add_log("error while updateTreeOccNum",roomID)
+				print "error while updateTreeOccNum"+roomID
+				print self.tree_of_space[roomID]
 
 			self.recordEvent(personID,"locationChange",roomID)
 
