@@ -245,9 +245,9 @@ class DBMgr(object):
 			})
 
 
+		ret={"tree":self.tree_of_space, "personal":personal_consumption }
 		#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
-
-
+		return json.dumps(ret, sort_keys=True, indent=4)
 
 		"3. possible accumulation at different tier?? like every 600 seconds?"
 
