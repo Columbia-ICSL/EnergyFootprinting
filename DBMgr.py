@@ -121,7 +121,7 @@ class DBMgr(object):
 		"maintenance tree node's energy consumption item, and update a sum value"
 		known_room=None
 		try:
-			device=self.ENERGYDEVICE_DEFINITION["deviceID"]
+			device=self.ENERGYDEVICE_DEFINITION[deviceID]
 			roomID=device["room"]
 			known_room=roomID
 
@@ -129,14 +129,24 @@ class DBMgr(object):
 				"value":value,
 				"type":device["type"]
 			}
+		except:
+			add_log("failed to report energy value on device",{
+				"known_room":known_room,
+				"deviceID":deviceID,
+				"value":value,
+				"raw":raw_data
+				})
+			return
+		
+		try:
 			total_con=0
 			for iter_devID in self.tree_of_space[roomID]["consumption"]:
 				total_con+=self.tree_of_space[roomID]["consumption"][iter_devID]["value"]
 			self.tree_of_space[roomID]["_sum_consumption"]=total_con
-
 		except:
-			add_log("failed to report energy value on device",{
+			add_log("failed to calculate accumulate total consumption",{
 				"known_room":known_room,
+				"room_current_cons":self.tree_of_space[known_room]["consumption"],
 				"deviceID":deviceID,
 				"value":value,
 				"raw":raw_data
