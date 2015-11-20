@@ -2,8 +2,8 @@ import json
 import web
 import cloudserver
 urls = (
-    "/QueryRoom/(.?)","QueryRoom", #room ID + time range
-    "/QueryPerson/(.*)","QueryPerson" #person ID +
+    "/QueryRoom/(.+?)","QueryRoom", #room ID + time range
+    "/QueryPerson/(.+?)","QueryPerson" #person ID +
 
 )
 
@@ -13,8 +13,23 @@ class QueryRoom:
         pass
         return "success"
     def GET(self,room):
-        print room
-        return room
+        if room=="":
+            return "no room to query"
+        raw_time=web.input()
+        
+        
+        if "end" not in raw_time:
+            end=calendar.timegm(datetime.datetime.utcnow().utctimetuple())
+        else:
+            end=raw_time['end']
+        if "start" not in raw_time:
+            start=calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60
+        else:
+            start=raw_time['start']
+            
+        
+        return db.QueryRoom(room,start,end)
+
 class QueryPerson:
     def all(self,person):
         if person=="":
