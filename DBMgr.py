@@ -54,7 +54,7 @@ class DBMgr(object):
 		self.raw_data=self.dbc.db.raw_data
 		#any raw data document.
 
-		selself.tree_snapshot_col=self.dbc.dself.tree_snapshot_col
+		self.tree_snapshot_col=self.dbc.dself.tree_snapshot_col
 		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
 		#snapshot every x seconds, for the tree
 
