@@ -217,7 +217,7 @@ class DBMgr(object):
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
 		"1. insert the tree into snapshot_col"
-		selself.tree_snapshot_col.insert({
+		self.tree_snapshot_col.insert({
 			"timestamp":datetime.datetime.utcnow(),
 			"data":self.tree_of_space
 			})
