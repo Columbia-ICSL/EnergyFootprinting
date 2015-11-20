@@ -220,7 +220,7 @@ class DBMgr(object):
 		#for space_id in self.tree_of_space:
 		for personID in self.people_in_space:
 			try:
-				roomID=people_in_space[personID]
+				roomID=self.people_in_space[personID]
 				e_value=-1
 				if "_sum_consumption" in self.tree_of_space[roomID]:
 					e_value=self.tree_of_space[roomID]["_sum_consumption"] / self.tree_of_space[roomID]["occupants"]["number"]
