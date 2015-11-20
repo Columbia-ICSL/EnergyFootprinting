@@ -3,12 +3,100 @@ import datetime
 import time
 import calendar
 from bson import ObjectId
+import json
+
+def add_log(msg,obj):
+	print "Got log:"+msg
+	print obj
+	pymongo.MongoClient().log_db.log.insert({
+		"msg":msg,
+		"obj":obj,
+		"timestamp":datetime.datetime.utcnow()
+		});
 
 class DBMgr(object):
+	def _GetConfigValue(self,key):
+		try:
+			ret=self.config_col.find_one({"_id":key})
+			return ret["value"]
+		except:
+			return None
 
+	def _SetConfigValue(self,key,value):
+		self.config_col.replace_one({"_id":key},{"value":value},True)
+
+	def UpdateConfigs(self):
+		self.ROOM_DEFINITION=self._GetConfigValue("ROOM_DEFINITION")
+		self.ENERGYDEVICE_DEFINITION=self._GetConfigValue("ENERGYDEVICE_DEFINITION")
+		
 	def __init__(self):
-		self.T=900
 		self.name="DB Manager"
+		self.dbc=pymongo.MongoClient()
+		self.config_col=self.dbc.db.config
+		self.UpdateConfigs()
+
+		self.people_in_space={}; "!!! should read snapshot"
+		self.tree_of_space={}; "!!! should also read shapshot to get latest energy values?"
+		#transpose array
+		for room in self.ROOM_DEFINITION:
+			self.tree_of_space[room["id"]]=room
+			self.tree_of_space[room["id"]]["consumption"]={}
+		#maintenance of father
+		for room in self.ROOM_DEFINITION:
+			for c in room["children"]:
+					self.tree_of_space[c]["father"]=room["id"]
+
+
+		self.raw_data=self.dbc.db.raw_data
+		#any raw data document.
+
+		self.tree_snapshot_col=self.dbc.db.tree_snapshot_col
+		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
+		#snapshot every x seconds, for the tree
+
+
+		self.events_col=self.dbc.db.events_col
+		#person ID events, like location change
+
+	def _TEST(self):
+		print "TEST"
+		self.tree_of_space["nwc1003b"]["occupants"]["ids"]=["xc2340"]
+		self.updateTreeOccNum("nwc1003b")
+		#print json.dumps(self.tree_of_space,indent=2, separators=(',', ': '))
+		#self.tree_of_space["nwc1003b"]["occupants"]["ids"]=[]
+		#self.updateTreeOccNum("nwc1003b")
+		print self.tree_of_space["nwc10"]["occupants"]
+
+	def recordEvent(self, personID, etype, data):
+		self.events_col.insert({
+			"personID":personID,
+			"type":etype,
+			"data":data
+			})
+
+	def updateTreeOccNum(self,node_id):#update till root, or encounter a non-auto index
+		if self.tree_of_space[node_id]["occupants"]["type"]!="auto":
+			return
+		#only update auto occupant #
+		try:
+			num_this_layer=len(self.tree_of_space[node_id]["occupants"]["ids"])
+			num_lower_layer=0
+			for c in self.tree_of_space[node_id]["children"]:
+				num_lower_layer+=self.tree_of_space[c]["occupants"]["number"]
+
+			self.tree_of_space[node_id]["occupants"]["number"]=num_lower_layer+num_this_layer
+		except:
+			add_log("error while calculating #occ node",node_id)
+			return
+		
+		try:
+			father_id=self.tree_of_space[node_id]["father"]
+			self.updateTreeOccNum(father_id)
+		except:
+			add_log("error while tracing father at node",node_id)
+			return
+		
+		"""self.T=900
 		self.dbc=pymongo.MongoClient()
 		self.engcol=self.dbc.db.energy_logs
 		#standardized energy consumption, by each appliance, (each incidence)
@@ -16,9 +104,7 @@ class DBMgr(object):
 		self.poscol=self.dbc.db.position_logs
 		#position log 
 		#(user, roomID, timestamp)
-		self.raw_data=self.dbc.db.raw_data_logs
-		#any raw data document.
-
+		
 		self.stdcol=self.dbc.db.standardized_consumption_log_column
 		#(room,#T,value, consumption=[?,?], occupants=[], responsibility=[?,?])
 		#(#T = timestamp / 15min)
@@ -26,213 +112,121 @@ class DBMgr(object):
 		# consumption history is non-repetitively added from energy_logs
 
 		self.room_meta=self.dbc.db.room_meta
-		#(room, PULLcallbackURL, latestUpdate)
+		#(room, PULLcallbackURL, latestUpdate)"""
+	def LogRawData(self,obj):
+		obj["_timestamp"]=datetime.datetime.utcnow()
+		self.raw_data.insert(obj)
 
-	def _time(self,timestamp=0):
-		if timestamp==0:
-			return datetime.datetime.utcnow()
-		else:
-			return datetime.datetime.utcfromtimestamp(timestamp)
-	
-	def _T(self, timestamp):
-		if timestamp==0:
-			return _TforDatetime(datetime.datetime.utcnow())
-		return int(timestamp/self.T)
-	def _TforDatetime(self, datetime):
-		utc_seconds = calendar.timegm(datetime.utctimetuple())
-		return self._T(utc_seconds)
-
-	def __add_energy_event(self,room,timestamp,description,val_in_kwh):
-		e_doc = {
-			"room": room,
-			"energy": val_in_kwh,
-			"timestamp": self._time(timestamp),
-			#"occupants": [],
-			"description": description
+	def ReportEnergyValue(self, deviceID, value, raw_data):
+		"maintenance tree node's energy consumption item, and update a sum value"
+		known_room=None
+		try:
+			device=self.ENERGYDEVICE_DEFINITION["deviceID"]
+			roomID=device["room"]
+			self.tree_of_space[roomID]["consumption"][deviceID]={
+				"value":value,
+				"type":device["type"]
 			}
-		ID=self.engcol.insert(e_doc)
-		#should consider repeated insertion? or two same description may be intentional??
-		T=self._T(timestamp)
+			total_con=0
+			for iter_devID in self.tree_of_space[roomID]["consumption"]:
+				total_con+=self.tree_of_space[roomID]["consumption"][iter_devID]["value"]
+			self.tree_of_space[roomID]["_sum_consumption"]=total_con
 
-		locator={"room":room,"T":T}
-		current_doc=self.stdcol.find_one(locator)
-		if current_doc==None:
-			current_doc={
-				"room":room, "T":T,
-				"value":0,"consumption":[],
-				"occupants":[],
-				"responsibility":[]
-			}
+			known_room=roomID
+		except:
+			add_log("failed to report energy value on device",{
+				"deviceID":deviceID,
+				"value":value,
+				"raw":raw_data
+				})
 
-		current_doc["consumption"] += [ str(ID) ]
-		current_doc["value"] += val_in_kwh
-		self.stdcol.replace_one(locator,current_doc,True)#upsert=true
-		return current_doc
-
-	def __maintenance_responsibility(self,room,T):
-		nowT=self._TforDatetime(self._time(0))
-		cond={"room":room,"T":T}
-		item=self.stdcol.find_one(cond)
-		if item==None:
-			return False
-		if len(item["occupants"])==0:
-			if T>=nowT:
-				return
-			#if no people and T in past, inherit!
-			#!!!TODO find nonempty occ list in the past, update
-			latest_w_occ=self.stdcol.find_one(
-				{
-					"room":room,
-					"T":{"$lt":T},
-					"occupants": {"$not": {"$size": 0}}
-				},
-				sort=[
-    			("T", pymongo.DESCENDING)
-			])
-			#modified item
-			update_resp=latest_w_occ["occupants"]
-		else:
-			update_resp=item["occupants"]
-		update_act={
-			"$set":{
-				"responsibility":update_resp
-			}
-		}
-		return self.stdcol.update_one(cond,update_act)
-
-	def __maintenance_responsibilities(self,T=0):
-		if T==0:
-			nowT=self._TforDatetime(self._time(0))
-			T=nowT-1
-
-		#iterate every room with T==T
-		#loop T==last..currT-1?
-		return
-
-	def __add_occupant_T(self,room,person,T):
-		#addToSet
-		cond={"room":room,"T":T}
-		if self.stdcol.find_one(cond)==None:
-			current_doc={
-				"room":room, "T":T,
-				"value":0,"consumption":[],
-				"occupants":[],
-				"responsibility":[]
-			}
-			self.stdcol.insert_one(current_doc)
-
-		act = {
-			"$addToSet"	:{
-				"occupants" : person
-			}
-		}
-		id=self.stdcol.update_one(cond,act,True)
-		self.__maintenance_responsibility(room,T)
-		return id
-
-	def __add_location_event(self,person,room,confidence,timestamp):
+		self.LogRawData({
+			"type":"energy_report",
+			"roomID":known_room,
+			"deviceID":deviceID,
+			"value":value,
+			"raw":raw_data
+			})
 		
-		doc = {
-			"person": person,
-			"room": room,
-			"confidence":confidence,
-			"timestamp": self._time(timestamp)
-		}
-		id=self.poscol.insert_one(doc).inserted_id
-		T=self._T(timestamp)
-		self.__add_occupant_T(room,person,T)
-		return id
 
-	def __query_room_history(self,room,Tl,Tu): #lower/upper bounds
-		cond={
-			"room":room, 
-			"T":{
-				"$gte":Tl,
-				"$lte":Tu
-			}
-		}
-		ret= list(self.stdcol.find(cond))
-		return ret
-	def __query_room_by_timestamp(self,person,time1,time2):
-			#!!TODO: remove/filter illegitimate incidents in first and last block??
-		return self.__query_room_history(room,self._T(time1),self._T(time2))
+	def ReportLocationAssociation(self,personID, roomID, raw_data):
+		self.LogRawData({
+			"type":"location_report",
+			"roomID":roomID,
+			"personID":personID,
+			"raw":raw_data
+			})
+		"!!! if roomID='' means he's out of tracking scope. maybe set to CUROOT?? "
+
+		try:
+			if personID in self.people_in_space:
+				oldS=self.people_in_space[personID]
+				if(roomID==oldS): 
+					return;
+				self.tree_of_space[oldS]["occupants"].remove(personID)
+				self.updateTreeOccNum(oldS)
+
+			self.people_in_space[personID]=roomID
+			self.tree_of_space[roomID]["occupants"]+=[personID]
+			self.updateTreeOccNum(roomID)
+
+			self.recordEvent(personID,"locationChange",roomID)
+
+		except:
+			add_log("error when maintaining ids list",{
+				"personID":personID,
+				"roomID":roomID
+				})
+
+		#"maintenance each user's value"
+		"maintanence involves too much space and other people; shouldn't do it here. moved to snapshot section"
+
+	def SaveShot(self, any_additional_data):
+		#save into database, with: timestamp, additional data
+		"1. insert the tree into snapshot_col"
+		self.tree_snapshot_col.insert({
+			"timestamp":datetime.datetime.utcnow(),
+			"data":self.tree_of_space
+			})
+		#snapshot every x seconds, for the tree
+
+		"2. record the people's consumption too"
+
+		personal_consumption={}
+		#for space_id in self.tree_of_space:
+		for personID in self.people_in_space:
+			try:
+				roomID=people_in_space[personID]
+				e_value=-1
+				if "_sum_consumption" in self.tree_of_space[roomID]:
+					e_value=self.tree_of_space[roomID]["_sum_consumption"] / self.tree_of_space[roomID]["occupants"]["number"]
+				personal_consumption[personID]={
+					"value":e_value,
+					"roomID":roomID
+				}
+			except:
+				add_log("fail to trace person's consumption; id:",personID)
+			
+		self.personal_snapshot_col.insert({
+			"timestamp":datetime.datetime.utcnow(),
+			"data":personal_consumption
+			})
 
 
-	def __query_person_history(self,person,Tl,Tu): #lower/upper bounds
-		cond={
-			"responsibility":person, 
-			"T":{
-				"$gte":Tl,
-				"$lte":Tu
-			}
-		}
-		ret= list(self.stdcol.find(cond))
-		return ret
-	def __query_person_history_full(self,person,Tl,Tu):
-	#expand all consumption incidents
-		history=self.__query_person_history(person,Tl,Tu)
-		ret=[]
-		for item in history:
-			rate=1.0 / len(item["responsibility"])
-			for ID in item["consumption"]:
-				actual_item=self.engcol.find_one({"_id":ObjectId(ID)})
-				actual_item["value"]=actual_item["energy"] * rate
-			ret+=[actual_item]
-		return ret
+		#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
 
-	def __query_person_by_timestamp(self,person,time1,time2):
-			#!!TODO: remove/filter illegitimate incidents in first and last block??
-		return self.__query_person_history_full(person,self._T(time1),self._T(time2))
 
-	def _TEST(self):
-		self.stdcol=self.dbc.db.test_col
-		self.stdcol.remove()
-		#self.__TEST()
-		self.__add_energy_event("1008",12*900+1,"test1",1.3)
-		self.__add_energy_event("1008",13*900+1,"test1",1.5)
-		self.__add_energy_event("1008",14*900+1,"test1",2.3)
-		self.__add_energy_event("1008",15*900+1,"test1",2.3)
-		self.__add_location_event("personA","1008","0.9",12*900+5)
-		self.__add_location_event("personB","1008","0.9",13*900+5)
-		self.__add_location_event("personB","1008","0.9",16*900+1)
-		self.__add_location_event("personC","1008","0.9",16*900+1)
 
-		self.__add_energy_event("1008",16*900+1,"TEST2",44)
-
-		self.__maintenance_responsibility("1008",12)
-		self.__maintenance_responsibility("1008",13)
-		self.__maintenance_responsibility("1008",15)
-		res= self.stdcol.find_one({"room":"1008","T":15})
-		assert(res["responsibility"]==["personB"])
-		res=self.__query_person_by_timestamp("personB",12*900,16*900)
-		assert(len(res)==3)
-		assert(res[2]["description"]=="TEST2")
-		assert(res[2]["value"]==44/2)
-
-		print "Test Success."
-		self.stdcol.remove()
-
-	def SavePlug(self,room,description,kwhs,watts,timestamp=0):
-		return self.__add_energy_event(room,timestamp,"Plug:"+description+" currW:"+str(watts),kwhs)		
-	
-	def SaveHVAC(self,room,description,temp,pres,timestamp=0):
-		kwhs= pres*2.1444 #arbitraty
-		return self.__add_energy_event(room,timestamp,"HVAC:"+description+" currPres:"+str(pres)+" currTemp:"+str(temp),kwhs)		
-
-#	def CheckLocation(self,person):
-#		return ret
-	
-	def SaveLocation(self,person,room,confidence,timestamp=0):
-		return self.__add_location_event(person,room,confidence,timestamp)
-
+		"3. possible accumulation at different tier?? like every 600 seconds?"
 
 	def QueryRoom(self,room,start,end):
-		return __query_room_by_timestamp(room,start,end)
+		return '{"result":"Query not finished yet."}'
 
 	def QueryPerson(self,person,start,end):
-		return __query_person_by_timestamp(person,start,end)
-		#add the "value" value from all array items, to get total energy
+		return '{"result":"Query not finished yet."}'
+
 
 if __name__ == "__main__":
-	db=DBMgr()
-	db._TEST()
+	dbm=DBMgr()
+	dbm._TEST()
+
