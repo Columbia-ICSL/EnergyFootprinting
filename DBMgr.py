@@ -119,7 +119,7 @@ class DBMgr(object):
 		obj["_timestamp"]=datetime.datetime.utcnow()
 		self.raw_data.insert(obj)
 
-	def ReportEnergyValue(self, deviceID, value, raw_data):
+	def ReportEnergyValue(self, deviceID, value, raw_data=None):
 		"maintenance tree node's energy consumption item, and update a sum value"
 		known_room=None
 		try:
@@ -163,7 +163,7 @@ class DBMgr(object):
 			})
 		
 
-	def ReportLocationAssociation(self,personID, roomID, raw_data):
+	def ReportLocationAssociation(self,personID, roomID, raw_data=None):
 		self.LogRawData({
 			"type":"location_report",
 			"roomID":roomID,
