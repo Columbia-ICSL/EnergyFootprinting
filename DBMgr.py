@@ -54,7 +54,7 @@ class DBMgr(object):
 		self.raw_data=self.dbc.db.raw_data
 		#any raw data document.
 
-		self.tree_snapshot_col=self.dbc.db.tree_snapshot_col
+		selself.tree_snapshot_col=self.dbc.dself.tree_snapshot_col
 		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
 		#snapshot every x seconds, for the tree
 
@@ -217,7 +217,7 @@ class DBMgr(object):
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
 		"1. insert the tree into snapshot_col"
-		self.tree_snapshot_col.insert({
+		selself.tree_snapshot_col.insert({
 			"timestamp":datetime.datetime.utcnow(),
 			"data":self.tree_of_space
 			})
@@ -262,7 +262,7 @@ class DBMgr(object):
 			}
 		}
 		projection = {"data."+room:1}
-		iterator = a.tree_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.tree_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if room in shot['data']:
 				result+=[shot['data'][room]]
