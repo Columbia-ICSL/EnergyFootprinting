@@ -30,7 +30,9 @@ class DBMgr(object):
 	def UpdateConfigs(self):
 		self.ROOM_DEFINITION=self._GetConfigValue("ROOM_DEFINITION")
 		self.ENERGYDEVICE_DEFINITION=self._GetConfigValue("ENERGYDEVICE_DEFINITION")
-		
+	
+	def _encode(data,isPretty):
+		return json.dumps(data, sort_keys=True, indent=4)
 	def __init__(self):
 		self.name="DB Manager"
 		self.dbc=pymongo.MongoClient()
@@ -247,7 +249,7 @@ class DBMgr(object):
 
 		ret={"tree":self.tree_of_space, "personal":personal_consumption }
 		#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
-		return json.dumps(ret, sort_keys=True, indent=4)
+		return self._encode(ret,True)
 
 		"3. possible accumulation at different tier?? like every 600 seconds?"
 
@@ -264,7 +266,7 @@ class DBMgr(object):
 		for shot in iterator:
 			if room in shot['data']:
 				result+=[shot['data'][room]]
-		print result
+		return self._encode(result,True)
 		#return '{"result":"Query not finished yet."}'
 
 	def QueryPerson(self,person,start,end):
@@ -280,7 +282,8 @@ class DBMgr(object):
 		for shot in iterator:
 			if person in shot["data"]:
 				result+=[shot["data"][person]]
-		return result
+		
+		return self._encode(result,True)
 
 if __name__ == "__main__":
 	dbm=DBMgr()
