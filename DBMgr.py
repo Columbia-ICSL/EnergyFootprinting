@@ -219,6 +219,13 @@ class DBMgr(object):
 
 		"3. possible accumulation at different tier?? like every 600 seconds?"
 
+	def QueryRoom(self,room,start,end):
+		return '{"result":"Query not finished yet."}'
+
+	def QueryPerson(self,person,start,end):
+		return '{"result":"Query not finished yet."}'
+
+
 if __name__ == "__main__":
 	dbm=DBMgr()
 	dbm._TEST()
