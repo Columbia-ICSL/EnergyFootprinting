@@ -227,6 +227,7 @@ class DBMgr(object):
 		#for space_id in self.tree_of_space:
 		for personID in self.people_in_space:
 			try:
+				"!!! should also consider the eng cons. of parent nodes?"
 				roomID=self.people_in_space[personID]
 				e_value=-1
 				if "_sum_consumption" in self.tree_of_space[roomID]:
