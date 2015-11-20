@@ -40,6 +40,7 @@ class QueryPerson:
     def GET(self,person):
         if person=="":
             return "no name []"
+        raw_time=web.input()
         if "end" not in raw_time:
             end=calendar.timegm(datetime.datetime.utcnow().utctimetuple())
         else:
