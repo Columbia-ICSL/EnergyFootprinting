@@ -5,6 +5,7 @@ import calendar
 import traceback
 from bson import ObjectId
 import json
+import pprint
 
 def add_log(msg,obj):
 	print "Got log:"+msg
@@ -15,6 +16,10 @@ def add_log(msg,obj):
 		"obj":obj,
 		"timestamp":datetime.datetime.utcnow()
 		});
+def dump_log():
+	return pprint.pformat(
+		list(pymongo.MongoClient().log_db.log.find()),
+	indent=2)
 
 class DBMgr(object):
 	def _GetConfigValue(self,key):
