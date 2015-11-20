@@ -2,12 +2,14 @@ import pymongo
 import datetime
 import time
 import calendar
+import traceback
 from bson import ObjectId
 import json
 
 def add_log(msg,obj):
 	print "Got log:"+msg
 	print obj
+	traceback.print_exc()
 	pymongo.MongoClient().log_db.log.insert({
 		"msg":msg,
 		"obj":obj,
@@ -175,7 +177,7 @@ class DBMgr(object):
 				oldS=self.people_in_space[personID]
 				if(roomID==oldS): 
 					return;
-				self.tree_of_space[oldS]["occupants"].remove(personID)
+				self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
 				try:	
 					self.updateTreeOccNum(oldS)
 				except:
@@ -184,7 +186,7 @@ class DBMgr(object):
 					print self.tree_of_space[oldS]
 
 			self.people_in_space[personID]=roomID
-			self.tree_of_space[roomID]["occupants"]+=[personID]
+			self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
 			try:	
 				self.updateTreeOccNum(roomID)
 			except:
