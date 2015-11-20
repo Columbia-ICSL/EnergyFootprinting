@@ -123,6 +123,8 @@ class DBMgr(object):
 		try:
 			device=self.ENERGYDEVICE_DEFINITION["deviceID"]
 			roomID=device["room"]
+			known_room=roomID
+
 			self.tree_of_space[roomID]["consumption"][deviceID]={
 				"value":value,
 				"type":device["type"]
@@ -132,7 +134,6 @@ class DBMgr(object):
 				total_con+=self.tree_of_space[roomID]["consumption"][iter_devID]["value"]
 			self.tree_of_space[roomID]["_sum_consumption"]=total_con
 
-			known_room=roomID
 		except:
 			add_log("failed to report energy value on device",{
 				"known_room":known_room,
