@@ -135,6 +135,7 @@ class DBMgr(object):
 			known_room=roomID
 		except:
 			add_log("failed to report energy value on device",{
+				"known_room":known_room,
 				"deviceID":deviceID,
 				"value":value,
 				"raw":raw_data
