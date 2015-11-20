@@ -31,7 +31,7 @@ class DBMgr(object):
 		self.ROOM_DEFINITION=self._GetConfigValue("ROOM_DEFINITION")
 		self.ENERGYDEVICE_DEFINITION=self._GetConfigValue("ENERGYDEVICE_DEFINITION")
 	
-	def _encode(data,isPretty):
+	def _encode(self,data,isPretty):
 		return json.dumps(data, sort_keys=True, indent=4)
 	def __init__(self):
 		self.name="DB Manager"
