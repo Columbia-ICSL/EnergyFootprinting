@@ -34,18 +34,24 @@ class QueryRoom:
         return cloudserver.db.QueryRoom(room,start,end)
 
 class QueryPerson:
-    def all(self,person):
-        if person=="":
-            return "no name []"
-        print person
-        result = cloudserver.db.QueryPerson(person,0,2**10)
-       # return """[{"type":"Plug","unit":"watts","value":15,"description":"plugmeter"},{"type":"HVAC","value":10,"unit":"watts","description":"Approximation from Pressure&Temperature"}]"""
-        return result
-        #"person name: {0}".format(person)
+
     def POST(self,person):
         return self.all(person)
     def GET(self,person):
-        return self.all(person)
+        if person=="":
+            return "no name []"
+        if "end" not in raw_time:
+            end=calendar.timegm(datetime.datetime.utcnow().utctimetuple())
+        else:
+            end=raw_time['end']
+        if "start" not in raw_time:
+            start=calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60
+        else:
+            start=raw_time['start']
+            
+        
+        return cloudserver.db.QueryPerson(person,start,end)
+
 #
 #
 query = web.application(urls, locals())
