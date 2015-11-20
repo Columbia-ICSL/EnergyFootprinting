@@ -193,7 +193,7 @@ class DBMgr(object):
 		#"maintenance each user's value"
 		"maintanence involves too much space and other people; shouldn't do it here. moved to snapshot section"
 
-	def SaveShot(self, any_additional_data):
+	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
 		"1. insert the tree into snapshot_col"
 		self.tree_snapshot_col.insert({
