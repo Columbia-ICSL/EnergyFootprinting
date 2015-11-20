@@ -20,7 +20,7 @@ urls = (
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
     "/frontend/(.+)", "frontend",
-    "/manage",Manage.Manager,
+    "/api/SaveShot",Manage.Manager,
     "/(.+)/index","index"
 
 

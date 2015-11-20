@@ -5,11 +5,11 @@ import cloudserver
 
 
 urls = (
-"/(.+)","Manage"
+"/","SaveShot"
 )
 
-class Manage:
-    def POST(self,Id):
+class SaveShot:
+    def POST(self):
         pass
         return "post"
     def GET(self):
