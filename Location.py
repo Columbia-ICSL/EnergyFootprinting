@@ -12,10 +12,10 @@ class SavePosition:
         raw_data = web.data() # you can get data use this method
         data=json.loads(raw_data)
         room=data["room"]
-        confidence=data["confidence"]
+        #confidence=data["confidence"]
         #timestamp, since, deviceID...
-        return str(cloudserver.db.SaveLocation(personID,room,confidence))
+        return str(cloudserver.db.ReportLocationAssociation(personID,room,raw_data))
     def GET(self,personID):
-        return str(cloudserver.db.CheckLocation(personID))
+        return ""#str(cloudserver.db.CheckLocation(personID))
 
 LocationReport = web.application(urls, locals())
