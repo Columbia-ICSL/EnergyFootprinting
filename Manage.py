@@ -13,8 +13,8 @@ class SaveShot:
         pass
         return "post"
     def GET(self):
-        cloudserver.db.SaveShot()
+        
         print "SaveShot!"
-        pass
-        return "get"
+        
+        return cloudserver.db.SaveShot()
 Manager = web.application(urls, locals())
