@@ -126,6 +126,21 @@ class DBMgr(object):
 
 		self.room_meta=self.dbc.db.room_meta
 		#(room, PULLcallbackURL, latestUpdate)"""
+
+	def updateTreeTotalCon(self,roomID):
+		total_con=0
+		for iter_devID in self.tree_of_space[roomID]["consumption"]:
+			total_con+=self.tree_of_space[roomID]["consumption"][iter_devID]["value"]
+		self.tree_of_space[roomID]["_sum_consumption"]=total_con
+
+		self.tree_of_space[roomID]["_sum_consumption_including_children"]=total_con
+		for c in self.tree_of_space[roomID]["children"]:
+			if "_sum_consumption_including_children" in self.tree_of_space[c]:
+				self.tree_of_space[roomID]["_sum_consumption_including_children"]+=self.tree_of_space[c]["_sum_consumption_including_children"]
+
+		if "father" in self.tree_of_space[roomID]:
+			self.updateTreeTotalCon(self.tree_of_space[roomID]["father"])
+
 	def LogRawData(self,obj):
 		obj["_timestamp"]=datetime.datetime.utcnow()
 		self.raw_data.insert(obj)
@@ -152,10 +167,7 @@ class DBMgr(object):
 			return
 		
 		try:
-			total_con=0
-			for iter_devID in self.tree_of_space[roomID]["consumption"]:
-				total_con+=self.tree_of_space[roomID]["consumption"][iter_devID]["value"]
-			self.tree_of_space[roomID]["_sum_consumption"]=total_con
+			self.updateTreeTotalCon(roomID)
 		except:
 			add_log("failed to calculate accumulate total consumption",{
 				"known_room":known_room,
@@ -241,8 +253,8 @@ class DBMgr(object):
 				"!!! should also consider the eng cons. of parent nodes?"
 				roomID=self.people_in_space[personID]
 				e_value=-1
-				if "_sum_consumption" in self.tree_of_space[roomID]:
-					e_value=self.tree_of_space[roomID]["_sum_consumption"] / self.tree_of_space[roomID]["occupants"]["number"]
+				if "_sum_consumption_including_children" in self.tree_of_space[roomID]:
+					e_value=self.tree_of_space[roomID]["_sum_consumption_including_children"] / self.tree_of_space[roomID]["occupants"]["number"]
 				personal_consumption[personID]={
 					"value":e_value,
 					"roomID":roomID
