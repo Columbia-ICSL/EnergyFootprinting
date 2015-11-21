@@ -16,9 +16,13 @@ def add_log(msg,obj):
 		"obj":obj,
 		"timestamp":datetime.datetime.utcnow()
 		});
-def dump_log():
+def dump_debug_log():
 	return pprint.pformat(
 		list(pymongo.MongoClient().log_db.log.find()),
+	indent=2)
+def dump_recent_raw_submission():
+	return pprint.pformat(
+		list(pymongo.MongoClient().db.raw_data.find().limit(20)),
 	indent=2)
 
 class DBMgr(object):
