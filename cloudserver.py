@@ -22,6 +22,7 @@ urls = (
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
     "/debug","Debug",
+    "/recent","Recent",
     "/(.+)/index","index"
 )
 
@@ -51,7 +52,10 @@ render = web.template.render('templates/')
 
 class Debug:
     def GET(self):
-        return DBMgr.dump_log()
+        return DBMgr.dump_debug_log()
+class Recent:
+    def GET(self):
+        return DBMgr.dump_recent_raw_submission()
 
 class index:
     def GET(self, path):
