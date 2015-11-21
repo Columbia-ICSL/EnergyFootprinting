@@ -22,7 +22,7 @@ def dump_debug_log():
 	indent=2)
 def dump_recent_raw_submission():
 	return pprint.pformat(
-		list(pymongo.MongoClient().db.raw_data.find().limit(20)),
+		list(pymongo.MongoClient().db.raw_data.find().sort([("timestamp", pymongo.DESCENDING)]).limit(500)),
 	indent=2)
 
 class DBMgr(object):
