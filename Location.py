@@ -16,6 +16,6 @@ class SavePosition:
         #timestamp, since, deviceID...
         return str(cloudserver.db.ReportLocationAssociation(personID,room,raw_data))
     def GET(self,personID):
-        return ""#str(cloudserver.db.CheckLocation(personID))
+        return "Location Reportint endpoint:"+personID #str(cloudserver.db.CheckLocation(personID))
 
 LocationReport = web.application(urls, locals())
