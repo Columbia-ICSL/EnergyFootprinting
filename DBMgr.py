@@ -6,6 +6,7 @@ import traceback
 from bson import ObjectId
 import json
 import pprint
+from threading import Thread
 
 def add_log(msg,obj):
 	print "Got log:"+msg
@@ -47,6 +48,8 @@ class DBMgr(object):
 		self.dbc=pymongo.MongoClient()
 		self.config_col=self.dbc.db.config
 		self.UpdateConfigs()
+		self.save_interval=1 
+		"!!! testing only!"
 
 		self.people_in_space={}; "!!! should read snapshot"
 		self.tree_of_space={}; "!!! should also read shapshot to get latest energy values?"
@@ -56,7 +59,7 @@ class DBMgr(object):
 			if not ("consumption"  in self.tree_of_space[room["id"]]):
 				self.tree_of_space[room["id"]]["consumption"]={}
 				#preserve pre-defined onstant consumptions
-				
+
 		#maintenance of father
 		for room in self.ROOM_DEFINITION:
 			for c in room["children"]:
@@ -66,13 +69,17 @@ class DBMgr(object):
 		self.raw_data=self.dbc.db.raw_data
 		#any raw data document.
 
-		self.tree_snapshot_col=self.dbc.dself.tree_snapshot_col
+		self.tree_snapshot_col=self.dbc.db.tree_snapshot_col
 		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
 		#snapshot every x seconds, for the tree
 
 
 		self.events_col=self.dbc.db.events_col
 		#person ID events, like location change
+
+		t=Thread(target=self._loopSaveShot,args=())
+		t.setDaemon(True)
+		t.start()
 
 	def _TEST(self):
 		print "TEST"
@@ -278,6 +285,12 @@ class DBMgr(object):
 		return self._encode(ret,True)
 
 		"3. possible accumulation at different tier?? like every 600 seconds?"
+
+	def _loopSaveShot(self):
+		while True:
+			self.SaveShot()
+			time.sleep(self.save_interval)
+
 
 	def QueryRoom(self,room,start,end):
 		result=[]
