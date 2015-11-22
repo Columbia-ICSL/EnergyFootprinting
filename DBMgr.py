@@ -207,27 +207,29 @@ class DBMgr(object):
 				oldS=self.people_in_space[personID]
 				if(roomID==oldS): 
 					return;
-				self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
-				try:	
-					self.updateTreeOccNum(oldS)
-				except:
-					add_log("error while updateTreeOccNum",oldS)
-					print "error while updateTreeOccNum"+oldS
-					print self.tree_of_space[oldS]
+				if self.tree_of_space[oldS]["occupants"]["type"]=="auto":
+					try:	
+						self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
+						self.updateTreeOccNum(oldS)
+					except:
+						add_log("error while removing ID and updateTreeOccNum",oldS)
+						print "error while removing ID and updateTreeOccNum"+oldS
+						print self.tree_of_space[oldS]
 
 			self.people_in_space[personID]=roomID
-			self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
-			try:	
-				self.updateTreeOccNum(roomID)
-			except:
-				add_log("error while updateTreeOccNum",roomID)
-				print "error while updateTreeOccNum"+roomID
-				print self.tree_of_space[roomID]
+			if self.tree_of_space[roomID]["occupants"]["type"]=="auto": 
+				try:	
+					self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
+					self.updateTreeOccNum(roomID)
+				except:
+					add_log("error while adding ID and updateTreeOccNum",roomID)
+					print "error while adding ID and updateTreeOccNum"+roomID
+					print self.tree_of_space[roomID]
 
 			self.recordEvent(personID,"locationChange",roomID)
 
 		except:
-			add_log("error when maintaining ids list",{
+			add_log("error while maintaining people_in_space[personID]. ",{
 				"personID":personID,
 				"roomID":roomID
 				})
