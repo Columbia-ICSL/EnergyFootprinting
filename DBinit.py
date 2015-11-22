@@ -22,6 +22,18 @@ class DBInit(object):
         "occupants": {
             "number": 29870,
             "type": "stat"
+        },
+        "consumption":{
+            "HVAC":{
+                "value":50000,
+                "type":"HVAC",
+                "note":"heating artificial data"
+            },
+            "ELEC":{
+                "value":100000,
+                "type":"Electrical",
+                "note":"street light artificial data"
+            }
         }
     },
     {
@@ -31,17 +43,42 @@ class DBInit(object):
         "occupants": {
             "number": 2000,
             "type": "stat"
+        },
+        "consumption":{
+            "HVAC":{
+                "value":5000,
+                "type":"HVAC",
+                "note":"artificial data"
+            },
+            "ELEC":{
+                "value":3000,
+                "type":"Electrical",
+                "note":"artificial data"
+            }
         }
     },
     {
         "name": "Columbia University/Northwest Corner Building",
         "id": "nwc",
         "children": [
-            "nwc10"
+            "nwc10",
+            "nwc8m"
         ],
         "occupants": {
             "number": 1000,
             "type": "statistics"
+        },
+        "consumption":{
+            "base_BMS_system":{
+                "value":1000,
+                "type":"BMS",
+                "note":"statistical(artificial) data of static consumptions"
+            },
+            "idle_HVAC_system":{
+                "value":1000,
+                "type":"HVAC",
+                "note":"statistical(artificial) data of static consumptions"
+            }
         }
     },
     {
@@ -52,6 +89,16 @@ class DBInit(object):
             "nwc1008",
             "nwc1003b"
         ],
+        "occupants": {
+            "number": 0,
+            "type": "auto",
+            "ids": []
+        }
+    },
+    {
+        "name": "Columbia University/Northwest Corner Building/Floor 10",
+        "id": "nwc8m",
+        "children": [],
         "occupants": {
             "number": 0,
             "type": "auto",
