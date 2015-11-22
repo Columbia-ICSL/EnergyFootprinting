@@ -53,7 +53,10 @@ class DBMgr(object):
 		#transpose array
 		for room in self.ROOM_DEFINITION:
 			self.tree_of_space[room["id"]]=room
-			self.tree_of_space[room["id"]]["consumption"]={}
+			if not ("consumption"  in self.tree_of_space[room["id"]]):
+				self.tree_of_space[room["id"]]["consumption"]={}
+				#preserve pre-defined onstant consumptions
+				
 		#maintenance of father
 		for room in self.ROOM_DEFINITION:
 			for c in room["children"]:
