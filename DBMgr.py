@@ -48,8 +48,7 @@ class DBMgr(object):
 		self.dbc=pymongo.MongoClient()
 		self.config_col=self.dbc.db.config
 		self.UpdateConfigs()
-		self.save_interval=1 
-		"!!! testing only!"
+		self.save_interval=60 #every minute
 
 		self.people_in_space={}; "!!! should read snapshot"
 		self.tree_of_space={}; "!!! should also read shapshot to get latest energy values?"
