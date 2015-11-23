@@ -6,6 +6,7 @@ import traceback
 from bson import ObjectId
 import json
 import pprint
+import copy
 from threading import Thread
 
 
@@ -266,12 +267,18 @@ class DBMgr(object):
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
 		"1. insert the tree into snapshot_col; remove some"
-		concise_tree=self.tree_of_space.deepcopy()
+		concise_tree=copy.deepcopy(self.tree_of_space)
 		for id in concise_tree:
-			print concise_tree[id]
-			del concise_tree[id]["name"]
-			del concise_tree[id]["children"]
-			del concise_tree[id]["id"]
+			for key in ["name","children","father","id"]:
+				if key in concise_tree[id]:
+					del concise_tree[id][key]
+		for id in concise_tree:
+			for cid in concise_tree[id]["consumption"]:
+				concise_cons={
+					"type":concise_tree[id]["consumption"][cid]["type"],
+					"value":concise_tree[id]["consumption"][cid]["value"]
+				}
+				concise_tree[id]["consumption"][cid]=concise_cons
 		self.tree_snapshot_col.insert({
 			"timestamp":datetime.datetime.utcnow(),
 			"data":concise_tree
@@ -328,7 +335,7 @@ class DBMgr(object):
 			})
 
 
-		ret={"tree":self.tree_of_space, "personal":personal_consumption }
+		ret={"concise_tree":concise_tree, "personal":personal_consumption }
 		#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
 		return self._encode(ret,True)
 
