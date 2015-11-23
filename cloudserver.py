@@ -60,7 +60,7 @@ class Recent:
 class index:
     def GET(self):
 
-        return web.seeother('/static')
+        return web.seeother('/static/')
 
 
 
