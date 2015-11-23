@@ -1,10 +1,168 @@
 <!doctype>
 <html>
 <head>
-	<title> The Energy Footprint System query interface </title>
+<title> The Energy Footprint System query interface </title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
+<style>
+body {
+  padding-top: 50px;
+  position: relative;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+        .box {border:1px solid grey;background-color:#d3d3d3;}
+        .large {font-size:3000%;color:red;}
+        #div1 {background-color:blue;}
+        #div2 {background-color:red;}
+        #div3 {background-color:green;}
+        .contentDiv {height:800px;}
+
+</style>
 </head>
-<body>
-	<h1> Hello, World! </h1>
+<body >
+   <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header"> <a href="" class="navbar-brand">My Website</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#div1">Page 1</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="container">
+      <div class="starter-template">
+        <h1>Introduction</h1>
+        <p class="lead">This interface is for debugging purpose only.</p>
+        <p> It can access arbitrary data (but not modify them); so no need to be careful! </p>
+      	
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Query Person
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <p class="lead">Obtain data of one certain person, during certain duration.</p>
+
+		<form onsubmit="return false;"  class="form-inline">
+		  <div class="form-group">
+		    <label for="personID">UserID</label>
+		    <input type="text" class="form-control" id="personID" placeholder="UNI">
+		  </div>
+		  <hr/>
+		  <div class="form-group">
+		    <label for="startDate">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate">
+		  </div>
+		  <div class="form-group">
+		    <label for="endDate">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate">
+		  </div>
+		  <div class="checkbox">
+		    <label>
+		      <input type="checkbox"> Check me out
+		    </label>
+		  </div>
+		  <button type="button" id="query_personal" class="btn btn-default">Query</button>
+		<script>
+		  $('#query_personal').on('click', function () {
+		    var $btn = $(this).button('loading');
+		    var personID=$('#personID').val();
+		    if(personID.length<2){
+		    	$("#personID").parent().addClass('has-error');
+		    	$btn.button('reset');
+		    	return;
+		    }
+		    $("#personID").removeClass('has-error');
+		    $.get("/api/Query/QueryPerson/"+personID,{
+		    		start:getUTCSeconds($('#startDate').val()),
+		    		end:getUTCSeconds($('#endDate').val()),
+		    		client:"AJAX debug frontend"
+	    		},
+		    	function(data,status){
+		    	console.log(data,status);
+		    	$btn.button('reset');
+		    }).fail(function() {
+			    alert('Error!'); // or whatever			    
+			    $btn.button('reset');
+			});
+		  })
+		</script>
+		</form>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Collapsible Group Item #2
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Collapsible Group Item #3
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </div><!-- /.container -->
+
+
+<script>
+//TODO: typeahead on username!
+Date.prototype.toInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,16);
+});
+var oneDayBefore=new Date();oneDayBefore.setSeconds(oneDayBefore.getSeconds()-86400);
+document.getElementById('startDate').value = oneDayBefore.toInputValue();
+document.getElementById('endDate').value = new Date().toInputValue();
+function getUTCSeconds(LocalDateStr){
+	var utcDate=new Date(LocalDateStr);
+	utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
+	return Math.floor(+utcDate/1000);
+}
+</script>
+
 
 </body>
 </html>
