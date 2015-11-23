@@ -266,8 +266,9 @@ class DBMgr(object):
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
 		"1. insert the tree into snapshot_col; remove some"
-		concise_tree=self.tree_of_space
+		concise_tree=self.tree_of_space.deepcopy()
 		for id in concise_tree:
+			print concise_tree[id]
 			del concise_tree[id]["name"]
 			del concise_tree[id]["children"]
 			del concise_tree[id]["id"]
