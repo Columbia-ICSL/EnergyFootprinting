@@ -24,11 +24,11 @@ class QueryRoom:
         if "end" not in raw_time:
             end=calendar.timegm(datetime.datetime.utcnow().utctimetuple())
         else:
-            end=raw_time['end']
+            end=int(raw_time['end'])
         if "start" not in raw_time:
             start=calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60
         else:
-            start=raw_time['start']
+            start=int(raw_time['start'])
             
         
         return cloudserver.db.QueryRoom(room,start,end)
