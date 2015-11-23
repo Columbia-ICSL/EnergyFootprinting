@@ -100,6 +100,7 @@ body {
 		    	function(data,status){
 		    	console.log(data,status);
 		    	$btn.button('reset');
+		    	$("#output1").text(JSON.encode(data));
 		    }).fail(function() {
 			    alert('Error!'); // or whatever			    
 			    $btn.button('reset');
@@ -107,7 +108,7 @@ body {
 		  })
 		</script>
 		</form>
-
+		<pre id="output1"></pre>
 
       </div>
     </div>
