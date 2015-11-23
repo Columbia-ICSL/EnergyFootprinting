@@ -23,7 +23,7 @@ def dump_debug_log():
 	indent=2)
 def dump_recent_raw_submission():
 	return pprint.pformat(
-		list(pymongo.MongoClient().db.raw_data.find().sort([("_timestamp", -1)]).limit(500)),
+		list(pymongo.MongoClient().db.raw_data.find().sort([("_log_timestamp", -1)]).limit(500)),
 	indent=2)
 
 class DBMgr(object):
@@ -151,7 +151,7 @@ class DBMgr(object):
 			self.updateTreeTotalCon(self.tree_of_space[roomID]["father"])
 
 	def LogRawData(self,obj):
-		obj["_timestamp"]=datetime.datetime.utcnow()
+		obj["_log_timestamp"]=datetime.datetime.utcnow()
 		self.raw_data.insert(obj)
 
 	def ReportEnergyValue(self, deviceID, value, raw_data=None):
@@ -299,11 +299,13 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		projection = {"data."+room:1}
+		projection = {"data."+room:1,"timestamp":1}
 		iterator = self.tree_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if room in shot['data']:
-				result+=[shot['data'][room]]
+				item=shot["data"][room]
+				item["timestamp"]=shot["timestamp"]
+				result+=[item]
 		return self._encode(result,True)
 		#return '{"result":"Query not finished yet."}'
 
@@ -315,11 +317,13 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		projection = {"data."+person:1}
+		projection = {"data."+person:1,"timestamp":1}
 		iterator = self.personal_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if person in shot["data"]:
-				result+=[shot["data"][person]]
+				item=shot["data"][person]
+				item["timestamp"]=shot["timestamp"]
+				result+=[item]
 		
 		return self._encode(result,True)
 
