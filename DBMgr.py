@@ -75,7 +75,13 @@ class DBMgr(object):
 			self.tree_of_space[room["id"]]=room
 			if not ("consumption"  in self.tree_of_space[room["id"]]):
 				self.tree_of_space[room["id"]]["consumption"]={}
+			else:
+				consumption=0
+				for con_id in room["consumption"]:
+					consumption+=room["consumption"]["con_id"]["value"]
+				self.tree_of_space[room["id"]]["_sum_consumption"]=consumption
 				#preserve pre-defined onstant consumption
+				#calc _sum_consumption 
 
 		#maintenance of father
 		for room in self.ROOM_DEFINITION:
