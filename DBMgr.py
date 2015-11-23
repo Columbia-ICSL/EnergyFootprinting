@@ -8,6 +8,23 @@ import json
 import pprint
 from threading import Thread
 
+
+class MongoJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            #return obj.isoformat()
+            utc_seconds = calendar.timegm(obj.utctimetuple())
+            return utc_seconds
+        elif isinstance(obj, datetime.date):
+            return obj.isoformat()
+        elif isinstance(obj, datetime.timedelta):
+            return (datetime.datetime.min + obj).time().isoformat()
+        elif isinstance(obj, ObjectId):
+            return str(obj)
+        else:
+            return super(MongoJsonEncoder, self).default(obj)
+
+
 def add_log(msg,obj):
 	print "Got log:"+msg
 	print obj
