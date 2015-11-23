@@ -59,7 +59,7 @@ class DBMgr(object):
 		self.ENERGYDEVICE_DEFINITION=self._GetConfigValue("ENERGYDEVICE_DEFINITION")
 	
 	def _encode(self,data,isPretty):
-		return json.dumps(data, sort_keys=True, indent=4)
+		return MongoJsonEncoder().encode(data)
 	def __init__(self):
 		self.name="DB Manager"
 		self.dbc=pymongo.MongoClient()
