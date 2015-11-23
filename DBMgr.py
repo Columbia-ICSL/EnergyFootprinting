@@ -324,7 +324,7 @@ class DBMgr(object):
 					add_log("error when tracing consumption through parent",{
 						"me":personID,
 						"at":roomID,
-						"traced until",currID
+						"traced until":currID
 						})
 
 				agg_type={}
