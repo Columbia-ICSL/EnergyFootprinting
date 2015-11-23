@@ -319,7 +319,7 @@ class DBMgr(object):
 						currID=self.tree_of_space[currID]["father"]
 						consumption=self.tree_of_space[currID]["consumption"]
 						occupants=1.0*self.tree_of_space[currID]["occupants"]["number"]
-						e_value+=consumption["_sum_consumption"] / occupants
+						e_value+= self.tree_of_space[currID]["_sum_consumption"] / occupants
 						for iid in consumption:
 							all_items[iid]={
 								"weight":1.0/occupants,
