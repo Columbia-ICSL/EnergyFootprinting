@@ -23,7 +23,7 @@ urls = (
     "/api/SaveShot",Manage.Manager,
     "/debug","Debug",
     "/recent","Recent",
-    "/(.+)/index","index"
+    "/","index"
 )
 
 from DBMgr import MongoJsonEncoder
@@ -46,11 +46,9 @@ class Recent:
         return DBMgr.dump_recent_raw_submission()
 
 class index:
-    def GET(self, path):
-        if path=="":
-            return "Hello world from bitbucket! this is the icsl energy foot-print api; try out /api/query/room/* "
-        print "{0}".format(path)
-        return "Energy foot-print"
+    def GET(self):
+
+        return web.seeother('/static/')
 
 
 
