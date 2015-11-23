@@ -100,7 +100,7 @@ body {
 		    	function(data,status){
 		    	console.log(data,status);
 		    	$btn.button('reset');
-		    	$("#output1").text(JSON.encode(data));
+		    	$("#output1").text(JSON.stringify(data));
 		    }).fail(function() {
 			    alert('Error!'); // or whatever			    
 			    $btn.button('reset');
