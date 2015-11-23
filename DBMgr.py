@@ -278,14 +278,39 @@ class DBMgr(object):
 		#for space_id in self.tree_of_space:
 		for personID in self.people_in_space:
 			try:
-				"!!! should also consider the eng cons. of parent nodes?"
+				"!!! TODO: should also consider the eng cons. of parent nodes?"
+				
 				roomID=self.people_in_space[personID]
 				e_value=-1
 				if "_sum_consumption_including_children" in self.tree_of_space[roomID]:
 					e_value=self.tree_of_space[roomID]["_sum_consumption_including_children"] / self.tree_of_space[roomID]["occupants"]["number"]
+				all_items={}
+				for con_item in self.tree_of_space[roomID]["consumption"]:
+					iid=con_item["id"]
+					all_items[iid]={
+						"weight":1.0/self.tree_of_space[roomID]["occupants"]["number"],
+						"value":con_item["value"],
+						"type":con_item["type"]
+					}
+
+				agg_type={}
+				for item in all_items:
+					itype=item["type"]
+					if not (itype in agg_type):
+						agg_type[itype]={
+							"ids":[item["id"]],
+							"value":item["value"]*item["weight"]
+						}
+					else:
+						agg_type[itype]["ids"]+=[item["id"]]
+						agg_type[itype]["value"]+=item["value"]*item["weight"]
+					
+
 				personal_consumption[personID]={
 					"value":e_value,
-					"roomID":roomID
+					"roomID":roomID,
+					"all_items":all_items, #may not be necessary
+					"type_aggregate":agg_type
 				}
 			except:
 				add_log("fail to trace person's consumption; id:",personID)
