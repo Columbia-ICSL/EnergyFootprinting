@@ -111,7 +111,8 @@ class DBMgr(object):
 		self.events_col.insert({
 			"personID":personID,
 			"type":etype,
-			"data":data
+			"data":data,
+			"timestamp":datetime.datetime.utcnow()
 			})
 
 	def updateTreeOccNum(self,node_id):#update till root, or encounter a non-auto index
