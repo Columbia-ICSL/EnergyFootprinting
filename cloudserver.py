@@ -23,7 +23,7 @@ urls = (
     "/api/SaveShot",Manage.Manager,
     "/debug","Debug",
     "/recent","Recent",
-    "/index","index"
+    "/","index"
 )
 
 class MongoJsonEncoder(json.JSONEncoder):
