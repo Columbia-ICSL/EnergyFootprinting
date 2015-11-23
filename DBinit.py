@@ -17,7 +17,9 @@ class DBInit(object):
         "id": "curoot",
         "children": [
             "mudd",
-            "nwc"
+            "nwc",
+            "pupin",
+            "cepsr"
         ],
         "occupants": {
             "number": 29870,
@@ -58,6 +60,48 @@ class DBInit(object):
         }
     },
     {
+        "name": "Columbia University/Pupin Building",
+        "id": "pupin",
+        "children": [],
+        "occupants": {
+            "number": 1500,
+            "type": "stat"
+        },
+        "consumption":{
+            "HVAC":{
+                "value":9000,
+                "type":"HVAC",
+                "note":"artificial data"
+            },
+            "ELEC":{
+                "value":3000,
+                "type":"Electrical",
+                "note":"artificial data"
+            }
+        }
+    },
+    {
+        "name": "Columbia University/Center for Engineering and Physical Science Research",
+        "id": "cepsr",
+        "children": [],
+        "occupants": {
+            "number": 3000,
+            "type": "stat"
+        },
+        "consumption":{
+            "HVAC":{
+                "value":2000,
+                "type":"HVAC",
+                "note":"artificial data"
+            },
+            "ELEC":{
+                "value":2000,
+                "type":"Electrical",
+                "note":"artificial data"
+            }
+        }
+    },
+    {
         "name": "Columbia University/Northwest Corner Building",
         "id": "nwc",
         "children": [
@@ -71,7 +115,7 @@ class DBInit(object):
         "consumption":{
             "base_BMS_system":{
                 "value":1000,
-                "type":"BMS",
+                "type":"Electrical",
                 "note":"statistical(artificial) data of static consumptions"
             },
             "idle_HVAC_system":{
@@ -141,49 +185,49 @@ class DBInit(object):
 
 		self.ENERGYDEVICE_DEFINITION={
 			"nwc1008_plug1":{
-				"type":"plug",
+				"type":"Electrical",
 				"room":"nwc1008",
 				"seq":1,
 				"manufacturer":"AEOTEC by AEON LABS",
 				"channel":"SmartThings Hub 2.0"
 			},
 			"nwc1008_smartvent1":{
-				"type":"vent",
+				"type":"HVAC",
 				"room":"nwc1008",
 				"seq":1,
 				"manufacturer":"Keen Home",
 				"channel":"SmartThings Hub 2.0"
 			},
 			"nwc1008_light1":{
-				"type":"lightbulb",
+				"type":"Lighting",
 				"room":"nwc1008",
 				"seq":1,
 				"manufacturer":"Cree",
 				"channel":"SmartThings Hub 2.0"
 			},
             "nwc1003b_plug1":{
-                "type":"plug",
+                "type":"Electrical",
                 "room":"nwc1003b",
                 "seq":1,
                 "manufacturer":"AEOTEC by AEON LABS",
                 "channel":"SmartThings Hub 2.0"
             },
             "nwc1003b_plug2":{
-                "type":"plug",
+                "type":"Electrical",
                 "room":"nwc1003b",
                 "seq":2,
                 "manufacturer":"AEOTEC by AEON LABS",
                 "channel":"SmartThings Hub 2.0"
             },
             "nwc1000_plug1":{
-                "type":"plug",
+                "type":"Electrical",
                 "room":"nwc1000",
                 "seq":1,
                 "manufacturer":"AEOTEC by AEON LABS",
                 "channel":"SmartThings Hub 2.0"
             },
             "nwc1000_plug2":{
-                "type":"plug",
+                "type":"Electrical",
                 "room":"nwc1000",
                 "seq":2,
                 "manufacturer":"AEOTEC by AEON LABS",
