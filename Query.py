@@ -29,8 +29,6 @@ class QueryRoom:
             start=calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60
         else:
             start=float(raw_time['start'])
-            
-        
         return cloudserver.db.QueryRoom(room,start,end)
 
 class QueryPerson:
@@ -44,11 +42,11 @@ class QueryPerson:
         if "end" not in raw_time:
             end=calendar.timegm(datetime.datetime.utcnow().utctimetuple())
         else:
-            end=raw_time['end']
+            end=float(raw_time['end'])
         if "start" not in raw_time:
             start=calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60
         else:
-            start=raw_time['start']
+            start=float(raw_time['start'])
             
         
         return cloudserver.db.QueryPerson(person,start,end)
