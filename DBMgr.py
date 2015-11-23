@@ -295,7 +295,8 @@ class DBMgr(object):
 
 				agg_type={}
 				for iid in all_items:
-					itype=all_items[iid]["type"]
+					item=all_items[iid]
+					itype=item["type"]
 					if not (itype in agg_type):
 						agg_type[itype]={
 							"ids":[item["id"]],
