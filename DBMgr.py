@@ -285,8 +285,8 @@ class DBMgr(object):
 				if "_sum_consumption_including_children" in self.tree_of_space[roomID]:
 					e_value=self.tree_of_space[roomID]["_sum_consumption_including_children"] / self.tree_of_space[roomID]["occupants"]["number"]
 				all_items={}
-				for con_item in self.tree_of_space[roomID]["consumption"]:
-					iid=con_item["id"]
+				for iid in self.tree_of_space[roomID]["consumption"]:
+					con_item=self.tree_of_space[roomID]["consumption"][iid]
 					all_items[iid]={
 						"weight":1.0/self.tree_of_space[roomID]["occupants"]["number"],
 						"value":con_item["value"],
@@ -294,8 +294,8 @@ class DBMgr(object):
 					}
 
 				agg_type={}
-				for item in all_items:
-					itype=item["type"]
+				for iid in all_items:
+					itype=all_items[iid]["type"]
 					if not (itype in agg_type):
 						agg_type[itype]={
 							"ids":[item["id"]],
