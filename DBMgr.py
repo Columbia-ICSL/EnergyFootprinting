@@ -265,10 +265,15 @@ class DBMgr(object):
 
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
-		"1. insert the tree into snapshot_col"
+		"1. insert the tree into snapshot_col; remove some"
+		concise_tree=self.tree_of_space
+		for id in concise_tree:
+			del concise_tree[id]["name"]
+			del concise_tree[id]["children"]
+			del concise_tree[id]["id"]
 		self.tree_snapshot_col.insert({
 			"timestamp":datetime.datetime.utcnow(),
-			"data":self.tree_of_space
+			"data":concise_tree
 			})
 		#snapshot every x seconds, for the tree
 
@@ -326,6 +331,7 @@ class DBMgr(object):
 		#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
 		return self._encode(ret,True)
 
+		"2. TODO: maintain last entrance list of all rooms; check all occupants.number==0 rooms, make the last person liable."
 		"3. possible accumulation at different tier?? like every 600 seconds?"
 
 	def _loopSaveShot(self):
