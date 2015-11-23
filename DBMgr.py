@@ -299,13 +299,13 @@ class DBMgr(object):
 					itype=item["type"]
 					if not (itype in agg_type):
 						agg_type[itype]={
-							"ids":[item["id"]],
-							"value":item["value"]*item["weight"]
+							"ids":[],
+							"value":0
 						}
-					else:
-						agg_type[itype]["ids"]+=[item["id"]]
-						agg_type[itype]["value"]+=item["value"]*item["weight"]
 					
+					agg_type[itype]["ids"]+=[iid]
+					agg_type[itype]["value"]+=item["value"]*item["weight"]
+				
 
 				personal_consumption[personID]={
 					"value":e_value,
