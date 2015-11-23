@@ -75,7 +75,7 @@ class DBMgr(object):
 			self.tree_of_space[room["id"]]=room
 			if not ("consumption"  in self.tree_of_space[room["id"]]):
 				self.tree_of_space[room["id"]]["consumption"]={}
-				#preserve pre-defined onstant consumptions
+				#preserve pre-defined onstant consumption
 
 		#maintenance of father
 		for room in self.ROOM_DEFINITION:
@@ -291,10 +291,9 @@ class DBMgr(object):
 		#for space_id in self.tree_of_space:
 		for personID in self.people_in_space:
 			try:
-				"!!! TODO: should also consider the eng cons. of parent nodes?"
-				
+
 				roomID=self.people_in_space[personID]
-				e_value=-1
+				e_value=0
 				if "_sum_consumption_including_children" in self.tree_of_space[roomID]:
 					e_value=self.tree_of_space[roomID]["_sum_consumption_including_children"] / self.tree_of_space[roomID]["occupants"]["number"]
 				all_items={}
@@ -305,6 +304,28 @@ class DBMgr(object):
 						"value":con_item["value"],
 						"type":con_item["type"]
 					}
+
+				"TODO: should also consider the eng cons. of parent nodes. Use _sum_consumption instead of _sum_consumption_including_children."
+				currID=roomID
+				try:
+					while "father" in self.tree_of_space[currID]:
+						currID=self.tree_of_space[currID]["father"]
+						consumption=self.tree_of_space[currID]["consumption"]
+						occupants=1.0*self.tree_of_space[currID]["occupants"]["number"]
+						e_value+=consumption["_sum_consumption"] / occupants
+						for iid in consumption:
+							all_items[iid]={
+								"weight":1.0/occupants,
+								"value":consumption[iid]["value"],
+								"type":consumption[iid]["type"]
+							}
+						
+				except:
+					add_log("error when tracing consumption through parent",{
+						"me":personID,
+						"at":roomID,
+						"traced until",currID
+						})
 
 				agg_type={}
 				for iid in all_items:

@@ -26,20 +26,7 @@ urls = (
     "/(.+)/index","index"
 )
 
-class MongoJsonEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            #return obj.isoformat()
-            utc_seconds = calendar.timegm(obj.utctimetuple())
-            return utc_seconds
-        elif isinstance(obj, datetime.date):
-            return obj.isoformat()
-        elif isinstance(obj, datetime.timedelta):
-            return (datetime.datetime.min + obj).time().isoformat()
-        elif isinstance(obj, ObjectId):
-            return str(obj)
-        else:
-            return super(MongoJsonEncoder, self).default(obj)
+from DBMgr import MongoJsonEncoder
 
 
 
@@ -47,6 +34,7 @@ class MongoJsonEncoder(json.JSONEncoder):
 #client = pymongo.MongoClient('localhost', 27017)
 #db = client.test_database
 db=DBMgr.DBMgr()
+
 
 render = web.template.render('templates/')
 
