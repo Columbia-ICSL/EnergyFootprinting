@@ -78,7 +78,7 @@ class DBMgr(object):
 			else:
 				consumption=0
 				for con_id in room["consumption"]:
-					consumption+=room["consumption"]["con_id"]["value"]
+					consumption+=room["consumption"][con_id]["value"]
 				self.tree_of_space[room["id"]]["_sum_consumption"]=consumption
 				#preserve pre-defined onstant consumption
 				#calc _sum_consumption 
