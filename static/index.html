@@ -88,7 +88,7 @@ body {
 		<div id="chart1" style="width: 900px; height: 500px;"></div>
 		<pre id="output1"></pre>
 		<script>
-		  $('#query_personal').on('click', function () {
+ 		$('#query_personal').on('click', function () {
 		    var $btn = $(this).button('loading');
 		    var personID=$('#personID').val();
 		    if(personID.length<2){
@@ -105,13 +105,78 @@ body {
 		    	function(data,status){
 		    	console.log(data,status);
 		    	$btn.button('reset');
-		    	$("#output1").text(JSON.stringify(data));
+		    	render(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
 			    $btn.button('reset');
 			});
 		  });
-		  $('#chart1').hide();
+		  function render(input){
+		  	input=input.reverse();
+			function distinct_types(input){
+	          var types={};
+	          input.map(function(s){
+	            if(s.type_aggregate)
+	              for(var t in s.type_aggregate)
+	                types[t]=true;
+	          });
+	          var ret=[];
+	          for(var t in types)
+	            ret.push(t);
+	          return ret;
+	        }
+	        var types=distinct_types(input);
+	        var type_indices={};for(var i in types)type_indices[types[i]]=1*i;
+	        console.log(types,type_indices);
+	        var data = new google.visualization.DataTable();
+	        var dlen=0;
+	        dlen++;data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        types.forEach(function(t){data.addColumn('number', t);dlen++;});
+
+	        dlen++;data.addColumn({type:'string', role:'annotation'}); // annotation role col.
+	        dlen++;data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
+	        
+
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          var ret=new Array(dlen);
+
+	          for(var t in item.type_aggregate){
+	            ret[ type_indices[t]+1 ]=item.type_aggregate[t].value;
+	          }
+	          if(item.roomID!=lastR){
+	            lastR=item.roomID;
+	            ret[dlen-2]=lastR;
+	            ret[dlen-1]="Entered "+lastR;
+	            console.log("enter room",lastR,item.timestamp);
+	          }
+
+	          if(!item.timestamp)return;
+	          if(ret[0]!=undefined)alert('index access violation');
+	          ret[0]=new Date(item.timestamp*1000);
+	          data.addRow(ret);
+	        };
+	        //data.addRows([
+	        //    [new Date(1400000000e3),1000,1000,1000, 'A','Stolen data'],
+	        //    [new Date(1401000000e3),  1170, 1170, 1170, 'B','Coffee spill'],
+	        //    [new Date(1402000000e3),  660, 660, 660, 'C','Wumpus attack'],
+	        //    [new Date(1403000000e3), 1030, 1030, 1030, null, null, ]
+	        //]);    
+
+	        var chart = new google.visualization.AreaChart(document.getElementById('chart1'));
+
+	        var options = {
+	          displayAnnotations: 1,
+	          isStacked: 1,
+	          //annotations: {'*': {style: 'line'}}
+	        };
+
+	        chart.draw(data, options);
+		  }
+
+	 $('#chart1').show();	
+	 $('#output1').hide();	
 		</script>
 
       </div>
