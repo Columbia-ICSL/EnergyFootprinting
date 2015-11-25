@@ -233,7 +233,7 @@ class DBMgr(object):
 				oldS=self.people_in_space[personID]
 				if(roomID==oldS): 
 					return;
-				if oldS!='false' 
+				if oldS!='false':
 					if self.tree_of_space[oldS]["occupants"]["type"]=="auto":
 						try:	
 							self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
