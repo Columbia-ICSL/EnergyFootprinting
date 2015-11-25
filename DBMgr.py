@@ -308,7 +308,7 @@ class DBMgr(object):
 				if roomID=='false':
 					personal_consumption[personID]={
 						"value":0,
-						"roomID":False,
+						"roomID":'unknown',
 						"all_items":{}, #may not be necessary
 						"type_aggregate":{}
 					}
