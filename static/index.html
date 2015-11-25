@@ -146,7 +146,7 @@ body {
 	            ret[ type_indices[t]+1 ]=item.type_aggregate[t].value;
 	          }
 	          if(item.roomID!=lastR){
-	            lastR=item.roomID;
+	            lastR=''+item.roomID;
 	            ret[dlen-2]=lastR;
 	            ret[dlen-1]="Entered "+lastR;
 	            console.log("enter room",lastR,item.timestamp);
@@ -163,7 +163,7 @@ body {
 	        //    [new Date(1402000000e3),  660, 660, 660, 'C','Wumpus attack'],
 	        //    [new Date(1403000000e3), 1030, 1030, 1030, null, null, ]
 	        //]);    
-
+	 		$('#chart1').show();	
 	        var chart = new google.visualization.AreaChart(document.getElementById('chart1'));
 
 	        var options = {
@@ -175,7 +175,7 @@ body {
 	        chart.draw(data, options);
 		  }
 
-	 $('#chart1').show();	
+	 $('#chart1').hide();	
 	 $('#output1').hide();	
 		</script>
 
