@@ -305,6 +305,15 @@ class DBMgr(object):
 			try:
 
 				roomID=self.people_in_space[personID]
+				if roomID=='false':
+					personal_consumption[personID]={
+						"value":0,
+						"roomID":False,
+						"all_items":{}, #may not be necessary
+						"type_aggregate":{}
+					}
+					continue;
+
 				e_value=0
 				if "_sum_consumption_including_children" in self.tree_of_space[roomID]:
 					e_value=self.tree_of_space[roomID]["_sum_consumption_including_children"] / self.tree_of_space[roomID]["occupants"]["number"]
