@@ -111,6 +111,7 @@ body {
 			    $btn.button('reset');
 			});
 		  });
+		  
 		  function render(input){
 		  	input=input.reverse();
 			function distinct_types(input){
@@ -135,13 +136,13 @@ body {
 
 	        dlen++;data.addColumn({type:'string', role:'annotation'}); // annotation role col.
 	        dlen++;data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
-	        
+	        console.log('dlen',dlen);
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
 	          var item=input[i];
 	          var ret=new Array(dlen);
-
+	          for(var j=1;j<dlen-2;j++)ret[j]=0;
 	          for(var t in item.type_aggregate){
 	            ret[ type_indices[t]+1 ]=item.type_aggregate[t].value;
 	          }
@@ -155,6 +156,7 @@ body {
 	          if(!item.timestamp)return;
 	          if(ret[0]!=undefined)alert('index access violation');
 	          ret[0]=new Date(item.timestamp*1000);
+	          //console.log('row',ret);
 	          data.addRow(ret);
 	        };
 	        //data.addRows([
