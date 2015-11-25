@@ -276,6 +276,15 @@ class DBMgr(object):
 		#"maintenance each user's value"
 		"maintanence involves too much space and other people; shouldn't do it here. moved to snapshot section"
 
+		"people change; should we update now?"
+		self.OptionalSaveShot();
+
+	def OptionalSaveShot(self):
+		"minimum interval: 10s; in lieu with regular snapshotting"
+		if self._latestSuccessShot< self._now() -10 :
+			self.SaveShot();
+
+
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
 		"1. insert the tree into snapshot_col; remove some"
@@ -384,6 +393,10 @@ class DBMgr(object):
 		"2. TODO: maintain last entrance list of all rooms; check all occupants.number==0 rooms, make the last person liable."
 		"3. possible accumulation at different tier?? like every 600 seconds?"
 
+		self._latestSuccessShot=self._now();
+
+	def _now(self):
+		return calendar.timegm(datetime.datetime.utcnow().utctimetuple())
 	def _loopSaveShot(self):
 		while True:
 			self.SaveShot()
