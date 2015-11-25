@@ -227,28 +227,33 @@ class DBMgr(object):
 			"personID":personID,
 			"raw":raw_data
 			})
-		"!!! if roomID='' means he's out of tracking scope. maybe set to CUROOT?? "
-		if not (roomID in self.tree_of_space):
-			add_log("illegitimate roomID",{
-					"p":personID,
-					"r":roomID,
-					"d":raw_data
-				})
-			return
-
+		
 		try:
 			if personID in self.people_in_space:
 				oldS=self.people_in_space[personID]
 				if(roomID==oldS): 
 					return;
-				if self.tree_of_space[oldS]["occupants"]["type"]=="auto":
-					try:	
-						self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
-						self.updateTreeOccNum(oldS)
-					except:
-						add_log("error while removing ID and updateTreeOccNum",oldS)
-						print "error while removing ID and updateTreeOccNum"+oldS
-						print self.tree_of_space[oldS]
+				if oldS!='false' 
+					if self.tree_of_space[oldS]["occupants"]["type"]=="auto":
+						try:	
+							self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
+							self.updateTreeOccNum(oldS)
+						except:
+							add_log("error while removing ID and updateTreeOccNum",oldS)
+							print "error while removing ID and updateTreeOccNum"+oldS
+							print self.tree_of_space[oldS]
+		except:
+			add_log("error while delete old spaceID. ",{
+				"personID":personID,
+				"roomID":roomID,
+				"oldS":self.people_in_space[personID]
+				})
+
+		try:
+			if not (roomID in self.tree_of_space):
+				"if no legitimate roomID, then he's out of tracking. remove from tree."
+				self.people_in_space[personID]='false'
+				return
 
 			self.people_in_space[personID]=roomID
 			if self.tree_of_space[roomID]["occupants"]["type"]=="auto": 
