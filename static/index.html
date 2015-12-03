@@ -56,50 +56,47 @@ body {
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Query Person
+          Query for single person
         </a>
       </h4>
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
-        <p class="lead">Obtain data of one certain person, during certain duration.</p>
-
-		<form onsubmit="return false;"  class="form-inline">
+		<form id="form1" onsubmit="return false;"  class="form-inline">
 		  <div class="form-group">
-		    <label for="personID">UserID</label>
-		    <input type="text" class="form-control" id="personID" placeholder="UNI">
+		    <label for="personID1">UserID</label>
+		    <input type="text" class="form-control" id="personID1" placeholder="UNI">
 		  </div>
 		  <hr/>
 		  <div class="form-group">
-		    <label for="startDate">startDate</label>
-		    <input type="datetime-local" class="form-control" id="startDate">
+		    <label for="startDate1">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate1" data-date-prefill="one-day-before">
 		  </div>
 		  <div class="form-group">
-		    <label for="endDate">endDate</label>
-		    <input type="datetime-local" class="form-control" id="endDate">
+		    <label for="endDate1">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate1" data-date-prefill="now">
 		  </div>
-		  <div class="checkbox">
+		  <!--<div class="checkbox">
 		    <label>
 		      <input type="checkbox"> Check me out
 		    </label>
-		  </div>
-		  <button type="button" id="query_personal" class="btn btn-default">Query</button>
+		  </div>-->
+		  <button type="button" id="query1" class="btn btn-default">Query</button>
 		</form>
-		<div id="chart1" style="width: 900px; height: 500px;"></div>
-		<pre id="output1"></pre>
+		<div id="chart1" class="panel-body" style="height:500px"></div>
 		<script>
- 		$('#query_personal').on('click', function () {
+ 		$('#query1').on('click', function () {
 		    var $btn = $(this).button('loading');
-		    var personID=$('#personID').val();
+		    var personID=frm1.personID1.value;
 		    if(personID.length<2){
-		    	$("#personID").parent().addClass('has-error');
+		    	$(frm1.personID1).parent().addClass('has-error');
 		    	$btn.button('reset');
 		    	return;
 		    }
 		    $("#personID").removeClass('has-error');
 		    $.get("/api/Query/QueryPerson/"+personID,{
-		    		start:getUTCSeconds($('#startDate').val()),
-		    		end:getUTCSeconds($('#endDate').val()),
+		    		start:getUTCSeconds(frm1.startDate1.value),
+		    		end:getUTCSeconds(frm1.endDate1.value),
 		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
@@ -159,56 +156,118 @@ body {
 	          //console.log('row',ret);
 	          data.addRow(ret);
 	        };
-	        //data.addRows([
-	        //    [new Date(1400000000e3),1000,1000,1000, 'A','Stolen data'],
-	        //    [new Date(1401000000e3),  1170, 1170, 1170, 'B','Coffee spill'],
-	        //    [new Date(1402000000e3),  660, 660, 660, 'C','Wumpus attack'],
-	        //    [new Date(1403000000e3), 1030, 1030, 1030, null, null, ]
-	        //]);    
-	 		$('#chart1').show();	
-	        var chart = new google.visualization.AreaChart(document.getElementById('chart1'));
 
+	        
+
+			
 	        var options = {
 	          displayAnnotations: 1,
 	          isStacked: 1,
+	          //width:800,
+	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
 	        };
-
-	        chart.draw(data, options);
+	        $(ch1).show(0,function(){
+	        	chart.draw(data, options);
+	        	$(ch1).slideToggle(0).slideToggle(1000);	
+	        });
 		  }
-
-	 $('#chart1').hide();	
-	 $('#output1').hide();	
+		  var ch1=document.getElementById('chart1');
+		  var frm1=document.getElementById('form1');
+		  var chart = new google.visualization.AreaChart(ch1);
+			$(ch1).hide();
 		</script>
 
       </div>
     </div>
   </div>
+
+  
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingTwo">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Collapsible Group Item #2
+           Location History of persons
         </a>
       </h4>
     </div>
     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        
+        <form onsubmit="return false;"  class="form-inline">
+		  <div class="form-group">
+		    <label for="personID">UserIDs</label>
+		    <input type="text" class="form-control" id="personIDs" placeholder="UNI">
+		  </div>
+		  <hr/>
+		  <div class="form-group">
+		    <label for="startDate2">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate2">
+		  </div>
+		  <div class="form-group">
+		    <label for="endDate2">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate2">
+		  </div>
+		  <!--<div class="checkbox">
+		    <label>
+		      <input type="checkbox"> Check me out
+		    </label>
+		  </div>-->
+		  <button type="button" id="query_personal" class="btn btn-default">Query</button>
+		</form>
+		<div id="chart1" class="panel-body" style="height:500px"></div>
+		<script>
+		</script>
+
       </div>
     </div>
   </div>
+
+
+  
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+           Title
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        	Content
+      </div>
+    </div>
+  </div>
+
+
+  
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+           Title
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        	Content
+      </div>
+    </div>
+  </div>
+
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Collapsible Group Item #3
+          Combined graph of all icsl members
         </a>
       </h4>
     </div>
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+       	Graph content 
       </div>
     </div>
   </div>
@@ -225,9 +284,12 @@ Date.prototype.toInputValue = (function() {
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
     return local.toJSON().slice(0,16);
 });
-var oneDayBefore=new Date();oneDayBefore.setSeconds(oneDayBefore.getSeconds()-86400);
-document.getElementById('startDate').value = oneDayBefore.toInputValue();
-document.getElementById('endDate').value = new Date().toInputValue();
+var oneDayBefore=new Date();oneDayBefore.setSeconds((new Date()).getSeconds()-86400);
+//document.getElementById('startDate1').value = oneDayBefore.toInputValue();
+//document.getElementById('endDate1').value = new Date().toInputValue();
+$("[data-date-prefill=now]").val(new Date().toInputValue());
+$("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
+
 function getUTCSeconds(LocalDateStr){
 	var utcDate=new Date(LocalDateStr);
 	utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
