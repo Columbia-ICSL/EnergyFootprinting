@@ -485,6 +485,16 @@ class DBMgr(object):
 
 		iterator = self.personal_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
+			for personID in shot["data"]:
+				#purge data
+				try:
+					shot["data"][personID]={
+						"value":shot["data"][personID]["value"],
+						"roomID":shot["data"][personID]["roomID"]
+					}
+				except:
+					print "??"
+					print shot[personID]
 			result+=[shot]
 		
 		return self._encode(result,True)
