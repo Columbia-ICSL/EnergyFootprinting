@@ -127,6 +127,9 @@ class DBMgr(object):
 			if "roomID" in latest_snapshot[personID]:
 				self.people_in_space[personID]=latest_snapshot[personID]["roomID"]
 
+		"try initialize _sum_consumption_including_children, to avoid empty entries"
+		for roomID in self.tree_of_space:
+			self.updateTreeTotalCon(roomID)
 
 		t=Thread(target=self._loopSaveShot,args=())
 		t.setDaemon(True)
