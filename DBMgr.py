@@ -442,7 +442,7 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		projection = {"data."+room:1,"timestamp":1}
+		projection = {"data."+room:1,"timestamp":1,"_id":0}
 		iterator = self.tree_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if room in shot['data']:
@@ -460,13 +460,63 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		projection = {"data."+person:1,"timestamp":1}
+		projection = {"data."+person:1,"timestamp":1,"_id":0}
 		iterator = self.personal_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if person in shot["data"]:
 				item=shot["data"][person]
 				item["timestamp"]=shot["timestamp"]
 				result+=[item]
+		
+		return self._encode(result,True)
+
+
+	def QueryPersonMulti(self,people,start,end):
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"timestamp":1,"_id":0}
+		for person in people:
+			projection["data."+person]=1
+
+		iterator = self.personal_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			result+=[shot]
+		
+		return self._encode(result,True)
+
+	def QueryEvents(self,person,start,end):
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			},
+			"personID":person
+		}
+		projection = {"_id":0}
+		iterator = self.events_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for item in iterator:
+			result+=[item]
+		
+		return self._encode(result,True)
+
+	def QueryAllEvents(self,start,end):
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"_id":0}
+		iterator = self.events_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for item in iterator:
+			result+=[item]
 		
 		return self._encode(result,True)
 
