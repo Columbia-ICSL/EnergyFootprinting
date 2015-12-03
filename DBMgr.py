@@ -79,6 +79,7 @@ class DBMgr(object):
 
 		self.events_col=self.dbc.db.events_col
 		#person ID events, like location change
+		self._latestSuccessShot=0
 
 		self.UpdateConfigs()
 
@@ -123,7 +124,8 @@ class DBMgr(object):
 		latest_snapshot=self.personal_snapshot_col.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
 		latest_snapshot=latest_snapshot["data"]
 		for personID in latest_snapshot:
-			self.people_in_space[personID]=latest_snapshot[personID]
+			if "roomID" in latest_snapshot[personID]:
+				self.people_in_space[personID]=latest_snapshot[personID]["roomID"]
 
 
 		t=Thread(target=self._loopSaveShot,args=())
