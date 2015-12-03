@@ -58,19 +58,31 @@ class DBMgr(object):
 	def UpdateConfigs(self):
 		self.ROOM_DEFINITION=self._GetConfigValue("ROOM_DEFINITION")
 		self.ENERGYDEVICE_DEFINITION=self._GetConfigValue("ENERGYDEVICE_DEFINITION")
-	
+		self.save_interval=60 #every minute
+		"!!! should read database to get 60..."
+
 	def _encode(self,data,isPretty):
 		return MongoJsonEncoder().encode(data)
 	def __init__(self):
 		self.name="DB Manager"
 		self.dbc=pymongo.MongoClient()
 		self.config_col=self.dbc.db.config
-		self.UpdateConfigs()
-		self.save_interval=60 #every minute
+		#metadata col
 
-		self.people_in_space={}; "!!! should read snapshot"
-		self.tree_of_space={}; "!!! should also read shapshot to get latest energy values?"
-		#transpose array
+		self.raw_data=self.dbc.db.raw_data
+		#any raw data document.
+
+		self.tree_snapshot_col=self.dbc.db.tree_snapshot_col
+		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
+		#snapshot every x seconds, for the tree
+
+
+		self.events_col=self.dbc.db.events_col
+		#person ID events, like location change
+
+		self.UpdateConfigs()
+
+		self.tree_of_space={}; #transpose array
 		for room in self.ROOM_DEFINITION:
 			self.tree_of_space[room["id"]]=room
 			if not ("consumption"  in self.tree_of_space[room["id"]]):
@@ -88,17 +100,31 @@ class DBMgr(object):
 			for c in room["children"]:
 					self.tree_of_space[c]["father"]=room["id"]
 
+		"!!! should read shapshot to get latest energy values?"
+		latest_snapshot=self.tree_snapshot_col.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
+		latest_snapshot=latest_snapshot["data"]
+		for roomID in latest_snapshot:
+			if self.tree_of_space[roomID]["consumption"]=={}:
+				self.tree_of_space[roomID]["consumption"]=latest_snapshot[roomID]["consumption"]
+				try:
+					self.tree_of_space[roomID]["_sum_consumption"]=latest_snapshot[roomID]["_sum_consumption"]
+					self.tree_of_space[roomID]["_sum_consumption_including_children"]=latest_snapshot[roomID]["_sum_consumption_including_children"]
+				except:
+					add_log("warning: initialize error when copying old snapshot room consumption",roomID)
+			if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
+				try:
+					self.tree_of_space[roomID]["occupants"]["ids"]=latest_snapshot[roomID]["occupants"]["ids"]
+					self.tree_of_space[roomID]["occupants"]["number"]=latest_snapshot[roomID]["occupants"]["number"]
+				except:
+					add_log("warning: initialize error when copying old snapshot ids and #",roomID)
+		
+		self.people_in_space={}; "!!! should read snapshot"
+		
+		latest_snapshot=self.personal_snapshot_col.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
+		latest_snapshot=latest_snapshot["data"]
+		for personID in latest_snapshot:
+			self.people_in_space[personID]=latest_snapshot[personID]
 
-		self.raw_data=self.dbc.db.raw_data
-		#any raw data document.
-
-		self.tree_snapshot_col=self.dbc.db.tree_snapshot_col
-		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
-		#snapshot every x seconds, for the tree
-
-
-		self.events_col=self.dbc.db.events_col
-		#person ID events, like location change
 
 		t=Thread(target=self._loopSaveShot,args=())
 		t.setDaemon(True)
