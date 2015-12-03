@@ -7,8 +7,8 @@ import cloudserver
 urls = (
     "/QueryRoom/(.+?)","QueryRoom", #room ID + time range
     "/QueryPerson/(.+?)","QueryPerson", #person ID +
-    "/QueryPersonMulti/(.+?)","QueryPersonMulti", #person ID +
-    "/QueryEvents/(.+?)","QueryEvents", #person ID +
+    "/QueryPersonMulti/(.+)","QueryPersonMulti", #person ID +
+    "/QueryEvents/(.*)","QueryEvents", #person ID +
 
 )
 
