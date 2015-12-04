@@ -21,6 +21,7 @@ urls = (
     "/api/Query",Query.query, #room ID + time range
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
+    "/api/Realtime/(.*)",Realtime,
     "/debug","Debug",
     "/recent","Recent",
     "/","index"
@@ -44,6 +45,9 @@ class Debug:
 class Recent:
     def GET(self):
         return DBMgr.dump_recent_raw_submission()
+class Realtime:
+    def GET(self,person):
+        return DBMgr.ShowRealtime(person)
 
 class index:
     def GET(self):
