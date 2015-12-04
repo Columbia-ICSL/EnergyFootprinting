@@ -433,6 +433,17 @@ class DBMgr(object):
 			self.SaveShot()
 			time.sleep(self.save_interval)
 
+	def ShowRealtime(self, person=None):
+		#save into database, with: timestamp, additional data
+		ret={
+			"tree":self.tree_of_space,
+			"timestamp":self._now()
+		}
+		if person:
+			ret["roomID"]=self.people_in_space[person]
+		else:
+			ret["people_locations"]=self.people_in_space
+		return self._encode(ret,False)
 
 	def QueryRoom(self,room,start,end):
 		result=[]
