@@ -22,6 +22,7 @@ urls = (
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
     "/realtime/(.*)","Realtime",
+    "/realtime","Realtime",
     "/debug","Debug",
     "/recent","Recent",
     "/","index"
@@ -46,7 +47,7 @@ class Recent:
     def GET(self):
         return DBMgr.dump_recent_raw_submission()
 class Realtime:
-    def GET(self,person):
+    def GET(self,person=None):
         return db.ShowRealtime(person)
 
 class index:
