@@ -439,7 +439,7 @@ class DBMgr(object):
 			"tree":self.tree_of_space,
 			"timestamp":self._now()
 		}
-		if person:
+		if person and person in self.people_in_space:
 			ret["roomID"]=self.people_in_space[person]
 		else:
 			ret["people_locations"]=self.people_in_space
