@@ -314,11 +314,8 @@ class DBMgr(object):
 		"minimum interval: 10s; in lieu with regular snapshotting"
 		if self._latestSuccessShot< self._now() -10 :
 			self.SaveShot();
-
-
-	def SaveShot(self, any_additional_data=None):
-		#save into database, with: timestamp, additional data
-		"1. insert the tree into snapshot_col; remove some"
+			
+	def _getShotTree(self):
 		concise_tree=copy.deepcopy(self.tree_of_space)
 		for id in concise_tree:
 			for key in ["name","children","father","id"]:
@@ -331,14 +328,9 @@ class DBMgr(object):
 					"value":concise_tree[id]["consumption"][cid]["value"]
 				}
 				concise_tree[id]["consumption"][cid]=concise_cons
-		self.tree_snapshot_col.insert({
-			"timestamp":datetime.datetime.utcnow(),
-			"data":concise_tree
-			})
-		#snapshot every x seconds, for the tree
+		return concise_tree
 
-		"2. record the people's consumption too"
-
+	def _getShotPersonal(self):
 		personal_consumption={}
 		#for space_id in self.tree_of_space:
 		for personID in self.people_in_space:
@@ -410,6 +402,20 @@ class DBMgr(object):
 				}
 			except:
 				add_log("fail to trace person's consumption; id:",personID)
+		return personal_consumption
+
+	def SaveShot(self, any_additional_data=None):
+		#save into database, with: timestamp, additional data
+		"1. insert the tree into snapshot_col; remove some"
+		concise_tree=self._getShotTree()
+		self.tree_snapshot_col.insert({
+			"timestamp":datetime.datetime.utcnow(),
+			"data":concise_tree
+			})
+		#snapshot every x seconds, for the tree
+
+		"2. record the people's consumption too"
+		personal_consumption=self._getShotPersonal()
 			
 		self.personal_snapshot_col.insert({
 			"timestamp":datetime.datetime.utcnow(),
