@@ -314,7 +314,7 @@ class DBMgr(object):
 		"minimum interval: 10s; in lieu with regular snapshotting"
 		if self._latestSuccessShot< self._now() -10 :
 			self.SaveShot();
-			
+
 	def _getShotTree(self):
 		concise_tree=copy.deepcopy(self.tree_of_space)
 		for id in concise_tree:
@@ -442,13 +442,14 @@ class DBMgr(object):
 	def ShowRealtime(self, person=None):
 		#save into database, with: timestamp, additional data
 		ret={
-			"tree":self.tree_of_space,
 			"timestamp":self._now()
 		}
 		if person and person in self.people_in_space:
-			ret["roomID"]=self.people_in_space[person]
+			d=self._getShotPersonal()
+			ret["personal"]=d[person]
 		else:
-			ret["people_locations"]=self.people_in_space
+			ret["tree"]=self._getShotTree()
+			ret["locations"]=self.people_in_space
 		return self._encode(ret,False)
 
 	def QueryRoom(self,room,start,end):
