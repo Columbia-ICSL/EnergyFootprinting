@@ -1,0 +1,149 @@
+<!doctype>
+<html>
+<head>
+<title> The Energy Footprint System query interface </title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript">
+/*function requestData() {
+    $.ajax({
+        url: 'live-server-data.php',
+        success: function(point) {
+            var series = chart.series[0],
+                shift = series.data.length > 20; // shift if the series is 
+                                                 // longer than 20
+
+            // add the point
+            chart.series[0].addPoint(point, true, shift);
+            
+            // call it again after one second
+            setTimeout(requestData, 1000);    
+        },
+        cache: false
+    });
+}*/
+
+var chart;
+var personID;
+
+var types=[];
+var maxLen=(20*60/10);//20mins, every 10s
+var reqTime=10*1000;
+function requestData(){
+  $.ajax({
+        url: '/realtime/'+personID,
+        success: render,
+        dataType:"json",
+        cache: false
+  });
+  function render(input){
+    console.log("input",d=input);
+    var ts=input.timestamp*1000;
+    for(var t in input.personal.type_aggregate){
+      console.log(t,input.personal.type_aggregate[t]);
+      if(types.indexOf(t)<0){
+        types.push(t);
+        chart.addSeries({name:t});
+      }
+      var idx=types.indexOf(t);
+      var val=input.personal.type_aggregate[t].value;
+      var doshift=chart.series[idx].length > maxLen;
+      chart.series[idx].addPoint([ts,val],true, doshift);
+    }
+    setTimeout(requestData,reqTime);
+  }
+}
+
+$(function(){
+    $("form button").click(function() {
+        personID=$("#personID").val();
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                defaultSeriesType: 'spline',
+                events: {
+                    load: requestData
+                }
+            },
+            title: {
+                text: 'Live data'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150,
+                maxZoom: 20 * 1000
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Value',
+                    margin: 80
+                }
+            },
+            series: []
+        });        
+    });
+});
+</script>
+
+<style>
+body {
+  padding-top: 50px;
+  position: relative;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+        .box {border:1px solid grey;background-color:#d3d3d3;}
+        .large {font-size:3000%;color:red;}
+        #div1 {background-color:blue;}
+        #div2 {background-color:red;}
+        #div3 {background-color:green;}
+        .contentDiv {height:800px;}
+
+</style>
+</head>
+<body >
+   <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header"> <a href="" class="navbar-brand">My Website</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Index</a></li>
+                    <li><a href="person.html">Personal Query</a></li>
+                    <li><a href="space.html">Spatial Query</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="container">
+      <div class="starter-template">
+        <h1>Realtime Personal Footprint</h1>
+          <div id="container" style="height: 440px;" class="panel-body">
+            <form id="form1" onsubmit="return false;"  class="form-inline">
+              <label for="personID">UserID</label>
+              <input type="text" class="form-control" id="personID" placeholder="fengyi" value="fengyi">
+              <button type="button" class="btn btn-default">Start</button>
+            </form>
+        </div>
+
+</div>
+</div>
+</body>
+</html>
+
