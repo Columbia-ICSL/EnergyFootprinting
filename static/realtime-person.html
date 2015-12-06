@@ -5,29 +5,8 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script type="text/javascript">
-/*function requestData() {
-    $.ajax({
-        url: 'live-server-data.php',
-        success: function(point) {
-            var series = chart.series[0],
-                shift = series.data.length > 20; // shift if the series is 
-                                                 // longer than 20
-
-            // add the point
-            chart.series[0].addPoint(point, true, shift);
-            
-            // call it again after one second
-            setTimeout(requestData, 1000);    
-        },
-        cache: false
-    });
-}*/
-
 var chart;
 var personID;
 
@@ -43,6 +22,10 @@ function requestData(){
   });
   function render(input){
     console.log("input",d=input);
+    if(!input.personal || typeof input.personal.type_aggregate == 'undefined'){
+      $('#myModal').modal({backdrop:'static', keyboard:0})
+      return;
+    }
     var ts=input.timestamp*1000;
     for(var t in input.personal.type_aggregate){
       console.log(t,input.personal.type_aggregate[t]);
@@ -139,6 +122,25 @@ body {
         </div>
     </div>
     <hr>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Person ID data not found</h4>
+          </div>
+          <div class="modal-body">
+            <p class="lead">
+            The ID you provided seems to have no data reported&hellip;</p>
+            <p>This may either because there's a typo, or because the latest data haven't arrived into the database or the person haven't entered monitored area. Please first check the database data stream and then refresh this page.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="location.reload()">Refresh</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <div class="container">
       <div class="starter-template">
