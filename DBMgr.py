@@ -8,6 +8,7 @@ import json
 import pprint
 import copy
 from threading import Thread
+import sys
 
 
 class MongoJsonEncoder(json.JSONEncoder):
@@ -112,12 +113,12 @@ class DBMgr(object):
 					self.tree_of_space[roomID]["_sum_consumption_including_children"]=latest_snapshot[roomID]["_sum_consumption_including_children"]
 				except:
 					add_log("warning: initialize error when copying old snapshot room consumption",roomID)
-			if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
-				try:
-					self.tree_of_space[roomID]["occupants"]["ids"]=latest_snapshot[roomID]["occupants"]["ids"]
-					self.tree_of_space[roomID]["occupants"]["number"]=latest_snapshot[roomID]["occupants"]["number"]
-				except:
-					add_log("warning: initialize error when copying old snapshot ids and #",roomID)
+			#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
+			#	try:
+			#		self.tree_of_space[roomID]["occupants"]["ids"]=latest_snapshot[roomID]["occupants"]["ids"]
+			#		self.tree_of_space[roomID]["occupants"]["number"]=latest_snapshot[roomID]["occupants"]["number"]
+			#	except:
+			#		add_log("warning: initialize error when copying old snapshot ids and #",roomID)
 		
 		self.people_in_space={}; "!!! should read snapshot"
 		
@@ -125,7 +126,13 @@ class DBMgr(object):
 		latest_snapshot=latest_snapshot["data"]
 		for personID in latest_snapshot:
 			if "roomID" in latest_snapshot[personID]:
-				self.people_in_space[personID]=latest_snapshot[personID]["roomID"]
+				roomID=latest_snapshot[personID]["roomID"]
+				#self.people_in_space[personID]=roomID #conflict to automatic assignment
+				print "recovery person in room:"+personID+";"+roomID
+				self.ReportLocationAssociation(personID,roomID,{"type":"recovery","rawSnap":latest_snapshot})
+				#if self.tree_of_space[roomID]["occupants"]["type"] == 'auto':
+				#	self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
+					#self.tree_of_space[roomID]["occupants"]["number"]=len(...) #updateTreeOCcNum does that
 
 		"try initialize _sum_consumption_including_children, to avoid empty entries"
 		for roomID in self.tree_of_space:
@@ -436,8 +443,8 @@ class DBMgr(object):
 		return calendar.timegm(datetime.datetime.utcnow().utctimetuple())
 	def _loopSaveShot(self):
 		while True:
-			self.SaveShot()
 			time.sleep(self.save_interval)
+			self.SaveShot()
 
 	def ShowRealtime(self, person=None):
 		#save into database, with: timestamp, additional data
