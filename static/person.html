@@ -8,6 +8,7 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
  <script> google.load("visualization", "1", {packages:["corechart","timeline"]});</script>
+ <script src="http://code.highcharts.com/highcharts.js"></script>
 <style>
 body {
   padding-top: 50px;
@@ -439,13 +440,149 @@ body {
     <div class="panel-heading" role="tab" id="headingFour">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-          Realtime personal consumption
+          Comparison Between Person
         </a>
       </h4>
     </div>
     <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
       <div class="panel-body">
-       	
+       	 <form id="form4" onsubmit="return false;"  class="form-inline">
+		  <div class="form-group">
+		    <label for="personID4">UserIDs, comma separated</label>
+		    <input type="text" class="form-control" id="personID4" placeholder="UNI" value="xc2340,fengyi">
+		  </div>
+		  <hr/>
+		  <div class="form-group">
+		    <label for="startDate4">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate4"  data-date-prefill="midnight-before">
+		  </div>
+		  <div class="form-group">
+		    <label for="endDate4">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate4"  data-date-prefill="now">
+		  </div>
+		  <button type="button" class="btn btn-default">Query</button>
+		</form>		
+		<div id="chart4" class="panel-body" style="height:500px;display:none;"></div>
+		<script>
+		var ch4=document.getElementById('chart4');
+		var frm4=document.getElementById('form4');
+		var people;
+ 		$(frm4).children('button').on('click', function () {
+		    var $btn = $(this).button('loading');
+		    var personIDs=frm4.personID4.value;
+		    people=personIDs.split(",");
+		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    		start:getUTCSeconds(frm4.startDate4.value),
+		    		end:getUTCSeconds(frm4.endDate4.value),
+		    		client:"AJAX debug frontend"
+	    		},
+		    	function(data,status){
+		    	console.log(data,status);
+		    	$btn.button('reset');
+		    	render4(data,people);
+		    },'json').fail(function() {
+			    alert('Error!'); // or whatever			    
+			    $btn.button('reset');
+			});
+		  });
+ 		
+
+ 		function render4(input, people){
+ 			d=input;
+ 			var
+ 				totalCon={}, roomCon={};
+ 			people.forEach(function(p){
+ 				totalCon[p]=0;roomCon[p]={};
+ 			});
+ 			for(var i=0;i<input.length;i++)
+ 				try{
+ 					var tdiff=60;
+ 					if(input[i+1] && input[i+1].timestap) tdiff=input[i+1].timestamp-input[i].timestamp;
+ 					var item=input[i].data;
+ 					people.forEach(function(p){
+ 						if(item[p]){
+ 							var thisV=item[p].value*tdiff;//unit: W * s
+ 							thisV=thisV/1000/3600;//unit: kW * h
+ 							totalCon[p]+=thisV;
+ 							var r=item[p].roomID;
+ 							roomCon[p][r] = roomCon[p][r] || 0;
+ 							roomCon[p][r]+=thisV;
+ 						}
+ 					});
+ 				}
+ 				catch(e){
+ 					console.log("error parsing input at",i,input[i]);
+	 			}
+
+ 			var formattedTotalCon=[], formattedRoomCon=[];
+ 			var colors = Highcharts.getOptions().colors;
+ 			people.forEach(function(p,i){
+ 				formattedTotalCon.push({
+		            name: p,
+		            y: totalCon[p],
+		            color: colors[i]
+		        });
+		        var j=0;
+		        for(var r in roomCon[p]){
+		        	j++;
+		        	formattedRoomCon.push({
+		            	name: p + " at " +r,
+		            	y: roomCon[p][r],
+		            	color: colors[i],
+		            	brightness: j%2?0.2:0
+		        	});
+		        }
+		        
+ 			});
+
+			$('#chart4').show().highcharts({
+		        chart: {
+		            type: 'pie'
+		        },
+		        title: {
+		            text: 'Drilldown of footprint by person ~ room'
+		        },
+		        yAxis: {
+		            title: {
+		                text: 'Total percent market share'
+		            }
+		        },
+		        plotOptions: {
+		            pie: {
+		                shadow: false,
+		                center: ['50%', '50%']
+		            }
+		        },
+		        tooltip: {
+		            valueSuffix: 'kWh'
+		        },
+		        series: [{
+		            name: 'Consumption',
+		            data: formattedTotalCon,
+		            size: '60%',
+		            dataLabels: {
+		                formatter: function () {
+		                    // display only if larger than 1
+		                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
+		                },
+		              distance:-50
+		            }
+		        }, {
+		            name: 'Consumption by room',
+		            data: formattedRoomCon,
+		            size: '80%',
+		            innerSize: '60%',
+		            dataLabels: {
+		                formatter: function () {
+		                    // display only if larger than 1
+		                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
+		                }
+		            }
+		        }]
+		    });
+ 		}
+
+		</script>
       </div>
     </div>
   </div>
@@ -463,9 +600,15 @@ Date.prototype.toInputValue = (function() {
     return local.toJSON().slice(0,16);
 });
 var oneDayBefore=new Date();oneDayBefore.setSeconds((new Date()).getSeconds()-86400);
+var midnightBefore=new Date();
+midnightBefore.setSeconds(0);
+midnightBefore.setHours(0);
+midnightBefore.setMinutes(0);
+midnightBefore.toInputValue();
 //document.getElementById('startDate1').value = oneDayBefore.toInputValue();
 //document.getElementById('endDate1').value = new Date().toInputValue();
 $("[data-date-prefill=now]").val(new Date().toInputValue());
+$("[data-date-prefill=midnight-before]").val(midnightBefore.toInputValue());
 $("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
 
 function getUTCSeconds(LocalDateStr){
