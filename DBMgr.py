@@ -291,6 +291,7 @@ class DBMgr(object):
 			if not (roomID in self.tree_of_space):
 				"if no legitimate roomID, then he's out of tracking. remove from tree."
 				self.people_in_space[personID]='false'
+				self.recordEvent(personID,"locationChange",False)
 				return
 
 			self.people_in_space[personID]=roomID
