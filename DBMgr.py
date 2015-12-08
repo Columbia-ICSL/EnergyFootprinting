@@ -273,7 +273,7 @@ class DBMgr(object):
 					return;
 				if oldS!='false':
 					if self.tree_of_space[oldS]["occupants"]["type"]=="auto":
-						try:	
+						try:
 							self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
 							self.updateTreeOccNum(oldS)
 						except:
@@ -296,7 +296,8 @@ class DBMgr(object):
 			self.people_in_space[personID]=roomID
 			if self.tree_of_space[roomID]["occupants"]["type"]=="auto": 
 				try:	
-					self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
+					if personID not in self.tree_of_space[roomID]["occupants"]["ids"]:
+						self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
 					self.updateTreeOccNum(roomID)
 				except:
 					add_log("error while adding ID and updateTreeOccNum",roomID)
