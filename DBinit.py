@@ -31,9 +31,9 @@ class DBInit(object):
                 "type":"HVAC",
                 "note":"heating artificial data"
             },
-            "ELEC":{
+            "LIGHT":{
                 "value":100000,
-                "type":"Electrical",
+                "type":"Lighting",
                 "note":"street light artificial data"
             }
         }
@@ -52,9 +52,9 @@ class DBInit(object):
                 "type":"HVAC",
                 "note":"artificial data"
             },
-            "ELEC":{
+            "LIGHT":{
                 "value":3000,
-                "type":"Electrical",
+                "type":"Lighting",
                 "note":"artificial data"
             }
         }
@@ -232,6 +232,13 @@ class DBInit(object):
                 "seq":2,
                 "manufacturer":"AEOTEC by AEON LABS",
                 "channel":"SmartThings Hub 2.0"
+            },
+            "nwc1003b_proton_light":{
+                "type":"Lighting",
+                "room":"nwc1003b",
+                "seq":1,
+                "manufacturer":"Particle Proton",
+                "channel":"Particle With TSL2561 Lux Sensor"
             }
 		}
 		self._SetConfigValue("ENERGYDEVICE_DEFINITION",self.ENERGYDEVICE_DEFINITION)
