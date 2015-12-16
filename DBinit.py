@@ -130,6 +130,7 @@ class DBInit(object):
         "id": "nwc10",
         "children": [
             "nwc1000",
+            "nwc1007",
             "nwc1008",
             "nwc1003b"
         ],
@@ -142,6 +143,16 @@ class DBInit(object):
     {
         "name": "Columbia University/Northwest Corner Building/Floor 10",
         "id": "nwc8m",
+        "children": [],
+        "occupants": {
+            "number": 0,
+            "type": "auto",
+            "ids": []
+        }
+    },
+    {
+        "name": "Columbia University/Northwest Corner Building/Floor 10/Room 1007",
+        "id": "nwc1007",
         "children": [],
         "occupants": {
             "number": 0,
@@ -233,12 +244,33 @@ class DBInit(object):
                 "manufacturer":"AEOTEC by AEON LABS",
                 "channel":"SmartThings Hub 2.0"
             },
-            "nwc1003b_proton_light":{
+            "nwc1003b_photon_light":{
                 "type":"Lighting",
                 "room":"nwc1003b",
                 "seq":1,
-                "manufacturer":"Particle Proton",
+                "manufacturer":"Particle Photon",
                 "channel":"Particle With TSL2561 Lux Sensor"
+            },
+            "nwc1007_photon_light":{
+                "type":"Lighting",
+                "room":"nwc1007",
+                "seq":1,
+                "manufacturer":"Particle Photon",
+                "channel":"Particle With TSL2561 Lux Sensor"
+            },
+            "nwc1007_plug1":{
+                "type":"Electrical",
+                "room":"nwc1007",
+                "seq":1,
+                "manufacturer":"AEOTEC by AEON LABS",
+                "channel":"SmartThings Hub 2.0"
+            },
+            "nwc1007_plug2":{
+                "type":"Electrical",
+                "room":"nwc1007",
+                "seq":1,
+                "manufacturer":"AEOTEC by AEON LABS",
+                "channel":"SmartThings Hub 2.0"
             }
 		}
 		self._SetConfigValue("ENERGYDEVICE_DEFINITION",self.ENERGYDEVICE_DEFINITION)
