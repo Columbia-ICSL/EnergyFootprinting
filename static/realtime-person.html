@@ -5,7 +5,8 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
+<!--<script src="http://code.highcharts.com/highcharts.js"></script> -->
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
 <script type="text/javascript">
 var chart;
 var personID;
@@ -27,17 +28,32 @@ function requestData(){
       return;
     }
     var ts=input.timestamp*1000;
+
+    //TODO: add flags to mark location change
+
     for(var t in input.personal.type_aggregate){
       console.log(t,input.personal.type_aggregate[t]);
       if(types.indexOf(t)<0){
         types.push(t);
         chart.addSeries({name:t});
       }
+    }
+    var visited={};
+    for(var t in input.personal.type_aggregate){
       var idx=types.indexOf(t);
       var val=input.personal.type_aggregate[t].value;
       var doshift=chart.series[idx].length > maxLen;
       chart.series[idx].addPoint([ts,val],true, doshift);
+      visited[t]=true;
     }
+    console.log('visited',visited);
+    for(var idx=0;idx<types.length;idx++){
+      var t=types[idx];
+      if(!visited[t]){
+        chart.series[idx].addPoint([ts,0],true, true);
+      }
+    }
+
     setTimeout(requestData,reqTime);
   }
 }
@@ -54,7 +70,7 @@ $(function(){
                 }
             },
             title: {
-                text: 'Live data'
+                text: 'Live energy footprint of '+personID
             },
             xAxis: {
                 type: 'datetime',
