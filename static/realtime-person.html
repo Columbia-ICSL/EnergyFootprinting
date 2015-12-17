@@ -11,9 +11,11 @@
 var chart;
 var personID;
 
-var types=[];
 var maxLen=(20*60/10);//20mins, every 10s
 var reqTime=3*1000;
+var types=[false];
+var LastRoom=false;
+//the first series is location history, not consumption!
 function requestData(){
   $.ajax({
         url: '/realtime/'+personID,
@@ -28,8 +30,14 @@ function requestData(){
       return;
     }
     var ts=input.timestamp*1000;
-
-    //TODO: add flags to mark location change
+    if(input.personal.roomID != LastRoom){
+      LastRoom=input.personal.roomID;
+      chart.series[0].addPoint({
+          title:LastRoom,
+          text:personID+' entered '+LastRoom,
+          x:ts
+        },true,true);
+    }
 
     for(var t in input.personal.type_aggregate){
       console.log(t,input.personal.type_aggregate[t]);
@@ -47,7 +55,7 @@ function requestData(){
       visited[t]=true;
     }
     console.log('visited',visited);
-    for(var idx=0;idx<types.length;idx++){
+    for(var idx=1;idx<types.length;idx++){
       var t=types[idx];
       if(!visited[t]){
         chart.series[idx].addPoint([ts,0],true, true);
@@ -85,7 +93,11 @@ $(function(){
                     margin: 80
                 }
             },
-            series: []
+            series: [{
+              type:'flags',
+              onSeries:'',
+              name:'Location History'
+            }]//series of energy cons will be dynamically added
         });        
     });
 });
