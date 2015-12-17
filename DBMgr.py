@@ -107,7 +107,9 @@ class DBMgr(object):
 		latest_snapshot=latest_snapshot["data"]
 		for roomID in latest_snapshot:
 			if self.tree_of_space[roomID]["consumption"]=={}:
-				self.tree_of_space[roomID]["consumption"]=latest_snapshot[roomID]["consumption"]
+				for deviceID in latest_snapshot[roomID]["consumption"]:
+					if deviceID in self.ENERGYDEVICE_DEFINITION:
+						self.tree_of_space[roomID]["consumption"][deviceID]=latest_snapshot[roomID]["consumption"][deviceID]
 				try:
 					self.tree_of_space[roomID]["_sum_consumption"]=latest_snapshot[roomID]["_sum_consumption"]
 					self.tree_of_space[roomID]["_sum_consumption_including_children"]=latest_snapshot[roomID]["_sum_consumption_including_children"]
