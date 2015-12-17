@@ -13,7 +13,7 @@ var roomID;
 
 var types=[];
 var maxLen=(20*60/10);//20mins, every 10s
-var reqTime=10*1000;
+var reqTime=3*1000; //TODO: add slider for update freq
 function requestData(){
   $.ajax({
         url: '/realtime/',
