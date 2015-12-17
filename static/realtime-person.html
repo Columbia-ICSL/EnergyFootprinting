@@ -34,9 +34,9 @@ function requestData(){
       LastRoom=input.personal.roomID;
       chart.series[0].addPoint({
           title:LastRoom,
-          text:personID+' entered '+LastRoom,
+          text:'<i>'+personID+'</i>'+' entered '+'<i>'+LastRoom+'</i>',
           x:ts
-        },true,true);
+      },true,false);
     }
 
     for(var t in input.personal.type_aggregate){
@@ -78,7 +78,7 @@ $(function(){
                 }
             },
             title: {
-                text: 'Live energy footprint of '+personID
+                text: 'Live energy footprint of <i>'+personID+'</i>'
             },
             xAxis: {
                 type: 'datetime',
