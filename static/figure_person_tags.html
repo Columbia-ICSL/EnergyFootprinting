@@ -1,0 +1,38 @@
+<!doctype>
+<html>
+<head>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+<div id="wordtree" style="width: 900px; height: 500px;"></div>
+<script>
+google.charts.load('current', {packages:['wordtree']});
+      google.charts.setOnLoadCallback(drawSimpleNodeChart);
+      function drawSimpleNodeChart() {
+        var nodeListData = new google.visualization.arrayToDataTable([
+          ['id', 'childLabel', 'parent', 'size', { role: 'style' }],
+          [0, 'Columbia U', -1, 1, 'black'],
+          [1, 'Dept. EE', 0, 1, 'black'],
+          [9, 'Dept. CS', 0, 1, 'black'],
+          [2, 'ICSL Lab', 1, 5, 'black'],
+          [3, 'Prof. James', 1, 1, 'rgb(127,0,0)'],
+          [4, 'Prof. Fred', 2, 1, 'rgb(127,0,0)'],
+          [5, 'Danny', 2, 1, 'rgb(0,0,127)'],
+          [6, 'Fengyi', 2, 1, 'rgb(0,0,127)']
+          //[31, 'Vetulicolia', 24, 1, 'black']
+          ]);
+
+        var options = {
+          colors: ['black', 'black', 'black'],
+          wordtree: {
+            format: 'explicit',
+            type: 'suffix'
+          }
+        };
+
+        var wordtree = new google.visualization.WordTree(document.getElementById('wordtree'));
+        wordtree.draw(nodeListData, options);
+      }
+</script>
+</body>
+</html>
