@@ -326,19 +326,20 @@ class DBMgr(object):
 		if self._latestSuccessShot< self._now() -10 :
 			self.SaveShot();
 
-	def _getShotTree(self):
+	def _getShotTree(self, concise=True):
 		concise_tree=copy.deepcopy(self.tree_of_space)
-		for id in concise_tree:
-			for key in ["name","children","father","id"]:
-				if key in concise_tree[id]:
-					del concise_tree[id][key]
-		for id in concise_tree:
-			for cid in concise_tree[id]["consumption"]:
-				concise_cons={
-					"type":concise_tree[id]["consumption"][cid]["type"],
-					"value":concise_tree[id]["consumption"][cid]["value"]
-				}
-				concise_tree[id]["consumption"][cid]=concise_cons
+		if concise:
+			for id in concise_tree:
+				for key in ["name","children","father","id"]:
+					if key in concise_tree[id]:
+						del concise_tree[id][key]
+			for id in concise_tree:
+				for cid in concise_tree[id]["consumption"]:
+					concise_cons={
+						"type":concise_tree[id]["consumption"][cid]["type"],
+						"value":concise_tree[id]["consumption"][cid]["value"]
+					}
+					concise_tree[id]["consumption"][cid]=concise_cons
 		return concise_tree
 
 	def _getShotPersonal(self):
@@ -450,7 +451,7 @@ class DBMgr(object):
 			time.sleep(self.save_interval)
 			self.SaveShot()
 
-	def ShowRealtime(self, person=None):
+	def ShowRealtime(self, person=None, concise=True):
 		#save into database, with: timestamp, additional data
 		ret={
 			"timestamp":self._now()
@@ -459,7 +460,7 @@ class DBMgr(object):
 			d=self._getShotPersonal()
 			ret["personal"]=d[person]
 		else:
-			ret["tree"]=self._getShotTree()
+			ret["tree"]=self._getShotTree(concise)
 			ret["locations"]=self.people_in_space
 		return self._encode(ret,False)
 

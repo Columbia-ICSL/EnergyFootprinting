@@ -48,6 +48,8 @@ class Recent:
         return DBMgr.dump_recent_raw_submission()
 class Realtime:
     def GET(self,person=None):
+        if "full" in web.input():
+            return db.ShowRealtime(concise=False)
         return db.ShowRealtime(person)
 
 class index:
