@@ -8,6 +8,7 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
  <script> google.load("visualization", "1", {packages:["corechart","timeline"]});</script>
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <style>
 body {
   padding-top: 50px;
@@ -93,18 +94,18 @@ body {
 		</form>
 		<div id="chart1" class="panel-body" style="height:500px;display:none;"></div>
 		<script>
-		/*var ch1=document.getElementById('chart1');
+		var ch1=document.getElementById('chart1');
 		var frm1=document.getElementById('form1');
  		$(frm1).children('button').on('click', function () {
 		    var $btn = $(this).button('loading');
-		    var personID=frm1.personID1.value;
-		    if(personID.length<2){
-		    	$(frm1.personID1).parent().addClass('has-error');
+		    var spaceID=frm1.spaceID1.value;
+		    if(spaceID.length<2){
+		    	$(frm1.spaceID1).parent().addClass('has-error');
 		    	$btn.button('reset');
 		    	return;
 		    }
-		    $(frm1.personID1).removeClass('has-error');
-		    $.get("/api/Query/QueryPerson/"+personID,{
+		    $(frm1.spaceID1).removeClass('has-error');
+		    $.get("/api/Query/QueryRoom/"+spaceID,{
 		    		start:getUTCSeconds(frm1.startDate1.value),
 		    		end:getUTCSeconds(frm1.endDate1.value),
 		    		client:"AJAX debug frontend"
@@ -120,6 +121,8 @@ body {
 		  });
 		  
 		  function render1(input){
+		  	d=input;
+		  	/*
 		  	input=input.reverse();
 			function distinct_types(input){
 	          var types={};
@@ -165,7 +168,8 @@ body {
 	          ret[0]=new Date(item.timestamp*1000);
 	          //console.log('row',ret);
 	          data.addRow(ret);
-	        };
+	          
+	        };*/
 
 	        
 
@@ -181,7 +185,7 @@ body {
 	        	chart.draw(data, options);
 	        	$(ch1).slideToggle(0).slideToggle(1000);	
 	        });
-		  }*/
+		  }
 		  </script>
 
       </div>
@@ -320,6 +324,85 @@ body {
       </div>
     </div>
   </div>
+
+
+    <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" onclick="drawTree();">
+           Space and Consumptions as a tree
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">	
+		<div id="chart3" class="panel-body" style="height:500px;"></div>
+		<script>
+		google.charts.load('current', {packages:['wordtree']});
+		google.charts.setOnLoadCallback(drawTree);
+      	function drawTree() {
+			$.ajax({
+		        url: '/realtime/?full=true',
+		        success: render3,
+		        dataType:"json",
+		        cache: false
+	  		});
+		}
+		function render3(data){
+			//_saved_tree_data=data;
+			var treeNodes=data.tree;
+			var nodeIDs=[];
+			var rows=[['id', 'childLabel', 'parent', 'Energy Consumption', { role: 'style' }]];
+			for(var id in treeNodes){
+				nodeIDs.push(id);
+			}
+			for(var id in treeNodes){
+				var node=treeNodes[id];
+				var row=[
+					nodeIDs.indexOf(id),
+					id,//node.name.split('/').reverse()[0].replace(/\s/g,'_'),
+					nodeIDs.indexOf(node.father),
+					1,//+node._sum_consumption,//(node._sum_consumption_including_children || node._sum_consumption)+0.00001,
+					'black'
+				];
+				rows.push(row);
+			}
+			//rows.sort(function(a,b){return a[2]-b[2]});
+
+			for(var id in treeNodes){
+				var node=treeNodes[id];
+				for(var cid in node.consumption){
+					var row=[
+						rows.length,
+						cid,//actual name in metadata...
+						nodeIDs.indexOf(id),
+						1e-10+node.consumption[cid].value,
+						'rgb(127,0,0)' //TODO: customize based on value
+					];
+					rows.push(row);
+				}
+			}
+
+
+			var nodeListData = new google.visualization.arrayToDataTable(rows);
+
+	        var options = {
+	        	maxFontSize: 26,
+				colors: ['black', 'red', 'green'],
+				wordtree: {
+					format: 'explicit',
+					type: 'suffix'
+				}
+	        };
+	        var wordtree = new google.visualization.WordTree(document.getElementById('chart3'));
+	        wordtree.draw(nodeListData, options);
+		}
+		</script>
+
+      </div>
+    </div>
+  </div>
+
 
       </div>
     </div><!-- /.container -->
