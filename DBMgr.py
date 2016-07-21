@@ -67,6 +67,10 @@ class DBMgr(object):
 	def __init__(self):
 		self.name="DB Manager"
 		self.dbc=pymongo.MongoClient()
+
+		db1 = self.dbc.test_database
+		coll1 = db1.test_collection
+
 		self.config_col=self.dbc.db.config
 		#metadata col
 
@@ -76,8 +80,6 @@ class DBMgr(object):
 		self.tree_snapshot_col=self.dbc.db.tree_snapshot_col
 		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
 		#snapshot every x seconds, for the tree
-
-
 		self.events_col=self.dbc.db.events_col
 		#person ID events, like location change
 		self._latestSuccessShot=0
@@ -559,6 +561,20 @@ class DBMgr(object):
 			result+=[item]
 		
 		return self._encode(result,True)
+
+	def SaveLocationData(self, person, location):
+		self.dbc.db1.coll1.insert({
+			"l1":location,
+			"person":person
+		})
+
+	def QueryLocationData(self, person):
+		result = []
+		condition = {
+			"person":person
+		}
+		iterator = self.dbc.db1.coll1.find_one(condition)
+		return iterator['l1']
 
 if __name__ == "__main__":
 	dbm=DBMgr()
