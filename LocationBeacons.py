@@ -10,23 +10,23 @@ class BeaconVals:
               [-89, -89, -89, -89, -89, -89]]
     def nn(self, p):
         min_dist = 1000000;
-	for j in range(len(self.points)):
-	    index = -1
-            sum_dist = 0
-            for k in range(len(p)):
-                ps = self.points[j]
-                sum_dist += (ps[k] - p[k]) * (ps[k] - p[k])
-                if (sum_dist < min_dist):
-                    min_dist = sum_dist
-                    index = j
+	    for j in range(len(self.points)):
+	        index = -1
+                sum_dist = 0
+                for k in range(len(p)):
+                    ps = self.points[j]
+                    sum_dist += (ps[k] - p[k]) * (ps[k] - p[k])
+                    if (sum_dist < min_dist):
+                        min_dist = sum_dist
+                        index = j
         return index
 
     def POST(self):
         raw_data=web.data()
-	locs = raw_data.split(',')
-	l = locs[1:]
+	    locs = raw_data.split(',')
+	    l = locs[1:]
         assert(len(l) == 6)
-	locs = map(int, l)
+	    locs = map(int, l)
         return raw_data#self.nn(locs)
 	
 	#total = 0
@@ -39,8 +39,8 @@ class BeaconVals:
         #return str(total)
 
     def GET(self):
-	result = cloudserver.db.QueryLocationData(0)
+	    result = cloudserver.db.QueryLocationData(0)
 #	return result
-        return "Hello World"
+        return result
 
 Beacons = web.application(urls, locals());

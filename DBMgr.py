@@ -577,7 +577,7 @@ class DBMgr(object):
 #		iterator = self.dbc.db1.coll1.find(condition).sort([("timestamp",pymongo.DESCENDING)])
 #		x = list(iterator)
 #		y = x[0]
-		return "Hello world"#y['l1']
+		return "Testing Database"#y['l1']
 
 if __name__ == "__main__":
 	dbm=DBMgr()
