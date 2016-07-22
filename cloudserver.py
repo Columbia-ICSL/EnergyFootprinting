@@ -10,6 +10,7 @@ import blog
 import DBMgr
 import Energy
 import Location
+import LocationBeacons
 import Query
 import Manage
 from bson import ObjectId
@@ -20,7 +21,8 @@ urls = (
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
-    "/api/Beacons", "beacons",
+#    "/api/Beacons", "beacons",
+    "/api/Beacons", LocationBeacons.Beacons,
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
     "/realtime/(.*)","Realtime",
@@ -79,14 +81,14 @@ class room:
         #return input+" {0}".format(name)
         return db.QueryRoom(room,0,2**32)
 
-class beacons: 
-    def POST(self):
-        raw_data = web.data()
-        db.SaveLocationData(0,12)
-        return str(raw_data)
-    def GET(self):
-        result = db.QueryLocationData(0)
-        return result
+#class beacons: 
+#    def POST(self):
+#        raw_data = web.data()
+#        db.SaveLocationData(0,12)
+#        return str(raw_data)
+#    def GET(self):
+#        result = db.QueryLocationData(0)
+#        return result
 
 
 

@@ -565,16 +565,19 @@ class DBMgr(object):
 	def SaveLocationData(self, person, location):
 		self.dbc.db1.coll1.insert({
 			"l1":location,
-			"person":person
+			"person":person,
+			"timestamp":datetime.datetime.utcnow()
 		})
 
 	def QueryLocationData(self, person):
-		result = []
-		condition = {
-			"person":person
-		}
-		iterator = self.dbc.db1.coll1.find_one(condition)
-		return iterator['l1']
+	#	result = []
+#		condition = {
+#			"person":person
+#		}
+#		iterator = self.dbc.db1.coll1.find(condition).sort([("timestamp",pymongo.DESCENDING)])
+#		x = list(iterator)
+#		y = x[0]
+		return "Hello world"#y['l1']
 
 if __name__ == "__main__":
 	dbm=DBMgr()

@@ -8,7 +8,7 @@
 <script type="text/javascript">
 function requestData(){
   $.ajax({
-        url: '/api/Beacons',
+        url: '/api/Beacons/',
         success: function(data){
           document.getElementById("demo").innerHTML = data;},
 	always: function() {
