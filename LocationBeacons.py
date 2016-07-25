@@ -27,6 +27,7 @@ class BeaconVals:
         l = locs[1:]
         assert(len(l) == 6)
         locs = map(int, l)
+        cloudserver.db.SaveLocationData(0, raw_data)
         return raw_data#self.nn(locs)
 	
 	#total = 0
