@@ -570,14 +570,14 @@ class DBMgr(object):
 		})
 
 	def QueryLocationData(self, person):
-        result = []
-        condition = {
-            "person":person
-        }
-        iterator = self.dbc.db1.coll1.find(condition).sort([("timestamp",pymongo.DESCENDING)])
-        x = list(iterator)
-        y = x[0]
-        return y['l1']
+		result = []
+		condition = {
+			"person":person
+		}
+		iterator = self.dbc.db1.coll1.find(condition).sort([("timestamp",pymongo.DESCENDING)])
+		x = list(iterator)
+		y = x[0]
+		return y['l1']
 
 if __name__ == "__main__":
 	dbm=DBMgr()
