@@ -25,7 +25,7 @@ class BeaconVals:
         raw_data=web.data()
         locs = raw_data.split(',')
         l = locs[1:]
-        assert(len(l) == 6)
+        assert(len(l) == 11)
         locs = map(int, l)
         cloudserver.db.SaveLocationData(0, raw_data)
         return raw_data#self.nn(locs)
