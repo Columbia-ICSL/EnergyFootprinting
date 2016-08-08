@@ -44,7 +44,7 @@ class BeaconVals:
         locs = map(int, l)
         cloudserver.db.SaveLocationData(0, raw_data)
         location = self.KNN.classifier(locs)
-        return labels[location[0]]#self.nn(locs)
+        return self.labels[location[0]]#self.nn(locs)
 	
 	#total = 0
 	#for i in range(len(locs)):
