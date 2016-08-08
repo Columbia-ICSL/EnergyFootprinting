@@ -1,6 +1,7 @@
 import json
 import web
 import cloudserver
+from KNNalgo import KNearestNeighbors
 
 urls = (
 "/","BeaconVals")
@@ -8,27 +9,17 @@ urls = (
 class BeaconVals:
     points = [[-90, -90, -90, -90, -90, -90],
               [-89, -89, -89, -89, -89, -89]]
-    def nn(self, p):
-        min_dist = 1000000;
-        for j in range(len(self.points)):
-            index = -1
-            sum_dist = 0
-            for k in range(len(p)):
-                ps = self.points[j]
-                sum_dist += (ps[k] - p[k]) * (ps[k] - p[k])
-                if (sum_dist < min_dist):
-                    min_dist = sum_dist
-                    index = j
-        return index
-
+    labels = ["Peter's Desk", "Danny's Desk", "Steven's Desk", "Rishi's Desk", "Daniel's Desk", "ICSL Lab Space", "Tehrani Lab Space", "4th Lab Space", "Bio Lab Space", "Professor's Office", "Hallway", "10M"]
+    KNN = KNearestNeighbors(3, points, labels)
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
         l = locs[1:]
-        assert(len(l) == 11)
+#        assert(len(l) == 11)
         locs = map(int, l)
         cloudserver.db.SaveLocationData(0, raw_data)
-        return raw_data#self.nn(locs)
+        location = self.KNN.classifier(locs)
+        return location[0]#self.nn(locs)
 	
 	#total = 0
 	#for i in range(len(locs)):
