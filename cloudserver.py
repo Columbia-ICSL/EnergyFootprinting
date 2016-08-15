@@ -11,6 +11,7 @@ import DBMgr
 import Energy
 import Location
 import LocationBeacons
+import suggestionDecisions
 import Query
 import Manage
 from bson import ObjectId
@@ -23,6 +24,7 @@ urls = (
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
     "/api/Beacons", LocationBeacons.Beacons,
+    "/api/suggestionDecisions", suggestionDecisions.Decisions,
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
     "/realtime/(.*)","Realtime",
