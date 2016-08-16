@@ -18,7 +18,6 @@ class DBInit(object):
                 "id":id,
                 "name":name,
                 "coordinate": coord,
-                "occupants": [],
             }]
         
         addRoom("nwc1008","NWC 1008 Office", [40.809997, -73.961983])
