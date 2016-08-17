@@ -93,6 +93,9 @@ class DBMgr(object):
 		db1 = self.dbc.test_database
 		coll1 = db1.test_collection
 
+		self.registration_col=self.dbc.db.registration_col
+		self.registration_col.ensure_index('screen_name', unique=True)
+		#user registration
 		self.config_col=self.dbc.db.config
 		#metadata col
 		self.raw_data=self.dbc.db.raw_data
@@ -134,6 +137,31 @@ class DBMgr(object):
 			"data":data,
 			"timestamp":datetime.datetime.utcnow()
 			})
+
+	def screenNameCheckAvailability(self, screenName):
+		return len(list(self.registration_col.find({"screenName":screenName}))) == 0
+		
+	def screenNameRegister(self, screenName, userID):
+		try:
+			self.registration_col.insert({
+				"screenName":screenName,
+				"userID":userID,
+				})
+			return True
+		except pymongo.errors.DuplicateKeyError:
+			return False
+
+	def screenNameLookup(self, screenName):
+		ret=list(self.registration_col.find({"screenName":screenName}))
+		if len(ret)!=1:
+			return None
+		return ret[0]["userID"]
+	
+	def userIDLookup(self, userID):
+		ret=list(self.registration_col.find({"userID":userID}))
+		if len(ret)!=1:
+			return None
+		return ret[0]["screenName"]
 
 	def updateUserLocation(self, user_id, in_id=None, out_id=None):
 		self.location_of_users[user_id]=in_id
@@ -393,6 +421,9 @@ class DBMgr(object):
 	def _TEST(self):
 		# unit testing, after init.
 
+		#cleanup
+		self.dbc.drop_database('test')
+
 		# Redirect storage
 		self.snapshots_col_rooms=self.dbc.test.snapshots_col_rooms
 		self.snapshots_col_appliances=self.dbc.test.snapshots_col_appliances
@@ -400,11 +431,10 @@ class DBMgr(object):
 		
 		self.raw_data=self.dbc.test.raw_data
 		self.events_col=self.dbc.test.events_col
+
+		self.registration_col=self.dbc.test.registration_col
+		self.registration_col.ensure_index('screen_name', unique=True)
 		
-		# Cleanup
-		self.snapshots_col_rooms.delete_many({})
-		self.snapshots_col_appliances.delete_many({})
-		self.snapshots_col_users.delete_many({})
 
 		# case 1: add a consumption value, put two users, the users get shared energy consumption
 		self.ReportEnergyValue("nwc1000m_a2_plug", 2, {"testing":True,"message":"unit test"})
@@ -445,6 +475,36 @@ class DBMgr(object):
 		# should be triggered after minimum sampling interval
 		# sleep()
 		# self.OptionalSaveShot()
+
+
+		# Test User signup:
+		ID="000001"
+		SN="my_screen_name_lol"
+		# ID is available
+		if self.screenNameCheckAvailability(SN) != True:
+			print("screenNameCheckAvailability() not passed?")
+			sys.exit(-1)
+		# add user, should success
+		if self.screenNameRegister(SN, ID) != True:
+			print("screenNameRegister() failed?")
+			sys.exit(-1)
+
+		# add another time, should fail
+		if self.screenNameRegister(SN, ID) != False:
+			print("screenNameRegister() succeeded when registering again?")
+			sys.exit(-1)
+		# ID is not available
+		if self.screenNameCheckAvailability(SN) != False:
+			print("screenNameCheckAvailability() passed for existing ID?")
+			sys.exit(-1)
+		# lookup users, id should match
+		if self.userIDLookup(ID) != SN:
+			print("userIDLookup() unexpected")
+			sys.exit(-1)
+		if self.screenNameLookup(SN) != ID:
+			print("screenNameLookup() unexpected")
+			sys.exit(-1)
+
 
 		print("Self-test succeeded, exit now.")
 		sys.exit(0)
