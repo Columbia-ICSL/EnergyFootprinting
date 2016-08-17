@@ -21,7 +21,7 @@ class userManagement:
 		if (username == "100"):
 			return "1"
 		if (cloudserver.db.screenNameCheckAvailability(username)):
-			if (screenNameRegister(userName, deviceID)):
+			if (cloudserver.db.screenNameRegister(userName, deviceID)):
 				return "0" #success
 			else:
 				return "1" #duplicate username
