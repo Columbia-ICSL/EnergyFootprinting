@@ -15,7 +15,7 @@ class suggestionsEngine:
 		users = []
 		roomOccupancySnapshot = ""
 		for roomID in list_of_rooms:
-			userList = list_of_rooms[roomID]["users"]
+			userList = list_of_rooms[roomID]
 			occupancy = len(userList)
 			roomOccupancySnapshot += str(roomID)
 			roomOccupancySnapshot += " "
