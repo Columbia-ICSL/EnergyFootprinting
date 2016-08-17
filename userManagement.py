@@ -11,7 +11,7 @@ class userManagement:
 			return
 		if (len(userData) == 1):
 			ret = cloudserver.db.userIDLookup(deviceID)
-			if (ret == None):
+			if (ret is None):
 				return "100"
 			else:
 				return ret
