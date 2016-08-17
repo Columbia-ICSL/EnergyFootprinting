@@ -45,7 +45,7 @@ class BeaconVals:
                 #data += "SA,"
                 #data += cloudserver.SE.roomOccupancySnapshot
                 #break
-        return data
+        return "1 0 1 3 2"
 
     def GET(self):
         result = cloudserver.db.QueryLocationData(0)
