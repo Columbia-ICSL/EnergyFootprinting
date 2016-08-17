@@ -10,13 +10,13 @@ class userManagement:
 		userData=raw_data.split(',')
 		if (len(userData) == 0):
 			return "case 1"
+		deviceID = userData[0]
 		if (len(userData) == 1):
 			ret = cloudserver.db.userIDLookup(deviceID)
 			if (ret is None):
 				return "100"
 			else:
 				return ret
-		deviceID = userData[0]
 		username = userData[1]
 		if (username == "100"):
 			return "1"
