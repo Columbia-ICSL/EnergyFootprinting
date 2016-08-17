@@ -7,6 +7,7 @@ class userManagement:
 	def POST(self):
 		raw_data=web.data()
 		userData=raw_data.split(',')
+		return "hello"
 		if (len(userData) == 0):
 			return "case 1"
 		if (len(userData) == 1):
