@@ -5,28 +5,29 @@ urls = ("/","userManagement")
 class userManagement:
 
 	def POST(self):
-		raw_data=web.data()
-		userData=raw_data.split(',')
-		return "hello"
-		if (len(userData) == 0):
-			return "case 1"
-		if (len(userData) == 1):
-			ret = cloudserver.db.userIDLookup(deviceID)
-			if (ret is None):
-				return "100"
-			else:
-				return "case 2"
-		deviceID = userData[0]
-		username = userData[1]
-		if (username == "100"):
-			return "1"
-		if (cloudserver.db.screenNameCheckAvailability(username)):
-			if (screenNameRegister(userName, deviceID)):
-				return "0" #success
-			else:
-				return "1" #duplicate username
-		else:
-			return "1" #username taken
-		return "case 3"
+		return "hello world"
+#		
+#		raw_data=web.data()
+#		userData=raw_data.split(',')
+#		if (len(userData) == 0):
+#			return "case 1"
+#		if (len(userData) == 1):
+#			ret = cloudserver.db.userIDLookup(deviceID)
+#			if (ret is None):
+#				return "100"
+#			else:
+#				return "case 2"
+#		deviceID = userData[0]
+#		username = userData[1]
+#		if (username == "100"):
+#			return "1"
+#		if (cloudserver.db.screenNameCheckAvailability(username)):
+#			if (screenNameRegister(userName, deviceID)):
+#				return "0" #success
+#			else:
+#				return "1" #duplicate username
+#		else:
+#			return "1" #username taken
+#		return "case 3"
 
 userManagement = web.application(urls, locals());
