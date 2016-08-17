@@ -8,13 +8,13 @@ class userManagement:
 		raw_data=web.data()
 		userData=raw_data.split(',')
 		if (len(userData) == 0):
-			return raw_data
+			return "case 1"
 		if (len(userData) == 1):
 			ret = cloudserver.db.userIDLookup(deviceID)
 			if (ret is None):
 				return "100"
 			else:
-				return "data=" + str(ret)
+				return "case 2"
 		deviceID = userData[0]
 		username = userData[1]
 		if (username == "100"):
@@ -26,9 +26,6 @@ class userManagement:
 				return "1" #duplicate username
 		else:
 			return "1" #username taken
-
-	def GET(self):
-		return
-
+		return "case 3"
 
 userManagement = web.application(urls, locals());
