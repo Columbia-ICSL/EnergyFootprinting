@@ -328,7 +328,8 @@ class DBMgr(object):
 			if roomID!=None:
 				ret["personal"]=self.calculateRoomFootprint(roomID)
 		else:
-			ret["tree"]=self._getShotTree(concise)
+			ret["rooms"]=self._getShotRooms(concise)
+			ret["appliances"]=self._getShotAppliances(concise)
 			ret["locations"]=self.location_of_users
 		return self._encode(ret,False)
 
