@@ -248,6 +248,7 @@ class DBMgr(object):
 				if (roomID not in cached_per_room_consumption):
 					cached_per_room_consumption[roomID]=self.calculateRoomFootprint(roomID)
 				personal_consumption[user_id]=cached_per_room_consumption[roomID]
+				personal_consumption[user_id]["location"]=roomID
 			except:
 				add_log("fail to trace person's consumption; id:",user_id)
 
