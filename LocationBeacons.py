@@ -16,11 +16,36 @@ class BeaconVals:
         raw_data=web.data()
         locs = raw_data.split(',')
         l = locs[1:]
-
+        ID = locs[0]
         locs = map(int, l)
         location = self.KNN.classifier(locs)
         cloudserver.db.SaveLocationData(0, self.labels[location[0]])
-        return "1 2 3 1 4"
+        moveUsers = cloudserver.SE.moveUsers
+        changeScheduleUsers = cloudserver.SE.changeScheduleUsers
+        turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
+        synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
+        data = "data="
+        for user in moveUsers:
+            if (ID == user):
+                data += "MO,"
+                data += cloudserver.SE.roomOccupancySnapshot
+                break
+        #for user in changeScheduleUsers:
+            #if (ID == user):
+                #data += "CS,"
+                #data += cloudserver.SE.roomOccupancySnapshot
+                #break
+        #for user in turnOffApplianceUsers:
+            #if (ID == user):
+                #data += "TO,"
+                #data += cloudserver.SE.roomOccupancySnapshot
+                #break
+        #for user in synchronizeApplianceUsers:
+            #if (ID == user):
+                #data += "SA,"
+                #data += cloudserver.SE.roomOccupancySnapshot
+                #break
+        return data
 
     def GET(self):
         result = cloudserver.db.QueryLocationData(0)

@@ -11,9 +11,12 @@ import DBMgr
 import Energy
 import Location
 import LocationBeacons
+import suggestionDecisions
 import Query
 import Manage
 from bson import ObjectId
+from threading import Thread
+import suggestionsEngine
 
 urls = (
  
@@ -23,6 +26,7 @@ urls = (
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
     "/api/Beacons", LocationBeacons.Beacons,
+    "/api/suggestionDecisions", suggestionDecisions.Decisions,
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
     "/realtime/(.*)","Realtime",
@@ -40,7 +44,7 @@ from DBMgr import MongoJsonEncoder
 #client = pymongo.MongoClient('localhost', 27017)
 #db = client.test_database
 db=DBMgr.DBMgr()
-
+SE = suggestionsEngine.suggestionsEngine()
 
 render = web.template.render('templates/')
 
