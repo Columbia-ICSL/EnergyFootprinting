@@ -27,7 +27,7 @@ urls = (
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
     "/api/Beacons", LocationBeacons.Beacons,
-    "/api/userManagement", userManagement.userManagement,
+    "/api/userManagement", userManagement.userMGM,
     "/api/suggestionDecisions", suggestionDecisions.Decisions,
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,

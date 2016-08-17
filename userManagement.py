@@ -30,4 +30,4 @@ class userManagement:
 #			return "1" #username taken
 #		return "case 3"
 
-userManagement = web.application(urls, locals());
+userMGM = web.application(urls, locals());
