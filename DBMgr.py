@@ -28,8 +28,8 @@ class MongoJsonEncoder(json.JSONEncoder):
 
 
 def add_log(msg,obj):
-	print "Got log:"+msg
-	print obj
+	print("Got log:"+msg)
+	print(obj)
 	traceback.print_exc()
 	pymongo.MongoClient().log_db.log.insert({
 		"msg":msg,
@@ -56,16 +56,38 @@ class DBMgr(object):
 	def _SetConfigValue(self,key,value):
 		self.config_col.replace_one({"_id":key},{"value":value},True)
 
-	def UpdateConfigs(self):
+	def _ReadConfigs(self):
 		self.ROOM_DEFINITION=self._GetConfigValue("ROOM_DEFINITION")
-		self.ENERGYDEVICE_DEFINITION=self._GetConfigValue("ENERGYDEVICE_DEFINITION")
-		self.save_interval=60 #every minute
-		"!!! should read database to get 60..."
+		self.APPLIANCE_DEFINITION=self._GetConfigValue("APPLIANCE_DEFINITION")
+		self.SAMPLING_TIMEOUT_SHORTEST=self._GetConfigValue("SAMPLING_TIMEOUT_SHORTEST")
+		self.SAMPLING_TIMEOUT_LONGEST=self._GetConfigValue("SAMPLING_TIMEOUT_LONGEST")
+
+	def _ConstructInMemoryGraph(self):
+		self.list_of_rooms={};
+		self.list_of_appliances={};
+		self.location_of_users={};
+
+		for room in self.ROOM_DEFINITION:
+			room["appliances"]=[]
+			room["users"]=[]
+			self.list_of_rooms[room["id"]]=room
+
+		for appliance in self.APPLIANCE_DEFINITION:
+			appliance["value"]=0
+			appliance["total_users"]=0
+			appliance["rooms"].sort()
+			self.list_of_appliances[appliance["id"]]=appliance
+			for roomID in appliance["rooms"]:
+				self.list_of_rooms[roomID]["appliances"]+=[appliance["id"]]
+
+		for room in self.ROOM_DEFINITION:
+			self.list_of_rooms[room["id"]]["appliances"].sort()
+		## Finished appliance bipartite graph.
+
 
 	def _encode(self,data,isPretty):
 		return MongoJsonEncoder().encode(data)
 	def __init__(self):
-		self.name="DB Manager"
 		self.dbc=pymongo.MongoClient()
 
 		db1 = self.dbc.test_database
@@ -73,87 +95,37 @@ class DBMgr(object):
 
 		self.config_col=self.dbc.db.config
 		#metadata col
-
 		self.raw_data=self.dbc.db.raw_data
 		#any raw data document.
-
-		self.tree_snapshot_col=self.dbc.db.tree_snapshot_col
-		self.personal_snapshot_col=self.dbc.db.personal_snapshot_col
-		#snapshot every x seconds, for the tree
 		self.events_col=self.dbc.db.events_col
-		#person ID events, like location change
+		#any events
+
+		self.snapshots_col_rooms=self.dbc.db.snapshots_col_rooms
+		self.snapshots_col_appliances=self.dbc.db.snapshots_col_appliances
+		self.snapshots_col_users=self.dbc.db.snapshots_col_users
+		#snapshot storage
+
 		self._latestSuccessShot=0
 
-		self.UpdateConfigs()
+		self._ReadConfigs()
+		## Data Structure Init: bipartite graph between rooms and appls
+		## TODO: Add a web interface to update config in db, and pull new config into memory.
 
-		self.tree_of_space={}; #transpose array
-		for room in self.ROOM_DEFINITION:
-			self.tree_of_space[room["id"]]=room
-			if not ("consumption"  in self.tree_of_space[room["id"]]):
-				self.tree_of_space[room["id"]]["consumption"]={}
-			else:
-				consumption=0
-				for con_id in room["consumption"]:
-					consumption+=room["consumption"][con_id]["value"]
-				self.tree_of_space[room["id"]]["_sum_consumption"]=consumption
-				#preserve pre-defined onstant consumption
-				#calc _sum_consumption 
+		self._ConstructInMemoryGraph()
+		## Construct bipartite graph. no recovery for now
 
-		#maintenance of father
-		for room in self.ROOM_DEFINITION:
-			for c in room["children"]:
-					self.tree_of_space[c]["father"]=room["id"]
+		if __name__ != "__main__":
+			self.startDaemon()
+		## Start the snapshot thread if not running "python DBMgr.py"
+		## (perform self-test if it is.)
 
-		"!!! should read shapshot to get latest energy values?"
-		latest_snapshot=self.tree_snapshot_col.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
-		latest_snapshot=latest_snapshot["data"]
-		for roomID in latest_snapshot:
-			if self.tree_of_space[roomID]["consumption"]=={}:
-				for deviceID in latest_snapshot[roomID]["consumption"]:
-					if deviceID in self.ENERGYDEVICE_DEFINITION:
-						self.tree_of_space[roomID]["consumption"][deviceID]=latest_snapshot[roomID]["consumption"][deviceID]
-				try:
-					self.tree_of_space[roomID]["_sum_consumption"]=latest_snapshot[roomID]["_sum_consumption"]
-					self.tree_of_space[roomID]["_sum_consumption_including_children"]=latest_snapshot[roomID]["_sum_consumption_including_children"]
-				except:
-					add_log("warning: initialize error when copying old snapshot room consumption",roomID)
-			#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
-			#	try:
-			#		self.tree_of_space[roomID]["occupants"]["ids"]=latest_snapshot[roomID]["occupants"]["ids"]
-			#		self.tree_of_space[roomID]["occupants"]["number"]=latest_snapshot[roomID]["occupants"]["number"]
-			#	except:
-			#		add_log("warning: initialize error when copying old snapshot ids and #",roomID)
-		
-		self.people_in_space={}; "!!! should read snapshot"
-		
-		latest_snapshot=self.personal_snapshot_col.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
-		latest_snapshot=latest_snapshot["data"]
-		for personID in latest_snapshot:
-			if "roomID" in latest_snapshot[personID]:
-				roomID=latest_snapshot[personID]["roomID"]
-				#self.people_in_space[personID]=roomID #conflict to automatic assignment
-				print "recovery person in room:"+personID+";"+roomID
-				self.ReportLocationAssociation(personID,roomID,{"type":"recovery","rawSnap":latest_snapshot})
-				#if self.tree_of_space[roomID]["occupants"]["type"] == 'auto':
-				#	self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
-					#self.tree_of_space[roomID]["occupants"]["number"]=len(...) #updateTreeOCcNum does that
+		##if __name__ != "__main__":
+		##	self.recover_from_latest_shot()
 
-		"try initialize _sum_consumption_including_children, to avoid empty entries"
-		for roomID in self.tree_of_space:
-			self.updateTreeTotalCon(roomID)
-
+	def startDaemon(self):
 		t=Thread(target=self._loopSaveShot,args=())
 		t.setDaemon(True)
 		t.start()
-
-	def _TEST(self):
-		print "TEST"
-		self.tree_of_space["nwc1003b"]["occupants"]["ids"]=["xc2340"]
-		self.updateTreeOccNum("nwc1003b")
-		#print json.dumps(self.tree_of_space,indent=2, separators=(',', ': '))
-		#self.tree_of_space["nwc1003b"]["occupants"]["ids"]=[]
-		#self.updateTreeOccNum("nwc1003b")
-		print self.tree_of_space["nwc10"]["occupants"]
 
 	def recordEvent(self, personID, etype, data):
 		self.events_col.insert({
@@ -163,76 +135,53 @@ class DBMgr(object):
 			"timestamp":datetime.datetime.utcnow()
 			})
 
-	def updateTreeOccNum(self,node_id):#update till root, or encounter a non-auto index
-		if self.tree_of_space[node_id]["occupants"]["type"]!="auto":
+	def updateUserLocation(self, user_id, in_id=None, out_id=None):
+		self.location_of_users[user_id]=in_id
+		if in_id==out_id:
 			return
-		#only update auto occupant #
-		try:
-			num_this_layer=len(self.tree_of_space[node_id]["occupants"]["ids"])
-			num_lower_layer=0
-			for c in self.tree_of_space[node_id]["children"]:
-				num_lower_layer+=self.tree_of_space[c]["occupants"]["number"]
-
-			self.tree_of_space[node_id]["occupants"]["number"]=num_lower_layer+num_this_layer
-		except:
-			add_log("error while calculating #occ node",node_id)
-			return
+		## TODO: optimize, merge In-ops and Out-ops and remove unnecessary update to common appliances
+		if in_id!=None and self.list_of_rooms[in_id]!=None:
+			self.list_of_rooms[in_id]["users"]+=[user_id]
+			for applianceID in self.list_of_rooms[in_id]["appliances"]:
+				self.list_of_appliances[applianceID]["total_users"]+=1
+		if out_id!=None and self.list_of_rooms[out_id]!=None:
+			self.list_of_rooms[out_id]["users"].remove(user_id)
+			for applianceID in self.list_of_rooms[out_id]["appliances"]:
+				self.list_of_appliances[applianceID]["total_users"]-=1
 		
-		try:
-			father_id=self.tree_of_space[node_id]["father"]
-			self.updateTreeOccNum(father_id)
-		except:
-			add_log("error while tracing father at node",node_id)
-			return
-		
-		"""self.T=900
-		self.dbc=pymongo.MongoClient()
-		self.engcol=self.dbc.db.energy_logs
-		#standardized energy consumption, by each appliance, (each incidence)
-		#(room, timestamp, watts, type/description ...)
-		self.poscol=self.dbc.db.position_logs
-		#position log 
-		#(user, roomID, timestamp)
-		
-		self.stdcol=self.dbc.db.standardized_consumption_log_column
-		#(room,#T,value, consumption=[?,?], occupants=[], responsibility=[?,?])
-		#(#T = timestamp / 15min)
-		# responsibility is inherited from last nonempty resp, if loc history is empty
-		# consumption history is non-repetitively added from energy_logs
+	def updateApplianceValue(self, applianceID, value):
+		self.list_of_appliances[applianceID]["value"]=value
 
-		self.room_meta=self.dbc.db.room_meta
-		#(room, PULLcallbackURL, latestUpdate)"""
+	def calculateRoomFootprint(self, roomID):
+		app_list=self.list_of_rooms[roomID]["appliances"]
+		ret={
+			"value":0,
+			"consumptions":[]
+		}
+		total_con=0.0
+		for applianceID in app_list:
+			app=self.list_of_appliances[applianceID]
+			app["share"]=app["value"]/(1.0*app["total_users"])
 
-	def updateTreeTotalCon(self,roomID):
-		total_con=0
-		for iter_devID in self.tree_of_space[roomID]["consumption"]:
-			total_con+=self.tree_of_space[roomID]["consumption"][iter_devID]["value"]
-		self.tree_of_space[roomID]["_sum_consumption"]=total_con
-
-		self.tree_of_space[roomID]["_sum_consumption_including_children"]=total_con
-		for c in self.tree_of_space[roomID]["children"]:
-			if "_sum_consumption_including_children" in self.tree_of_space[c]:
-				self.tree_of_space[roomID]["_sum_consumption_including_children"]+=self.tree_of_space[c]["_sum_consumption_including_children"]
-
-		if "father" in self.tree_of_space[roomID]:
-			self.updateTreeTotalCon(self.tree_of_space[roomID]["father"])
+			total_con+=app["share"]
+			ret["consumptions"]+=[app]
+		ret["value"]=total_con
+		return ret
 
 	def LogRawData(self,obj):
 		obj["_log_timestamp"]=datetime.datetime.utcnow()
 		self.raw_data.insert(obj)
 
-	def ReportEnergyValue(self, deviceID, value, raw_data=None):
+
+
+	def ReportEnergyValue(self, applianceID, value, raw_data=None):
 		"maintenance tree node's energy consumption item, and update a sum value"
 		known_room=None
 		try:
-			device=self.ENERGYDEVICE_DEFINITION[deviceID]
-			roomID=device["room"]
-			known_room=roomID
+			app=self.list_of_appliances[applianceID]
+			known_room=app["rooms"]
+			self.updateApplianceValue(app["id"], value)
 
-			self.tree_of_space[roomID]["consumption"][deviceID]={
-				"value":value,
-				"type":device["type"]
-			}
 		except:
 			add_log("failed to report energy value on device",{
 				"known_room":known_room,
@@ -241,84 +190,37 @@ class DBMgr(object):
 				"raw":raw_data
 				})
 			return
-		
-		try:
-			self.updateTreeTotalCon(roomID)
-		except:
-			add_log("failed to calculate accumulate total consumption",{
-				"known_room":known_room,
-				"room_current_cons":self.tree_of_space[known_room]["consumption"],
-				"deviceID":deviceID,
-				"value":value,
-				"raw":raw_data
-				})
 
 		self.LogRawData({
 			"type":"energy_report",
 			"roomID":known_room,
-			"deviceID":deviceID,
+			"applianceID":applianceID,
 			"value":value,
 			"raw":raw_data
 			})
 		
 
-	def ReportLocationAssociation(self,personID, roomID, raw_data=None):
+	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
 		self.LogRawData({
 			"type":"location_report",
 			"roomID":roomID,
 			"personID":personID,
 			"raw":raw_data
 			})
-		
-		try:
-			if personID in self.people_in_space:
-				oldS=self.people_in_space[personID]
-				if(roomID==oldS): 
-					return;
-				if oldS!='false':
-					if self.tree_of_space[oldS]["occupants"]["type"]=="auto":
-						try:
-							self.tree_of_space[oldS]["occupants"]["ids"].remove(personID)
-							self.updateTreeOccNum(oldS)
-						except:
-							add_log("error while removing ID and updateTreeOccNum",oldS)
-							print "error while removing ID and updateTreeOccNum"+oldS
-							print self.tree_of_space[oldS]
-		except:
-			add_log("error while delete old spaceID. ",{
-				"personID":personID,
-				"roomID":roomID,
-				"oldS":self.people_in_space[personID]
-				})
 
-		try:
-			if not (roomID in self.tree_of_space):
-				"if no legitimate roomID, then he's out of tracking. remove from tree."
-				self.people_in_space[personID]='false'
-				self.recordEvent(personID,"locationChange",False)
-				return
+		oldS=None
+		newS=roomID
+		if personID in self.location_of_users:
+			oldS=self.location_of_users[personID]
 
-			self.people_in_space[personID]=roomID
-			if self.tree_of_space[roomID]["occupants"]["type"]=="auto": 
-				try:	
-					if personID not in self.tree_of_space[roomID]["occupants"]["ids"]:
-						self.tree_of_space[roomID]["occupants"]["ids"]+=[personID]
-					self.updateTreeOccNum(roomID)
-				except:
-					add_log("error while adding ID and updateTreeOccNum",roomID)
-					print "error while adding ID and updateTreeOccNum"+roomID
-					print self.tree_of_space[roomID]
-
+		if roomID not in self.list_of_rooms:
+			"if no legitimate roomID, then he's out of tracking."
+			newS=None
+			self.recordEvent(personID,"illegitimateLocationReported",roomID)
+		else:
 			self.recordEvent(personID,"locationChange",roomID)
 
-		except:
-			add_log("error while maintaining people_in_space[personID]. ",{
-				"personID":personID,
-				"roomID":roomID
-				})
-
-		#"maintenance each user's value"
-		"maintanence involves too much space and other people; shouldn't do it here. moved to snapshot section"
+		self.updateUserLocation(personID, newS, oldS)
 
 		"people change; should we update now?"
 		self.OptionalSaveShot();
@@ -328,123 +230,51 @@ class DBMgr(object):
 		if self._latestSuccessShot< self._now() -10 :
 			self.SaveShot();
 
-	def _getShotTree(self, concise=True):
-		concise_tree=copy.deepcopy(self.tree_of_space)
-		if concise:
-			for id in concise_tree:
-				for key in ["name","children","father","id"]:
-					if key in concise_tree[id]:
-						del concise_tree[id][key]
-			for id in concise_tree:
-				for cid in concise_tree[id]["consumption"]:
-					concise_cons={
-						"type":concise_tree[id]["consumption"][cid]["type"],
-						"value":concise_tree[id]["consumption"][cid]["value"]
-					}
-					concise_tree[id]["consumption"][cid]=concise_cons
-		return concise_tree
+	# TODO: think about what to drop in concise mode
+	def _getShotRooms(self, concise=True):
+		return self.list_of_rooms
+
+	def _getShotAppliances(self, concise=True):
+		return self.list_of_appliances
 
 	def _getShotPersonal(self):
 		personal_consumption={}
-		#for space_id in self.tree_of_space:
-		for personID in self.people_in_space:
+		cached_per_room_consumption={}
+		for user_id in self.location_of_users:
 			try:
-
-				roomID=self.people_in_space[personID]
-				if roomID=='false':
-					personal_consumption[personID]={
-						"value":0,
-						"roomID":'unknown',
-						"all_items":{}, #may not be necessary
-						"type_aggregate":{}
-					}
-					continue;
-
-				e_value=0
-				if "_sum_consumption_including_children" in self.tree_of_space[roomID]:
-					e_value=self.tree_of_space[roomID]["_sum_consumption_including_children"] / self.tree_of_space[roomID]["occupants"]["number"]
-				all_items={}
-				for iid in self.tree_of_space[roomID]["consumption"]:
-					con_item=self.tree_of_space[roomID]["consumption"][iid]
-					all_items[iid]={
-						"weight":1.0/self.tree_of_space[roomID]["occupants"]["number"],
-						"value":con_item["value"],
-						"type":con_item["type"]
-					}
-
-				"TODO: should also consider the eng cons. of parent nodes. Use _sum_consumption instead of _sum_consumption_including_children."
-				currID=roomID
-				try:
-					while "father" in self.tree_of_space[currID]:
-						currID=self.tree_of_space[currID]["father"]
-						consumption=self.tree_of_space[currID]["consumption"]
-						occupants=1.0*self.tree_of_space[currID]["occupants"]["number"]
-						e_value+= self.tree_of_space[currID]["_sum_consumption"] / occupants
-						for iid in consumption:
-							all_items[iid]={
-								"weight":1.0/occupants,
-								"value":consumption[iid]["value"],
-								"type":consumption[iid]["type"]
-							}
-						
-				except:
-					add_log("error when tracing consumption through parent",{
-						"me":personID,
-						"at":roomID,
-						"traced until":currID
-						})
-
-				agg_type={}
-				for iid in all_items:
-					item=all_items[iid]
-					itype=item["type"]
-					if not (itype in agg_type):
-						agg_type[itype]={
-							"ids":[],
-							"value":0
-						}
-					
-					agg_type[itype]["ids"]+=[iid]
-					agg_type[itype]["value"]+=item["value"]*item["weight"]
-				
-
-				personal_consumption[personID]={
-					"value":e_value,
-					"roomID":roomID,
-					"all_items":all_items, #may not be necessary
-					"type_aggregate":agg_type
-				}
+				roomID=self.location_of_users[user_id]
+				if roomID==None:
+					continue
+				if (roomID not in cached_per_room_consumption):
+					cached_per_room_consumption[roomID]=self.calculateRoomFootprint(roomID)
+				personal_consumption[user_id]=cached_per_room_consumption[roomID]
 			except:
-				add_log("fail to trace person's consumption; id:",personID)
+				add_log("fail to trace person's consumption; id:",user_id)
+
 		return personal_consumption
 
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
-		"1. insert the tree into snapshot_col; remove some"
-		concise_tree=self._getShotTree()
-		self.tree_snapshot_col.insert({
+		self.snapshots_col_rooms.insert({
 			"timestamp":datetime.datetime.utcnow(),
-			"data":concise_tree
+			"data":self._getShotRooms()
 			})
-		#snapshot every x seconds, for the tree
 
-		"2. record the people's consumption too"
-		personal_consumption=self._getShotPersonal()
+		self.snapshots_col_appliances.insert({
+			"timestamp":datetime.datetime.utcnow(),
+			"data":self._getShotAppliances()
+			})
 			
-		self.personal_snapshot_col.insert({
+		self.snapshots_col_users.insert({
 			"timestamp":datetime.datetime.utcnow(),
-			"data":personal_consumption
+			"data":self._getShotPersonal()
 			})
-
-
-		ret={"concise_tree":concise_tree, "personal":personal_consumption }
-		#if self.tree_of_space[roomID]["occupants"]["type"]=="auto":
-		return self._encode(ret,True)
-
-		"2. TODO: maintain last entrance list of all rooms; check all occupants.number==0 rooms, make the last person liable."
-		"3. possible accumulation at different tier?? like every 600 seconds?"
 
 		self._latestSuccessShot=self._now();
+		return True
+		"2. TODO: maintain last entrance list of all rooms; check all occupants.number==0 rooms, make the last person liable."
+		"3. possible accumulation at different tier?? like every 600 seconds?"
+		
 
 	def _now(self):
 		return calendar.timegm(datetime.datetime.utcnow().utctimetuple())
@@ -458,12 +288,13 @@ class DBMgr(object):
 		ret={
 			"timestamp":self._now()
 		}
-		if person and person in self.people_in_space:
-			d=self._getShotPersonal()
-			ret["personal"]=d[person]
+		if person and person in self.location_of_users:
+			roomID=self.location_of_users[person]
+			if roomID!=None:
+				ret["personal"]=self.calculateRoomFootprint(roomID)
 		else:
 			ret["tree"]=self._getShotTree(concise)
-			ret["locations"]=self.people_in_space
+			ret["locations"]=self.location_of_users
 		return self._encode(ret,False)
 
 	def QueryRoom(self,room,start,end):
@@ -475,7 +306,7 @@ class DBMgr(object):
 			}
 		}
 		projection = {"data."+room:1,"timestamp":1,"_id":0}
-		iterator = self.tree_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_rooms.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if room in shot['data']:
 				item=shot["data"][room]
@@ -493,7 +324,7 @@ class DBMgr(object):
 			}
 		}
 		projection = {"data."+person:1,"timestamp":1,"_id":0}
-		iterator = self.personal_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_users.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if person in shot["data"]:
 				item=shot["data"][person]
@@ -503,7 +334,7 @@ class DBMgr(object):
 		return self._encode(result,True)
 
 
-	def QueryPersonMulti(self,people,start,end):
+	def QueryPersonAll(self,start,end):
 		result=[]
 		condition = {
 			"timestamp":{
@@ -511,23 +342,13 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		projection = {"timestamp":1,"_id":0}
-		for person in people:
-			projection["data."+person]=1
+		projection = {"_id":0}
 
-		iterator = self.personal_snapshot_col.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_users.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
-			for personID in shot["data"]:
-				#purge data
-				try:
-					shot["data"][personID]={
-						"value":shot["data"][personID]["value"],
-						"roomID":shot["data"][personID]["roomID"]
-					}
-				except:
-					print "??"
-					print shot[personID]
-			result+=[shot]
+			item=shot["data"]
+			item["timestamp"]=shot["timestamp"]
+			result+=[item]
 		
 		return self._encode(result,True)
 
@@ -561,6 +382,60 @@ class DBMgr(object):
 			result+=[item]
 		
 		return self._encode(result,True)
+		
+	def _TEST(self):
+		# unit testing, after init.
+
+		# Redirect storage
+		self.snapshots_col_rooms=self.dbc.test.snapshots_col_rooms
+		self.snapshots_col_appliances=self.dbc.test.snapshots_col_appliances
+		self.snapshots_col_users=self.dbc.test.snapshots_col_users
+		
+		self.raw_data=self.dbc.test.raw_data
+		self.events_col=self.dbc.test.events_col
+		
+		# Cleanup
+		self.snapshots_col_rooms.delete_many({})
+		self.snapshots_col_appliances.delete_many({})
+		self.snapshots_col_users.delete_many({})
+
+		# case 1: add a consumption value, put two users, the users get shared energy consumption
+		self.ReportEnergyValue("nwc1000m_a2_plug", 2, {"testing":True,"message":"unit test"})
+		
+		self.ReportLocationAssociation("testUser2", "nwc1003b",  {"testing":True,"message":"unit test"})
+		self.ReportLocationAssociation("testUser1", "nwc1000m_a1",  {"testing":True,"message":"unit test"})
+		self.ReportLocationAssociation("testUser2", "nwc1000m_a2",  {"testing":True,"message":"unit test"})
+
+		self.ReportEnergyValue("nwc1000m_light", 100, {"testing":True,"message":"unit test"})
+		self.ReportEnergyValue("nwc1008_light", 10, {"testing":True,"message":"unit test"})
+
+		result=self._getShotPersonal()
+
+		if result["testUser1"]["value"]!=50 or result["testUser2"]["value"]!=52 :
+			print("Unexpected personal snapshot: expecting energy split.", result)
+			sys.exit(-1)
+
+		# case 2: move the user away, the other user gets all consumption
+		self.ReportLocationAssociation("testUser1", "nwc1008",  {"testing":True,"message":"unit test"})
+		result=self._getShotPersonal()
+		if result["testUser1"]["value"]!=10 or result["testUser2"]["value"]!=102 :
+			print("Unexpected personal snapshot: expecting full responsibility.", result)
+			sys.exit(-1)
+
+		# case 3: TODO: take a snapshot manually, and check if it's intended
+		self.SaveShot()
+		if False:
+			sys.exit(-1)
+		# case 4: TODO: optional save should not be triggered immediately
+		# self.OptionalSaveShot()
+		# should be triggered after minimum sampling interval
+		# sleep()
+		# self.OptionalSaveShot()
+
+		print("Self-test succeeded, exit now.")
+		sys.exit(0)
+		## IOS RELATED, DON'T TOUCH
+
 
 	def SaveLocationData(self, person, location):
 		self.dbc.db1.coll1.insert({
@@ -582,4 +457,4 @@ class DBMgr(object):
 if __name__ == "__main__":
 	dbm=DBMgr()
 	dbm._TEST()
-
+	## Beware, the _TEST will terminate the script.

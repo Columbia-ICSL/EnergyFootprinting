@@ -1,285 +1,89 @@
+import re
 import pymongo
 class DBInit(object):
-	def _GetConfigValue(self,key):
-		try:
-			ret=self.config_col.find_one({"_id":key})
-			return ret["value"]
-		except:
-			return None
+    def _GetConfigValue(self,key):
+        try:
+            ret=self.config_col.find_one({"_id":key})
+            return ret["value"]
+        except:
+            return None
 
-	def _SetConfigValue(self,key,value):
-		self.config_col.replace_one({"_id":key},{"value":value},True)
+    def _SetConfigValue(self,key,value):
+        self.config_col.replace_one({"_id":key},{"value":value},True)
 
-	def WriteConfigs(self):
-		self.ROOM_DEFINITION=[
-    {
-        "name": "Columbia University",
-        "id": "curoot",
-        "children": [
-            "mudd",
-            "nwc",
-            "pupin",
-            "cepsr"
-        ],
-        "occupants": {
-            "number": 29870,
-            "type": "stat"
-        },
-        "consumption":{
-            "HVAC":{
-                "value":50000,
-                "type":"HVAC",
-                "note":"heating artificial data"
-            },
-            "LIGHT":{
-                "value":100000,
-                "type":"Lighting",
-                "note":"street light artificial data"
-            }
-        }
-    },
-    {
-        "name": "Columbia University/Mudd Building",
-        "id": "mudd",
-        "children": [],
-        "occupants": {
-            "number": 2000,
-            "type": "stat"
-        },
-        "consumption":{
-            "HVAC":{
-                "value":5000,
-                "type":"HVAC",
-                "note":"artificial data"
-            },
-            "LIGHT":{
-                "value":3000,
-                "type":"Lighting",
-                "note":"artificial data"
-            }
-        }
-    },
-    {
-        "name": "Columbia University/Pupin Building",
-        "id": "pupin",
-        "children": [],
-        "occupants": {
-            "number": 1500,
-            "type": "stat"
-        },
-        "consumption":{
-            "HVAC":{
-                "value":9000,
-                "type":"HVAC",
-                "note":"artificial data"
-            },
-            "ELEC":{
-                "value":3000,
-                "type":"Electrical",
-                "note":"artificial data"
-            }
-        }
-    },
-    {
-        "name": "Columbia University/Center for Engineering and Physical Science Research",
-        "id": "cepsr",
-        "children": [],
-        "occupants": {
-            "number": 3000,
-            "type": "stat"
-        },
-        "consumption":{
-            "HVAC":{
-                "value":2000,
-                "type":"HVAC",
-                "note":"artificial data"
-            },
-            "ELEC":{
-                "value":2000,
-                "type":"Electrical",
-                "note":"artificial data"
-            }
-        }
-    },
-    {
-        "name": "Columbia University/Northwest Corner Building",
-        "id": "nwc",
-        "children": [
-            "nwc10",
-            "nwc8m"
-        ],
-        "occupants": {
-            "number": 1000,
-            "type": "statistics"
-        },
-        "consumption":{
-            "base_BMS_system":{
-                "value":1000,
-                "type":"Electrical",
-                "note":"statistical(artificial) data of static consumptions"
-            },
-            "idle_HVAC_system":{
-                "value":1000,
-                "type":"HVAC",
-                "note":"statistical(artificial) data of static consumptions"
-            }
-        }
-    },
-    {
-        "name": "Columbia University/Northwest Corner Building/Floor 10",
-        "id": "nwc10",
-        "children": [
-            "nwc1000",
-            "nwc1007",
-            "nwc1008",
-            "nwc1003b"
-        ],
-        "occupants": {
-            "number": 0,
-            "type": "auto",
-            "ids": []
-        }
-    },
-    {
-        "name": "Columbia University/Northwest Corner Building/Floor 10",
-        "id": "nwc8m",
-        "children": [],
-        "occupants": {
-            "number": 0,
-            "type": "auto",
-            "ids": []
-        }
-    },
-    {
-        "name": "Columbia University/Northwest Corner Building/Floor 10/Room 1007",
-        "id": "nwc1007",
-        "children": [],
-        "occupants": {
-            "number": 0,
-            "type": "auto",
-            "ids": []
-        }
-    },
-    {
-        "name": "Columbia University/Northwest Corner Building/Floor 10/Room 1008",
-        "id": "nwc1008",
-        "children": [],
-        "occupants": {
-            "number": 0,
-            "type": "auto",
-            "ids": []
-        }
-    },
-    {
-        "name": "Columbia University/Northwest Corner Building/Floor 10/Room 1000",
-        "id": "nwc1000",
-        "children": [],
-        "occupants": {
-            "number": 0,
-            "type": "auto",
-            "ids": []
-        }
-    },
-    {
-        "name": "Columbia University/Northwest Corner Building/Floor 10/Room 1003b",
-        "id": "nwc1003b",
-        "children": [],
-        "occupants": {
-            "number": 0,
-            "type": "auto",
-            "ids": []
-        }
-    }
-]
+    def WriteConfigs(self):
+        self.ROOM_DEFINITION=[]
+        def addRoom(id, name, coord):
+            self.ROOM_DEFINITION+=[{
+                "id":id,
+                "name":name,
+                "coordinate": coord,
+            }]
+        
+        addRoom("nwc1008","NWC 1008 Office", [40.809997, -73.961983])
+        addRoom("nwc1003g","1003 Optics G Lab", [40.809965, -73.962063])
+        addRoom("nwc1003b","1003B Lab",[40.810022, -73.962075])
+        
+        addRoom("nwc1000m_a1","10M Floor Aisle 1", [40.810050, -73.961945])
+        addRoom("nwc1000m_a2","10M Floor Aisle 2", [40.810038, -73.961955])
+        addRoom("nwc1000m_a3","10M Floor Aisle 3", [40.810021, -73.961966])
+        addRoom("nwc1000m_a4","10M Floor Aisle 4", [40.810005, -73.961978])
+        addRoom("nwc1000m_a5","10M Floor Aisle 5", [40.809986, -73.961991])
+        addRoom("nwc1000m_a6","10M Floor Aisle 6", [40.809968, -73.962003])
+        addRoom("nwc1000m_a7","10M Floor Aisle 7", [40.809950, -73.962017])
+        addRoom("nwc1000m_a8","10M Floor Aisle 8", [40.809933, -73.962030])
 
-		self._SetConfigValue("ROOM_DEFINITION",self.ROOM_DEFINITION)
+        # Only the lowest-layer cubicles, corresponding to localization unit
 
-		self.ENERGYDEVICE_DEFINITION={
-			"nwc1008_plug1":{
-				"type":"Electrical",
-				"room":"nwc1008",
-				"seq":1,
-				"manufacturer":"AEOTEC by AEON LABS",
-				"channel":"SmartThings Hub 2.0"
-			},
-			"nwc1008_smartvent1":{
-				"type":"HVAC",
-				"room":"nwc1008",
-				"seq":1,
-				"manufacturer":"Keen Home",
-				"channel":"SmartThings Hub 2.0"
-			},
-			"nwc1008_light1":{
-				"type":"Lighting",
-				"room":"nwc1008",
-				"seq":1,
-				"manufacturer":"Cree",
-				"channel":"SmartThings Hub 2.0"
-			},
-            "nwc1003b_plug1":{
-                "type":"Electrical",
-                "room":"nwc1003b",
-                "seq":1,
-                "manufacturer":"AEOTEC by AEON LABS",
-                "channel":"SmartThings Hub 2.0"
-            },
-            "nwc1003b_plug2":{
-                "type":"Electrical",
-                "room":"nwc1003b",
-                "seq":2,
-                "manufacturer":"AEOTEC by AEON LABS",
-                "channel":"SmartThings Hub 2.0"
-            },
-            "nwc1000_plug1":{
-                "type":"Electrical",
-                "room":"nwc1000",
-                "seq":1,
-                "manufacturer":"AEOTEC by AEON LABS",
-                "channel":"SmartThings Hub 2.0"
-            },
-            "nwc1000_plug2":{
-                "type":"Electrical",
-                "room":"nwc1000",
-                "seq":2,
-                "manufacturer":"AEOTEC by AEON LABS",
-                "channel":"SmartThings Hub 2.0"
-            },
-            "nwc1003b_photon_light":{
-                "type":"Lighting",
-                "room":"nwc1003b",
-                "seq":1,
-                "manufacturer":"Particle Photon",
-                "channel":"Particle With TSL2561 Lux Sensor"
-            },
-            "nwc1007_photon_light":{
-                "type":"Lighting",
-                "room":"nwc1007",
-                "seq":1,
-                "manufacturer":"Particle Photon",
-                "channel":"Particle With TSL2561 Lux Sensor"
-            },
-            "nwc1007_plug1":{
-                "type":"Electrical",
-                "room":"nwc1007",
-                "seq":1,
-                "manufacturer":"AEOTEC by AEON LABS",
-                "channel":"SmartThings Hub 2.0"
-            },
-            "nwc1007_plug2":{
-                "type":"Electrical",
-                "room":"nwc1007",
-                "seq":1,
-                "manufacturer":"AEOTEC by AEON LABS",
-                "channel":"SmartThings Hub 2.0"
+        self._SetConfigValue("ROOM_DEFINITION",self.ROOM_DEFINITION)
+
+        self.APPLIANCE_DEFINITION=[]
+        def addAppliance(id, type, roomsRegex):
+            roomsMatched=[]
+            for room in self.ROOM_DEFINITION:
+                if re.search(roomsRegex, room["id"]):
+                    roomsMatched+=[room["id"]]
+            item={
+                "id":id,
+                "type":type,
+                "rooms":roomsMatched,
             }
-		}
-		self._SetConfigValue("ENERGYDEVICE_DEFINITION",self.ENERGYDEVICE_DEFINITION)
+            self.APPLIANCE_DEFINITION+=[item]
 
-	def __init__(self):
-		self.name="DB Initialization"
-		print self.name
-		self.dbc=pymongo.MongoClient()
-		self.config_col=self.dbc.db.config
-		self.WriteConfigs()
+        addAppliance("nwc1008_plug1", "Electrical", "nwc1008")
+        addAppliance("nwc1008_smartvent1", "HVAC", "nwc1008")
+        addAppliance("nwc1008_light", "Light", "nwc1008")
 
-a=DBInit()
+        addAppliance("nwc1003b_plug1", "Electrical", "nwc1003b")
+        addAppliance("nwc1003b_plug2", "Electrical", "nwc1003b")
+        addAppliance("nwc1003g_plug1", "Electrical", "nwc1003g")
+        addAppliance("nwc1003g_plug2", "Electrical", "nwc1003g")
+        addAppliance("nwc1003b_light", "Light", "nwc1003b")
+        addAppliance("nwc1003g_light", "Light", "nwc1003g")
+
+        addAppliance("nwc1000m_a1_plug", "Electrical", "nwc1000m_a1")
+        addAppliance("nwc1000m_a2_plug", "Electrical", "nwc1000m_a2")
+        addAppliance("nwc1000m_a3_plug", "Electrical", "nwc1000m_a3")
+        addAppliance("nwc1000m_a4_plug", "Electrical", "nwc1000m_a4")
+        addAppliance("nwc1000m_a5_plug", "Electrical", "nwc1000m_a5")
+        addAppliance("nwc1000m_a6_plug", "Electrical", "nwc1000m_a6")
+        addAppliance("nwc1000m_a7_plug", "Electrical", "nwc1000m_a7")
+        addAppliance("nwc1000m_a8_plug", "Electrical", "nwc1000m_a8")
+
+        addAppliance("nwc1000m_light", "Light", "nwc1000m_.*")
+
+        self._SetConfigValue("APPLIANCE_DEFINITION",self.APPLIANCE_DEFINITION)
+
+        # Snapshot timeout, in seconds
+        self._SetConfigValue("SAMPLING_TIMEOUT_SHORTEST", 6)
+        self._SetConfigValue("SAMPLING_TIMEOUT_LONGEST", 60*2)
+
+    def __init__(self):
+        self.name="DB Initialization"
+        print(self.name)
+        self.dbc=pymongo.MongoClient()
+        self.config_col=self.dbc.db.config
+        self.WriteConfigs()
+        print(self._GetConfigValue("APPLIANCE_DEFINITION"))
+
+DBInit()
