@@ -315,7 +315,7 @@ class DBMgr(object):
 		return calendar.timegm(datetime.datetime.utcnow().utctimetuple())
 	def _loopSaveShot(self):
 		while True:
-			time.sleep(self.save_interval)
+			time.sleep(self.SAMPLING_TIMEOUT_LONGEST)
 			self.SaveShot()
 
 	def ShowRealtime(self, person=None, concise=True):
