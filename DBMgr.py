@@ -234,6 +234,12 @@ class DBMgr(object):
 	def _getShotRooms(self, concise=True):
 		return self.list_of_rooms
 
+	def CurrentOccupancy(self):
+		ret={}
+		for roomID in self.list_of_rooms:
+			ret[roomID]=self.list_of_rooms[roomID]["users"]
+		return ret
+
 	def _getShotAppliances(self, concise=True):
 		return self.list_of_appliances
 
@@ -420,6 +426,13 @@ class DBMgr(object):
 		result=self._getShotPersonal()
 		if result["testUser1"]["value"]!=10 or result["testUser2"]["value"]!=102 :
 			print("Unexpected personal snapshot: expecting full responsibility.", result)
+			sys.exit(-1)
+
+
+		# test CurrentOccupancy()
+		result=self.CurrentOccupancy()
+		if result["nwc1008"] != ["testUser1"] or result["nwc1000m_a2"] != ["testUser2"] :
+			print("CurrentOccupancy() didn't return expected list.", result)
 			sys.exit(-1)
 
 		# case 3: TODO: take a snapshot manually, and check if it's intended

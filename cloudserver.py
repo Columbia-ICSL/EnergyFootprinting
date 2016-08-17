@@ -15,6 +15,8 @@ import suggestionDecisions
 import Query
 import Manage
 from bson import ObjectId
+from threading import Thread
+import suggestionsEngine
 
 urls = (
  
@@ -42,7 +44,7 @@ from DBMgr import MongoJsonEncoder
 #client = pymongo.MongoClient('localhost', 27017)
 #db = client.test_database
 db=DBMgr.DBMgr()
-
+SE = suggestionsEngine.suggestionsEngine()
 
 render = web.template.render('templates/')
 
