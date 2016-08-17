@@ -25,5 +25,6 @@ class training:
               [-69,-85,-90,-90,-99,-96,-71,-91,-100,-100,-100],
               [-88,-95,-87,-87,-95,-90,-68,-93,-100,-100,-100]
               ]
-    labelNames = ["Peter's Desk", "Danny's Desk", "Steven's Desk", "Rishi's Desk", "Daniel's Desk", "ICSL Lab Space", "Tehrani Lab Space", "4th Lab Space", "Bio Lab Space", "Professor's Office", "Hallway", "10M"]
+    labelNames1 = ["Peter's Desk", "Danny's Desk", "Steven's Desk", "Rishi's Desk", "Daniel's Desk", "ICSL Lab Space", "Tehrani Lab Space", "4th Lab Space", "Bio Lab Space", "Professor's Office", "Hallway", "10M"]
+    labelNames = ["nwc1003b", "nwc1003b", "nwc1003b", "nwc1003b", "nwc1003b", "nwc1003g", "nwc1003g", "nwc1003g", "nwc1003g", "nwc1008", "nwc1003g", "nwc100ma7"]
     labelNumber = [6, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 5, 5, 5, 5, 5, 1, 1, 1, 1, 0, 0, 0, 0]
