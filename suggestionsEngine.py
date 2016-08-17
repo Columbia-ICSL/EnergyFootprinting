@@ -21,7 +21,7 @@ class suggestionsEngine:
 			roomOccupancySnapshot += " "
 			roomOccupancySnapshot += str(occupancy)
 			roomOccupancySnapshot += ";"
-			if (len(userList) < moveLimit):
+			if (len(userList) < self.moveLimit):
 				users.extend(userList)
 		return users
 
