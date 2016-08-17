@@ -8,7 +8,7 @@ class userManagement:
 		raw_data=web.data()
 		userData=raw_data.split(',')
 		if (len(userData) == 0):
-			return
+			return raw_data
 		if (len(userData) == 1):
 			ret = cloudserver.db.userIDLookup(deviceID)
 			if (ret is None):
