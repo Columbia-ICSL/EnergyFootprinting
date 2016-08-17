@@ -11,7 +11,7 @@ class suggestionsEngine:
 	turnOffApplianceUsers = []
 	synchronizeApplianceUsers = []
 	def moveSuggestion(self):
-		list_of_rooms = cloudserver.db.CurrectOccupancy()
+		list_of_rooms = cloudserver.db.CurrentOccupancy()
 		users = []
 		roomOccupancySnapshot = ""
 		for roomID in list_of_rooms:
