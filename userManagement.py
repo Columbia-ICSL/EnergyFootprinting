@@ -14,7 +14,7 @@ class userManagement:
 			if (ret is None):
 				return "100"
 			else:
-				return ret
+				return "data=" + str(ret)
 		deviceID = userData[0]
 		username = userData[1]
 		if (username == "100"):
