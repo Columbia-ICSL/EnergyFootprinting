@@ -7,7 +7,7 @@ class suggestionsEngine:
 	checkInterval = 60 #1 minute
 	moveUsers = []
 	sortedRoomList = ["nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g", "nwc1008"]
-	sortedRoomOccupancy = [0] * len(sortedRoomOccupancy)
+	sortedRoomOccupancy = [0] * len(self.sortedRoomOccupancy)
 	roomOccupancySnapshot = ""
 	changeScheduleUsers = []
 	turnOffApplianceUsers = []
