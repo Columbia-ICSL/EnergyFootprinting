@@ -23,7 +23,7 @@ class suggestionsEngine:
 			self.sortedRoomOccupancy[index] = occupancy
 			if (len(userList) < self.moveLimit):
 				users.extend(userList)
-		for i in range(len(sortedRoomOccupancy)):
+		for i in range(len(self.sortedRoomOccupancy)):
 			self.roomOccupancySnapshot += str(self.sortedRoomOccupancy[i])
 			self.roomOccupancySnapshot += ";"
 		return users
