@@ -13,14 +13,14 @@ class suggestionsEngine:
 	def moveSuggestion(self):
 		list_of_rooms = cloudserver.db.CurrentOccupancy()
 		users = []
-		roomOccupancySnapshot = ""
+		self.roomOccupancySnapshot = ""
 		for roomID in list_of_rooms:
 			userList = list_of_rooms[roomID]
 			occupancy = len(userList)
-			roomOccupancySnapshot += str(roomID)
-			roomOccupancySnapshot += " "
-			roomOccupancySnapshot += str(occupancy)
-			roomOccupancySnapshot += ";"
+			self.roomOccupancySnapshot += str(roomID)
+			self.roomOccupancySnapshot += " "
+			self.roomOccupancySnapshot += str(occupancy)
+			self.roomOccupancySnapshot += ";"
 			if (len(userList) < self.moveLimit):
 				users.extend(userList)
 		return users
