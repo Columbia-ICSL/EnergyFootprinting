@@ -165,7 +165,6 @@ class DBMgr(object):
 
 	def updateUserLocation(self, user_id, in_id=None, out_id=None):
 		self.location_of_users[user_id]=in_id
-		for room in self.list_of_rooms:
 		if in_id==out_id:
 			return
 		## TODO: optimize, merge In-ops and Out-ops and remove unnecessary update to common appliances
