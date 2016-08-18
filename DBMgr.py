@@ -229,17 +229,19 @@ class DBMgr(object):
 		
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
-		self.LogRawData({
-			"type":"location_report",
-			"roomID":roomID,
-			"personID":personID,
-			"raw":raw_data
-			})
-
 		oldS=None
 		newS=roomID
 		if personID in self.location_of_users:
 			oldS=self.location_of_users[personID]
+
+		self.LogRawData({
+			"type":"location_report",
+			"roomID":roomID,
+			"personID":personID,
+			"raw":raw_data,
+			"oldS":oldS,
+			"newS":newS
+			})
 
 		if roomID not in self.list_of_rooms:
 			"if no legitimate roomID, then he's out of tracking."
