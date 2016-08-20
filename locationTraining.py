@@ -28,8 +28,7 @@ class train:
         locs = map(int, l)
         cloudserver.trainingData.append(locs)
         cloudserver.trainingLabels.append(intID)
-        location = self.KNN.classifier(locs)
-        return data
+        return "success"
 
     def GET(self):
         result = cloudserver.db.QueryLocationData(0)
