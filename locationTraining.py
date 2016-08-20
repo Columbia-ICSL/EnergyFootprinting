@@ -16,16 +16,15 @@ class train:
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
-        print("locs[0]")
-        if (locs[0] == "SAVE"):
-            print("saved")
-            outfile = "backup.txt"
-            with open(outfile, 'w') as file:
-                file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
-            outfile2 = "backuplabels.txt"
-            with open(outfile2, 'w') as file:
-                file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingLabels)
-            return "written"
+        #if (locs[0] == "SAVE"):
+        #    print("saved")
+        #    outfile = "backup.txt"
+        #    with open(outfile, 'w') as file:
+        #        file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
+        #    outfile2 = "backuplabels.txt"
+        #    with open(outfile2, 'w') as file:
+        #        file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingLabels)
+        #    return "written"
         if (locs[0] == "DESTROY"):
             #cloudserver.trainingData = []
             #cloudserver.trainingLabels = []
