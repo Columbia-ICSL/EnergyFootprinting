@@ -20,10 +20,24 @@ class DBInit(object):
                 "coordinate": coord,
             }]
         
+        addRoom("nwc10","NWC 10F Public Area", [40.810174, -73.962006]) # public area 10F, elevator bank etc.
+        addRoom("nwc10M","NWC 10M Public Area", [40.810174, -73.962006]) # public area 10F, elevator bank etc.
+        # exits
+        addRoom("nwc8","NWC 8F Public Area", [40.810174, -73.962006]) # public area 8F
+        addRoom("nwc7","NWC 7F Public Area", [40.810174, -73.962006]) # public area 7F
+        addRoom("nwc4","NWC 4F Public Area", [40.810174, -73.962006]) # public area 4F
+
+        # 10F space units
         addRoom("nwc1008","NWC 1008 Office", [40.809997, -73.961983])
         addRoom("nwc1003g","1003 Optics G Lab", [40.809965, -73.962063])
-        addRoom("nwc1003b","1003B Lab",[40.810022, -73.962075])
-        
+        #addRoom("nwc1003b","1003B Lab",[40.810022, -73.962075])
+        addRoom("nwc1003b_a","1003B Lab, Area A",[40.809980, -73.962159]) # Seat for Peter/Daniel
+        addRoom("nwc1003b_b","1003B Lab, Area B",[40.809947, -73.962050]) # Seat for Danny/Stephen
+        addRoom("nwc1003b_c","1003B Lab, Area C",[40.810005, -73.962072]) # Seat for Rishi
+        addRoom("nwc1003b_t","1003B Lab, Area T",[40.809897, -73.962138]) # Prof. Teherani's space
+
+
+        # 10M space units
         addRoom("nwc1000m_a1","10M Floor Aisle 1", [40.810050, -73.961945])
         addRoom("nwc1000m_a2","10M Floor Aisle 2", [40.810038, -73.961955])
         addRoom("nwc1000m_a3","10M Floor Aisle 3", [40.810021, -73.961966])
@@ -54,11 +68,14 @@ class DBInit(object):
         addAppliance("nwc1008_smartvent1", "HVAC", "nwc1008")
         addAppliance("nwc1008_light", "Light", "nwc1008")
 
-        addAppliance("nwc1003b_plug1", "Electrical", "nwc1003b")
-        addAppliance("nwc1003b_plug2", "Electrical", "nwc1003b")
+        addAppliance("nwc1003b_a_plug", "Electrical", "nwc1003b_a")
+        addAppliance("nwc1003b_b_plug", "Electrical", "nwc1003b_b")
+        addAppliance("nwc1003b_c_plug", "Electrical", "nwc1003b_c")
+
         addAppliance("nwc1003g_plug1", "Electrical", "nwc1003g")
         addAppliance("nwc1003g_plug2", "Electrical", "nwc1003g")
-        addAppliance("nwc1003b_light", "Light", "nwc1003b")
+        addAppliance("nwc1003g_plug3", "Electrical", "nwc1003g")
+        addAppliance("nwc1003b_light", "Light", "nwc1003b.*")
         addAppliance("nwc1003g_light", "Light", "nwc1003g")
 
         addAppliance("nwc1000m_a1_plug", "Electrical", "nwc1000m_a1")
