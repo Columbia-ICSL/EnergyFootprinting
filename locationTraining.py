@@ -41,7 +41,9 @@ class train:
                 file.writelines(str(self.rooms[i]) + '\n' for i in cloudserver.trainingLabels)
             locs = map(int, l)
             if (len(cloudserver.trainingLabels) <= self.K):
-                return "not enough data, LOL"
+                ret = "not enough data"
+                ret += str(len(cloudserver.trainingLabels))
+                return ret
             K = KNearestNeighbors(self.K, cloudserver.trainingData, cloudserver.trainingLabels)
             location = K.classifier(locs)
             return self.rooms[location] + ",LOL"
