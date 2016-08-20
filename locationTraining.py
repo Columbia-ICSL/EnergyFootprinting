@@ -24,7 +24,7 @@ class train:
             return location
         
         ID = locs[0]
-        intID = map(int, ID)
+        intID = int(ID)
         locs = map(int, l)
         cloudServer.trainingData.append(locs)
         cloudServer.trainingLabels.append(intID)
