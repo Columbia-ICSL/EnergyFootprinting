@@ -521,6 +521,9 @@ class DBMgr(object):
 			"timestamp":datetime.datetime.utcnow()
 		})
 
+	def DestroyLocationData(self):
+		self.dbc.db1.coll1.remove({})
+
 	def QueryLocationData(self, person):
 		result = []
 		condition = {

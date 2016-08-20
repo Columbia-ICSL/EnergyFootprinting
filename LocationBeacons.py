@@ -19,8 +19,8 @@ class BeaconVals:
         ID = locs[0]
         locs = map(int, l)
         location = self.KNN.classifier(locs)
-        cloudserver.db.ReportLocationAssociation(ID, self.labels[location[0]])
-        cloudserver.db.SaveLocationData(0, self.labels[location[0]])
+        cloudserver.db.ReportLocationAssociation(ID, self.labels[location])
+        cloudserver.db.SaveLocationData(0, self.labels[location])
         moveUsers = cloudserver.SE.moveUsers
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
