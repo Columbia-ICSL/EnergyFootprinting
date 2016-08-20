@@ -25,13 +25,16 @@ class train:
         #    with open(outfile2, 'w') as file:
         #        file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingLabels)
         #    return "written"
-        if (locs[0] == "DESTROY"):
+        if (locs[0] == "DES"):
             #cloudserver.trainingData = []
             #cloudserver.trainingLabels = []
             return "success"
         l = locs[1:]
 
         if (locs[0] == "GET"):
+            outfile = "backup.txt"
+            with open(outfile, 'w') as file:
+                file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
             locs = map(int, l)
             K = KNearestNeighbors(3, cloudserver.trainingData, cloudserver.trainingLabels)
             location = K.classifier(locs)
