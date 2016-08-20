@@ -36,11 +36,11 @@ class BeaconVals:
                 #data += "CS,"
                 #data += cloudserver.SE.roomOccupancySnapshot
                 #break
-        #for user in turnOffApplianceUsers:
-            #if (ID == user):
-                #data += "TO,"
-                #data += cloudserver.SE.roomOccupancySnapshot
-                #break
+        for user in turnOffApplianceUsers:
+            if (ID == user):
+                data += "TO,"
+                data += cloudserver.SE.roomOccupancySnapshot
+                break
         #for user in synchronizeApplianceUsers:
             #if (ID == user):
                 #data += "SA,"
