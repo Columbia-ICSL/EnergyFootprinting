@@ -16,13 +16,16 @@ class train:
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
+        if (locs[0] == "DESTROY"):
+            cloudserver.trainingData = []
+            cloudserver.trainingLabels = []
         l = locs[1:]
 
         if (locs[0] == "GET"):
             locs = map(int, l)
             K = KNearestNeighbors(3, cloudserver.trainingData, cloudserver.trainingLabels)
             location = K.classifier(locs)
-            return self.rooms[location]
+            return self.rooms[location] + ",LOL"
         
         ID = locs[0]
         intID = int(ID)
