@@ -16,6 +16,7 @@ class train:
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
+        print("locs[0]")
         if (locs[0] == "SAVE"):
             print("saved")
             outfile = "backup.txt"
