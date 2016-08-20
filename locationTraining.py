@@ -32,6 +32,7 @@ class train:
             infile = "backuplabels.txt"
             f = open(infile, 'r')
             x = f.readlines()
+            cloudserver.trainingLabels = []
             for j in range(len(x)):
                 y = x[i].split('\t')
                 last = y[-1].split('\n')
