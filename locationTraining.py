@@ -26,8 +26,8 @@ class train:
                 file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingLabels)
             return "written"
         if (locs[0] == "DESTROY"):
-            cloudserver.trainingData = []
-            cloudserver.trainingLabels = []
+            #cloudserver.trainingData = []
+            #cloudserver.trainingLabels = []
             return "success"
         l = locs[1:]
 
