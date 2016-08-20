@@ -36,7 +36,7 @@ class train:
                 y = x[i].split('\t')
                 last = y[-1].split('\n')
                 y[-1] = last[0]
-                cloudserver.trainingLabels.append(y)                
+                cloudserver.trainingLabels += y                
             return "successful reupload"
         if (locs[0] == "DES"):
             cloudserver.trainingData = []
