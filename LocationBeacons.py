@@ -25,7 +25,8 @@ class BeaconVals:
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
-        data = "data="
+        data = location
+        data += "="
         for user in moveUsers:
             if (ID == user):
                 data += "MO,"
