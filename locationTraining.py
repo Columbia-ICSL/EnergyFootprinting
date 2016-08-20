@@ -46,14 +46,14 @@ class train:
                 return ret
             K = KNearestNeighbors(self.K, cloudserver.trainingData, cloudserver.trainingLabels)
             location = K.classifier(locs)
-            return self.rooms[location] + ",LOL"
+            return self.rooms[location] + " LOL"
         ID = locs[0]
         intID = int(ID)
         locs = map(int, l)
         cloudserver.trainingData.append(locs)
         cloudserver.trainingLabels.append(intID)
         cloudserver.db.SaveLocationData(intID, locs)
-        return "success"
+        return str(len(cloudserver.trainingLabels)) + ",LOL"
 
     def GET(self):
         result = cloudserver.db.QueryLocationData(0)
