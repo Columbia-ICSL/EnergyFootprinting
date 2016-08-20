@@ -21,7 +21,7 @@ class DBInit(object):
             }]
         
         addRoom("nwc10","NWC 10F Public Area", [40.810174, -73.962006]) # public area 10F, elevator bank etc.
-        addRoom("nwc10M","NWC 10M Public Area", [40.810174, -73.962006]) # public area 10F, elevator bank etc.
+        addRoom("nwc10m","NWC 10M Public Area", [40.810174, -73.962006]) # public area 10F, elevator bank etc.
         # exits
         addRoom("nwc8","NWC 8F Public Area", [40.810174, -73.962006]) # public area 8F
         addRoom("nwc7","NWC 7F Public Area", [40.810174, -73.962006]) # public area 7F
