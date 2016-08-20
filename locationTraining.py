@@ -17,6 +17,7 @@ class train:
         raw_data=web.data()
         locs = raw_data.split(',')
         if (locs[0] == "SAVE"):
+            print("saved")
             outfile = "backup.txt"
             with open(outfile, 'w') as file:
                 file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
