@@ -29,7 +29,6 @@ class train:
         if (locs[0] == "DES"):
             cloudserver.trainingData = []
             cloudserver.trainingLabels = []
-            cloudserver.db.DestroyLocationData()
             return "successful destroy"
         l = locs[1:]
 
