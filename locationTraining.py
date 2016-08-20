@@ -19,6 +19,7 @@ class train:
         if (locs[0] == "DESTROY"):
             cloudserver.trainingData = []
             cloudserver.trainingLabels = []
+            return "success"
         l = locs[1:]
 
         if (locs[0] == "GET"):
