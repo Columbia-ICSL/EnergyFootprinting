@@ -19,15 +19,15 @@ class train:
 
         if (locs[0] == "GET"):
             locs = map(int, l)
-            KNN = KNearestNeighbors(3, cloudServer.trainingData, cloudServer.trainingLabels)
+            KNN = KNearestNeighbors(3, cloudserver.trainingData, cloudserver.trainingLabels)
             location = self.KNN.classifier(locs)
             return location
         
         ID = locs[0]
         intID = int(ID)
         locs = map(int, l)
-        cloudServer.trainingData.append(locs)
-        cloudServer.trainingLabels.append(intID)
+        cloudserver.trainingData.append(locs)
+        cloudserver.trainingLabels.append(intID)
         location = self.KNN.classifier(locs)
         return data
 
