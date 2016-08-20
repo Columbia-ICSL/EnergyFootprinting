@@ -35,16 +35,19 @@ class train:
             outfile = "backup.txt"
             with open(outfile, 'w') as file:
                 file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
+            outfile2 = "backuplabels.txt"
+            with open(outfile2, 'w') as file:
+                file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingLabels)
             locs = map(int, l)
             K = KNearestNeighbors(3, cloudserver.trainingData, cloudserver.trainingLabels)
             location = K.classifier(locs)
             return self.rooms[location] + ",LOL"
-        
         ID = locs[0]
         intID = int(ID)
         locs = map(int, l)
         cloudserver.trainingData.append(locs)
         cloudserver.trainingLabels.append(intID)
+        cloudserver.db.SaveLocationData(intID, locs)
         return "success"
 
     def GET(self):
