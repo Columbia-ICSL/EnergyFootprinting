@@ -12,7 +12,8 @@ class KNearestNeighbors:
 			sum = self.EUDist(self.dataset[i], measurement)
 			self.distances[i] = (sum, self.labels[i])
 		sortedDistances = sorted(self.distances, key=lambda dist:dist[0])
-		return self.majority_vote(sortedDistances[0:self.K])
+		majority = self.majority_vote(sortedDistances[0:self.K])
+		return majority[0]
 
 
 	def EUDist(self, Xmeas, Ymeas):
@@ -28,6 +29,5 @@ class KNearestNeighbors:
 			if (vote[1] in voteMap): voteMap[vote[1]] += 1
 			else: voteMap[vote[1]] = 1
 			if voteMap[vote[1]] > maximum[1]: maximum = (vote[1], voteMap[vote[1]])
-		print maximum
 		return maximum
 
