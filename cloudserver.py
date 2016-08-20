@@ -11,6 +11,7 @@ import DBMgr
 import Energy
 import Location
 import LocationBeacons
+import locationTraining
 import suggestionDecisions
 import userManagement
 import Query
