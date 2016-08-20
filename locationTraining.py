@@ -34,7 +34,7 @@ class train:
             x = f.readlines()
             cloudserver.trainingLabels = []
             for j in range(len(x)):
-                y = x[i]
+                y = x[j]
                 last = y.split('\n')
                 y = last[0]
 
@@ -47,10 +47,10 @@ class train:
 
         l = locs[1:]
         if (locs[0] == "GET"):
-            outfile = "backup.txt"
+            outfile = "backup1.txt"
             with open(outfile, 'w') as file:
                 file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
-            outfile2 = "backuplabels.txt"
+            outfile2 = "backuplabels1.txt"
             with open(outfile2, 'w') as file:
                 file.writelines(str(self.rooms[i]) + '\n' for i in cloudserver.trainingLabels)
             locs = map(int, l)
