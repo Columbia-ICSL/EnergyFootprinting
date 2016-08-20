@@ -6,23 +6,26 @@ class suggestionsEngine:
 	moveLimit = 3
 	checkInterval = 60 #1 minute
 	moveUsers = []
+	sortedRoomList = ["nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g", "nwc1008"]
+	sortedRoomOccupancy = [0] * len(sortedRoomList)
 	roomOccupancySnapshot = ""
 	changeScheduleUsers = []
 	turnOffApplianceUsers = []
 	synchronizeApplianceUsers = []
 	def moveSuggestion(self):
-		list_of_rooms = cloudserver.db.CurrectOccupancy()
+		list_of_rooms = cloudserver.db.CurrentOccupancy()
 		users = []
-		roomOccupancySnapshot = ""
+		self.roomOccupancySnapshot = ""
 		for roomID in list_of_rooms:
-			userList = list_of_rooms[roomID]["users"]
+			userList = list_of_rooms[roomID]
 			occupancy = len(userList)
-			roomOccupancySnapshot += str(roomID)
-			roomOccupancySnapshot += " "
-			roomOccupancySnapshot += str(occupancy)
-			roomOccupancySnapshot += ";"
-			if (len(userList) < moveLimit):
+			index = self.sortedRoomList.index(roomID)
+			self.sortedRoomOccupancy[index] = occupancy
+			if (len(userList) < self.moveLimit):
 				users.extend(userList)
+		for i in range(len(self.sortedRoomOccupancy)):
+			self.roomOccupancySnapshot += str(self.sortedRoomOccupancy[i])
+			self.roomOccupancySnapshot += ";"
 		return users
 
 ############## TODO #################

@@ -25,7 +25,6 @@ class KNearestNeighbors:
 		voteMap = {}
 		maximum = (0, 0)
 		for vote in votes:
-			print vote
 			if (vote[1] in voteMap): voteMap[vote[1]] += 1
 			else: voteMap[vote[1]] = 1
 			if voteMap[vote[1]] > maximum[1]: maximum = (vote[1], voteMap[vote[1]])
