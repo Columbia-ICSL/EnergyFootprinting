@@ -38,7 +38,7 @@ class train:
                 file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
             outfile2 = "backuplabels.txt"
             with open(outfile2, 'w') as file:
-                file.writelines(str(i) + '\n' for i in cloudserver.trainingLabels)
+                file.writelines(str(rooms[i]) + '\n' for i in cloudserver.trainingLabels)
             locs = map(int, l)
             K = KNearestNeighbors(3, cloudserver.trainingData, cloudserver.trainingLabels)
             location = K.classifier(locs)
