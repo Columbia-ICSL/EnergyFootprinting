@@ -17,21 +17,33 @@ class train:
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
-        #if (locs[0] == "SAVE"):
-        #    print("saved")
-        #    outfile = "backup.txt"
-        #    with open(outfile, 'w') as file:
-        #        file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
-        #    outfile2 = "backuplabels.txt"
-        #    with open(outfile2, 'w') as file:
-        #        file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingLabels)
-        #    return "written"
+
+        if (locs[0] == "REUP"):
+            infile = "backup.txt"
+            f = open(infile, 'r')
+            x = f.readlines()
+            cloudserver.trainingData = []
+            for i in range(len(x)):
+                y = x[i].split('\t')
+                last = y[-1].split('\n')
+                y[-1] = last[0]
+                y = map(int, y)
+                cloudserver.trainingData.append(y)
+            infile = "backuplabels.txt"
+            f = open(infile, 'r')
+            x = f.readlines()
+            for j in range(len(x)):
+                y = x[i].split('\t')
+                last = y[-1].split('\n')
+                y[-1] = last[0]
+                cloudserver.trainingLabels.append(y)                
+            return "successful reupload"
         if (locs[0] == "DES"):
             cloudserver.trainingData = []
             cloudserver.trainingLabels = []
             return "successful destroy"
-        l = locs[1:]
 
+        l = locs[1:]
         if (locs[0] == "GET"):
             outfile = "backup.txt"
             with open(outfile, 'w') as file:
