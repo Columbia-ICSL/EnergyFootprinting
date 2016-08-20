@@ -28,7 +28,7 @@ class train:
         if (locs[0] == "DES"):
             #cloudserver.trainingData = []
             #cloudserver.trainingLabels = []
-            return "success"
+            return "successful destroy"
         l = locs[1:]
 
         if (locs[0] == "GET"):
