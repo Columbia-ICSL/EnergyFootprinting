@@ -41,7 +41,7 @@ class train:
                 file.writelines(str(self.rooms[i]) + '\n' for i in cloudserver.trainingLabels)
             locs = map(int, l)
             if (len(cloudserver.trainingLabels) <= self.K):
-                ret = "not enough data"
+                ret = "not enough data,"
                 ret += str(len(cloudserver.trainingLabels))
                 return ret
             K = KNearestNeighbors(self.K, cloudserver.trainingData, cloudserver.trainingLabels)
