@@ -40,7 +40,7 @@ class train:
             with open(outfile2, 'w') as file:
                 file.writelines(str(self.rooms[i]) + '\n' for i in cloudserver.trainingLabels)
             locs = map(int, l)
-            if (len(cloudserver.trainingLabels) <= self.K):
+            if (len(cloudserver.trainingLabels) < self.K):
                 ret = "not enough data,"
                 ret += str(len(cloudserver.trainingLabels))
                 return ret
