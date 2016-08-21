@@ -11,6 +11,7 @@ import DBMgr
 import Energy
 import Location
 import LocationBeacons
+import locationTraining
 import suggestionDecisions
 import userManagement
 import Query
@@ -27,6 +28,7 @@ urls = (
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
     "/api/Beacons", LocationBeacons.Beacons,
+    "/api/locationTraining", locationTraining.locationTraining,
     "/api/userManagement", userManagement.userMGM,
     "/api/suggestionDecisions", suggestionDecisions.Decisions,
     "/frontend/(.+)", "frontend",
@@ -40,7 +42,8 @@ urls = (
 
 from DBMgr import MongoJsonEncoder
 
-
+trainingData = []
+trainingLabels = []
 
 #client = pymongo.MongoClient()
 #client = pymongo.MongoClient('localhost', 27017)

@@ -570,10 +570,13 @@ class DBMgr(object):
 
 	def SaveLocationData(self, person, location):
 		self.dbc.db1.coll1.insert({
-			"l1":location,
+			"location":location,
 			"person":person,
 			"timestamp":datetime.datetime.utcnow()
 		})
+
+	def DestroyLocationData(self):
+		self.dbc.db1.coll1.remove({})
 
 	def QueryLocationData(self, person):
 		result = []
