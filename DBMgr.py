@@ -376,7 +376,7 @@ class DBMgr(object):
 			time.sleep(self.SAMPLING_TIMEOUT_LONGEST)
 			self.SaveShot()
 			self.watchdogCheck_User()
-			self.watchdogRefresh_User()
+			self.watchdogCheck_Appliance()
 
 	def ShowRealtime(self, person=None, concise=True):
 		#save into database, with: timestamp, additional data
