@@ -121,9 +121,11 @@ class DBMgr(object):
 		self._ConstructInMemoryGraph()
 		## Construct bipartite graph. no recovery for now
 
+		self.watchdogInit()
+		
 		if __name__ != "__main__":
 			self.startDaemon()
-			self.watchdogInit()
+
 		## Start the snapshot thread if not running "python DBMgr.py"
 		## (perform self-test if it is.)
 
@@ -201,9 +203,17 @@ class DBMgr(object):
 		minTime=self._now()-self.WATCHDOG_TIMEOUT
 		futureTime=self._now()+86400
 		
-		for applID in self.watchdogLastSeen_Appliance:
-			if self.watchdogLastSeen_Appliance[applID]<minTime:
-				notWorking_List+=[applID]
+		#for applID in self.watchdogLastSeen_Appliance:
+		for applID in list_of_appliances:
+			if list_of_appliances[applID]["value"]>0:
+				# for all working(value>0) appliances
+				if applID in self.watchdogLastSeen_Appliance:
+					if self.watchdogLastSeen_Appliance[applID]<minTime:
+						notWorking_List+=[applID]
+				else:
+					#start-up issue, maybe the first report haven't arrived yet.
+					self.watchdogLastSeen_Appliance[applID]=self._now()
+
 		for applID in notWorking_List:
 			last_seen=self.watchdogLastSeen_Appliance[applID]
 			self.watchdogLastSeen_Appliance[applID]=futureTime
