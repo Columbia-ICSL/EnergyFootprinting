@@ -131,7 +131,7 @@ class DBMgr(object):
 		##	self.recover_from_latest_shot()
 
 	def startDaemon(self):
-		t=Thread(target=self._loopSaveShot,args=())
+		t=Thread(target=self._backgroundLoop,args=())
 		t.setDaemon(True)
 		t.start()
 
@@ -280,6 +280,7 @@ class DBMgr(object):
 			"value":value,
 			"raw":raw_data
 			})
+		self.watchdogCheck_Appliance(applianceID)
 		
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
@@ -296,6 +297,7 @@ class DBMgr(object):
 			"oldS":oldS,
 			"newS":newS
 			})
+		self.watchdogRefresh_User(personID)
 
 		if roomID!=None and roomID not in self.list_of_rooms:
 			"if no legitimate roomID, then he's out of tracking."
@@ -369,10 +371,12 @@ class DBMgr(object):
 
 	def _now(self):
 		return calendar.timegm(datetime.datetime.utcnow().utctimetuple())
-	def _loopSaveShot(self):
+	def _backgroundLoop(self):
 		while True:
 			time.sleep(self.SAMPLING_TIMEOUT_LONGEST)
 			self.SaveShot()
+			self.watchdogCheck_User()
+			self.watchdogRefresh_User()
 
 	def ShowRealtime(self, person=None, concise=True):
 		#save into database, with: timestamp, additional data
