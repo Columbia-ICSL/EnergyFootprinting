@@ -9,9 +9,8 @@ urls = (
 
 class BeaconVals:
     points = training.datapoints
-    labels = training.labelNames
     labelNumber = training.labelNumber
-    KNN = KNearestNeighbors(3, points, labelNumber)
+    KNN = KNearestNeighbors(11, points, labelNumber)
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
