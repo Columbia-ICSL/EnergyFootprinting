@@ -391,6 +391,8 @@ class DBMgr(object):
 			ret["rooms"]=self._getShotRooms(concise)
 			ret["appliances"]=self._getShotAppliances(concise)
 			ret["locations"]=self.location_of_users
+			ret["watchdog_user"]=self.watchdogCheck_User
+			ret["watchdog_appl"]=self.watchdogCheck_Appliance
 		return self._encode(ret,False)
 
 	def QueryRoom(self,room,start,end):
