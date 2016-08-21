@@ -45,6 +45,8 @@ def dump_recent_raw_submission():
 		list(pymongo.MongoClient().db.raw_data.find().sort([("_log_timestamp", -1)]).limit(500)),
 	indent=2)
 
+from Email import SendEmail
+
 class DBMgr(object):
 	def _GetConfigValue(self,key):
 		try:
@@ -61,6 +63,8 @@ class DBMgr(object):
 		self.APPLIANCE_DEFINITION=self._GetConfigValue("APPLIANCE_DEFINITION")
 		self.SAMPLING_TIMEOUT_SHORTEST=self._GetConfigValue("SAMPLING_TIMEOUT_SHORTEST")
 		self.SAMPLING_TIMEOUT_LONGEST=self._GetConfigValue("SAMPLING_TIMEOUT_LONGEST")
+		self.WATCHDOG_TIMEOUT=self._GetConfigValue("WATCHDOG_TIMEOUT")
+		
 
 	def _ConstructInMemoryGraph(self):
 		self.list_of_rooms={};
@@ -119,6 +123,7 @@ class DBMgr(object):
 
 		if __name__ != "__main__":
 			self.startDaemon()
+			self.watchdogInit()
 		## Start the snapshot thread if not running "python DBMgr.py"
 		## (perform self-test if it is.)
 
@@ -162,6 +167,55 @@ class DBMgr(object):
 		if len(ret)!=1:
 			return None
 		return ret[0]["screenName"]
+
+
+	def watchdogInit(self):
+		self.watchdogLastSeen_User={}
+		self.watchdogLastSeen_Appliance={}
+
+	def watchdogRefresh_User(self, userID):
+		if userID not in self.watchdogLastSeen_User:
+			self.watchdogLastSeen_User[userID]=0
+		self.watchdogLastSeen_User[userID]=max(self._now(), self.watchdogLastSeen_User[userID])
+
+	def watchdogRefresh_Appliance(self, applID):
+		if applID not in self.watchdogLastSeen_Appliance:
+			self.watchdogLastSeen_Appliance[applID]=0
+		self.watchdogLastSeen_Appliance[applID]=max(self._now(), self.watchdogLastSeen_Appliance[applID])
+
+
+	def watchdogCheck_User(self):
+		outOfRange_List=[]
+		minTime=self._now()-self.WATCHDOG_TIMEOUT
+
+		for userID in self.watchdogLastSeen_User:
+			if self.watchdogLastSeen_User[userID]<minTime:
+				outOfRange_List+=[userID]
+		for userID in outOfRange_List:
+			last_seen=self.watchdogLastSeen_User[userID]
+			self.ReportLocationAssociation(userID, None, {"Note":"Reported by Watchdog","last_seen": last_seen})
+
+
+	def watchdogCheck_Appliance(self):
+		notWorking_List=[]
+		minTime=self._now()-self.WATCHDOG_TIMEOUT
+		futureTime=self._now()+86400
+		
+		for applID in self.watchdogLastSeen_Appliance:
+			if self.watchdogLastSeen_Appliance[applID]<minTime:
+				notWorking_List+=[applID]
+		for applID in notWorking_List:
+			last_seen=self.watchdogLastSeen_Appliance[applID]
+			self.watchdogLastSeen_Appliance[applID]=futureTime
+			self.ReportEnergyValue(applID, 0, {"Note":"Reported by Watchdog","last_seen": last_seen})
+
+		title="Energy Monitoring Appliance Down: "+str(notWorking_List)
+		body="Dear SysAdmin,\nThe following appliance ID has not been reporting to the system for >15 minutes."
+		body+="\n\n"+"\n".join([str(x) for x in notWorking_List])+"\n\n"
+		body+="Please debug as appropriate.\nNote: this warning will repeat every 24 hours."
+		body+="\n\nSincerely, system watchdog."
+		SendEmail(title, body)
+
 
 	def updateUserLocation(self, user_id, in_id=None, out_id=None):
 		self.location_of_users[user_id]=in_id
@@ -243,7 +297,7 @@ class DBMgr(object):
 			"newS":newS
 			})
 
-		if roomID not in self.list_of_rooms:
+		if roomID!=None and roomID not in self.list_of_rooms:
 			"if no legitimate roomID, then he's out of tracking."
 			newS=None
 			self.recordEvent(personID,"illegitimateLocationReported",roomID)

@@ -37,7 +37,7 @@ class DBInit(object):
         addRoom("nwc1003b_t","1003B Lab, Area T",[40.809897, -73.962138]) # Prof. Teherani's space
 
 
-        # 10M space units
+        # 10M space units, aisle 1-8
         addRoom("nwc1000m_a1","10M Floor Aisle 1", [40.810050, -73.961945])
         addRoom("nwc1000m_a2","10M Floor Aisle 2", [40.810038, -73.961955])
         addRoom("nwc1000m_a3","10M Floor Aisle 3", [40.810021, -73.961966])
@@ -94,6 +94,9 @@ class DBInit(object):
         # Snapshot timeout, in seconds
         self._SetConfigValue("SAMPLING_TIMEOUT_SHORTEST", 6)
         self._SetConfigValue("SAMPLING_TIMEOUT_LONGEST", 60*2)
+
+        self._SetConfigValue("WATCHDOG_TIMEOUT", 60*10)
+
 
     def __init__(self):
         self.name="DB Initialization"
