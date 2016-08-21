@@ -280,7 +280,7 @@ class DBMgr(object):
 			"value":value,
 			"raw":raw_data
 			})
-		self.watchdogCheck_Appliance(applianceID)
+		self.watchdogRefresh_Appliance(applianceID)
 		
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
