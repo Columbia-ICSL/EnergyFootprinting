@@ -122,7 +122,7 @@ class DBMgr(object):
 		## Construct bipartite graph. no recovery for now
 
 		self.watchdogInit()
-		
+
 		if __name__ != "__main__":
 			self.startDaemon()
 
@@ -204,8 +204,8 @@ class DBMgr(object):
 		futureTime=self._now()+86400
 		
 		#for applID in self.watchdogLastSeen_Appliance:
-		for applID in list_of_appliances:
-			if list_of_appliances[applID]["value"]>0:
+		for applID in self.list_of_appliances:
+			if self.list_of_appliances[applID]["value"]>0:
 				# for all working(value>0) appliances
 				if applID in self.watchdogLastSeen_Appliance:
 					if self.watchdogLastSeen_Appliance[applID]<minTime:
