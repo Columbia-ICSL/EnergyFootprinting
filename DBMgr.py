@@ -233,7 +233,9 @@ class DBMgr(object):
 		body+="\n\n"+"\n".join([str(x) for x in notWorking_List])+"\n\n"
 		body+="Please debug as appropriate.\nNote: this warning will repeat every 24 hours."
 		body+="\n\nSincerely, system watchdog."
-		email_ret=SendEmail(title, body)
+
+		if len(notWorking_List)>0:
+			email_ret=SendEmail(title, body)
 
 		self.LogRawData({
 			"type":"watchdogCheck_Appliance",
