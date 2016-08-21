@@ -193,6 +193,15 @@ class DBMgr(object):
 		for userID in self.watchdogLastSeen_User:
 			if self.watchdogLastSeen_User[userID]<minTime:
 				outOfRange_List+=[userID]
+
+		self.LogRawData({
+			"type":"watchdogCheck_User",
+			"time":self._now(),
+			"minTime":minTime,
+			"outOfRange_List":outOfRange_List,
+			"raw":self.watchdogLastSeen_User,
+			})
+
 		for userID in outOfRange_List:
 			last_seen=self.watchdogLastSeen_User[userID]
 			self.ReportLocationAssociation(userID, None, {"Note":"Reported by Watchdog","last_seen": last_seen})
@@ -224,7 +233,16 @@ class DBMgr(object):
 		body+="\n\n"+"\n".join([str(x) for x in notWorking_List])+"\n\n"
 		body+="Please debug as appropriate.\nNote: this warning will repeat every 24 hours."
 		body+="\n\nSincerely, system watchdog."
-		SendEmail(title, body)
+		email_ret=SendEmail(title, body)
+
+		self.LogRawData({
+			"type":"watchdogCheck_Appliance",
+			"time":self._now(),
+			"minTime":minTime,
+			"notWorking_List":notWorking_List,
+			"raw":self.watchdogLastSeen_Appliance,
+			})
+
 
 
 	def updateUserLocation(self, user_id, in_id=None, out_id=None):
