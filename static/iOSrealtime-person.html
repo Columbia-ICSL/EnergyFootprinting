@@ -65,10 +65,12 @@ function requestData(){
     });
 
     var visited={};
+    var total=0;
     input.personal.consumptions.forEach(function(appl){
       var applID=appl['id'];
       var idx=appls.indexOf(applID);
       var val=appl.share;
+      total+=val;
       var doshift=chart.series[idx].length > maxLen;
       chart.series[idx].addPoint([ts,val],true, doshift);
       visited[applID]=true;
@@ -81,6 +83,8 @@ function requestData(){
         chart.series[idx].addPoint([ts,0],true, true);
       }
     }
+    var title='Your total footprint: <br><i>'+total+' Watts</i>';
+    chart.title.textSetter(title);
 
     setTimeout(requestData,reqTime);
   }
@@ -95,9 +99,9 @@ $(function(){
                 load: requestData
             }
         },
-        //title: {
-            //text: 'Live energy footprint'
-        //},
+        title: {
+            text: 'Please wait...'
+        },
         xAxis: {
             type: 'datetime',
             tickPixelInterval: 150,
