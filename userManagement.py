@@ -19,14 +19,14 @@ class userManagement:
 				return ret
 		username = userData[1]
 		if (username == "100"):
-			return "1"
+			return "Special Name"
 		if (cloudserver.db.screenNameCheckAvailability(username)):
 			if (cloudserver.db.screenNameRegister(username, deviceID)):
 				return "0" #success
 			else:
-				return "1" #duplicate username
+				return "Duplicate Username" #duplicate username
 		else:
-			return "1" #username taken
+			return "Username Taken" #username taken
 		return "case 3"
 
 userMGM = web.application(urls, locals());
