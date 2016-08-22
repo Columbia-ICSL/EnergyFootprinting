@@ -44,9 +44,9 @@ function requestData(){
       return;
     }
     var ts=input.timestamp*1000;
-    if(input.personal.location.id != LastRoom){
-      LastRoom=input.personal.location.id;
-      var roomName=input.personal.location.name;
+    if(input.location.id != LastRoom){
+      LastRoom=input.location.id;
+      var roomName=input.location.name;
       chart.series[0].addPoint({
           title:LastRoom,
           text:'You Entered '+'<i>'+roomName+'</i>',
