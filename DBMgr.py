@@ -149,6 +149,12 @@ class DBMgr(object):
 		return len(list(self.registration_col.find({"screenName":screenName}))) == 0
 		
 	def screenNameRegister(self, screenName, userID):
+		self.LogRawData({
+			"type":"screenNameRegister",
+			"time":self._now(),
+			"screenName":screenName,
+			"userID":userID
+			})
 		try:
 			self.registration_col.insert({
 				"screenName":screenName,
