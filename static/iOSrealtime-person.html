@@ -83,6 +83,7 @@ function requestData(){
         chart.series[idx].addPoint([ts,0],true, true);
       }
     }
+    total=total.toFixed(2);
     var title='Your total footprint: <br><i>'+total+' Watts</i>';
     chart.title.textSetter(title);
 
