@@ -349,6 +349,9 @@ class DBMgr(object):
 
 		self.updateUserLocation(personID, newS, oldS)
 
+		if newS!=None:
+			self.list_of_rooms[newS]["phantom_user"]=personID
+
 		"people change; should we update now?"
 		self.OptionalSaveShot();
 
@@ -564,6 +567,12 @@ class DBMgr(object):
 		if result["testUser1"]["value"]!=10 or result["testUser2"]["value"]!=102 :
 			print("Unexpected personal snapshot: expecting full responsibility.", result)
 			sys.exit(-1)
+
+		# check phantom user
+		if self.list_of_rooms["nwc1000m_a1"]["phantom_user"] != "testUser1":
+			print("phantom_user not set correctly.")
+			sys.exit(-1)
+
 
 
 		# test CurrentOccupancy()
