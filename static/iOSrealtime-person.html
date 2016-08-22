@@ -68,7 +68,7 @@ function requestData(){
     input.personal.consumptions.forEach(function(appl){
       var applID=appl['id'];
       var idx=appls.indexOf(applID);
-      var val=input.personal.consumptions[applID].value;
+      var val=appl.share;
       var doshift=chart.series[idx].length > maxLen;
       chart.series[idx].addPoint([ts,val],true, doshift);
       visited[applID]=true;
