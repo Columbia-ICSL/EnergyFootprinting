@@ -417,6 +417,8 @@ class DBMgr(object):
 			roomID=self.location_of_users[person]
 			if roomID!=None:
 				ret["personal"]=self.calculateRoomFootprint(roomID)
+				#ret["location"]=roomID
+				ret["location"]=self.list_of_rooms[roomID]
 		else:
 			ret["rooms"]=self._getShotRooms(concise)
 			ret["appliances"]=self._getShotAppliances(concise)
