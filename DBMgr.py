@@ -171,6 +171,11 @@ class DBMgr(object):
 		return ret[0]["userID"]
 	
 	def userIDLookup(self, userID):
+		self.LogRawData({
+			"type":"userIDLookup",
+			"time":self._now(),
+			"userID":userID
+			})
 		ret=list(self.registration_col.find({"userID":userID}))
 		if len(ret)!=1:
 			return None
