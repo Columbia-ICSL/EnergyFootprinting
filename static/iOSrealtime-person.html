@@ -2,18 +2,32 @@
 <html>
 <head>
 <title> The Energy Footprint System query interface </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <!--<script src="http://code.highcharts.com/highcharts.js"></script> -->
 <script src="http://code.highcharts.com/stock/highstock.js"></script>
 <script type="text/javascript">
+var query=(function(s){
+  var loc=s.indexOf('?');
+  if(loc==-1)return {};
+  var q=s.substr(loc+1);
+  var ret={};
+  q.split('&').map(function(part){
+    var array=part.split('=');
+    var key=decodeURIComponent(array[0]), value=decodeURIComponent(array.slice(1).join("="));
+    ret[key]=value;
+  });
+  return ret;
+})(location.href);
+
 var chart;
-var personID;
+var personID=query['id'];
 
 var maxLen=(20*60/10);//20mins, every 10s
 var reqTime=3*1000;
-var types=[false];
+var appls=[false];
 var LastRoom=false;
 //the first series is location history, not consumption!
 function requestData(){
@@ -25,82 +39,90 @@ function requestData(){
   });
   function render(input){
     console.log("input",d=input);
-    if(!input.personal || typeof input.personal.type_aggregate == 'undefined'){
+    if(!input.personal || typeof input.personal.consumptions == 'undefined'){
       $('#myModal').modal({backdrop:'static', keyboard:0})
       return;
     }
     var ts=input.timestamp*1000;
-    if(input.personal.roomID != LastRoom){
-      LastRoom=input.personal.roomID;
+    if(input.location.id != LastRoom){
+      LastRoom=input.location.id;
+      var roomName=input.location.name;
       chart.series[0].addPoint({
           title:LastRoom,
-          text:'<i>'+personID+'</i>'+' entered '+'<i>'+LastRoom+'</i>',
+          text:'You Entered '+'<i>'+roomName+'</i>',
           x:ts
       },true,false);
     }
 
-    for(var t in input.personal.type_aggregate){
-      console.log(t,input.personal.type_aggregate[t]);
-      if(types.indexOf(t)<0){
-        types.push(t);
-        chart.addSeries({name:t});
+    input.personal.consumptions.forEach(function(appl){
+      var applID=appl['id'];
+      console.log(applID, appl['share']);
+    if(appls.indexOf(applID)<0){
+        appls.push(applID);
+        chart.addSeries({name:applID});
+        // TODO: display Names instead
       }
-    }
+    });
+
     var visited={};
-    for(var t in input.personal.type_aggregate){
-      var idx=types.indexOf(t);
-      var val=input.personal.type_aggregate[t].value;
+    var total=0;
+    input.personal.consumptions.forEach(function(appl){
+      var applID=appl['id'];
+      var idx=appls.indexOf(applID);
+      var val=appl.share;
+      total+=val;
       var doshift=chart.series[idx].length > maxLen;
       chart.series[idx].addPoint([ts,val],true, doshift);
-      visited[t]=true;
-    }
+      visited[applID]=true;
+    });
+
     console.log('visited',visited);
-    for(var idx=1;idx<types.length;idx++){
-      var t=types[idx];
+    for(var idx=1;idx<appls.length;idx++){
+      var t=appls[idx];
       if(!visited[t]){
         chart.series[idx].addPoint([ts,0],true, true);
       }
     }
+    total=total.toFixed(2);
+    var title='Your total footprint: <br><i>'+total+' Watts</i>';
+    chart.title.textSetter(title);
 
     setTimeout(requestData,reqTime);
   }
 }
 
 $(function(){
-    $("form button").click(function() {
-        personID=$("#personID").val();
-        chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'container',
-                defaultSeriesType: 'spline',
-                events: {
-                    load: requestData
-                }
-            },
+    chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'container',
+            defaultSeriesType: 'spline',
+            events: {
+                load: requestData
+            }
+        },
+        title: {
+            text: 'Please wait...'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150,
+            maxZoom: 20 * 1000
+        },
+        yAxis: {
+            minPadding: 0.2,
+            maxPadding: 0.2,
             title: {
-                text: 'Live energy footprint of <i>'+personID+'</i>'
-            },
-            xAxis: {
-                type: 'datetime',
-                tickPixelInterval: 150,
-                maxZoom: 20 * 1000
-            },
-            yAxis: {
-                minPadding: 0.2,
-                maxPadding: 0.2,
-                title: {
-                    text: 'Value',
-                    margin: 80
-                }
-            },
-            series: [{
-              type:'flags',
-              showInLegend: false,
-              onSeries:'',
-              name:'Location History'
-            }]//series of energy cons will be dynamically added
-        });        
-    });
+                text: 'Footprint / Watts',
+                margin: 80
+            }
+        },
+        series: [{
+          type:'flags',
+          showInLegend: false,
+          onSeries:'',
+          name:'Location History'
+        }]//series of energy cons will be dynamically added
+    });        
 });
 </script>
 <style>
@@ -127,12 +149,12 @@ body {
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Person ID data not found</h4>
+            <h4 class="modal-title">Data not found</h4>
           </div>
           <div class="modal-body">
             <p class="lead">
-            The ID you provided seems to have no data reported&hellip;</p>
-            <p>This may either because there's a typo, or because the latest data haven't arrived into the database or the person haven't entered monitored area. Please first check the database data stream and then refresh this page.
+            Your device ID seems to have no data reported&hellip;</p>
+            <p>This may either because the location data haven't arrived into the central system yet, or energy monitors is not reporting energy consumptions in your area. Please come back later.
             </p>
           </div>
           <div class="modal-footer">
@@ -146,11 +168,13 @@ body {
       <div class="starter-template">
         <h1>Realtime Personal Footprint</h1>
           <div id="container" style="height: 440px;" class="panel-body">
+          <!--
             <form id="form1" onsubmit="return false;"  class="form-inline">
               <label for="personID">UserID</label>
               <input type="text" class="form-control" id="personID" placeholder="fengyi" value="fengyi">
               <button type="button" class="btn btn-default">Start</button>
             </form>
+          -->
         </div>
 
 </div>
