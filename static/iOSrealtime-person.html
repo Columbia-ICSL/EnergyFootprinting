@@ -27,7 +27,7 @@ var personID=query['id'];
 
 var maxLen=(20*60/10);//20mins, every 10s
 var reqTime=3*1000;
-var types=[false];
+var appls=[false];
 var LastRoom=false;
 //the first series is location history, not consumption!
 function requestData(){
@@ -57,8 +57,8 @@ function requestData(){
     input.personal.consumptions.forEach(function(appl){
       var applID=appl['id'];
       console.log(applID, appl['share']);
-    if(types.indexOf(applID)<0){
-        types.push(applID);
+    if(appls.indexOf(applID)<0){
+        appls.push(applID);
         chart.addSeries({name:applID});
         // TODO: display Names instead
       }
@@ -67,16 +67,16 @@ function requestData(){
     var visited={};
     input.personal.consumptions.forEach(function(appl){
       var applID=appl['id'];
-      var idx=types.indexOf(applID);
-      var val=input.personal.type_aggregate[applID].value;
+      var idx=appls.indexOf(applID);
+      var val=input.personal.consumptions[applID].value;
       var doshift=chart.series[idx].length > maxLen;
       chart.series[idx].addPoint([ts,val],true, doshift);
       visited[applID]=true;
     });
 
     console.log('visited',visited);
-    for(var idx=1;idx<types.length;idx++){
-      var t=types[idx];
+    for(var idx=1;idx<appls.length;idx++){
+      var t=appls[idx];
       if(!visited[t]){
         chart.series[idx].addPoint([ts,0],true, true);
       }
