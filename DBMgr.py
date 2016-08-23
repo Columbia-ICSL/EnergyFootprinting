@@ -97,8 +97,8 @@ class DBMgr(object):
 		db1 = self.dbc.test_database
 		coll1 = db1.test_collection
 
-		self.registration_col=self.dbc.db.registration_col
-		self.registration_col.ensure_index('screen_name', unique=True)
+		self.registration_col1=self.dbc.db.registration_col1
+		self.registration_col1.ensure_index('screenName', unique=True)
 		#user registration
 		self.config_col=self.dbc.db.config
 		#metadata col
@@ -146,7 +146,7 @@ class DBMgr(object):
 			})
 
 	def screenNameCheckAvailability(self, screenName):
-		return len(list(self.registration_col.find({"screenName":screenName}))) == 0
+		return len(list(self.registration_col1.find({"screenName":screenName}))) == 0
 		
 	def screenNameRegister(self, screenName, userID):
 		self.LogRawData({
@@ -156,16 +156,16 @@ class DBMgr(object):
 			"userID":userID
 			})
 		try:
-			self.registration_col.insert({
+			self.registration_col1.insert({
 				"screenName":screenName,
-				"userID":userID,
+				"userID":userID
 				})
 			return True
 		except pymongo.errors.DuplicateKeyError:
 			return False
 
 	def screenNameLookup(self, screenName):
-		ret=list(self.registration_col.find({"screenName":screenName}))
+		ret=list(self.registration_col1.find({"screenName":screenName}))
 		if len(ret)!=1:
 			return None
 		return ret[0]["userID"]
@@ -176,7 +176,7 @@ class DBMgr(object):
 			"time":self._now(),
 			"userID":userID
 			})
-		ret=list(self.registration_col.find({"userID":userID}))
+		ret=list(self.registration_col1.find({"userID":userID}))
 		if len(ret)!=1:
 			return None
 		return ret[0]["screenName"]
@@ -538,8 +538,8 @@ class DBMgr(object):
 		self.raw_data=self.dbc.test.raw_data
 		self.events_col=self.dbc.test.events_col
 
-		self.registration_col=self.dbc.test.registration_col
-		self.registration_col.ensure_index('screen_name', unique=True)
+		self.registration_col1=self.dbc.test.registration_col1
+		self.registration_col1.ensure_index('screenName', unique=True)
 		
 
 		# case 1: add a consumption value, put two users, the users get shared energy consumption
