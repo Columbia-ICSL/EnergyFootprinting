@@ -88,9 +88,9 @@ class DBMgr(object):
 			self.list_of_rooms[room["id"]]["appliances"].sort()
 		## Finished appliance bipartite graph.
 
-	def RoomIdToName(id):
+	def RoomIdToName(self,id):
 		return self.list_of_rooms[id]["name"]
-	def ApplIdToName(id):
+	def ApplIdToName(self,id):
 		return "TODO"
 
 	def _encode(self,data,isPretty):
