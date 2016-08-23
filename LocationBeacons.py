@@ -25,29 +25,48 @@ class BeaconVals:
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
-        data = self.labels[location]
-        data += "="
+        
+        json_return={
+            "location":"Location Name",
+            "location_id":"locationIDString",
+            "balance":-1,
+            "suggestions":[],
+        }
+        def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
+            return dict(Others).update({
+                "type":iType,
+                "title":iTitle,
+                "body":iBodyText,
+                "reward":iReward,
+                })
+
+        json_return["location_id"]=self.labels[location]
+        json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
         for user in moveUsers:
             if (ID == user):
-                data += "MO,"
-                data += cloudserver.SE.roomOccupancySnapshot
+                roomId="nwc1008"
+                roomName=cloudserver.db.RoomIdToName(roomId)
+                title="Move to "+roomName+"?"
+                body="TODO--some description"
+                reward=4
+                json_return["suggestions"].append(
+                    make_suggestion_item("move",title,body,reward,{"to":roomName,"to_id":roomId})
+                    )
                 break
-        #for user in changeScheduleUsers:
-            #if (ID == user):
-                #data += "CS,"
-                #data += cloudserver.SE.roomOccupancySnapshot
-                #break
+
         for user in turnOffApplianceUsers:
             if (ID == user):
-                data += "TO,"
-                data += cloudserver.SE.roomOccupancySnapshot
-                break
-        #for user in synchronizeApplianceUsers:
-            #if (ID == user):
-                #data += "SA,"
-                #data += cloudserver.SE.roomOccupancySnapshot
-                #break
-        return data
+                applianceID="nwc1003b_c_plug"
+                applianceName=cloudserver.db.ApplIdToName(applianceID)
+                title="Shut off "+applianceName+"?"
+                pwr=1234 # todo from DBM
+                body="The electrical appliances at "+applianceName+" is consuming excess power ("+pwr+" watts), please see if you can switch off some appliance."
+                reward=0.1*pwr
+                json_return["suggestions"].append(
+                    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID})
+                    )
+
+        return cloudserver.db._encode(json_return,False)
 
     def GET(self):
         result = cloudserver.db.QueryLocationData(0)

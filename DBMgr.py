@@ -88,6 +88,10 @@ class DBMgr(object):
 			self.list_of_rooms[room["id"]]["appliances"].sort()
 		## Finished appliance bipartite graph.
 
+	def RoomIdToName(id):
+		return self.list_of_rooms[id]["name"]
+	def ApplIdToName(id):
+		return "TODO"
 
 	def _encode(self,data,isPretty):
 		return MongoJsonEncoder().encode(data)
