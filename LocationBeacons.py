@@ -33,12 +33,13 @@ class BeaconVals:
             "suggestions":[],
         }
         def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
-            return dict(Others).update({
+            Others.update({
                 "type":iType,
                 "title":iTitle,
                 "body":iBodyText,
                 "reward":iReward,
                 })
+            return Others
 
         json_return["location_id"]=self.labels[location]
         json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
