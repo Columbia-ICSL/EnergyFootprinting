@@ -380,7 +380,9 @@ class DBMgr(object):
 	def CurrentApplianceUsage(self, limit=3):
 		for person in self.location_of_users:
 			location = self.location_of_users[person]
-			appliances = self.list_of_rooms[location]
+			if location not in self.list_of_rooms:
+				continue
+			appliances = self.list_of_rooms[location]["appliances"]
 			applianceValues = []
 			applianceIDs = []
 			for applianceID in appliances:
