@@ -384,7 +384,7 @@ class DBMgr(object):
 			applianceValues = []
 			applianceIDs = []
 			for applianceID in appliances:
-				applianceValues.append(list_of_appliances[applianceID]["value"])
+				applianceValues.append(self.list_of_appliances[applianceID]["value"])
 				applianceIDs.append(applianceID)
 			appliances_sorted = sorted(range(len(applianceValues)), key=lambda k:applianceValues[k])
 			len_appliances = len(appliances_sorted)
