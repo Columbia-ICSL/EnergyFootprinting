@@ -96,7 +96,8 @@ class DBInit(object):
         self._SetConfigValue("SAMPLING_TIMEOUT_SHORTEST", 6)
         self._SetConfigValue("SAMPLING_TIMEOUT_LONGEST", 60*2)
 
-        self._SetConfigValue("WATCHDOG_TIMEOUT", 60*10)
+        self._SetConfigValue("WATCHDOG_TIMEOUT_USER", 60*10)
+        self._SetConfigValue("WATCHDOG_TIMEOUT_APPLIANCE", 60*20)
 
 
     def __init__(self):

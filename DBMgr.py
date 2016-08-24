@@ -63,7 +63,8 @@ class DBMgr(object):
 		self.APPLIANCE_DEFINITION=self._GetConfigValue("APPLIANCE_DEFINITION")
 		self.SAMPLING_TIMEOUT_SHORTEST=self._GetConfigValue("SAMPLING_TIMEOUT_SHORTEST")
 		self.SAMPLING_TIMEOUT_LONGEST=self._GetConfigValue("SAMPLING_TIMEOUT_LONGEST")
-		self.WATCHDOG_TIMEOUT=self._GetConfigValue("WATCHDOG_TIMEOUT")
+		self.WATCHDOG_TIMEOUT_USER=self._GetConfigValue("WATCHDOG_TIMEOUT_USER")
+		self.WATCHDOG_TIMEOUT_APPLIANCE=self._GetConfigValue("WATCHDOG_TIMEOUT_APPLIANCE")
 		
 
 	def _ConstructInMemoryGraph(self):
@@ -205,7 +206,7 @@ class DBMgr(object):
 
 	def watchdogCheck_User(self):
 		outOfRange_List=[]
-		minTime=self._now()-self.WATCHDOG_TIMEOUT
+		minTime=self._now()-self.WATCHDOG_TIMEOUT_USER
 
 		for userID in self.watchdogLastSeen_User:
 			if self.watchdogLastSeen_User[userID]<minTime:
@@ -226,7 +227,7 @@ class DBMgr(object):
 
 	def watchdogCheck_Appliance(self):
 		notWorking_List=[]
-		minTime=self._now()-self.WATCHDOG_TIMEOUT
+		minTime=self._now()-self.WATCHDOG_TIMEOUT_APPLIANCE
 		futureTime=self._now()+86400
 		
 		#for applID in self.watchdogLastSeen_Appliance:
