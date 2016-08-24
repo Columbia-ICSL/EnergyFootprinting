@@ -92,6 +92,8 @@ class DBMgr(object):
 		return self.list_of_rooms[id]["name"]
 	def ApplIdToName(self,id):
 		return self.list_of_appliances[id]["name"]
+	def ApplIdToVal(self,id):
+		return self.list_of_appliances[id]["value"]
 
 	def _encode(self,data,isPretty):
 		return MongoJsonEncoder().encode(data)

@@ -48,7 +48,7 @@ class BeaconVals:
                 roomId="nwc1008"
                 roomName=cloudserver.db.RoomIdToName(roomId)
                 title="Move to "+roomName+"?"
-                body="TODO--some description"
+                body="Please consider sharing the room to lower everyone's energy footprint."
                 reward=4
                 json_return["suggestions"].append(
                     make_suggestion_item("move",title,body,reward,{"to":roomName,"to_id":roomId})
@@ -60,9 +60,9 @@ class BeaconVals:
                 applianceID="nwc1003b_c_plug"
                 applianceName=cloudserver.db.ApplIdToName(applianceID)
                 title="Shut off "+applianceName+"?"
-                pwr=1234 # todo from DBM
-                body="The electrical appliances at "+applianceName+" is consuming excess power ("+pwr+" watts), please see if you can switch off some appliance."
-                reward=0.1*pwr
+                pwr=cloudserver.db.ApplIdToVal(applianceID)
+                body=applianceName+" is consuming excess power ("+pwr+" watts), please see if you can switch off some appliance."
+                reward=int(0.1*pwr)+1
                 json_return["suggestions"].append(
                     make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID})
                     )
