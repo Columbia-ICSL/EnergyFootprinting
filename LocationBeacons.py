@@ -63,7 +63,7 @@ class BeaconVals:
                     applianceName = appliance["name"]
                     powerUsage = appliance["value"]
                     title="Shut off "+applianceName
-                    body=applianceName+" is consuming excess power ("+powerUsage+" watts), please see if you can switch off some appliance."
+                    body=applianceName+" is consuming excess power ("+str(powerUsage)+" watts), please see if you can switch off some appliance."
                     reward=1
                     json_return["suggestions"].append(
                         make_suggestion_item("turnoff",title, body, reward, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
