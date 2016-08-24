@@ -57,15 +57,30 @@ class BeaconVals:
 
         for user in turnOffApplianceUsers:
             if (ID == user):
-                applianceID="nwc1003b_c_plug"
-                applianceName=cloudserver.db.ApplIdToName(applianceID)
-                title="Shut off "+applianceName+"?"
-                pwr=cloudserver.db.ApplIdToVal(applianceID)
-                body=applianceName+" is consuming excess power ("+pwr+" watts), please see if you can switch off some appliance."
-                reward=int(0.1*pwr)+1
-                json_return["suggestions"].append(
-                    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID, "power":pwr})
-                    )
+                applianceList = turnOffApplianceUsers[user]
+                for APPL in applianceList:
+                    applianceID = APPL[APPL]["id"]
+                    applianceName = APPL[APPL]["name"]
+                    powerUsage = APPL[APPL]["value"]
+                    title="Shut off "+applianceName
+                    body=applianceName+" is consuming excess power ("+powerUsage+" watts), please see if you can switch off some appliance."
+                    reward=1
+                    json_return["suggestions"].append(
+                        make_suggestion_item("turnoff",title, body, reward, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
+
+
+
+
+
+                #applianceID="nwc1003b_c_plug"
+                #applianceName=cloudserver.db.ApplIdToName(applianceID)
+                #title="Shut off "+applianceName+"?"
+                #pwr=cloudserver.db.ApplIdToVal(applianceID)
+                #body=applianceName+" is consuming excess power ("+pwr+" watts), please see if you can switch off some appliance."
+                #reward=int(0.1*pwr)+1
+                #json_return["suggestions"].append(
+                #    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID, "power":pwr})
+                #    )
 
         return cloudserver.db._encode(json_return,False)
 

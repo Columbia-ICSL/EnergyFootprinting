@@ -377,6 +377,28 @@ class DBMgr(object):
 			ret[roomID]=self.list_of_rooms[roomID]["users"]
 		return ret
 
+	def CurrentApplianceUsage(self, limit=3):
+		for person in self.location_of_users:
+			location = self.location_of_users[person]
+			appliances = self.list_of_rooms[location]
+			applianceValues = []
+			applianceIDs = []
+			for applianceID in appliances:
+				applianceValues.append(list_of_appliances[applianceID]["value"])
+				applianceIDs.append(applianceID)
+			appliances_sorted = sorted(range(len(applianceValues)), key=lambda k:applianceValues[k])
+			len_appliances = len(appliances_sorted)
+			min_appliances = min(len_appliances, limit)
+			rec_appliances = []
+			for i in range(min_appliances):
+				AID = applianceIDs[appliances_sorted[i]]
+				rec_appliances.append(self.list_of_appliances[AID])
+			ret[person] = rec_appliances
+		#appliancesSorted
+		#for appliance in self.list_of_appliances:
+	#		ret[appliance]=self.list_of_appliances[appliance]["users"]
+		return ret
+
 	def _getShotAppliances(self, concise=True):
 		return self.list_of_appliances
 
