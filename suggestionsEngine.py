@@ -33,7 +33,7 @@ class suggestionsEngine:
 		users = []
 		return users
 	def turnOffApplianceSuggestion(self):
-		personalUsage = CurrentApplianceUsage(5)
+		personalUsage = cloudserver.db.CurrentApplianceUsage(5)
 		users = {}
 		for person in personalUsage:
 			users[person] = personalUsage[person]
