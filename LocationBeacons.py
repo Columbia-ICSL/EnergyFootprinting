@@ -64,7 +64,7 @@ class BeaconVals:
                 body=applianceName+" is consuming excess power ("+pwr+" watts), please see if you can switch off some appliance."
                 reward=int(0.1*pwr)+1
                 json_return["suggestions"].append(
-                    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID})
+                    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID, "power":pwr})
                     )
 
         return cloudserver.db._encode(json_return,False)
