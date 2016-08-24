@@ -58,10 +58,10 @@ class BeaconVals:
         for user in turnOffApplianceUsers:
             if (ID == user):
                 applianceList = turnOffApplianceUsers[user]
-                for APPL in applianceList:
-                    applianceID = APPL[APPL]["id"]
-                    applianceName = APPL[APPL]["name"]
-                    powerUsage = APPL[APPL]["value"]
+                for appliance in applianceList:
+                    applianceID = appliance["id"]
+                    applianceName = appliance["name"]
+                    powerUsage = appliance["value"]
                     title="Shut off "+applianceName
                     body=applianceName+" is consuming excess power ("+powerUsage+" watts), please see if you can switch off some appliance."
                     reward=1
