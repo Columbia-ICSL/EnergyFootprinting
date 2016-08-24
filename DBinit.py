@@ -52,42 +52,43 @@ class DBInit(object):
         self._SetConfigValue("ROOM_DEFINITION",self.ROOM_DEFINITION)
 
         self.APPLIANCE_DEFINITION=[]
-        def addAppliance(id, type, roomsRegex):
+        def addAppliance(Id, Name, Type, roomsRegex):
             roomsMatched=[]
             for room in self.ROOM_DEFINITION:
                 if re.search(roomsRegex, room["id"]):
                     roomsMatched+=[room["id"]]
             item={
-                "id":id,
-                "type":type,
+                "id":Id,
+                "name":Name,
+                "type":Type,
                 "rooms":roomsMatched,
             }
             self.APPLIANCE_DEFINITION+=[item]
 
-        addAppliance("nwc1008_plug1", "Electrical", "nwc1008")
-        addAppliance("nwc1008_smartvent1", "HVAC", "nwc1008")
-        addAppliance("nwc1008_light", "Light", "nwc1008")
+        addAppliance("nwc1008_plug1", "Plug#1 in Prof Jiang's Office", "Electrical", "nwc1008")
+        addAppliance("nwc1008_smartvent1", "SmartVent in Prof Jiang's Office (HVAC Indirect Sensing)", "HVAC", "nwc1008")
+        addAppliance("nwc1008_light", "Lights in Prof Jiang's Office", "Light", "nwc1008")
 
-        addAppliance("nwc1003b_a_plug", "Electrical", "nwc1003b_a")
-        addAppliance("nwc1003b_b_plug", "Electrical", "nwc1003b_b")
-        addAppliance("nwc1003b_c_plug", "Electrical", "nwc1003b_c")
+        addAppliance("nwc1003b_a_plug", "Plugmeter in 1003B Lab Area A (Peter)", "Electrical", "nwc1003b_a")
+        addAppliance("nwc1003b_b_plug", "Plugmeter in 1003B Lab Area B (Danny&Stephen)", "Electrical", "nwc1003b_b")
+        addAppliance("nwc1003b_c_plug", "Plugmeter in 1003B Lab Area C (Rishi)", "Electrical", "nwc1003b_c")
 
-        addAppliance("nwc1003g_plug1", "Electrical", "nwc1003g")
-        addAppliance("nwc1003g_plug2", "Electrical", "nwc1003g")
-        addAppliance("nwc1003g_plug3", "Electrical", "nwc1003g")
-        addAppliance("nwc1003b_light", "Light", "nwc1003b.*")
-        addAppliance("nwc1003g_light", "Light", "nwc1003g")
+        addAppliance("nwc1003g_plug1", "Plugmeter in 1003G (Printer&Computer)", "Electrical", "nwc1003g")
+        addAppliance("nwc1003g_plug2", "Plugmeter in 1003G (Soldering Station)", "Electrical", "nwc1003g")
+        addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "nwc1003g")
+        addAppliance("nwc1003b_light", "Lights in 1003B Lab", "Light", "nwc1003b.*")
+        addAppliance("nwc1003g_light", "Lights in 1003G Lab", "Light", "nwc1003g")
 
-        addAppliance("nwc1000m_a1_plug", "Electrical", "nwc1000m_a1")
-        addAppliance("nwc1000m_a2_plug", "Electrical", "nwc1000m_a2")
-        addAppliance("nwc1000m_a3_plug", "Electrical", "nwc1000m_a3")
-        addAppliance("nwc1000m_a4_plug", "Electrical", "nwc1000m_a4")
-        addAppliance("nwc1000m_a5_plug", "Electrical", "nwc1000m_a5")
-        addAppliance("nwc1000m_a6_plug", "Electrical", "nwc1000m_a6")
-        addAppliance("nwc1000m_a7_plug", "Electrical", "nwc1000m_a7")
-        addAppliance("nwc1000m_a8_plug", "Electrical", "nwc1000m_a8")
+        addAppliance("nwc1000m_a1_plug", "Power strip in Mezzaine Level, Aisle #1", "Electrical", "nwc1000m_a1")
+        addAppliance("nwc1000m_a2_plug", "Power strip in Mezzaine Level, Aisle #2", "Electrical", "nwc1000m_a2")
+        addAppliance("nwc1000m_a3_plug", "Power strip in Mezzaine Level, Aisle #3", "Electrical", "nwc1000m_a3")
+        addAppliance("nwc1000m_a4_plug", "Power strip in Mezzaine Level, Aisle #4", "Electrical", "nwc1000m_a4")
+        addAppliance("nwc1000m_a5_plug", "Power strip in Mezzaine Level, Aisle #5", "Electrical", "nwc1000m_a5")
+        addAppliance("nwc1000m_a6_plug", "Power strip in Mezzaine Level, Aisle #6", "Electrical", "nwc1000m_a6")
+        addAppliance("nwc1000m_a7_plug", "Power strip in Mezzaine Level, Aisle #7", "Electrical", "nwc1000m_a7")
+        addAppliance("nwc1000m_a8_plug", "Power strip in Mezzaine Level, Aisle #8", "Electrical", "nwc1000m_a8")
 
-        addAppliance("nwc1000m_light", "Light", "nwc1000m_.*")
+        addAppliance("nwc1000m_light", "Shared Lighting in Mezzaine Level", "Light", "nwc1000m_.*")
 
         self._SetConfigValue("APPLIANCE_DEFINITION",self.APPLIANCE_DEFINITION)
 
