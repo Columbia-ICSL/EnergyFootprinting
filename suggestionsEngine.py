@@ -4,13 +4,13 @@ import time
 import datetime
 class suggestionsEngine:
 	moveLimit = 3
-	checkInterval = 60 #1 minute
+	checkInterval = 30 #1 minute
 	moveUsers = []
 	sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
 	sortedRoomOccupancy = [0] * len(sortedRoomList)
 	roomOccupancySnapshot = ""
 	changeScheduleUsers = []
-	turnOffApplianceUsers = []
+	turnOffApplianceUsers = {}
 	synchronizeApplianceUsers = []
 	def moveSuggestion(self):
 		list_of_rooms = cloudserver.db.CurrentOccupancy()
@@ -33,7 +33,10 @@ class suggestionsEngine:
 		users = []
 		return users
 	def turnOffApplianceSuggestion(self):
-		users = []
+		personalUsage = cloudserver.db.CurrentApplianceUsage(5)
+		users = {}
+		for person in personalUsage:
+			users[person] = personalUsage[person]
 		return users
 	def synchronizeApplianceScheduleSuggestion(self):
 		users = []
