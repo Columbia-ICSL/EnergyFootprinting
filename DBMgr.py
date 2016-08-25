@@ -537,9 +537,10 @@ class DBMgr(object):
 		
 		return self._encode(result,True)
 
-	def GridUsersLocHistory(self, start=-1, end=0):
+	def BinUsersLocHistory(self, start=-1, end=0):
 		# Provide two timestamps as time range; by default, we check "yesterday" (24hr, local timezone)
 		# Note: expensive function, called once a day.
+		# return format: dict[user_id][timestamp]={"location":?,"value":?}
 		if start==-1:
 			end=time.mktime(datetime.date.today().timetuple())
 			start=end-86400
@@ -597,7 +598,60 @@ class DBMgr(object):
 
 		return dict_users
 
+	def BinApplPowerHistory(self, start=-1, end=0):
+		# Similar to user history yesterday.
+		# return format: dict[appl_id][timestamp]={"user_list":[],"value":?}
+		if start==-1:
+			end=time.mktime(datetime.date.today().timetuple())
+			start=end-86400
+		
+		dict_raw_snapshots={}
+		dict_appls={}
 
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"_id":0}
+		iterator = self.snapshots_col_appliances.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for snapshot in iterator:
+			ts=self._toUnix(snapshot["timestamp"])
+			dict_raw_snapshots[ts]=snapshot
+			for appl_id in snapshot["data"]:
+				if appl_id not in dict_appls:
+					dict_appls[appl_id]=[]
+
+		for ts in dict_raw_snapshots:
+			for appl_id in dict_appls:
+				if appl_id not in dict_raw_snapshots[ts]["data"]:
+					dict_appls[appl_id]+=[{
+						"timestamp":ts,
+						"location":None,
+					}]
+				else:
+					item=dict_raw_snapshots[ts]["data"][appl_id]
+					item["timestamp"]=ts
+					dict_appls[appl_id]+=[item]
+		
+		step=15*60
+		bins_headers=range(int(start),int(end),int(step))
+		bins_ranges=[range(x,x+step) for x in bins_headers]
+		def get_average(lst):
+			return sum(lst)/(1.0*len(lst))
+		for appl_id in dict_appls:
+			time_series=dict_appls[appl_id]
+			return_bins={}
+			for bin_range in bins_ranges:
+				in_range=[x for x in time_series if x["timestamp"] in bin_range]
+				avg_power=get_average([x["value"] for x in in_range])
+				avg_users=get_average([x["total_users"] for x in in_range])
+				return_bins[bin_range.start]={"avg_users":avg_users, "value":avg_power}	
+			dict_appls[appl_id]=return_bins
+
+		return dict_appls
+	
 		
 	def _TEST(self):
 		# unit testing, after init.
