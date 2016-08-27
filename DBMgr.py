@@ -792,7 +792,7 @@ class DBMgr(object):
 			"balance": balance
 			},
 			{
-				upsert: True
+				"upsert": True
 			})
 
 	def updateUserBalance(self, user, balance):
