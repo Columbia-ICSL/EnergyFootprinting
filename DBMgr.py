@@ -791,9 +791,8 @@ class DBMgr(object):
 			"user": user,
 			"balance": balance
 			},
-			{
-				"upsert": True
-			})
+			True
+			)
 
 	def updateUserBalance(self, user, balance):
 		old_balance = self.getUserBalance(user)
