@@ -98,7 +98,7 @@ class DBMgr(object):
 
 	def _encode(self,data,isPretty):
 		return MongoJsonEncoder().encode(data)
-	def __init__(self):
+	def __init__(self, start_bg_thread=True):
 		self.dbc=pymongo.MongoClient()
 
 		db1 = self.dbc.test_database
@@ -130,7 +130,7 @@ class DBMgr(object):
 
 		self.watchdogInit()
 
-		if __name__ != "__main__":
+		if start_bg_thread:
 			self.startDaemon()
 
 		## Start the snapshot thread if not running "python DBMgr.py"
@@ -447,7 +447,10 @@ class DBMgr(object):
 
 	def _now(self):
 		return calendar.timegm(datetime.datetime.utcnow().utctimetuple())
+	def _toUnix(self, ts):
+		return calendar.timegm(ts.utctimetuple())
 	def _backgroundLoop(self):
+		print("DBMGR _backgroundLoop started...")
 		while True:
 			time.sleep(self.SAMPLING_TIMEOUT_LONGEST)
 			self.SaveShot()
@@ -558,6 +561,122 @@ class DBMgr(object):
 			result+=[item]
 		
 		return self._encode(result,True)
+
+	def BinUsersLocHistory(self, start=-1, end=0):
+		# Provide two timestamps as time range; by default, we check "yesterday" (24hr, local timezone)
+		# Note: expensive function, called once a day.
+		# return format: dict[user_id][timestamp]={"location":?,"value":?}
+		if start==-1:
+			end=time.mktime(datetime.date.today().timetuple())
+			start=end-86400
+		
+		dict_raw_snapshots={}
+		dict_users={}
+
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"_id":0}
+		iterator = self.snapshots_col_users.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for snapshot in iterator:
+			ts=self._toUnix(snapshot["timestamp"])
+			dict_raw_snapshots[ts]=snapshot
+			for user_id in snapshot["data"]:
+				if user_id not in dict_users:
+					dict_users[user_id]=[]
+		
+		for ts in dict_raw_snapshots:
+			for user_id in dict_users:
+				if user_id not in dict_raw_snapshots[ts]["data"]:
+					dict_users[user_id]+=[{
+						"timestamp":ts,
+						"location":None,
+					}]
+				else:
+					item=dict_raw_snapshots[ts]["data"][user_id]
+					item["timestamp"]=ts
+					dict_users[user_id]+=[item]
+		
+		step=15*60
+		bins_headers=range(int(start),int(end),int(step))
+		bins_ranges=[range(x,x+step) for x in bins_headers]
+		def get_majority(lst):
+			return max(set(lst), key=lst.count)
+		def get_average(lst):
+			return sum(lst)/(1.0*len(lst))
+
+		for user_id in dict_users:
+			time_series=dict_users[user_id]
+			return_bins={}
+			for bin_range in bins_ranges:
+				in_range=[x for x in time_series if x["timestamp"] in bin_range]
+				majority_loc=get_majority([x["location"] for x in in_range])
+				if majority_loc==None:
+					return_bins[bin_range.start]={"location":None, "value":0}
+				else:
+					majority_average=get_average([x["value"] for x in in_range if x["location"]==majority_loc])
+					return_bins[bin_range.start]={"location":majority_loc,"value":majority_average}
+			dict_users[user_id]=return_bins
+
+		return dict_users
+
+	def BinApplPowerHistory(self, start=-1, end=0):
+		# Similar to user history yesterday.
+		# return format: dict[appl_id][timestamp]={"user_list":[],"value":?}
+		if start==-1:
+			end=time.mktime(datetime.date.today().timetuple())
+			start=end-86400
+		
+		dict_raw_snapshots={}
+		dict_appls={}
+
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"_id":0}
+		iterator = self.snapshots_col_appliances.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for snapshot in iterator:
+			ts=self._toUnix(snapshot["timestamp"])
+			dict_raw_snapshots[ts]=snapshot
+			for appl_id in snapshot["data"]:
+				if appl_id not in dict_appls:
+					dict_appls[appl_id]=[]
+
+		for ts in dict_raw_snapshots:
+			for appl_id in dict_appls:
+				if appl_id not in dict_raw_snapshots[ts]["data"]:
+					dict_appls[appl_id]+=[{
+						"timestamp":ts,
+						"location":None,
+					}]
+				else:
+					item=dict_raw_snapshots[ts]["data"][appl_id]
+					item["timestamp"]=ts
+					dict_appls[appl_id]+=[item]
+		
+		step=15*60
+		bins_headers=range(int(start),int(end),int(step))
+		bins_ranges=[range(x,x+step) for x in bins_headers]
+		def get_average(lst):
+			return sum(lst)/(1.0*len(lst))
+		for appl_id in dict_appls:
+			time_series=dict_appls[appl_id]
+			return_bins={}
+			for bin_range in bins_ranges:
+				in_range=[x for x in time_series if x["timestamp"] in bin_range]
+				avg_power=get_average([x["value"] for x in in_range])
+				avg_users=get_average([x["total_users"] for x in in_range])
+				return_bins[bin_range.start]={"avg_users":avg_users, "value":avg_power}	
+			dict_appls[appl_id]=return_bins
+
+		return dict_appls
+	
 		
 	def _TEST(self):
 		# unit testing, after init.
@@ -679,6 +798,6 @@ class DBMgr(object):
 		return y['l1']
 
 if __name__ == "__main__":
-	dbm=DBMgr()
+	dbm=DBMgr(False)
 	dbm._TEST()
 	## Beware, the _TEST will terminate the script.
