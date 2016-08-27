@@ -12,6 +12,7 @@ import Energy
 import Location
 import LocationBeacons
 import locationTraining
+import userRanking
 import suggestionDecisions
 import userManagement
 import Query
@@ -28,6 +29,7 @@ urls = (
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
     "/api/Beacons", LocationBeacons.Beacons,
+    "/api/userRankings", userRanking.userRankings,
     "/api/locationTraining", locationTraining.locationTraining,
     "/api/userManagement", userManagement.userMGM,
     "/api/suggestionDecisions", suggestionDecisions.Decisions,
