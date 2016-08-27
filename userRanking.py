@@ -9,7 +9,7 @@ class ranking:
 	def POST(self):
 		raw_data=web.data()
 		json_return = {
-			"user":raw_data,
+			"user":cloudserver.db.userIDLookup(raw_data),
 			"balance": 0,
 			"rankingData":[]
 		}
