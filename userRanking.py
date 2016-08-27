@@ -7,7 +7,8 @@ urls = (
 
 class ranking:
 	def POST(self):
-		return "hello from ranking!"
+		raw_data=web.data()
+		return raw_data
 
 	def GET(self):
 		return
