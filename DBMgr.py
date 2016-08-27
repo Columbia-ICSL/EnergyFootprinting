@@ -796,7 +796,7 @@ class DBMgr(object):
 			})
 
 	def getRankingData(self):
-		return self.ranking.find().sort({["balance":-1,"user":1]})
+		return self.ranking.find().sort([("balance":-1),("user":1)])
 
 	def getUserBalance(self, user):
 		U = self.ranking.find({"user":user})
