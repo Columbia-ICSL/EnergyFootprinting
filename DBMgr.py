@@ -804,7 +804,7 @@ class DBMgr(object):
 
 	def getUserBalance(self, user):
 		U = self.ranking.find({"user":user})
-		return U["balance"]
+		return U[0]["balance"]
 
 	def SaveLocationData(self, person, location):
 		self.dbc.db1.coll1.insert({
