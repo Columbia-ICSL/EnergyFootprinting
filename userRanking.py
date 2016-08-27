@@ -8,7 +8,7 @@ urls = (
 class ranking:
 	def POST(self):
 		raw_data=web.data()
-		return raw_data
+		return cloudserver.db.getRankingData()
 
 	def GET(self):
 		return

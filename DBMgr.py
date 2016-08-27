@@ -106,6 +106,8 @@ class DBMgr(object):
 
 		self.registration_col1=self.dbc.db.registration_col1
 		self.registration_col1.ensure_index('screenName', unique=True)
+		self.ranking = self.dbc.db.ranking
+		self.ranking.ensure_index('user', unique=True)
 		#user registration
 		self.config_col=self.dbc.db.config
 		#metadata col
@@ -776,6 +778,29 @@ class DBMgr(object):
 		sys.exit(0)
 		## IOS RELATED, DON'T TOUCH
 
+	def registerForRanking(self, user):
+		self.ranking.insert({
+			"user":user,
+			"balance":0
+			})
+	def updateRankingData(self, user, balance):
+		self.ranking.update({
+			"user": user
+			},
+			{
+			"user": user,
+			"balance": balance
+			},
+			{
+				upsert: True
+			})
+
+	def getRankingData(self):
+		return self.ranking.find().sort({"balance":-1})
+
+	def getUserBalance(self, user):
+		U = self.ranking.find({"user":user})
+		return U["balance"]
 
 	def SaveLocationData(self, person, location):
 		self.dbc.db1.coll1.insert({

@@ -22,6 +22,7 @@ class userManagement:
 			return "Special Name"
 		if (cloudserver.db.screenNameCheckAvailability(username)):
 			if (cloudserver.db.screenNameRegister(username, deviceID)):
+				cloudserver.db.registerForRanking(username)
 				return "0" #success
 			else:
 				return "Duplicate Username" #duplicate username
