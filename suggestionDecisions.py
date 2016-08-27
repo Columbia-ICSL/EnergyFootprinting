@@ -12,7 +12,7 @@ class DecisionVals:
 		deviceID = data[0]
 		user = cloudserver.db.userIDLookup(deviceID)
 		suggestion = data[1]
-		coins = data[2]
+		coins = int(data[2])
 		cloudserver.db.updateUserBalance(user, coins)
 		return "success"
 
