@@ -795,6 +795,10 @@ class DBMgr(object):
 				upsert: True
 			})
 
+	def updateUserBalance(self, user, balance):
+		old_balance = self.getUserBalance(user)
+		self.updateRankingData(user, old_balance + balance)
+
 	def getRankingData(self):
 		return self.ranking.find().sort([("balance",-1),("user",1)])
 
