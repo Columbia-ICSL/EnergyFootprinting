@@ -29,7 +29,7 @@ class BeaconVals:
         json_return={
             "location":"Location Name",
             "location_id":"locationIDString",
-            "balance":cloudserver.db.getUserBalance[cloudserver.db.userIDLookup(ID)],
+            "balance":cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID)),
             "suggestions":[],
         }
         def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
