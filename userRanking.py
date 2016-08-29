@@ -28,6 +28,16 @@ class ranking:
 		return cloudserver.db._encode(json_return, False)
 
 	def GET(self):
-		return
+		json_return = {
+			"user":userID,
+			"balance": cloudserver.db.getUserBalance(userID),
+			"rankingData":[]
+		}
+		rankingData = cloudserver.db.getRankingData()
+		for rank in rankingData:
+			user = rank["user"]
+			balance = rank["balance"]
+			json_return["rankingData"].append(rank)
+		return cloudserver.db._encode(json_return, False)
 
 userRankings = web.application(urls, locals());
