@@ -89,12 +89,16 @@ class DBMgr(object):
 			self.list_of_rooms[room["id"]]["appliances"].sort()
 		## Finished appliance bipartite graph.
 
+####################################################################
+## Room ID and Appliance IDs functions #############################
+####################################################################
 	def RoomIdToName(self,id):
 		return self.list_of_rooms[id]["name"]
 	def ApplIdToName(self,id):
 		return self.list_of_appliances[id]["name"]
 	def ApplIdToVal(self,id):
 		return self.list_of_appliances[id]["value"]
+####################################################################
 
 	def _encode(self,data,isPretty):
 		return MongoJsonEncoder().encode(data)
@@ -108,6 +112,8 @@ class DBMgr(object):
 		self.registration_col1.ensure_index('screenName', unique=True)
 		self.ranking = self.dbc.db.ranking
 		self.ranking.ensure_index('user', unique=True)
+
+		self.suggestionsML = self.dbc.db.suggestionsML
 		#user registration
 		self.config_col=self.dbc.db.config
 		#metadata col
@@ -154,6 +160,9 @@ class DBMgr(object):
 			"timestamp":datetime.datetime.utcnow()
 			})
 
+####################################################################
+## Login Information, for self.registration_col1 ###################
+####################################################################
 	def screenNameCheckAvailability(self, screenName):
 		return len(list(self.registration_col1.find({"screenName":screenName}))) == 0
 		
@@ -189,6 +198,8 @@ class DBMgr(object):
 		if len(ret)!=1:
 			return None
 		return ret[0]["screenName"]
+
+####################################################################
 
 
 	def watchdogInit(self):
@@ -778,6 +789,13 @@ class DBMgr(object):
 		sys.exit(0)
 		## IOS RELATED, DON'T TOUCH
 
+
+
+
+####################################################################
+## Ranking Functions, for self.ranking #############################
+####################################################################
+
 	def registerForRanking(self, user):
 		self.ranking.insert({
 			"user":user,
@@ -799,11 +817,28 @@ class DBMgr(object):
 		self.updateRankingData(user, old_balance + balance)
 
 	def getRankingData(self):
-		return self.ranking.find().sort([("balance",-1),("user",1)])
+		return self.ranking.find().sort([("balance",-1)])
 
 	def getUserBalance(self, user):
 		U = self.ranking.find({"user":user})
 		return U[0]["balance"]
+
+
+
+####################################################################
+## Machine Learning Functions, for self.suggestionsML ##############
+####################################################################
+
+	def submitAcceptedSuggestion(self, sugType, startRoom, endRoom, ToD, applianceNum):
+		self.suggestionsML.insert({
+			"type":sugType,
+			"startRoom":startRoom,
+			"endRoom":endRoom,
+			"time":ToD,
+			"applianceNum": applianceNum
+			})
+
+####################################################################
 
 	def SaveLocationData(self, person, location):
 		self.dbc.db1.coll1.insert({
