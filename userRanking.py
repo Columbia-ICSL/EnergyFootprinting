@@ -23,7 +23,7 @@ class ranking:
 		for rank in rankingData:
 			user = rank["user"]
 			balance = rank["balance"]
-			json_return["rankingData"].append(make_entry(user, balance))
+			json_return["rankingData"].append(rank)
 		return cloudserver.db._encode(json_return, False)
 
 	def GET(self):
