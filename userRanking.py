@@ -8,9 +8,10 @@ urls = (
 class ranking:
 	def POST(self):
 		raw_data=web.data()
+		userID = cloudserver.db.userIDLookup(raw_data)
 		json_return = {
-			"user":cloudserver.db.userIDLookup(raw_data),
-			"balance": 0,
+			"user":userID,
+			"balance": cloudserver.db.getUserBalance(userID),
 			"rankingData":[]
 		}
 		def make_entry(user, balance, Others={}):
