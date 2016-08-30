@@ -821,6 +821,9 @@ class DBMgr(object):
 
 	def getUserBalance(self, user):
 		U = self.ranking.find_one({"user":user})
+		if (U == None) {
+			return False
+		}
 		return U["balance"]
 
 

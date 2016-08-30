@@ -25,11 +25,14 @@ class BeaconVals:
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
-        
+        balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
+        if (balance_server == False) {
+            balance_server = 0
+        }
         json_return={
             "location":"Location Name",
             "location_id":"locationIDString",
-            "balance":cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID)),
+            "balance":balance_server,
             "suggestions":[],
         }
         def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
