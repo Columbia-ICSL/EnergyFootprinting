@@ -1,5 +1,22 @@
 import re
 import pymongo
+
+PUBLIC_SPACE = 0
+BURKE_LAB = 1
+TEHARANI_LAB = 2
+JIANG_LAB = 3
+SAJDA_LAB = 4
+DANINO_LAB = 5
+OFFICE_SPACE = 0
+STUDENT_WORK_SPACE = 1
+GENERAL_SPACE = 2
+WINDOWED = True
+NOT_WINDOWED = False
+ACTIONABLE = True
+NOT_ACTIONABLE = False
+DUTY_CYCLE = True
+NO_DUTY_CYCLE = False
+
 class DBInit(object):
     def _GetConfigValue(self,key):
         try:
@@ -13,46 +30,54 @@ class DBInit(object):
 
     def WriteConfigs(self):
         self.ROOM_DEFINITION=[]
-        def addRoom(id, name, coord):
+        def addRoom(id, name, coord, labDefinition, spaceDefinition, windowedDefinition):
             self.ROOM_DEFINITION+=[{
                 "id":id,
                 "name":name,
                 "coordinate": coord,
+                "lab": labDefinition,
+                "space": spaceDefinition,
+                "windowed": windowedDefinition
             }]
         
-        addRoom("nwc10","NWC 10F Public Area", [40.810174, -73.962006]) # public area 10F, elevator bank etc.
-        addRoom("nwc10m","NWC 10M Public Area", [40.810174, -73.962006]) # public area 10F, elevator bank etc.
+        addRoom("nwc10","NWC 10F Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, NOT_WINDOWED) # public area 10F, elevator bank etc.
+        addRoom("nwc10m","NWC 10M Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, NOT_WINDOWED) # public area 10F, elevator bank etc.
         # exits
-        addRoom("nwc8","NWC 8F Public Area", [40.810174, -73.962006]) # public area 8F
-        addRoom("nwc7","NWC 7F Public Area", [40.810174, -73.962006]) # public area 7F
-        addRoom("nwc4","NWC 4F Public Area", [40.810174, -73.962006]) # public area 4F
+        addRoom("nwc8","NWC 8F Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, WINDOWED) # public area 8F
+        addRoom("nwc7","NWC 7F Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, WINDOWED)# public area 7F
+        addRoom("nwc4","NWC 4F Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, WINDOWED) # public area 4F
 
         # 10F space units
-        addRoom("nwc1008","NWC 1008 Office", [40.809997, -73.961983])
-        addRoom("nwc1003g","1003 Optics G Lab", [40.809965, -73.962063])
+        addRoom("nwc1008","NWC 1008 Office", [40.809997, -73.961983], JIANG_LAB, OFFICE_SPACE, WINDOWED)
+        addRoom("nwc1006","NWC 1006 Office", [40.809997, -73.961983], BURKE_LAB, OFFICE_SPACE, WINDOWED)
+        addRoom("nwc1007","NWC 1007 Office", [40.809997, -73.961983], TEHARANI_LAB, OFFICE_SPACE, WINDOWED)
+        addRoom("nwc1009","NWC 1009 Office", [40.809997, -73.961983], PUBLIC_SPACE, OFFICE_SPACE, WINDOWED)
+        addRoom("nwc1010","NWC 1010 Office", [40.809997, -73.961983], SAJDA_LAB, OFFICE_SPACE, WINDOWED)
+
+        addRoom("nwc1003g","1003 Optics G Lab", [40.809965, -73.962063], JIANG_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
         #addRoom("nwc1003b","1003B Lab",[40.810022, -73.962075])
-        addRoom("nwc1003b_a","1003B Lab, Area A",[40.809980, -73.962159]) # Seat for Peter/Daniel
-        addRoom("nwc1003b_b","1003B Lab, Area B",[40.809947, -73.962050]) # Seat for Danny/Stephen
-        addRoom("nwc1003b_c","1003B Lab, Area C",[40.810005, -73.962072]) # Seat for Rishi
-        addRoom("nwc1003b_t","1003B Lab, Area T",[40.809897, -73.962138]) # Prof. Teherani's space
+        addRoom("nwc1003b_a","1003B Lab, Area A",[40.809980, -73.962159], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Peter/Daniel
+        addRoom("nwc1003b_b","1003B Lab, Area B",[40.809947, -73.962050], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Danny/Stephen
+        addRoom("nwc1003b_c","1003B Lab, Area C",[40.810005, -73.962072], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Rishi
+        addRoom("nwc1003b_t","1003B Lab, Area T",[40.809897, -73.962138], TEHARANI_LAB, STUDENT_WORK_SPACE, WINDOWED) # Prof. Teherani's space
 
 
         # 10M space units, aisle 1-8
-        addRoom("nwc1000m_a1","10M Floor Aisle 1", [40.810050, -73.961945])
-        addRoom("nwc1000m_a2","10M Floor Aisle 2", [40.810038, -73.961955])
-        addRoom("nwc1000m_a3","10M Floor Aisle 3", [40.810021, -73.961966])
-        addRoom("nwc1000m_a4","10M Floor Aisle 4", [40.810005, -73.961978])
-        addRoom("nwc1000m_a5","10M Floor Aisle 5", [40.809986, -73.961991])
-        addRoom("nwc1000m_a6","10M Floor Aisle 6", [40.809968, -73.962003])
-        addRoom("nwc1000m_a7","10M Floor Aisle 7", [40.809950, -73.962017])
-        addRoom("nwc1000m_a8","10M Floor Aisle 8", [40.809933, -73.962030])
+        addRoom("nwc1000m_a1","10M Floor Aisle 1", [40.810050, -73.961945], BURKE_LAB, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a2","10M Floor Aisle 2", [40.810038, -73.961955], BURKE_LAB, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a3","10M Floor Aisle 3", [40.810021, -73.961966], DANINO_LAB, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a4","10M Floor Aisle 4", [40.810005, -73.961978], DANINO_LAB, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a5","10M Floor Aisle 5", [40.809986, -73.961991], TEHARANI_LAB, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a6","10M Floor Aisle 6", [40.809968, -73.962003], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a7","10M Floor Aisle 7", [40.809950, -73.962017], PUBLIC_SPACE, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a8","10M Floor Aisle 8", [40.809933, -73.962030], PUBLIC_SPACE, STUDENT_WORK_SPACE, WINDOWED)
 
         # Only the lowest-layer cubicles, corresponding to localization unit
 
         self._SetConfigValue("ROOM_DEFINITION",self.ROOM_DEFINITION)
 
         self.APPLIANCE_DEFINITION=[]
-        def addAppliance(Id, Name, Type, roomsRegex):
+        def addAppliance(Id, Name, Type, roomsRegex, actionableDefinition, dutyCycleDefinition):
             roomsMatched=[]
             for room in self.ROOM_DEFINITION:
                 if re.search(roomsRegex, room["id"]):
@@ -62,33 +87,35 @@ class DBInit(object):
                 "name":Name,
                 "type":Type,
                 "rooms":roomsMatched,
+                "actionable": actionableDefinition,
+                "dutyCycle": dutyCycleDefinition
             }
             self.APPLIANCE_DEFINITION+=[item]
 
-        addAppliance("nwc1008_plug1", "Plug#1 in Prof Jiang's Office", "Electrical", "nwc1008")
-        addAppliance("nwc1008_smartvent1", "SmartVent in Prof Jiang's Office (HVAC Indirect Sensing)", "HVAC", "nwc1008")
-        addAppliance("nwc1008_light", "Lights in Prof Jiang's Office", "Light", "nwc1008")
+        addAppliance("nwc1008_plug1", "Plug#1 in Prof Jiang's Office", "Electrical", "nwc1008", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1008_smartvent1", "SmartVent in Prof Jiang's Office (HVAC Indirect Sensing)", "HVAC", "nwc1008", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1008_light", "Lights in Prof Jiang's Office", "Light", "nwc1008", ACTIONABLE, NO_DUTY_CYCLE)
 
-        addAppliance("nwc1003b_a_plug", "Plugmeter in 1003B Lab Area A (Peter)", "Electrical", "nwc1003b_a")
-        addAppliance("nwc1003b_b_plug", "Plugmeter in 1003B Lab Area B (Danny&Stephen)", "Electrical", "nwc1003b_b")
-        addAppliance("nwc1003b_c_plug", "Plugmeter in 1003B Lab Area C (Rishi)", "Electrical", "nwc1003b_c")
+        addAppliance("nwc1003b_a_plug", "Plugmeter in 1003B Lab Area A (Peter)", "Electrical", "nwc1003b_a", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003b_b_plug", "Plugmeter in 1003B Lab Area B (Danny&Stephen)", "Electrical", "nwc1003b_b", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003b_c_plug", "Plugmeter in 1003B Lab Area C (Rishi)", "Electrical", "nwc1003b_c", ACTIONABLE, NO_DUTY_CYCLE)
 
-        addAppliance("nwc1003g_plug1", "Plugmeter in 1003G (Printer&Computer)", "Electrical", "nwc1003g")
-        addAppliance("nwc1003g_plug2", "Plugmeter in 1003G (Soldering Station)", "Electrical", "nwc1003g")
-        addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "nwc1003g")
-        addAppliance("nwc1003b_light", "Lights in 1003B Lab", "Light", "nwc1003b.*")
-        addAppliance("nwc1003g_light", "Lights in 1003G Lab", "Light", "nwc1003g")
+        addAppliance("nwc1003g_plug1", "Plugmeter in 1003G (Printer&Computer)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1003g_plug2", "Plugmeter in 1003G (Soldering Station)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1003b_light", "Lights in 1003B Lab", "Light", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003g_light", "Lights in 1003G Lab", "Light", "nwc1003g", ACTIONABLE, NO_DUTY_CYCLE)
 
-        addAppliance("nwc1000m_a1_plug", "Power strip in Mezzaine Level, Aisle #1", "Electrical", "nwc1000m_a1")
-        addAppliance("nwc1000m_a2_plug", "Power strip in Mezzaine Level, Aisle #2", "Electrical", "nwc1000m_a2")
-        addAppliance("nwc1000m_a3_plug", "Power strip in Mezzaine Level, Aisle #3", "Electrical", "nwc1000m_a3")
-        addAppliance("nwc1000m_a4_plug", "Power strip in Mezzaine Level, Aisle #4", "Electrical", "nwc1000m_a4")
-        addAppliance("nwc1000m_a5_plug", "Power strip in Mezzaine Level, Aisle #5", "Electrical", "nwc1000m_a5")
-        addAppliance("nwc1000m_a6_plug", "Power strip in Mezzaine Level, Aisle #6", "Electrical", "nwc1000m_a6")
-        addAppliance("nwc1000m_a7_plug", "Power strip in Mezzaine Level, Aisle #7", "Electrical", "nwc1000m_a7")
-        addAppliance("nwc1000m_a8_plug", "Power strip in Mezzaine Level, Aisle #8", "Electrical", "nwc1000m_a8")
+        addAppliance("nwc1000m_a1_plug", "Power strip in Mezzaine Level, Aisle #1", "Electrical", "nwc1000m_a1", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a2_plug", "Power strip in Mezzaine Level, Aisle #2", "Electrical", "nwc1000m_a2", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a3_plug", "Power strip in Mezzaine Level, Aisle #3", "Electrical", "nwc1000m_a3", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a4_plug", "Power strip in Mezzaine Level, Aisle #4", "Electrical", "nwc1000m_a4", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a5_plug", "Power strip in Mezzaine Level, Aisle #5", "Electrical", "nwc1000m_a5", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a6_plug", "Power strip in Mezzaine Level, Aisle #6", "Electrical", "nwc1000m_a6", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a7_plug", "Power strip in Mezzaine Level, Aisle #7", "Electrical", "nwc1000m_a7", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a8_plug", "Power strip in Mezzaine Level, Aisle #8", "Electrical", "nwc1000m_a8", ACTIONABLE, NO_DUTY_CYCLE)
 
-        addAppliance("nwc1000m_light", "Shared Lighting in Mezzaine Level", "Light", "nwc1000m_.*")
+        addAppliance("nwc1000m_light", "Shared Lighting in Mezzaine Level", "Light", "nwc1000m_.*", NOT_ACTIONABLE, NO_DUTY_CYCLE)
 
         self._SetConfigValue("APPLIANCE_DEFINITION",self.APPLIANCE_DEFINITION)
 
