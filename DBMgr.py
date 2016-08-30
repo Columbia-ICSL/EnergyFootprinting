@@ -820,7 +820,7 @@ class DBMgr(object):
 		return self.ranking.find().sort([("balance",-1),("user",1)])
 
 	def getUserBalance(self, user):
-		U = list(self.ranking.find({"user":user}).limit(1))
+		U = self.ranking.find({"user":user}).limit(1)
 		U1 = U.next()
 		return U1["balance"]
 
