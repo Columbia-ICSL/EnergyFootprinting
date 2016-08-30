@@ -26,9 +26,8 @@ class BeaconVals:
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
         balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
-        if (balance_server == False) {
+        if (balance_server == False):
             balance_server = 0
-        }
         json_return={
             "location":"Location Name",
             "location_id":"locationIDString",
