@@ -29,8 +29,6 @@ class ranking:
 
 	def GET(self):
 		json_return = {
-			"user":userID,
-			"balance": cloudserver.db.getUserBalance(userID),
 			"rankingData":[]
 		}
 		rankingData = cloudserver.db.getRankingData()
