@@ -49,7 +49,7 @@ class BeaconVals:
             if (ID == user):
                 roomId="nwc1008"
                 roomName=cloudserver.db.RoomIdToName(roomId)
-                title="Move to "+roomName+"?"
+                title="Move to "+roomName
                 body="Please consider sharing the room to lower everyone's energy footprint."
                 reward=4
                 json_return["suggestions"].append(
