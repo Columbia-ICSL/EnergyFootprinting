@@ -69,8 +69,8 @@ class BeaconVals:
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
                 powerUsage = appliance["value"]
-                #if (powerUsage < 10):
-                #    continue
+                if (powerUsage < 10):
+                    continue
                 title="Shut off "+applianceName
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
                 reward=1
