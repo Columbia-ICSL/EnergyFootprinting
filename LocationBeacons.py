@@ -34,8 +34,7 @@ class BeaconVals:
             "location":"Location Name",
             "location_id":"locationIDString",
             "balance":balance_server,
-            "suggestions":[],
-            "debug":{}
+            "suggestions":[]
         }
         def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
             Others.update({
@@ -63,7 +62,7 @@ class BeaconVals:
                 make_suggestion_item("move",title,body,reward,{"to":roomName,"to_id":roomId})
             )
 
-        json_return["debug"] = turnOffApplianceUsers
+        #json_return["debug"] = turnOffApplianceUsers
         if (ID in turnOffApplianceUsers.keys()):
             applianceList = turnOffApplianceUsers[ID]
             for appliance in applianceList:
