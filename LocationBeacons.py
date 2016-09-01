@@ -49,8 +49,9 @@ class BeaconVals:
 
         json_return["location_id"]=self.labels[location]
         json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
-        keys = moveUsers.keys()
-        json_return["debug"] = keys[0]
+        keys = turnOffApplianceUsers.keys()
+        for i in range(len(keys)):
+            json_return["debug"] = keys[i]
         if (ID in moveUsers.keys()):
             roomInfo = moveUsers[ID]
             roomId=roomInfo["roomDest"]
