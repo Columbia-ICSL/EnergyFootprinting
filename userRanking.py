@@ -12,6 +12,7 @@ class ranking:
 		json_return = {
 			"user":userID,
 			"balance": cloudserver.db.getUserBalance(userID),
+			"rank":0,
 			"rankingData":[]
 		}
 		def make_entry(user, balance, Others={}):
@@ -21,9 +22,13 @@ class ranking:
 				})
 			return Others
 		rankingData = cloudserver.db.getRankingData()
+		i = 0
 		for rank in rankingData:
+			i += 1
 			user = rank["user"]
 			balance = rank["balance"]
+			if (userID == user):
+				json_return{"rank"} = i
 			json_return["rankingData"].append(rank)
 		return cloudserver.db._encode(json_return, False)
 
