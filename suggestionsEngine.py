@@ -30,8 +30,8 @@ class suggestionsEngine:
 	synchronizeApplianceUsers = []
 	def moveSuggestionHelper(self, roomOrigin, roomDest, Others={}):
 		Others.update({
-			"roomOrigin", roomOrigin,
-			"roomDest", roomDest
+			"roomOrigin": roomOrigin,
+			"roomDest": roomDest
 			})
 		return Others
 
