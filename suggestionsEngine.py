@@ -36,6 +36,7 @@ class suggestionsEngine:
 		return Others
 
 	def moveSuggestion(self):
+		users = {}
 		list_of_rooms = cloudserver.db._getShotRooms()
 		lab_maximum = [(0,0), (0,0), (0,0), (0,0), (0,0), (0,0)]
 		for roomID in list_of_rooms:
@@ -55,8 +56,8 @@ class suggestionsEngine:
 					continue
 				if (list_of_rooms[roomDest]["space"] == list_of_rooms[roomID]["space"]):
 					for user in userList:
-						moveUsers[user] = self.moveSuggestionHelper(roomID, roomDest)
-		return moveUsers
+						users[user] = self.moveSuggestionHelper(roomID, roomDest)
+		return users
 
 
 
