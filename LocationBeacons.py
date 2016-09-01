@@ -35,6 +35,7 @@ class BeaconVals:
             "location_id":"locationIDString",
             "balance":balance_server,
             "suggestions":[],
+            "debug":[]
         }
         def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
             Others.update({
@@ -42,11 +43,14 @@ class BeaconVals:
                 "title":iTitle,
                 "body":iBodyText,
                 "reward":iReward,
+                "notification":0
                 })
             return Others
 
         json_return["location_id"]=self.labels[location]
         json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
+        keys = moveUsers.keys()
+        json_return["debug"] = keys[0]
         if (ID in moveUsers.keys()):
             roomInfo = moveUsers[ID]
             roomId=roomInfo["roomDest"]
