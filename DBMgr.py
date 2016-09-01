@@ -392,27 +392,25 @@ class DBMgr(object):
 
 	def CurrentApplianceUsage(self, limit=3):
 		ret = {}
-		ret["what is going on": "Hello world"]
+		for person in self.location_of_users:
+			location = self.location_of_users[person]
+			if location not in self.list_of_rooms:
+				continue
+			appliances = self.list_of_rooms[location]["appliances"]
+			applianceValues = []
+			applianceIDs = []
+			for applianceID in appliances:
+				applianceValues.append(self.list_of_appliances[applianceID]["value"])
+				applianceIDs.append(applianceID)
+			appliances_sorted = sorted(range(len(applianceValues)), key=lambda k:applianceValues[k])
+			len_appliances = len(appliances_sorted)
+			min_appliances = min(len_appliances, limit)
+			rec_appliances = []
+			for i in range(min_appliances):
+				AID = applianceIDs[appliances_sorted[i]]
+				rec_appliances.append(self.list_of_appliances[AID])
+			ret[person] = rec_appliances
 		return ret
-		#for person in self.location_of_users:
-	#		location = self.location_of_users[person]
-	#		if location not in self.list_of_rooms:
-	#			continue
-	#		appliances = self.list_of_rooms[location]["appliances"]
-	#		applianceValues = []
-	#		applianceIDs = []
-	#		for applianceID in appliances:
-	#			applianceValues.append(self.list_of_appliances[applianceID]["value"])
-	#			applianceIDs.append(applianceID)
-	#		appliances_sorted = sorted(range(len(applianceValues)), key=lambda k:applianceValues[k])
-	#		len_appliances = len(appliances_sorted)
-	#		min_appliances = min(len_appliances, limit)
-	#		rec_appliances = []
-	#		for i in range(min_appliances):
-	#			AID = applianceIDs[appliances_sorted[i]]
-	#			rec_appliances.append(self.list_of_appliances[AID])
-	#		ret[person] = rec_appliances
-	#		return ret
 		#appliancesSorted
 		#for appliance in self.list_of_appliances:
 	#		ret[appliance]=self.list_of_appliances[appliance]["users"]
