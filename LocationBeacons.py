@@ -35,7 +35,7 @@ class BeaconVals:
             "location_id":"locationIDString",
             "balance":balance_server,
             "suggestions":[],
-            "debug":[]
+            "debug":{}
         }
         def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
             Others.update({
@@ -49,9 +49,9 @@ class BeaconVals:
 
         json_return["location_id"]=self.labels[location]
         json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
-        keys = turnOffApplianceUsers.keys()
-        for i in range(len(keys)):
-            json_return["debug"].append(keys[i])
+        #keys = turnOffApplianceUsers.keys()
+        #for i in range(len(keys)):
+        #    json_return["debug"].append(keys[i])
         if (ID in moveUsers.keys()):
             roomInfo = moveUsers[ID]
             roomId=roomInfo["roomDest"]
@@ -63,6 +63,7 @@ class BeaconVals:
                 make_suggestion_item("move",title,body,reward,{"to":roomName,"to_id":roomId})
             )
 
+        json_return["debug"] = turnOffApplianceUsers
         if (ID in turnOffApplianceUsers.keys()):
             applianceList = turnOffApplianceUsers[ID]
             for appliance in applianceList:
