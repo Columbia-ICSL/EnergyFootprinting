@@ -36,13 +36,13 @@ class BeaconVals:
             "balance":balance_server,
             "suggestions":[]
         }
-        def make_suggestion_item(iType, iTitle, iBodyText, iReward, Others={}):
+        def make_suggestion_item(iType, iTitle, iBodyText, iReward, inotification=0, Others={}):
             Others.update({
                 "type":iType,
                 "title":iTitle,
                 "body":iBodyText,
                 "reward":iReward,
-                "notification":0
+                "notification":inotification
                 })
             return Others
 
@@ -59,7 +59,7 @@ class BeaconVals:
             body="Please consider sharing the room to lower everyone's energy footprint."
             reward=4
             json_return["suggestions"].append(
-                make_suggestion_item("move",title,body,reward,{"to":roomName,"to_id":roomId})
+                make_suggestion_item("move",title,body,reward,0,{"to":roomName,"to_id":roomId})
             )
 
         #json_return["debug"] = turnOffApplianceUsers
@@ -75,7 +75,7 @@ class BeaconVals:
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
                 reward=1
                 json_return["suggestions"].append(
-                    make_suggestion_item("turnoff",title, body, reward, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
+                    make_suggestion_item("turnoff",title, body, reward, 1,{"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
 
 
 
