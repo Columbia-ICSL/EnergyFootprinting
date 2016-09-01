@@ -28,7 +28,7 @@ class ranking:
 			user = rank["user"]
 			balance = rank["balance"]
 			if (userID == user):
-				json_return{"rank"} = i
+				json_return["rank"] = i
 			json_return["rankingData"].append(rank)
 		return cloudserver.db._encode(json_return, False)
 
