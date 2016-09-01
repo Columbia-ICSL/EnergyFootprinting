@@ -58,20 +58,19 @@ class BeaconVals:
                 make_suggestion_item("move",title,body,reward,{"to":roomName,"to_id":roomId})
             )
 
-        for user in turnOffApplianceUsers:
-            if (ID == user):
-                applianceList = turnOffApplianceUsers[user]
-                for appliance in applianceList:
-                    applianceID = appliance["id"]
-                    applianceName = appliance["name"]
-                    powerUsage = appliance["value"]
-                    #if (powerUsage < 10):
-                    #    continue
-                    title="Shut off "+applianceName
-                    body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
-                    reward=1
-                    json_return["suggestions"].append(
-                        make_suggestion_item("turnoff",title, body, reward, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
+        if (ID in turnOffApplianceUsers.keys()):
+            applianceList = turnOffApplianceUsers[ID]
+            for appliance in applianceList:
+                applianceID = appliance["id"]
+                applianceName = appliance["name"]
+                powerUsage = appliance["value"]
+                #if (powerUsage < 10):
+                #    continue
+                title="Shut off "+applianceName
+                body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
+                reward=1
+                json_return["suggestions"].append(
+                    make_suggestion_item("turnoff",title, body, reward, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
 
 
 
