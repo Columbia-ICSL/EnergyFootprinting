@@ -392,6 +392,7 @@ class DBMgr(object):
 
 	def CurrentApplianceUsage(self, limit=3):
 		ret = {}
+		ret["what is going on": "Hello world"]
 		for person in self.location_of_users:
 			location = self.location_of_users[person]
 			if location not in self.list_of_rooms:
