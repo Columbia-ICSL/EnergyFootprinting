@@ -86,7 +86,7 @@ class suggestionsEngine:
 		users = {}
 		for person in personalUsage:
 			users[person] = personalUsage[person]
-		return users
+		return personalUsage
 	def synchronizeApplianceScheduleSuggestion(self):
 		users = []
 		return users
