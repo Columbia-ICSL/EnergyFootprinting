@@ -59,7 +59,7 @@ class BeaconVals:
             body="Please consider sharing the room to lower everyone's energy footprint."
             reward=4
             json_return["suggestions"].append(
-                make_suggestion_item("move",title,body,reward,1,{"to":roomName,"to_id":roomId})
+                make_suggestion_item("move",title,body,reward,0,{"to":roomName,"to_id":roomId})
             )
 
         #json_return["debug"] = turnOffApplianceUsers
@@ -75,7 +75,7 @@ class BeaconVals:
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
                 reward=1
                 json_return["suggestions"].append(
-                    make_suggestion_item("turnoff",title, body, reward, 1,{"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
+                    make_suggestion_item("turnoff",title, body, reward, 0,{"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
 
 
 
