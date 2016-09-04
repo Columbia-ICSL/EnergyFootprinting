@@ -802,6 +802,16 @@ class DBMgr(object):
 			"user":user,
 			"balance":0
 			})
+
+	def registerForRankingInfo(self, user, lab, gender, affiliation):
+		self.ranking.insert({
+			"user":user,
+			"balance":0,
+			"lab":lab,
+			"gender":gender,
+			"affiliation":affiliation
+			})
+
 	def updateRankingData(self, user, balance):
 		self.ranking.update({
 			"user": user

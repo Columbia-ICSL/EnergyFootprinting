@@ -3,7 +3,7 @@ import pymongo
 
 PUBLIC_SPACE = 0
 BURKE_LAB = 1
-TEHARANI_LAB = 2
+TEHERANI_LAB = 2
 JIANG_LAB = 3
 SAJDA_LAB = 4
 DANINO_LAB = 5
@@ -50,7 +50,7 @@ class DBInit(object):
         # 10F space units
         addRoom("nwc1008","NWC 1008 Office", [40.809997, -73.961983], JIANG_LAB, OFFICE_SPACE, WINDOWED)
         addRoom("nwc1006","NWC 1006 Office", [40.809997, -73.961983], BURKE_LAB, OFFICE_SPACE, WINDOWED)
-        addRoom("nwc1007","NWC 1007 Office", [40.809997, -73.961983], TEHARANI_LAB, OFFICE_SPACE, WINDOWED)
+        addRoom("nwc1007","NWC 1007 Office", [40.809997, -73.961983], TEHERANI_LAB, OFFICE_SPACE, WINDOWED)
         addRoom("nwc1009","NWC 1009 Office", [40.809997, -73.961983], PUBLIC_SPACE, OFFICE_SPACE, WINDOWED)
         addRoom("nwc1010","NWC 1010 Office", [40.809997, -73.961983], SAJDA_LAB, OFFICE_SPACE, WINDOWED)
 
@@ -59,7 +59,7 @@ class DBInit(object):
         addRoom("nwc1003b_a","1003B Lab, Peter&Daniel's seat",[40.809980, -73.962159], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Peter/Daniel
         addRoom("nwc1003b_b","1003B Lab, Danny&Stephen's seat",[40.809947, -73.962050], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Danny/Stephen
         addRoom("nwc1003b_c","1003B Lab, Rishi's seat",[40.810005, -73.962072], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Rishi
-        addRoom("nwc1003b_t","1003B Lab, Prof. Teherani's space",[40.809897, -73.962138], TEHARANI_LAB, STUDENT_WORK_SPACE, WINDOWED) # Prof. Teherani's space
+        addRoom("nwc1003b_t","1003B Lab, Prof. Teherani's space",[40.809897, -73.962138], TEHERANI_LAB, STUDENT_WORK_SPACE, WINDOWED) # Prof. Teherani's space
 
 
         # 10M space units, aisle 1-8
@@ -67,7 +67,7 @@ class DBInit(object):
         addRoom("nwc1000m_a2","10M Floor, Aisle 2", [40.810038, -73.961955], BURKE_LAB, STUDENT_WORK_SPACE, WINDOWED)
         addRoom("nwc1000m_a3","10M Floor, Aisle 3", [40.810021, -73.961966], DANINO_LAB, STUDENT_WORK_SPACE, WINDOWED)
         addRoom("nwc1000m_a4","10M Floor, Aisle 4", [40.810005, -73.961978], DANINO_LAB, STUDENT_WORK_SPACE, WINDOWED)
-        addRoom("nwc1000m_a5","10M Floor, Aisle 5", [40.809986, -73.961991], TEHARANI_LAB, STUDENT_WORK_SPACE, WINDOWED)
+        addRoom("nwc1000m_a5","10M Floor, Aisle 5", [40.809986, -73.961991], TEHERANI_LAB, STUDENT_WORK_SPACE, WINDOWED)
         addRoom("nwc1000m_a6","10M Floor, Aisle 6", [40.809968, -73.962003], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED)
         addRoom("nwc1000m_a7","10M Floor, Aisle 7", [40.809950, -73.962017], PUBLIC_SPACE, STUDENT_WORK_SPACE, WINDOWED)
         addRoom("nwc1000m_a8","10M Floor, Aisle 8", [40.809933, -73.962030], PUBLIC_SPACE, STUDENT_WORK_SPACE, WINDOWED)
