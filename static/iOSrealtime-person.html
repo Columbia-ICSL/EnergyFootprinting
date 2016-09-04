@@ -1,13 +1,8 @@
 <!doctype>
 <html>
 <head>
-<title> The Energy Footprint System query interface </title>
+<title> Personal Energy Footprint html frontend</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<!--<script src="http://code.highcharts.com/highcharts.js"></script> -->
-<script src="http://code.highcharts.com/stock/highstock.js"></script>
 <script type="text/javascript">
 var query=(function(s){
   var loc=s.indexOf('?');
@@ -22,163 +17,127 @@ var query=(function(s){
   return ret;
 })(location.href);
 
-var chart;
 var personID=query['id'];
 
-var maxLen=(20*60/10);//20mins, every 10s
-var reqTime=3*1000;
-var appls=[false];
-var LastRoom=false;
-//the first series is location history, not consumption!
-function requestData(){
-  $.ajax({
-        url: '/realtime/'+personID,
-        success: render,
-        dataType:"json",
-        cache: false
-  });
-  function render(input){
-    console.log("input",d=input);
-    if(!input.personal || typeof input.personal.consumptions == 'undefined'){
-      $('#myModal').modal({backdrop:'static', keyboard:0})
-      return;
-    }
-    var ts=input.timestamp*1000;
-    if(input.location.id != LastRoom){
-      LastRoom=input.location.id;
-      var roomName=input.location.name;
-      chart.series[0].addPoint({
-          title:LastRoom,
-          text:'You Entered '+'<i>'+roomName+'</i>',
-          x:ts
-      },true,false);
-    }
+//var maxLen=(20*60/10);//20mins, every 10s
+//var reqTime=3*1000;
+var onLoadCallback=function(){
 
-    input.personal.consumptions.forEach(function(appl){
-      var applID=appl['id'];
-      console.log(applID, appl['share']);
-    if(appls.indexOf(applID)<0){
-        appls.push(applID);
-        chart.addSeries({name:applID});
-        // TODO: display Names instead
-      }
-    });
-
-    var visited={};
-    var total=0;
-    input.personal.consumptions.forEach(function(appl){
-      var applID=appl['id'];
-      var idx=appls.indexOf(applID);
-      var val=appl.share;
-      total+=val;
-      var doshift=chart.series[idx].length > maxLen;
-      chart.series[idx].addPoint([ts,val],true, doshift);
-      visited[applID]=true;
-    });
-
-    console.log('visited',visited);
-    for(var idx=1;idx<appls.length;idx++){
-      var t=appls[idx];
-      if(!visited[t]){
-        chart.series[idx].addPoint([ts,0],true, true);
-      }
-    }
-    total=total.toFixed(2);
-    var title='Your total footprint: <br><i>'+total+' Watts</i>';
-    chart.title.textSetter(title);
-
-    setTimeout(requestData,reqTime);
-  }
 }
-
-$(function(){
-    chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'container',
-            defaultSeriesType: 'spline',
-            events: {
-                load: requestData
-            }
-        },
-        title: {
-            text: 'Please wait...'
-        },
-        xAxis: {
-            type: 'datetime',
-            tickPixelInterval: 150,
-            maxZoom: 20 * 1000
-        },
-        yAxis: {
-            minPadding: 0.2,
-            maxPadding: 0.2,
-            title: {
-                text: 'Footprint / Watts',
-                margin: 80
-            }
-        },
-        series: [{
-          type:'flags',
-          showInLegend: false,
-          onSeries:'',
-          name:'Location History'
-        }]//series of energy cons will be dynamically added
-    });        
-});
+window.onload=onLoadCallback;
 </script>
 <style>
-body {
-  padding-top: 50px;
-  position: relative;
-}
-.starter-template {
-  padding: 40px 15px;
-  text-align: center;
-}
-        .box {border:1px solid grey;background-color:#d3d3d3;}
-        .large {font-size:3000%;color:red;}
-        #div1 {background-color:blue;}
-        #div2 {background-color:red;}
-        #div3 {background-color:green;}
-        .contentDiv {height:800px;}
+/*div {border:1px dashed red;}
+(debug)
+*/
 
+body {
+    background:rgba(255,200,155,0.2);
+}
+.blue {background-color:blue;}
+.red {background-color:red;}
+.green {background-color:green;}
+.orange {background-color:#f80;}
+
+.f_left {
+  float:left;
+}
+.f_right {
+  float:right;
+}
+#head {
+  position:fixed;
+  height:15%;top:5%;
+  width:80%;left:10%;
+}
+#headLeft, #headRight{
+  width:40%;
+  height:100%;
+}
+.headTitle{
+  font-family: Helvetica, sans-serif;
+  width:100%;
+  display: block;
+  font-size: 16pt;
+  color: #aaf;
+  text-align: center;
+  margin-bottom: 4pt;
+}
+.headBody{
+  font-family: Helvetica, sans-serif;
+  width:100%;
+  padding:4px;
+  display: block;
+  font-size: 20pt;
+  color: #aaf;
+  background:#ddd;
+  text-align: center;
+  margin:auto;
+}
+
+
+#figure {
+  position:fixed;
+  height:70%;top:25%;
+  width:80%;left:10%;
+  border-left:1pt solid black;
+}
+.bar{
+  height:25%;
+  width:100%;
+}
+.bar .fill {
+  height:12%;
+  margin-top:7%;
+  min-width:10%;
+  position: absolute;
+  opacity:0.5;
+}
+.bar .name {
+  position: absolute;
+}
+
+#barHighest .fill{
+  width:80%;
+}
 </style>
 </head>
-<body >
+<body>
+  <div id="head">
+    <div id="headLeft" class="f_left">
+      <span class="headTitle">Footprint</span>
+      <span class="headBody">35&nbsp;Watts</span>
+    </div>
+    <div id="headRight" class="f_right">
+      <span class="headTitle">Share</span>
+      <span class="headBody">5.33%</span>
+    </div>
+  </div>
+  <div id="figure">
+    <div class="bar" id="barLowest">
+      <div class="fill green"></div>
+      <span class="name">Lowest: 0.00W</span>
+    </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Data not found</h4>
-          </div>
-          <div class="modal-body">
-            <p class="lead">
-            Your device ID seems to have no data reported&hellip;</p>
-            <p>This may either because the location data haven't arrived into the central system yet, or energy monitors is not reporting energy consumptions in your area. Please come back later.
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" onclick="location.reload()">Refresh</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    <div class="bar" id="barYou">
+      <div class="fill blue"></div>
+      <span class="name">You</span>
+    </div>
 
-    <div class="container">
-      <div class="starter-template">
-        <h1>Realtime Personal Footprint</h1>
-          <div id="container" style="height: 440px;" class="panel-body">
-          <!--
-            <form id="form1" onsubmit="return false;"  class="form-inline">
-              <label for="personID">UserID</label>
-              <input type="text" class="form-control" id="personID" placeholder="fengyi" value="fengyi">
-              <button type="button" class="btn btn-default">Start</button>
-            </form>
-          -->
-        </div>
 
-</div>
-</div>
+    <div class="bar" id="barMedian">
+      <div class="fill orange"></div>
+      <span class="name">Median</span>
+    </div>
+
+
+    <div class="bar" id="barHighest">
+      <div class="fill red"></div>
+      <span class="name">Highest: 0.00W</span>
+    </div>
+  </div>
+
+
 </body>
 </html>
 
