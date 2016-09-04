@@ -43,6 +43,7 @@ var renderGraph=function(data){
     }
     values.push(val);
   }
+  console.log('values',values);
   var sumVal=values.reduce(function(a,b){return a+b});
 
   // calculate min, max, median
@@ -93,7 +94,7 @@ var onLoadCallback=function(){
   $.get(url,{},function(resp, err){
     console.info('Data Received', resp, err);
     if(!resp || !resp[personID])return;//data not found
-    renderGraph();
+    renderGraph(resp);
   },'json');
 }
 window.onload=onLoadCallback;
