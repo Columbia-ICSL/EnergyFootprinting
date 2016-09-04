@@ -65,6 +65,8 @@ class Realtime:
     def GET(self,person=None):
         if "full" in web.input():
             return db.ShowRealtime(concise=False)
+        if "personal" in web.input():
+            return MongoJsonEncoder().encode(db._getShotPersonal())
         return db.ShowRealtime(person)
 
 class index:
