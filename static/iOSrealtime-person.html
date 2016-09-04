@@ -3,6 +3,8 @@
 <head>
 <title> Personal Energy Footprint html frontend</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/zepto.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/modules/fx.min.js"></script>
 <script type="text/javascript">
 var query=(function(s){
   var loc=s.indexOf('?');
@@ -21,8 +23,78 @@ var personID=query['id'];
 
 //var maxLen=(20*60/10);//20mins, every 10s
 //var reqTime=3*1000;
-var onLoadCallback=function(){
 
+
+var hideError=function(){
+  $('#figureCover').hide();
+  $('#figure').removeClass('blurred');
+}
+
+var numFormat=function(num){
+  return (1*num).toFixed(2);
+}
+
+var renderGraph=function(data){
+  var myVal=-1, values=[];
+  for(var userID in data){
+    val=1*data[userID]["value"];
+    if(userID==personID){
+      myVal=val;
+    }
+    values.push(val);
+  }
+  var sumVal=values.reduce(function(a,b){return a+b});
+
+  // calculate min, max, median
+  values.sort();
+  var vMin=values[0], vMax=values[values.length-1],
+      vMedian=values[Math.floor(values.length/2)];
+  if(values.length%2==0){
+    var p=values.length/2;
+    vMedian=(values[p]+values[p-1])/2;
+  }
+  console.log('Power values:',vMin,vMedian,vMax,myVal);
+
+  // calculate max width=50%~100%
+  var barLowest=10, barHighest=10, barMe=10, barMedian=10;
+  if(vMax>0){
+    var scaleMin=Math.log10(5);//50%
+    var scaleMax=Math.log10(500);//100%
+    barHighest=50+50*(Math.log10(vMax)-scaleMin)/(scaleMax-scaleMin);
+    if(barHighest>100)barHighest=100;
+    if(barHighest<30)barHighest=30;
+  // get everything else done, proportional
+    barLowest=vMin/vMax*barHighest;
+    barMedian=vMedian/vMax*barHighest;
+    barMe=myVal/vMax*barHighest;
+  }//if no value, everyone is 10% width
+
+  console.log('bar ratio:',barLowest,barMedian,barHighest,barMe);
+
+  // set text
+  $('#headLeft .headBody').html(numFormat(myVal)+'&nbsp;Watts');
+  $('#headRight .headBody').html(numFormat(myVal/sumVal*100)+'%');
+  $('#barHighest .name').text('Highest: '+numFormat(vMax)+'W');
+  $('#barLowest .name').text('Lowest: '+numFormat(vMin)+'W');
+  $('#barMedian .name').text('Median: '+numFormat(vMedian)+'W');
+  $('#barMe .name').text('You: '+numFormat(myVal)+'W');
+
+  $('#barHighest .fill, #barMedian .fill, #barLowest .fill, #barMe .fill').css({'width':'10%'});
+  hideError();
+  //start animation
+  $('#barHighest .fill').animate({'width':barHighest+'%'},500,"ease-in-out");
+  $('#barMedian .fill').animate({'width':barMedian+'%'},500,"ease-in-out");
+  $('#barMe .fill').animate({'width':barMe+'%'},500,"ease-in-out");
+  $('#barLowest .fill').animate({'width':barLowest+'%'},500,"ease-in-out");
+}
+
+var onLoadCallback=function(){
+  var url='/realtime?personal=true';
+  $.get(url,{},function(resp, err){
+    console.info('Data Received', resp, err);
+    if(!resp || !resp[personID])return;//data not found
+    renderGraph();
+  },'json');
 }
 window.onload=onLoadCallback;
 </script>
@@ -90,13 +162,20 @@ body {
 }
 .bar .fill {
   height:12%;
-  margin-top:7%;
+  margin-top:8%;
   min-width:10%;
   position: absolute;
   opacity:0.5;
+  border-radius:16pt;
 }
 .bar .name {
   position: absolute;
+  color:white;
+  font-size:16pt;
+  margin-bottom:4pt;
+
+  padding:4px;
+  background:rgba(224,224,224,0.7);
 }
 
 #barHighest .fill{
@@ -105,13 +184,13 @@ body {
 #barMedian .fill{
   width:50%;
 }
-#barYou .fill{
+#barMe .fill{
   width:70%;
 }
 /*
   Initial (error) state, removed using JS later.
 */
-#figure{
+.blurred{
   background: white;
   -webkit-filter: blur(5px);
   filter: blur(5px);
@@ -157,13 +236,13 @@ body {
       <span class="headBody">0.00%</span>
     </div>
   </div>
-  <div id="figure">
+  <div id="figure" class="blurred">
     <div class="bar" id="barLowest">
       <div class="fill green"></div>
       <span class="name">Lowest: 0.00W</span>
     </div>
 
-    <div class="bar" id="barYou">
+    <div class="bar" id="barMe">
       <div class="fill blue"></div>
       <span class="name">You</span>
     </div>
