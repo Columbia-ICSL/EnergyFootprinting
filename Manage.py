@@ -11,10 +11,10 @@ urls = (
 class SaveShot:
     def POST(self):
         pass
-        return "post"
+        return("post")
     def GET(self):
         
-        print "SaveShot!"
+        print("SaveShot!")
         
         return cloudserver.db.SaveShot()
 Manager = web.application(urls, locals())

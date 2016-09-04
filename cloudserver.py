@@ -77,7 +77,7 @@ class index:
         #return "Hello {0}".format(name)
 class frontend:
     def GET(self,person):
-        print person
+        print(person)
         t = time.time() 
         result = db.QueryPerson(person,t-86400*7+1,t)
         #data=json.dumps(result)
@@ -86,8 +86,8 @@ class frontend:
 class room:
     def GET(self,room):
         input=str(web.input())
-        print input
-        print room
+        print(input)
+        print(room)
 
         #return input+" {0}".format(name)
         return db.QueryRoom(room,0,2**32)
