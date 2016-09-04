@@ -57,7 +57,7 @@ var renderGraph=function(data){
   console.log('Power values:',vMin,vMedian,vMax,myVal);
 
   // calculate max width=50%~100%
-  var barLowest=10, barHighest=10, barMe=10, barMedian=10;
+  var barLowest=20, barHighest=20, barMe=20, barMedian=20;
   if(vMax>0){
     var scaleMin=Math.log10(5);//50%
     var scaleMax=Math.log10(500);//100%
@@ -163,20 +163,18 @@ body {
 }
 .bar .fill {
   height:12%;
-  margin-top:8%;
-  min-width:10%;
+  min-width:20%;
   position: absolute;
   opacity:0.5;
-  border-radius:16pt;
+  border-radius:999pt;
 }
 .bar .name {
-  position: absolute;
   color:white;
   font-size:16pt;
-  margin-bottom:4pt;
-
-  padding:4px;
+  display: inline-block;
+  margin-bottom:8px;
   background:rgba(224,224,224,0.7);
+  z-index: 1;
 }
 
 #barHighest .fill{
@@ -239,25 +237,25 @@ body {
   </div>
   <div id="figure" class="blurred">
     <div class="bar" id="barLowest">
-      <div class="fill green"></div>
       <span class="name">Lowest: 0.00W</span>
+      <div class="fill green"></div>
     </div>
 
     <div class="bar" id="barMe">
-      <div class="fill blue"></div>
       <span class="name">You</span>
+      <div class="fill blue"></div>
     </div>
 
 
     <div class="bar" id="barMedian">
-      <div class="fill orange"></div>
       <span class="name">Median</span>
+      <div class="fill orange"></div>
     </div>
 
 
     <div class="bar" id="barHighest">
-      <div class="fill red"></div>
       <span class="name">Highest: 0.00W</span>
+      <div class="fill red"></div>
     </div>
   </div>
 
