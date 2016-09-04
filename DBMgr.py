@@ -343,6 +343,8 @@ class DBMgr(object):
 			})
 		self.watchdogRefresh_Appliance(applianceID)
 		
+	def getUserLocation(self, user_id):
+		return self.location_of_users[user_id]
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
 		oldS=None

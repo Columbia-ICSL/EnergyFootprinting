@@ -21,13 +21,25 @@ class BeaconVals:
         ID = locs[0]
         locs = map(int, l)
         location = self.KNN.classifier(locs)
+
+
+        username = cloudserver.db.userIDLookup(ID)
+        alpha = username.split('_')
+        if (alpha == "alpha"):
+            ID = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
+            location = cloudserver.db.getUserLocation(ID)
+
+
         cloudserver.db.ReportLocationAssociation(ID, self.labels[location])
         cloudserver.db.SaveLocationData(0, self.labels[location])
         moveUsers = cloudserver.SE.moveUsers
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
+
         balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
+
+
 
         if (balance_server == False):
             balance_server = 0
