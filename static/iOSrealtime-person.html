@@ -30,9 +30,11 @@ window.onload=onLoadCallback;
 /*div {border:1px dashed red;}
 (debug)
 */
-
 body {
-    background:rgba(255,200,155,0.2);
+  width:100%;
+  height:100%;
+  padding:0;
+  font-family: Helvetica, sans-serif;
 }
 .blue {background-color:blue;}
 .red {background-color:red;}
@@ -53,23 +55,22 @@ body {
 #headLeft, #headRight{
   width:40%;
   height:100%;
+  text-align: center;
 }
 .headTitle{
   font-family: Helvetica, sans-serif;
   width:100%;
   display: block;
   font-size: 16pt;
-  color: #aaf;
+  color: white;
   text-align: center;
   margin-bottom: 4pt;
 }
 .headBody{
   font-family: Helvetica, sans-serif;
-  width:100%;
-  padding:4px;
-  display: block;
+  padding:8px;
   font-size: 20pt;
-  color: #aaf;
+  color: #66f;
   background:#ddd;
   text-align: center;
   margin:auto;
@@ -100,17 +101,47 @@ body {
 #barHighest .fill{
   width:80%;
 }
+#barMedian .fill{
+  width:50%;
+}
+#barYou .fill{
+  width:70%;
+}
+/*
+  Initial (error) state, removed using JS later.
+*/
+#figure{
+  background: white;
+  -webkit-filter: blur(5px);
+  filter: blur(5px);
+}
+#figureCover{
+  position:fixed;
+  height:70%;top:25%;
+  width:80%;left:10%;
+  z-index:1;
+}
+#figureCover #questionMark {
+  font-size:160pt;
+  font-family: Verdana, sans-serif;
+  color: rgba(100,150,255,0.7);
+  display: block;
+  text-align: center;
+}
+#figureCover #message{
+  color: rgba(30,50,155,1);
+}
 </style>
 </head>
 <body>
   <div id="head">
     <div id="headLeft" class="f_left">
       <span class="headTitle">Footprint</span>
-      <span class="headBody">35&nbsp;Watts</span>
+      <span class="headBody">0.00&nbsp;Watts</span>
     </div>
     <div id="headRight" class="f_right">
       <span class="headTitle">Share</span>
-      <span class="headBody">5.33%</span>
+      <span class="headBody">0.00%</span>
     </div>
   </div>
   <div id="figure">
@@ -135,6 +166,15 @@ body {
       <div class="fill red"></div>
       <span class="name">Highest: 0.00W</span>
     </div>
+  </div>
+
+  <div id="figureCover">
+    <span id="questionMark">?</span>
+    <span id="message">
+      Sorry, your current energy footprint data is temporarily unavailable. Please check back later!
+      <br/>
+      <em>Please make sure you're in NWC and enabled Bluetooth on your device.<em/>
+    </span>
   </div>
 
 
