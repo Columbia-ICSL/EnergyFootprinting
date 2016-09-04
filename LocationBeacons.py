@@ -29,8 +29,6 @@ class BeaconVals:
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
         balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
 
-        alphaUser = 
-
         if (balance_server == False):
             balance_server = 0
         json_return={
