@@ -171,6 +171,7 @@ class DBMgr(object):
 			{"$set": {"screenName": screenName}},
 			multi=True)
 
+
 	def screenNameRegister(self, screenName, userID):
 		self.LogRawData({
 			"type":"screenNameRegister",
@@ -818,13 +819,37 @@ class DBMgr(object):
 			"balance":0
 			})
 
-	def registerForRankingInfo(self, user, lab, gender, affiliation):
+	def rankingUpdateName(self, oldName, newName, frequency, wifi, public):
+		itm = self.ranking.find_one({"user": oldName})
+		object_id = itm.get('_id')
+		return self.ranking.update({'_id': object_id},
+			{"$set": {"user": newName, "frequency":frequency, "wifi":wifi, "public":public}},
+			multi=True)
+
+	def getAttributes(self, username):
+		json_return={
+            "username":"username",
+            "frequency":0,
+            "wifi":True,
+            "public":True
+		}
+		itm = self.ranking.find_one({"user":username})
+		json_return["username"] = username
+		json_return["frequency"] = itm.get("frequency")
+		json_return["wifi"] = itm.get("wifi")
+		json_return["public"] = itm.get("public")
+		return self._encode(json_return, False)
+
+	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=50,wifi=True,public=True):
 		self.ranking.insert({
 			"user":user,
 			"balance":0,
 			"lab":lab,
 			"gender":gender,
-			"affiliation":affiliation
+			"affiliation":affiliation,
+			"frequency":frequency,
+			"wifi":wifi,
+			"public":public
 			})
 
 	def updateRankingData(self, user, balance):
