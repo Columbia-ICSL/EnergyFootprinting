@@ -483,9 +483,12 @@ class DBMgr(object):
 		total=0
 		for userID in ret:
 			value=ret[userID]["value"]
-			total+=value
 			if concise:
 				ret[userID]={"value":value}
+
+		for applID in self.list_of_appliances:
+			total+=self.list_of_appliances[applID]["value"]
+
 		ret["_total"]=total
 		return self._encode(ret,True)
 

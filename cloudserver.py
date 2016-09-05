@@ -66,7 +66,7 @@ class Realtime:
         if "full" in web.input():
             return db.ShowRealtime(concise=False)
         if "personal" in web.input():
-            return MongoJsonEncoder().encode(db.ShowRealtimePersonalSummary())
+            return db.ShowRealtimePersonalSummary()
         return db.ShowRealtime(person)
 
 class index:
