@@ -127,6 +127,10 @@ class DBMgr(object):
 		self.snapshots_col_users=self.dbc.db.snapshots_col_users
 		#snapshot storage
 
+		self.pushManagement_push_col=self.dbc.db.pushManagement_push_col
+		self.pushManagement_disp_col=self.dbc.db.pushManagement_disp_col
+		#push management timestamp storage
+
 		self._latestSuccessShot=0
 
 		self._ReadConfigs()
@@ -138,7 +142,6 @@ class DBMgr(object):
 
 		self.watchdogInit()
 
-		self.pushManagementInit()
 
 		if start_bg_thread:
 			self.startDaemon()
@@ -210,33 +213,37 @@ class DBMgr(object):
 ####################################################################
 ##  Message last-pushed/last-seen information  #####################
 ####################################################################
-## This is a fake in-memory version; switch to DB-based later.
-	def pushManagementInit(self):
-		self.PMDictPush={}
-		self.PMDictDisp={}
-
 	def pushManagementPushUpdate(self, key, now=None):
 		if now==None:
 			now=self._now()
-		self.PMDictPush[key]=now
+		self.pushManagement_push_col.update(
+			{"_id":key},
+			{"$set":{"timestamp":now}},
+			upsert=True)
+
 
 	def pushManagementDispUpdate(self, key, now=None):
 		if now==None:
 			now=self._now()
-		self.PMDictDisp[key]=now
+		self.pushManagement_disp_col.update(
+			{"_id":key},
+			{"$set":{"timestamp":now}},
+			upsert=True)
 		
 	def pushManagementPushCheck(self, key, notSentSince):
 		#return True if the message haven't been sent recently (last sent <= notSentSince)
 		latest=0
-		if key in self.PMDictPush:
-			latest= self.PMDictPush[key]
+		item=self.pushManagement_push_col.find_one({"_id":key})
+		if item!=None:
+			latest=item["timestamp"]
 		return latest <= notSentSince
 		
 	def pushManagementDispCheck(self, key, notSentSince):
-		#return True if the message haven't been sent recently (last sent <= notSentSince)
+		#ditto.
 		latest=0
-		if key in self.PMDictDisp:
-			latest= self.PMDictDisp[key]
+		item=self.pushManagement_disp_col.find_one({"_id":key})
+		if item!=None:
+			latest=item["timestamp"]
 		return latest <= notSentSince
 
 
@@ -762,6 +769,9 @@ class DBMgr(object):
 
 		self.registration_col1=self.dbc.test.registration_col1
 		self.registration_col1.ensure_index('screenName', unique=True)
+
+		self.pushManagement_push_col=self.dbc.test.pushManagement_push_col
+		self.pushManagement_disp_col=self.dbc.test.pushManagement_disp_col
 		
 
 		# case 1: add a consumption value, put two users, the users get shared energy consumption
@@ -847,8 +857,6 @@ class DBMgr(object):
 			sys.exit(-1)
 
 		# push management test
-		# !!!! TODO: use alternate DB column in test db
-
 		now=self._now()
 		self.pushManagementPushUpdate("key1")
 		self.pushManagementPushUpdate("key2",5)
