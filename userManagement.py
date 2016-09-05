@@ -5,7 +5,6 @@ urls = ("/","userManagement")
 class userManagement:
 
 	def POST(self):
-
 		raw_data=web.data()
 		userData=raw_data.split(',')
 		if (len(userData) == 0):
@@ -16,7 +15,7 @@ class userManagement:
 			if (ret is None):
 				return "100"
 			else:
-				return ret
+				return cloudserver.db.getAttributes(ret)
 		if (userData[0] == "^^^"):
 			if (len(userData) == 6):
 				freq = int(float(userData[3]))
