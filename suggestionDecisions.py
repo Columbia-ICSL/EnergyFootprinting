@@ -11,7 +11,8 @@ class DecisionVals:
 		data = raw_data.split(',')
 		deviceID = data[0]
 		user = cloudserver.db.userIDLookup(deviceID)
-		suggestion = data[1]
+		messageID = data[1]
+		cloudserver.db.pushManagementDispUpdate(messageID)
 		coins = int(data[2])
 		cloudserver.db.updateUserBalance(user, coins)
 		return "success"
