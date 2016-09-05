@@ -478,6 +478,16 @@ class DBMgr(object):
 			self.SaveShot()
 			self.watchdogCheck_User()
 			self.watchdogCheck_Appliance()
+	def ShowRealtimePersonalSummary(self, concise=True):
+		ret=self._getShotPersonal()
+		total=0
+		for userID in ret:
+			value=ret[userID]["value"]
+			total+=value
+			if concise:
+				ret[userID]={"value":value}
+		ret["_total"]=total
+		return self._encode(ret,True)
 
 	def ShowRealtime(self, person=None, concise=True):
 		#save into database, with: timestamp, additional data

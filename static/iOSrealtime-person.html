@@ -36,7 +36,8 @@ var numFormat=function(num){
 
 var renderGraph=function(data){
   var myVal=-1, values=[];
-  for(var userID in data){
+  for(var userID in data)
+    if(userID.substr(0,1)!='_'){
     val=1*data[userID]["value"];
     if(userID==personID){
       myVal=val;
@@ -45,7 +46,9 @@ var renderGraph=function(data){
   }
   values=values.sort(function(a,b){return a-b;});
   console.log('values',values);
-  var sumVal=values.reduce(function(a,b){return a+b});
+  var sumVal=values['_total'];
+  if(!sumVal)sumVal=values.reduce(function(a,b){return a+b});
+  console.log('_total', sumVal);
 
   // calculate min, max, median
   var vMin=values[0], vMax=values[values.length-1],
