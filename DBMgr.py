@@ -840,7 +840,7 @@ class DBMgr(object):
 		json_return["public"] = itm.get("public")
 		return self._encode(json_return, False)
 
-	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=50,wifi=True,public=True):
+	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=66,wifi=True,public=True):
 		self.ranking.insert({
 			"user":user,
 			"balance":0,
