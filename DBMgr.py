@@ -819,20 +819,23 @@ class DBMgr(object):
 			"balance":0
 			})
 
-	def rankingUpdateName(self, oldName, newName):
+	def rankingUpdateName(self, oldName, newName, frequency, wifi, public):
 		itm = self.ranking.find_one({"user": oldName})
 		object_id = itm.get('_id')
 		return self.ranking.update({'_id': object_id},
-			{"$set": {"user": newName}},
+			{"$set": {"user": newName, "frequency":frequency, "wifi":wifi, "public":public}},
 			multi=True)
 
-	def registerForRankingInfo(self, user, lab, gender, affiliation):
+	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=50,wifi=True,public=True):
 		self.ranking.insert({
 			"user":user,
 			"balance":0,
 			"lab":lab,
 			"gender":gender,
-			"affiliation":affiliation
+			"affiliation":affiliation,
+			"frequency":frequency,
+			"wifi":wifi,
+			"public":public
 			})
 
 	def updateRankingData(self, user, balance):

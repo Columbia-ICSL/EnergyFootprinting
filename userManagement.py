@@ -18,10 +18,19 @@ class userManagement:
 			else:
 				return ret
 		if (userData[0] == "^^^"):
-			if (len(userData) == 3):
+			if (len(userData) == 6):
+				freq = int(float(userData[3]))
+				if (userData[4] == "true"):
+					wifi = True
+				else:
+					wifi = False
+				if (userData[5] == "true"):
+					public = True
+				else:
+					public = False
 				user = cloudserver.db.userIDLookup(userData[2])
 				cloudserver.db.rankingUpdateName(user, userData[1])
-				cloudserver.db.screenNameUpdate(userData[1], userData[2])
+				cloudserver.db.screenNameUpdate(userData[1], userData[2], freq, wifi, public)
 				return "updated"
 			return "failed update"
 		username = userData[1]
