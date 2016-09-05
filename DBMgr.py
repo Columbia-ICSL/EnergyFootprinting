@@ -838,7 +838,7 @@ class DBMgr(object):
 		json_return["frequency"] = itm.get("frequency")
 		json_return["wifi"] = itm.get("wifi")
 		json_return["public"] = itm.get("public")
-		return json_return
+		return self._encode(json_return, False)
 
 	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=50,wifi=True,public=True):
 		self.ranking.insert({
