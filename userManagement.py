@@ -20,7 +20,8 @@ class userManagement:
 		if (userData[0] == "^^^"):
 			if (len(userData) == 3):
 				cloudserver.db.screenNameUpdate(userData[1], userData[2])
-			return "updated"
+				return "updated"
+			return "failed update"
 		username = userData[1]
 		if (username == "100"):
 			return "Special Name"
