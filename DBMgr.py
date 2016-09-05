@@ -832,13 +832,13 @@ class DBMgr(object):
             "frequency":0,
             "wifi":True,
             "public":True
-        }
-        itm = self.ranking.find_one({"user":username})
-        json_return["username"] = username
-        json_return["frequency"] = itm.get("frequency")
+		}
+		itm = self.ranking.find_one({"user":username})
+		json_return["username"] = username
+		json_return["frequency"] = itm.get("frequency")
         json_return["wifi"] = itm.get("wifi")
-        json_return["public"] = itm.get("public")
-        return json_return
+		json_return["public"] = itm.get("public")
+		return json_return
 
 	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=50,wifi=True,public=True):
 		self.ranking.insert({
