@@ -820,10 +820,10 @@ class DBMgr(object):
 			})
 
 	def rankingUpdateName(self, oldName, newName):
-		return self.registration_col1.update({"user": oldName},
+		return self.ranking.update({"user": oldName},
 			{"$set": {"user": newName}},
 			multi=True)
-		
+
 	def registerForRankingInfo(self, user, lab, gender, affiliation):
 		self.ranking.insert({
 			"user":user,
