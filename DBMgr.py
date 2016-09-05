@@ -836,7 +836,7 @@ class DBMgr(object):
 		itm = self.ranking.find_one({"user":username})
 		json_return["username"] = username
 		json_return["frequency"] = itm.get("frequency")
-        json_return["wifi"] = itm.get("wifi")
+		json_return["wifi"] = itm.get("wifi")
 		json_return["public"] = itm.get("public")
 		return json_return
 
