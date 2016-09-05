@@ -24,10 +24,12 @@ class BeaconVals:
 
 
         username = cloudserver.db.userIDLookup(ID)
-        alpha = username.split('_')
-        if (alpha == "alpha"):
-            ID = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
-            location = cloudserver.db.getUserLocation(ID)
+        if (username != None):
+            alpha = username.split('_')
+            if (len(alpha >= 1)):
+                if (alpha[0] == "alpha"):
+                    ID = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
+                    location = cloudserver.db.getUserLocation(ID)
 
 
         cloudserver.db.ReportLocationAssociation(ID, self.labels[location])
