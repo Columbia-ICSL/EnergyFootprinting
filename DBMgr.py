@@ -820,7 +820,9 @@ class DBMgr(object):
 			})
 
 	def rankingUpdateName(self, oldName, newName):
-		return self.ranking.update({"user": oldName},
+		itm = self.ranking.find_one({"user": oldName})
+		object_id = itm.get('_id')
+		return self.ranking.update({'_id': object_id},
 			{"$set": {"user": newName}},
 			multi=True)
 
