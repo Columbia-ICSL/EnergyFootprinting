@@ -84,13 +84,13 @@ class suggestionsEngine:
 	def changeScheduleSuggestion(self):
 		users = []
 		return users
-		
+
 	def turnOffApplianceSuggestion(self):
 		personalUsage = cloudserver.db.CurrentApplianceUsage(5)
 		users = {}
 		for person in personalUsage:
-			for appliance in personalUsage[person]:
-				messageID = "{0}|{1}|{2}".format("turnoff", str(person), appliance["id"])
+			#for appliance in personalUsage[person]:
+			#	messageID = "{0}|{1}|{2}".format("turnoff", str(person), appliance["id"])
 			users[person] = personalUsage[person]
 		return personalUsage
 

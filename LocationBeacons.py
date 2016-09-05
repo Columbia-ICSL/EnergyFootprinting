@@ -76,7 +76,7 @@ class BeaconVals:
             body="Please consider sharing the room to lower everyone's energy footprint."
             reward=4
             json_return["suggestions"].append(
-                make_suggestion_item("move",title,body,reward,0,messageID,{"to":roomName,"to_id":roomId})
+                make_suggestion_item("move",title,body,reward,0, messageID, {"to":roomName,"to_id":roomId})
             )
 
         #json_return["debug"] = turnOffApplianceUsers
@@ -86,6 +86,7 @@ class BeaconVals:
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
                 powerUsage = appliance["value"]
+                messageID = "{0}|{1}|{2}".format("turnoff", ID, applianceID)
                 if (powerUsage <= 0):
                     continue
                 title="Shut off "+applianceName

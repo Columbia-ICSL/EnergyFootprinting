@@ -238,7 +238,7 @@ class DBMgr(object):
 		if key in self.PMDictDisp:
 			latest= self.PMDictDisp[key]
 		return latest <= notSentSince
-
+####################################################################
 
 
 	def watchdogInit(self):
