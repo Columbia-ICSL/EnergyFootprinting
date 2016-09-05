@@ -28,10 +28,11 @@ class suggestionsEngine:
 	changeScheduleUsers = []
 	turnOffApplianceUsers = {}
 	synchronizeApplianceUsers = []
-	def moveSuggestionHelper(self, roomOrigin, roomDest, Others={}):
+	def moveSuggestionHelper(self, roomOrigin, roomDest, messageID, Others={}):
 		Others.update({
 			"roomOrigin": roomOrigin,
-			"roomDest": roomDest
+			"roomDest": roomDest,
+			"messageID":messageID
 			})
 		return Others
 
@@ -46,7 +47,7 @@ class suggestionsEngine:
 			cur_max = lab_maximum[labDefinition][1]
 			if (occupancy >= cur_max and (list_of_rooms[roomID]["space"] == STUDENT_WORK_SPACE)):
 				lab_maximum[labDefinition] = (roomID, occupancy)
-		for roomID in list_of_rooms:		
+		for roomID in list_of_rooms:
 			userList = list_of_rooms[roomID]["users"]
 			occupancy = len(userList)
 			labDefinition = list_of_rooms[roomID]["lab"]
@@ -56,7 +57,8 @@ class suggestionsEngine:
 					continue
 				if (list_of_rooms[roomDest]["space"] == list_of_rooms[roomID]["space"]):
 					for user in userList:
-						users[user] = self.moveSuggestionHelper(roomID, roomDest)
+						messageID = "{0}|{1}|{2}".format("move", str(user), str(roomDest))
+						users[user] = self.moveSuggestionHelper(roomID, roomDest, messageID)
 		return users
 
 
@@ -82,12 +84,16 @@ class suggestionsEngine:
 	def changeScheduleSuggestion(self):
 		users = []
 		return users
+		
 	def turnOffApplianceSuggestion(self):
 		personalUsage = cloudserver.db.CurrentApplianceUsage(5)
 		users = {}
 		for person in personalUsage:
+			for appliance in personalUsage[person]:
+				messageID = "{0}|{1}|{2}".format("turnoff", str(person), appliance["id"])
 			users[person] = personalUsage[person]
 		return personalUsage
+
 	def synchronizeApplianceScheduleSuggestion(self):
 		users = []
 		return users
