@@ -44,7 +44,7 @@ class suggestionsEngine:
 			occupancy = len(userList)
 			labDefinition = list_of_rooms[roomID]["lab"]
 			cur_max = lab_maximum[labDefinition][1]
-			if (occupancy >= cur_max and (list_of_rooms[roomID]["space"] == STUDENT_WORK_SPACE) or list_of_rooms[roomID]["space"] == STUDENT_WORK_SPACE):
+			if (occupancy >= cur_max and (list_of_rooms[roomID]["space"] == STUDENT_WORK_SPACE)):
 				lab_maximum[labDefinition] = (roomID, occupancy)
 		for roomID in list_of_rooms:		
 			userList = list_of_rooms[roomID]["users"]
