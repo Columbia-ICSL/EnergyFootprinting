@@ -36,18 +36,22 @@ var numFormat=function(num){
 
 var renderGraph=function(data){
   var myVal=-1, values=[];
-  for(var userID in data){
+  for(var userID in data)
+  if(userID.substr(0,1)!='_')
+  {
     val=1*data[userID]["value"];
     if(userID==personID){
       myVal=val;
     }
     values.push(val);
   }
+  values=values.sort(function(a,b){return a-b;});
   console.log('values',values);
-  var sumVal=values.reduce(function(a,b){return a+b});
+  var sumVal=data['_total'];
+  if(!sumVal)sumVal=values.reduce(function(a,b){return a+b});
+  console.log('_total', sumVal);
 
   // calculate min, max, median
-  values.sort();
   var vMin=values[0], vMax=values[values.length-1],
       vMedian=values[Math.floor(values.length/2)];
   if(values.length%2==0){
@@ -65,9 +69,9 @@ var renderGraph=function(data){
     if(barHighest>100)barHighest=100;
     if(barHighest<30)barHighest=30;
   // get everything else done, proportional
-    barLowest=vMin/vMax*barHighest;
-    barMedian=vMedian/vMax*barHighest;
-    barMe=myVal/vMax*barHighest;
+    barLowest=20+vMin/vMax*(barHighest-20);
+    barMedian=20+vMedian/vMax*(barHighest-20);
+    barMe=20+myVal/vMax*(barHighest-20);
   }//if no value, everyone is 10% width
 
   console.log('bar ratio:',barLowest,barMedian,barHighest,barMe);
