@@ -29,8 +29,8 @@ class userManagement:
 				else:
 					public = False
 				user = cloudserver.db.userIDLookup(userData[2])
-				cloudserver.db.rankingUpdateName(user, userData[1])
-				cloudserver.db.screenNameUpdate(userData[1], userData[2], freq, wifi, public)
+				cloudserver.db.rankingUpdateName(user, userData[1], freq, wifi, public)
+				cloudserver.db.screenNameUpdate(userData[1], userData[2])
 				return "updated"
 			return "failed update"
 		username = userData[1]
