@@ -69,9 +69,9 @@ var renderGraph=function(data){
     if(barHighest>100)barHighest=100;
     if(barHighest<30)barHighest=30;
   // get everything else done, proportional
-    barLowest=vMin/vMax*barHighest;
-    barMedian=vMedian/vMax*barHighest;
-    barMe=myVal/vMax*barHighest;
+    barLowest=20+vMin/vMax*(barHighest-20);
+    barMedian=20+vMedian/vMax*(barHighest-20);
+    barMe=20+myVal/vMax*(barHighest-20);
   }//if no value, everyone is 10% width
 
   console.log('bar ratio:',barLowest,barMedian,barHighest,barMe);
