@@ -167,9 +167,9 @@ class DBMgr(object):
 		return len(list(self.registration_col1.find({"screenName":screenName}))) == 0
 	
 	def screenNameUpdate(self, screenName, userID):
-		self.registration_col1.update({"user": userID},
+		return self.registration_col1.update({"userID": userID},
 			{"$set": {"screenName": screenName}},
-			False, True)
+			multi=True)
 
 	def screenNameRegister(self, screenName, userID):
 		self.LogRawData({
@@ -718,7 +718,7 @@ class DBMgr(object):
 		
 
 		# case 1: add a consumption value, put two users, the users get shared energy consumption
-		self.ReportEnergyValue("nwc1000m_a2_plug", 2, {"testing":True,"message":"unit test"})
+		self.ReportEnergyValue("nwc1000m_a2_plug2", 2, {"testing":True,"message":"unit test"})
 		
 		self.ReportLocationAssociation("testUser2", "nwc1003b",  {"testing":True,"message":"unit test"})
 		self.ReportLocationAssociation("testUser1", "nwc1000m_a1",  {"testing":True,"message":"unit test"})
@@ -791,6 +791,14 @@ class DBMgr(object):
 		if self.screenNameLookup(SN) != ID:
 			print("screenNameLookup() unexpected")
 			sys.exit(-1)
+
+		NewSN="NEW_Name"
+		print(self.screenNameUpdate(NewSN, ID))
+		if self.userIDLookup(ID) != NewSN:
+			print("userIDLookup() unexpected after screenNameUpdate()")
+			print(list(self.registration_col1.find()))
+			sys.exit(-1)
+
 
 
 		print("Self-test succeeded, exit now.")
