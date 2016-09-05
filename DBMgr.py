@@ -168,7 +168,7 @@ class DBMgr(object):
 	
 	def screenNameUpdate(self, screenName, userID):
 		self.registration_col1.update({"user": userID},
-			{$set: {"screenName": screenName}},
+			{"$set": {"screenName": screenName}},
 			False)
 
 	def screenNameRegister(self, screenName, userID):
