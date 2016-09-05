@@ -58,6 +58,7 @@ class suggestionsEngine:
 				if (list_of_rooms[roomDest]["space"] == list_of_rooms[roomID]["space"]):
 					for user in userList:
 						messageID = "{0}|{1}|{2}".format("move", str(user), str(roomDest))
+						
 						users[user] = self.moveSuggestionHelper(roomID, roomDest, messageID)
 		return users
 
@@ -115,3 +116,8 @@ class suggestionsEngine:
 			self.changeScheduleUsers = self.changeScheduleSuggestion()
 			self.turnOffApplianceUsers = self.turnOffApplianceSuggestion()
 			self.synchronizeApplianceUsers = self.synchronizeApplianceScheduleSuggestion()
+			print("Suggestions Generated: #users receiving suggestion= {0}/move {1}/changeSchedule {2}/turnOff {3}/sync".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers)))
+
+
+
+
