@@ -165,7 +165,18 @@ class DBMgr(object):
 ####################################################################
 	def screenNameCheckAvailability(self, screenName):
 		return len(list(self.registration_col1.find({"screenName":screenName}))) == 0
-		
+	
+	def screenNameUpdate(self, screenName, userID):
+		self.registration_col1.update({
+			"user": userID
+			},
+			{'$set': {
+				"screenName" : screenName
+			}
+			},
+			False
+			)
+
 	def screenNameRegister(self, screenName, userID):
 		self.LogRawData({
 			"type":"screenNameRegister",
