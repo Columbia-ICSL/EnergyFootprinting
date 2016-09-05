@@ -171,6 +171,7 @@ class DBMgr(object):
 			{"$set": {"screenName": screenName}},
 			multi=True)
 
+
 	def screenNameRegister(self, screenName, userID):
 		self.LogRawData({
 			"type":"screenNameRegister",
@@ -818,6 +819,11 @@ class DBMgr(object):
 			"balance":0
 			})
 
+	def rankingUpdateName(self, oldName, newName):
+		return self.registration_col1.update({"user": oldName},
+			{"$set": {"user": newName}},
+			multi=True)
+		
 	def registerForRankingInfo(self, user, lab, gender, affiliation):
 		self.ranking.insert({
 			"user":user,

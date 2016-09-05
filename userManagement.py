@@ -20,6 +20,8 @@ class userManagement:
 		if (userData[0] == "^^^"):
 			if (len(userData) == 3):
 				cloudserver.db.screenNameUpdate(userData[1], userData[2])
+				user = cloudserver.db.userIDLookup(userData[2])
+				cloudserver.db.rankingUpdateName(user, userData[1])
 				return "updated"
 			return "failed update"
 		username = userData[1]
