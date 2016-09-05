@@ -46,7 +46,7 @@ var renderGraph=function(data){
   }
   values=values.sort(function(a,b){return a-b;});
   console.log('values',values);
-  var sumVal=values['_total'];
+  var sumVal=data['_total'];
   if(!sumVal)sumVal=values.reduce(function(a,b){return a+b});
   console.log('_total', sumVal);
 
