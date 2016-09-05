@@ -117,7 +117,7 @@ class BeaconVals:
         sinceTime=cloudserver.db._now()-interval
         json_return["suggestions"]=[
             item for item in json_return["suggestions"]
-            if cloudserver.db.pushManagementDispCheck(item["messageID"], sinceTime) is not True #not passed the ckeck->recently dismissed
+            if cloudserver.db.pushManagementDispCheck(item["messageID"], sinceTime) is True #not passed the ckeck->recently dismissed
         ]
         #Check 2: if push timeout is too short, erase the push flag.
 
