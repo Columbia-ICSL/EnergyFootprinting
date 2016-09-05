@@ -43,11 +43,11 @@ var renderGraph=function(data){
     }
     values.push(val);
   }
+  values=values.sort(function(a,b){return a-b;});
   console.log('values',values);
   var sumVal=values.reduce(function(a,b){return a+b});
 
   // calculate min, max, median
-  values.sort();
   var vMin=values[0], vMax=values[values.length-1],
       vMedian=values[Math.floor(values.length/2)];
   if(values.length%2==0){
