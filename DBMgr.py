@@ -138,6 +138,8 @@ class DBMgr(object):
 
 		self.watchdogInit()
 
+		self.pushManagementInit()
+
 		if start_bg_thread:
 			self.startDaemon()
 
@@ -206,6 +208,37 @@ class DBMgr(object):
 		return ret[0]["screenName"]
 
 ####################################################################
+##  Message last-pushed/last-seen information  #####################
+####################################################################
+## This is a fake in-memory version; switch to DB-based later.
+	def pushManagementInit(self):
+		self.PMDictPush={}
+		self.PMDictDisp={}
+
+	def pushManagementPushUpdate(self, key, now=None):
+		if now==None:
+			now=self._now()
+		self.PMDictPush[key]=now
+
+	def pushManagementDispUpdate(self, key, now=None):
+		if now==None:
+			now=self._now()
+		self.PMDictDisp[key]=now
+		
+	def pushManagementPushCheck(self, key, notSentSince):
+		#return True if the message haven't been sent recently (last sent <= notSentSince)
+		latest=0
+		if key in self.PMDictPush:
+			latest= self.PMDictPush[key]
+		return latest <= notSentSince
+		
+	def pushManagementDispCheck(self, key, notSentSince):
+		#return True if the message haven't been sent recently (last sent <= notSentSince)
+		latest=0
+		if key in self.PMDictDisp:
+			latest= self.PMDictDisp[key]
+		return latest <= notSentSince
+
 
 
 	def watchdogInit(self):
@@ -812,6 +845,40 @@ class DBMgr(object):
 			print("userIDLookup() unexpected after screenNameUpdate()")
 			print(list(self.registration_col1.find()))
 			sys.exit(-1)
+
+		# push management test
+		# !!!! TODO: use alternate DB column in test db
+
+		now=self._now()
+		self.pushManagementPushUpdate("key1")
+		self.pushManagementPushUpdate("key2",5)
+		self.pushManagementDispUpdate("key1")
+		self.pushManagementDispUpdate("key2",50)
+
+		if self.pushManagementPushCheck("key1", now-1)!=False:
+			print("pushManagementPushCheck() key1 unexpected")
+			sys.exit(-1)
+		if self.pushManagementPushCheck("key1", now+1)!=True:
+			print("pushManagementPushCheck() key1 unexpected")
+			sys.exit(-1)
+
+		if self.pushManagementPushCheck("key2", 0)!=False:
+			print("pushManagementPushCheck() key2 unexpected")
+			sys.exit(-1)
+		if self.pushManagementPushCheck("key2", 30)!=True:
+			print("pushManagementPushCheck() key2 unexpected")
+			sys.exit(-1)
+		self.pushManagementPushUpdate("key2",32)
+		if self.pushManagementPushCheck("key2", 30)!=False:
+			print("pushManagementPushCheck() key2 unexpected")
+			sys.exit(-1)
+		if self.pushManagementDispCheck("key2", 30)!=False:
+			print("pushManagementDispCheck() key2 unexpected")
+			sys.exit(-1)
+		if self.pushManagementDispCheck("key1", now+10)!=True:
+			print("pushManagementDispCheck() key1 unexpected")
+			sys.exit(-1)
+
 
 
 
