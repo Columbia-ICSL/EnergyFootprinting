@@ -24,7 +24,7 @@ class BeaconVals:
 
 
         username = cloudserver.db.userIDLookup(ID)
-        if (username != None):
+        if (username is not None):
             alpha = username.split('_')
             if (len(alpha >= 1)):
                 if (alpha[0] == "alpha"):
