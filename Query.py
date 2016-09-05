@@ -69,7 +69,7 @@ class QueryPersonMulti:
             start=float(raw_time['start'])
         
         people=personList.split(",")
-        print people
+        print(people)
         return cloudserver.db.QueryPersonMulti(people,start,end)
 
 

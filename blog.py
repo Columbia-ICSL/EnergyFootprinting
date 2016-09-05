@@ -16,7 +16,7 @@ class blog:
     return "blog " + path
 class append:
   def GET(self,path):
-      print path
+      print(path)
       return "append "+" web input is "+str(web.input())
 class signing:
   def GET(self,query):
