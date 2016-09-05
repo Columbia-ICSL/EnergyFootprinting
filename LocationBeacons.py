@@ -93,11 +93,12 @@ class BeaconVals:
                 title="Shut off "+applianceName
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
                 reward=1
+                doPush=0
+                if(powerUsage>100):
+                    #!!TODO: make doPush=1,2,3,4 according to various criteria, not a single threshold.
+                    doPush=1
                 json_return["suggestions"].append(
-                    make_suggestion_item("turnoff",title, body, reward, messageID, 0, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
-
-
-
+                    make_suggestion_item("turnoff",title, body, reward, messageID, doPush, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
 
 
                 #applianceID="nwc1003b_c_plug"
@@ -120,6 +121,19 @@ class BeaconVals:
             if cloudserver.db.pushManagementDispCheck(item["messageID"], sinceTime) is True #not passed the ckeck->recently dismissed
         ]
         #Check 2: if push timeout is too short, erase the push flag.
+        #TODO: personalized push interval from DB (notification frequency in config)
+        pushInterval=5*60 # !!!! TESTINT ONLY ### should be >= than display timeout anyway
+        pushSinceTime=cloudserver.db._now()-pushInterval
+        for i in range(len(json_return["suggestions"])):
+            if json_return["suggestions"][i]["notification"]!=0:
+                #this is a push message; check if we want to push
+                messageID=json_return["suggestions"][i]["messageID"]
+                if cloudserver.db.pushManagementPushCheck(messageID, pushSinceTime)==False: #last notification too recent
+                    #erase flag
+                    json_return["suggestions"][i]["notification"]=0
+                else: #good to go
+                    #remember this push, do not repeat.
+                    cloudserver.db.pushManagementPushUpdate(messageID)
 
         return cloudserver.db._encode(json_return,False)
 
