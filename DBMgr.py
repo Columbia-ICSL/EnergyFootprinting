@@ -858,6 +858,15 @@ class DBMgr(object):
 
 		# push management test
 		now=self._now()
+
+		if self.pushManagementPushCheck("key0", now-1)!=True:
+			print("pushManagementPushCheck() key0 unexpected")
+			sys.exit(-1)
+		self.pushManagementPushUpdate("key0")
+		if self.pushManagementPushCheck("key0", now-1)!=False:
+			print("pushManagementPushCheck() key0 unexpected")
+			sys.exit(-1)
+		
 		self.pushManagementPushUpdate("key1")
 		self.pushManagementPushUpdate("key2",5)
 		self.pushManagementDispUpdate("key1")
