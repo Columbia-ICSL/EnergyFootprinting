@@ -47,7 +47,8 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        location = self.KNN.classifier(locs)
+        KNN = KNearestNeighbors(11, points, labelNumber)
+        location = KNN.classifier(locs)
 
 
         #username = cloudserver.db.userIDLookup(ID)
