@@ -47,7 +47,7 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        KNN = KNearestNeighbors(11, points, labelNumber)
+        KNN = KNearestNeighbors(11, self.points, self.labelNumber)
         location = KNN.classifier(locs)
 
 
