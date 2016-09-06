@@ -6,19 +6,41 @@ from trainingData import training
 
 urls = (
 "/","BeaconVals")
+class generateTrainingData:
+    trainingData = []
+    trainingLabels = []
+    def generate(self):
+        rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
+        infile = "backup2.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        for i in range(len(x)):
+            y = x[i].split('\t')
+            last = y[-1].split('\n')
+            y[-1] = last[0]
+            y = map(int, y)
+            trainingData.append(y)
+
+        infile = "backuplabels2.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        for j in range(len(x)):
+            y = x[j]
+            last = y.split('\n')
+            y = last[0]
+            trainingLabels += [self.rooms.index(y)]
 
 class BeaconVals:
-    cloudserver.TD.generate()
-    points = []
-    labels = []
-    labelNumber = []
+    trainingDataGenerator = generateTrainingData()
+    trainingDataGenerator.generate()
+    points = trainingDataGenerator.trainingData
+    labels = trainingDataGenerator.trainingLabels
+    labelNumber = trainingDataGenerator.trainingLabels
+    KNN = KNearestNeighbors(11, points, labelNumber)
     sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
 
     def POST(self):
-        points = cloudserver.trainingData
-        labels = cloudserver.trainingLabels
-        labelNumber = cloudserver.trainingLabels
-        KNN = KNearestNeighbors(11, points, labelNumber)
+
         
         raw_data=web.data()
         locs = raw_data.split(',')
