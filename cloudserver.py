@@ -20,6 +20,7 @@ import Manage
 from bson import ObjectId
 from threading import Thread
 import suggestionsEngine
+from trainingData import training
 
 urls = (
  
@@ -44,8 +45,14 @@ urls = (
 
 from DBMgr import MongoJsonEncoder
 
-trainingData = []
-trainingLabels = []
+trainingData = training.datapoints
+trainingLabels = training.labelNames
+outfile = "backup2.txt"
+with open(outfile, 'w') as file:
+    file.writelines('\t'.join(str(j) for j in i) + '\n' for i in trainingData)
+outfile2 = "backuplabels2.txt"
+with open(outfile2, 'w') as file:
+    file.writelines(str(self.rooms[i]) + '\n' for i in trainingLabels)
 
 #client = pymongo.MongoClient()
 #client = pymongo.MongoClient('localhost', 27017)

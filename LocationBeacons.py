@@ -8,8 +8,8 @@ urls = (
 "/","BeaconVals")
 
 class BeaconVals:
-    points = training.datapoints
-    labels = training.labelNames
+    points = cloudserver.trainingData
+    labels = cloudserver.trainingLabels
     labelNumber = training.labelNumber
     KNN = KNearestNeighbors(11, points, labelNumber)
     sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
@@ -122,7 +122,7 @@ class BeaconVals:
         ]
         #Check 2: if push timeout is too short, erase the push flag.
         #TODO: personalized push interval from DB (notification frequency in config)
-        pushInterval=5*60 # !!!! TESTINT ONLY ### should be >= than display timeout anyway
+        pushInterval=60*60 # !!!! TESTINT ONLY ### should be >= than display timeout anyway
         pushSinceTime=cloudserver.db._now()-pushInterval
         for i in range(len(json_return["suggestions"])):
             if json_return["suggestions"][i]["notification"]!=0:
