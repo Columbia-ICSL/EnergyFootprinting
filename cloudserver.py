@@ -44,7 +44,7 @@ urls = (
 )
 
 from DBMgr import MongoJsonEncoder
-#rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
+rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
 #infile = "backup2.txt"
 #f = open(infile, 'r')
 #x = f.readlines()
@@ -72,7 +72,7 @@ with open(outfile, 'w') as file:
     file.writelines('\t'.join(str(j) for j in i) + '\n' for i in trainingData)
 outfile2 = "backuplabels2.txt"
 with open(outfile2, 'w') as file:
-    file.writelines(str(self.rooms[i]) + '\n' for i in trainingLabels)
+    file.writelines(str(rooms[i]) + '\n' for i in trainingLabels)
 
 #client = pymongo.MongoClient()
 #client = pymongo.MongoClient('localhost', 27017)
