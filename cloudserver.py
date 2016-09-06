@@ -45,7 +45,7 @@ urls = (
 
 from DBMgr import MongoJsonEncoder
 rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
-infile = "backup.txt"
+infile = "backup2.txt"
 f = open(infile, 'r')
 x = f.readlines()
 trainingData = []
@@ -55,7 +55,9 @@ for i in range(len(x)):
     y[-1] = last[0]
     y = map(int, y)
     trainingData.append(y)
-infile = "backuplabels.txt"
+
+trainingLabels = []
+infile = "backuplabels2.txt"
 f = open(infile, 'r')
 x = f.readlines()
 for j in range(len(x)):
