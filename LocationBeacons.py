@@ -28,7 +28,7 @@ class generateTrainingData:
             y = x[j]
             last = y.split('\n')
             y = last[0]
-            self.trainingLabels += [self.rooms.index(y)]
+            self.trainingLabels += [rooms.index(y)]
 
 class BeaconVals:
     trainingDataGenerator = generateTrainingData()
