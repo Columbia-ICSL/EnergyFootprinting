@@ -19,7 +19,7 @@ class train:
         locs = raw_data.split(',')
 
         if (locs[0] == "REUP"):
-            infile = "backup.txt"
+            infile = "backup2.txt"
             f = open(infile, 'r')
             x = f.readlines()
             cloudserver.trainingData = []
@@ -29,7 +29,7 @@ class train:
                 y[-1] = last[0]
                 y = map(int, y)
                 cloudserver.trainingData.append(y)
-            infile = "backuplabels.txt"
+            infile = "backuplabels2.txt"
             f = open(infile, 'r')
             x = f.readlines()
             cloudserver.trainingLabels = []
@@ -47,10 +47,10 @@ class train:
 
         l = locs[1:]
         if (locs[0] == "GET"):
-            outfile = "backup1.txt"
+            outfile = "backup2.txt"
             with open(outfile, 'w') as file:
                 file.writelines('\t'.join(str(j) for j in i) + '\n' for i in cloudserver.trainingData)
-            outfile2 = "backuplabels1.txt"
+            outfile2 = "backuplabels2.txt"
             with open(outfile2, 'w') as file:
                 file.writelines(str(self.rooms[i]) + '\n' for i in cloudserver.trainingLabels)
             locs = map(int, l)
