@@ -66,7 +66,7 @@ rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2"
 #    y = last[0]
 #    trainingLabels += [self.rooms.index(y)]               
 trainingData = training.datapoints
-trainingLabels = training.labelNames
+trainingLabels = training.labelNumber
 outfile = "backup2.txt"
 with open(outfile, 'w') as file:
     file.writelines('\t'.join(str(j) for j in i) + '\n' for i in trainingData)
