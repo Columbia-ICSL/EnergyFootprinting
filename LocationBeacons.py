@@ -1,6 +1,7 @@
 import json
 import web
 import cloudserver
+from cloudserver import TD
 from KNNalgo import KNearestNeighbors
 from trainingData import training
 
@@ -8,7 +9,7 @@ urls = (
 "/","BeaconVals")
 
 class BeaconVals:
-    cloudserver.TD
+    TD.generate()
     points = []
     labels = []
     labelNumber = []
