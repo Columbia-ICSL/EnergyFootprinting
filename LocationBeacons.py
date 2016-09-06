@@ -19,7 +19,7 @@ class generateTrainingData:
             last = y[-1].split('\n')
             y[-1] = last[0]
             y = map(int, y)
-            trainingData.append(y)
+            self.trainingData.append(y)
 
         infile = "backuplabels2.txt"
         f = open(infile, 'r')
@@ -28,7 +28,7 @@ class generateTrainingData:
             y = x[j]
             last = y.split('\n')
             y = last[0]
-            trainingLabels += [self.rooms.index(y)]
+            self.trainingLabels += [self.rooms.index(y)]
 
 class BeaconVals:
     trainingDataGenerator = generateTrainingData()
