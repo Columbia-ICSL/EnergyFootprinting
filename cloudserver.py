@@ -80,9 +80,9 @@ class generateTrainingData():
 #client = pymongo.MongoClient()
 #client = pymongo.MongoClient('localhost', 27017)
 #db = client.test_database
-TD = generateTrainingData.generateTrainingData()
 db=DBMgr.DBMgr()
 SE = suggestionsEngine.suggestionsEngine()
+TD = generateTrainingData.generateTrainingData()
 
 render = web.template.render('templates/')
 
