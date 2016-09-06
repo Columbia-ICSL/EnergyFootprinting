@@ -8,6 +8,7 @@ urls = (
 "/","BeaconVals")
 
 class BeaconVals:
+    cloudserver.TD
     points = []
     labels = []
     labelNumber = []
