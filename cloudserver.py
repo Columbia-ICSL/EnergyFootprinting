@@ -45,7 +45,7 @@ urls = (
 
 from DBMgr import MongoJsonEncoder
 
-class generateTrainingData():
+class generateTrainingData:
     trainingData = []
     trainingLabels = []
     def generate(self):
@@ -82,7 +82,7 @@ class generateTrainingData():
 #db = client.test_database
 db=DBMgr.DBMgr()
 SE = suggestionsEngine.suggestionsEngine()
-TD = generateTrainingData.generateTrainingData()
+TD = generateTrainingData()
 
 render = web.template.render('templates/')
 
