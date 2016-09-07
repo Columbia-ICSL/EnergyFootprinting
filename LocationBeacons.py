@@ -142,12 +142,19 @@ class BeaconVals:
         #filter out message using suggestionIDs
         #Check 1: if display timestamp indicates a recent "dismiss", remove the message entirely.
         #TODO: personalize the interval
-        interval=20*60
-        sinceTime=cloudserver.db._now()-interval
-        json_return["suggestions"]=[
-            item for item in json_return["suggestions"]
-            if cloudserver.db.pushManagementDispCheck(item["messageID"], sinceTime) is True #not passed the ckeck->recently dismissed
-        ]
+        moveInterval=20*60
+        applianceInterval=20*60
+        moveSinceTime=cloudserver.db._now()-moveInterval
+        applianceSinceTime=cloudserver.db._now()-applianceInterval
+        returnList = []
+        for item in json_return["suggestions"]:
+            if (item["type"] == "move" and cloudserver.db.pushManagementDispCheck(item["messageID"], moveSinceTime)):
+                returnList.append(item)
+                continue
+            if (item["type"] == "turnoff" and cloudserver.db.pushManagementDispCheck(item["messageID"], applianceSinceTime)):
+                returnList.append(item)
+                continue
+        json_return["suggestions"]=returnList
         #Check 2: if push timeout is too short, erase the push flag.
         #TODO: personalized push interval from DB (notification frequency in config)
         pushInterval=60*60 # !!!! TESTINT ONLY ### should be >= than display timeout anyway
