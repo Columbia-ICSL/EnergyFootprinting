@@ -76,9 +76,12 @@ var renderGraph=function(data){
 
   console.log('bar ratio:',barLowest,barMedian,barHighest,barMe);
 
+  var percentage=myVal/sumVal*100;
   // set text
   $('#headLeft .headBody').html(numFormat(myVal)+'&nbsp;Watts');
-  $('#headRight .headBody').html(numFormat(myVal/sumVal*100)+'%');
+  $('#headRight .headBody').html(numFormat(percentage)+'%');
+  if(sumVal==0)
+    $('#headRight .headBody').html('--');
   $('#barHighest .name').text('Highest: '+numFormat(vMax)+'W');
   $('#barLowest .name').text('Lowest: '+numFormat(vMin)+'W');
   $('#barMedian .name').text('Median: '+numFormat(vMedian)+'W');
