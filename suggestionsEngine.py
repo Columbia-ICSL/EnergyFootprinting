@@ -58,7 +58,6 @@ class suggestionsEngine:
 				if (list_of_rooms[roomDest]["space"] == list_of_rooms[roomID]["space"]):
 					for user in userList:
 						messageID = "{0}|{1}|{2}".format("move", str(user), str(roomDest))
-						
 						users[user] = self.moveSuggestionHelper(roomID, roomDest, messageID)
 		return users
 
