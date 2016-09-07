@@ -60,7 +60,7 @@ from DBMgr import MongoJsonEncoder
 #db = client.test_database
 db=DBMgr.DBMgr()
 SE = suggestionsEngine.suggestionsEngine()
-TD = generateTrainingData()
+#TD = generateTrainingData()
 
 render = web.template.render('templates/')
 
