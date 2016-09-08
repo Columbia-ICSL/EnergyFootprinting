@@ -36,7 +36,6 @@ class BeaconVals:
     points = trainingDataGenerator.trainingData
     labels = training.labelNames
     labelNumber = trainingDataGenerator.trainingLabels
-    KNN = KNearestNeighbors(11, points, labelNumber)
     sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]
 
     def POST(self):
@@ -58,10 +57,22 @@ class BeaconVals:
         #        if (alpha[0] == "alpha"):
         #            ID = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
         #            location = cloudserver.db.getUserLocation(ID)
-
+        checkUnknown = False
+        for loc in locs:
+            if (loc != -100):
+                checkUnknown = True
+                break
+        if (checkUnknown == False):
+            unknown_return={
+            "location":"Unknown Location",
+            "location_id":"Unknown Location",
+            "balance":cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID)),
+            "suggestions":[]
+            }
+            cloudserver.db.ReportLocationAssociation(ID, None)
+            return cloudserver.db._encode(unknown_return,False)
 
         cloudserver.db.ReportLocationAssociation(ID, self.labels[location])
-        cloudserver.db.SaveLocationData(0, self.labels[location])
         moveUsers = cloudserver.SE.moveUsers
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
@@ -173,7 +184,6 @@ class BeaconVals:
         return cloudserver.db._encode(json_return,False)
 
     def GET(self):
-        result = cloudserver.db.QueryLocationData(0)
-        return result
+        return 0
 
 Beacons = web.application(urls, locals());
