@@ -24,7 +24,7 @@ class KNearestNeighbors:
 			if (Xmeas[j] != -100):
 				checkBlank = True
 				print(j)
-		if (checkBlank = False):
+		if (checkBlank == False):
 			return -1
 		for i in xrange(self.beacons):
 			sum += (Ymeas[i]-Xmeas[i])*(Ymeas[i]-Xmeas[i])
