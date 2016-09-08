@@ -8,7 +8,7 @@ class KNearestNeighbors:
 		self.distances = [0] * self.samples
 		checkBlank = False
 		for j in xrange(self.beacons):
-			if (Xmeas[j] != -100):
+			if (self.dataset[j] != -100):
 				checkBlank = True
 				print(j)
 
