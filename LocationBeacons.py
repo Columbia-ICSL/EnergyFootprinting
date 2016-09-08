@@ -58,10 +58,22 @@ class BeaconVals:
         #        if (alpha[0] == "alpha"):
         #            ID = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
         #            location = cloudserver.db.getUserLocation(ID)
-
+        checkUnknown = False
+        for loc in locs:
+            if (loc != -100):
+                checkUnknown = True
+                break
+        if (checkUnknown == False):
+            unknown_return={
+            "location":"Unknown Location",
+            "location_id":"Unknown Location",
+            "balance":cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID)),
+            "suggestions":[]
+            }
+            cloudserver.db.ReportLocationAssociation(ID, None)
+            return cloudserver.db._encode(unknown_return,False)
 
         cloudserver.db.ReportLocationAssociation(ID, self.labels[location])
-        cloudserver.db.SaveLocationData(0, self.labels[location])
         moveUsers = cloudserver.SE.moveUsers
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
@@ -173,7 +185,6 @@ class BeaconVals:
         return cloudserver.db._encode(json_return,False)
 
     def GET(self):
-        result = cloudserver.db.QueryLocationData(0)
-        return result
+        return 0
 
 Beacons = web.application(urls, locals());

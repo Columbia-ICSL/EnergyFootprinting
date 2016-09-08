@@ -10,7 +10,8 @@ class KNearestNeighbors:
 	def classifier(self, measurement):
 		for i in xrange(len(self.dataset)):
 			sum = self.EUDist(self.dataset[i], measurement)
-			self.distances[i] = (sum, self.labels[i])
+			if (sum != -1):
+				self.distances[i] = (sum, self.labels[i])
 		sortedDistances = sorted(self.distances, key=lambda dist:dist[0])
 		majority = self.majority_vote(sortedDistances[0:self.K])
 		return majority[0]
@@ -18,6 +19,13 @@ class KNearestNeighbors:
 
 	def EUDist(self, Xmeas, Ymeas):
 		sum = 0
+		checkBlank = False
+		for j in xrange(self.beacons):
+			if (Xmeas[j] != -100):
+				checkBlank = True
+				break
+		if (checkBlank = False):
+			return -1
 		for i in xrange(self.beacons):
 			sum += (Ymeas[i]-Xmeas[i])*(Ymeas[i]-Xmeas[i])
 		return sum
