@@ -3,10 +3,10 @@ class KNearestNeighbors:
 		self.K = K
 		self.dataset = dataset
 		self.labels = labels
-		deletedIndices = [345, 344, 341, 335, 336]
-		for i in xrange(len(deletedIndices)):
-			self.dataset.pop(deletedIndices[i])
-			self.labels.pop(deletedIndices[i])
+		#deletedIndices = [345, 344, 341, 335, 336]
+		#for i in xrange(len(deletedIndices)):
+		#	self.dataset.pop(deletedIndices[i])
+		#	self.labels.pop(deletedIndices[i])
 		self.beacons = len(dataset[0])
 		self.samples = len(dataset)
 		self.distances = [0] * self.samples
