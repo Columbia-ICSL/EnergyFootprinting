@@ -6,15 +6,11 @@ class KNearestNeighbors:
 		self.samples = len(dataset)
 		self.labels = labels
 		self.distances = [0] * self.samples
-		
-		for j in xrange(self.samples):
-			checkBlank = False
-			for k in xrange(self.beacons):
-				if (self.dataset[j][k] != -100):
-					checkBlank = True
-			if (checkBlank == False):
-				print(j)
-
+		deletedIndices = [345, 344, 341, 335, 336]
+		for i in xrange(len(deletedIndices)):
+			self.dataset[i] = []
+			self.labels[i] = []
+			
 	def classifier(self, measurement):
 		for i in xrange(len(self.dataset)):
 			sum = self.EUDist(self.dataset[i], measurement)
