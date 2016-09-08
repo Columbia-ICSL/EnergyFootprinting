@@ -56,10 +56,10 @@ class DBInit(object):
 
         addRoom("nwc1003g","1003 Optics G Lab", [40.809965, -73.962063], JIANG_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
         #addRoom("nwc1003b","1003B Lab",[40.810022, -73.962075])
-        addRoom("nwc1003b_a","1003B Lab, Peter&Daniel's seat",[40.809980, -73.962159], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Peter/Daniel
-        addRoom("nwc1003b_b","1003B Lab, Danny&Stephen's seat",[40.809947, -73.962050], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Danny/Stephen
-        addRoom("nwc1003b_c","1003B Lab, Rishi's seat",[40.810005, -73.962072], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Rishi
-        addRoom("nwc1003b_t","1003B Lab, Prof. Teherani's space",[40.809897, -73.962138], TEHERANI_LAB, STUDENT_WORK_SPACE, WINDOWED) # Prof. Teherani's space
+        addRoom("nwc1003b_a","1003B Lab Area A",[40.809980, -73.962159], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Peter/Daniel
+        addRoom("nwc1003b_b","1003B Lab Area B",[40.809947, -73.962050], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Danny/Stephen
+        addRoom("nwc1003b_c","1003B Lab Area C",[40.810005, -73.962072], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Rishi
+        addRoom("nwc1003b_t","1003B Teherani Lab",[40.809897, -73.962138], TEHERANI_LAB, STUDENT_WORK_SPACE, WINDOWED) # Prof. Teherani's space
 
 
         # 10M space units, aisle 1-8
