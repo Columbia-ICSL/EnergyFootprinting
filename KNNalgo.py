@@ -2,14 +2,15 @@ class KNearestNeighbors:
 	def __init__(self, K, dataset, labels):
 		self.K = K
 		self.dataset = dataset
-		self.beacons = len(dataset[0])
-		self.samples = len(dataset)
 		self.labels = labels
-		self.distances = [0] * self.samples
 		deletedIndices = [345, 344, 341, 335, 336]
 		for i in xrange(len(deletedIndices)):
-			self.dataset.pop(i)
-			self.labels.pop(i)
+			self.dataset.pop(deletedIndices[i])
+			self.labels.pop(deletedIndices[i])
+		self.beacons = len(dataset[0])
+		self.samples = len(dataset)
+		self.distances = [0] * self.samples
+
 
 	def classifier(self, measurement):
 		for i in xrange(len(self.dataset)):
