@@ -23,7 +23,7 @@ class KNearestNeighbors:
 		for j in xrange(self.beacons):
 			if (Xmeas[j] != -100):
 				checkBlank = True
-				break
+				print(j)
 		if (checkBlank = False):
 			return -1
 		for i in xrange(self.beacons):
