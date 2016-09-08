@@ -5,6 +5,7 @@ class KNearestNeighbors:
 		self.labels = labels
 		deletedIndices = [345, 344, 341, 335, 336]
 		for i in xrange(len(deletedIndices)):
+			print(deletedIndices[i])
 			self.dataset.pop(deletedIndices[i])
 			self.labels.pop(deletedIndices[i])
 		self.beacons = len(dataset[0])
