@@ -6,10 +6,13 @@ class KNearestNeighbors:
 		self.samples = len(dataset)
 		self.labels = labels
 		self.distances = [0] * self.samples
-		checkBlank = False
-		for j in xrange(self.beacons):
-			if (self.dataset[j] != -100):
-				checkBlank = True
+		
+		for j in xrange(self.samples):
+			checkBlank = False
+			for k in xrange(self.beacons):
+				if (self.dataset[j][k] != -100):
+					checkBlank = True
+			if (checkBlank == False):
 				print(j)
 
 	def classifier(self, measurement):
