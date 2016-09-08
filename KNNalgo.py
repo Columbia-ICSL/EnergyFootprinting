@@ -8,9 +8,9 @@ class KNearestNeighbors:
 		self.distances = [0] * self.samples
 		deletedIndices = [345, 344, 341, 335, 336]
 		for i in xrange(len(deletedIndices)):
-			self.dataset[i] = []
-			self.labels[i] = []
-			
+			self.dataset.pop(i)
+			self.labels.pop(i)
+
 	def classifier(self, measurement):
 		for i in xrange(len(self.dataset)):
 			sum = self.EUDist(self.dataset[i], measurement)
