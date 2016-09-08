@@ -209,6 +209,9 @@ class DBMgr(object):
 		if len(ret)!=1:
 			return None
 		return ret[0]["screenName"]
+	
+	def userIDRemoveAll(self, userID):
+		self.registration_col1.remove({"userID":userID})
 
 ####################################################################
 ##  Message last-pushed/last-seen information  #####################
