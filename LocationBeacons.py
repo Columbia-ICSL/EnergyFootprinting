@@ -113,7 +113,7 @@ class BeaconVals:
             messageID = roomInfo["messageID"]
 
             title="Move to "+roomName
-            body="Please consider sharing the room to lower everyone's energy footprint."
+            body="Sharing spaces with others helps to lower everyone's energy footprint."
             reward=4
             json_return["suggestions"].append(
                 make_suggestion_item("move",title,body,reward, messageID,0, {"to":roomName,"to_id":roomId})
@@ -129,7 +129,7 @@ class BeaconVals:
                 messageID = "{0}|{1}|{2}".format("turnoff", ID, applianceID)
                 if (powerUsage <= 0):
                     continue
-                title="Shut off "+applianceName
+                title="Reduce power of "+applianceName
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
                 reward=1
                 doPush=0
@@ -153,6 +153,7 @@ class BeaconVals:
         #filter out message using suggestionIDs
         #Check 1: if display timestamp indicates a recent "dismiss", remove the message entirely.
         #TODO: personalize the interval
+
         moveInterval=20*60
         applianceInterval=20*60
         moveSinceTime=cloudserver.db._now()-moveInterval
@@ -166,9 +167,21 @@ class BeaconVals:
                 returnList.append(item)
                 continue
         json_return["suggestions"]=returnList
+        usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
+        userFrequency = usernameAttributes["frequency"]
+        #default value = every 4 hours
+        pushInterval=60*60*4
+        if (userFrequency == 0):
+            pushInterval = 60*1000000
+        if (userFrequency == 33):
+            pushInterval = 60*60*24
+        if (userFrequency == 66):
+            pushInterval = 60*60*4
+        if (userFrequency == 100):
+            pushInterval = 60*30
         #Check 2: if push timeout is too short, erase the push flag.
         #TODO: personalized push interval from DB (notification frequency in config)
-        pushInterval=60*60 # !!!! TESTINT ONLY ### should be >= than display timeout anyway
+         # !!!! TESTINT ONLY ### should be >= than display timeout anyway
         pushSinceTime=cloudserver.db._now()-pushInterval
         for i in range(len(json_return["suggestions"])):
             if json_return["suggestions"][i]["notification"]!=0:
