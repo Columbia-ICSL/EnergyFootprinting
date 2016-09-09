@@ -209,6 +209,9 @@ class DBMgr(object):
 		if len(ret)!=1:
 			return None
 		return ret[0]["screenName"]
+	
+	def userIDRemoveAll(self, userID):
+		self.registration_col1.remove({"userID":userID})
 
 ####################################################################
 ##  Message last-pushed/last-seen information  #####################
@@ -923,7 +926,7 @@ class DBMgr(object):
 			{"$set": {"user": newName, "frequency":frequency, "wifi":wifi, "public":public}},
 			multi=True)
 
-	def getAttributes(self, username):
+	def getAttributes(self, username, encodeJson=True):
 		json_return={
             "username":"username",
             "frequency":0,
@@ -935,7 +938,10 @@ class DBMgr(object):
 		json_return["frequency"] = itm.get("frequency")
 		json_return["wifi"] = itm.get("wifi")
 		json_return["public"] = itm.get("public")
-		return self._encode(json_return, False)
+		if (encodeJson == True):
+			return self._encode(json_return, False)
+		else:
+			return json_return
 
 	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=66,wifi=True,public=True):
 		self.ranking.insert({

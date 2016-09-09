@@ -25,7 +25,10 @@ class ranking:
 		i = 0
 		for rank in rankingData:
 			i += 1
-			user = rank["user"]
+			attributes = cloudserver.db.getAttributes(rank["user"], False)
+			user = rank["user"]	
+			if (attributes["public"] == False):
+				rank["user"] = "anonymous"
 			balance = rank["balance"]
 			if (userID == user):
 				json_return["rank"] = i

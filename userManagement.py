@@ -35,6 +35,7 @@ class userManagement:
 		username = userData[1]
 		if (username == "100"):
 			return "Special Name"
+		cloudserver.db.userIDRemoveAll(deviceID)
 		if (cloudserver.db.screenNameCheckAvailability(username)):
 			if (cloudserver.db.screenNameRegister(username, deviceID)):
 				if (len(userData) == 5):
