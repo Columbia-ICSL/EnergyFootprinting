@@ -1,280 +1,49 @@
 <!doctype>
 <html>
 <head>
-<title> Personal Energy Footprint html frontend</title>
+<title> Personal Energy Footprint html frame test</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/zepto.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/modules/fx.min.js"></script>
 <script type="text/javascript">
-var query=(function(s){
-  var loc=s.indexOf('?');
-  if(loc==-1)return {};
-  var q=s.substr(loc+1);
-  var ret={};
-  q.split('&').map(function(part){
-    var array=part.split('=');
-    var key=decodeURIComponent(array[0]), value=decodeURIComponent(array.slice(1).join("="));
-    ret[key]=value;
-  });
-  return ret;
-})(location.href);
-
-var personID=query['id'];
-
-//var maxLen=(20*60/10);//20mins, every 10s
-//var reqTime=3*1000;
-
-
-var hideError=function(){
-  $('#figureCover').hide();
-  $('#figure').removeClass('blurred');
+function $(id){return document.getElementById(id);}
+function _now(){
+	return (new Date()).toLocaleString();
 }
-
-var numFormat=function(num){
-  return (1*num).toFixed(2);
+function atForeground(){
+	$('opened').innerText=_now();
+	$('foreground').innerText="Foreground.";
 }
-
-var renderGraph=function(data){
-  var myVal=-1, values=[];
-  for(var userID in data)
-  if(userID.substr(0,1)!='_')
-  {
-    val=1*data[userID]["value"];
-    if(userID==personID){
-      myVal=val;
-    }
-    values.push(val);
-  }
-  values=values.sort(function(a,b){return a-b;});
-  console.log('values',values);
-  var sumVal=data['_total'];
-  if(!sumVal)sumVal=values.reduce(function(a,b){return a+b});
-  console.log('_total', sumVal);
-
-  // calculate min, max, median
-  var vMin=values[0], vMax=values[values.length-1],
-      vMedian=values[Math.floor(values.length/2)];
-  if(values.length%2==0){
-    var p=values.length/2;
-    vMedian=(values[p]+values[p-1])/2;
-  }
-  console.log('Power values:',vMin,vMedian,vMax,myVal);
-
-  // calculate max width=50%~100%
-  var barLowest=20, barHighest=20, barMe=20, barMedian=20;
-  if(vMax>0){
-    var scaleMin=Math.log10(5);//50%
-    var scaleMax=Math.log10(500);//100%
-    barHighest=50+50*(Math.log10(vMax)-scaleMin)/(scaleMax-scaleMin);
-    if(barHighest>100)barHighest=100;
-    if(barHighest<30)barHighest=30;
-  // get everything else done, proportional
-    barLowest=20+vMin/vMax*(barHighest-20);
-    barMedian=20+vMedian/vMax*(barHighest-20);
-    barMe=20+myVal/vMax*(barHighest-20);
-  }//if no value, everyone is 10% width
-
-  console.log('bar ratio:',barLowest,barMedian,barHighest,barMe);
-
-  var percentage=myVal/sumVal*100;
-  // set text
-  $('#headLeft .headBody').html(numFormat(myVal)+'&nbsp;Watts');
-  $('#headRight .headBody').html(numFormat(percentage)+'%');
-  if(sumVal==0)
-    $('#headRight .headBody').html('--');
-  $('#barHighest .name').text('Highest: '+numFormat(vMax)+'W');
-  $('#barLowest .name').text('Lowest: '+numFormat(vMin)+'W');
-  $('#barMedian .name').text('Median: '+numFormat(vMedian)+'W');
-  $('#barMe .name').text('You: '+numFormat(myVal)+'W');
-
-  $('#barHighest .fill, #barMedian .fill, #barLowest .fill, #barMe .fill').css({'width':'10%'});
-  hideError();
-  //start animation
-  $('#barHighest .fill').animate({'width':barHighest+'%'},500,"ease-in-out");
-  $('#barMedian .fill').animate({'width':barMedian+'%'},500,"ease-in-out");
-  $('#barMe .fill').animate({'width':barMe+'%'},500,"ease-in-out");
-  $('#barLowest .fill').animate({'width':barLowest+'%'},500,"ease-in-out");
+function atBackground(){
+	$('closed').innerText=_now();
+	$('foreground').innerText="Background.";
 }
-
-var onLoadCallback=function(){
-  var url='/realtime?personal=true';
-  $.get(url,{},function(resp, err){
-    console.info('Data Received', resp, err);
-    if(!resp || !resp[personID])return;//data not found
-    renderGraph(resp);
-  },'json');
+window.onload=function(){
+	$('loaded').innerText=_now();
+	atForeground();
 }
-window.onload=onLoadCallback;
 </script>
-<style>
-/*div {border:1px dashed red;}
-(debug)
-*/
-body {
-  width:100%;
-  height:100%;
-  padding:0;
-  font-family: Helvetica, sans-serif;
-}
-.blue {background-color:blue;}
-.red {background-color:red;}
-.green {background-color:green;}
-.orange {background-color:#f80;}
-
-.f_left {
-  float:left;
-}
-.f_right {
-  float:right;
-}
-#head {
-  position:fixed;
-  height:15%;top:5%;
-  width:80%;left:10%;
-}
-#headLeft, #headRight{
-  width:40%;
-  height:100%;
-  text-align: center;
-}
-.headTitle{
-  font-family: Helvetica, sans-serif;
-  width:100%;
-  display: block;
-  font-size: 16pt;
-  color: white;
-  text-align: center;
-  margin-bottom: 8pt;
-}
-.headBody{
-  font-family: Helvetica, sans-serif;
-  padding:8px;
-  font-size: 20pt;
-  color: #66f;
-
-  background:rgba(224,224,224,0.7);
-  text-align: center;
-  margin:auto;
-}
-
-
-#figure {
-  position:fixed;
-  height:70%;top:25%;
-  width:80%;left:10%;
-  border-left:1pt solid black;
-}
-.bar{
-  height:25%;
-  width:100%;
-}
-.bar .fill {
-  height:12%;
-  min-width:20%;
-  position: absolute;
-  opacity:0.5;
-  border-radius:999pt;
-}
-.bar .name {
-  color:white;
-  font-size:16pt;
-  display: inline-block;
-  margin-bottom:8px;
-  background:rgba(224,224,224,0.7);
-  z-index: 1;
-}
-
-#barHighest .fill{
-  width:80%;
-}
-#barMedian .fill{
-  width:50%;
-}
-#barMe .fill{
-  width:70%;
-}
-/*
-  Initial (error) state, removed using JS later.
-*/
-.blurred{
-  background: white;
-  -webkit-filter: blur(5px);
-  filter: blur(5px);
-}
-#figureCover{
-  position:fixed;
-  height:70%;top:25%;
-  width:80%;left:10%;
-  z-index:1;
-}
-#figureCover #questionMark {
-  position:fixed;
-  height:40%;top:25%;
-  width:80%;left:10%;
-
-  font-size:140pt;
-  font-family: Verdana, sans-serif;
-  color: rgba(255,50,150,0.7);
-  display: block;
-  text-align: center;
-}
-#figureCover #message{
-  position:fixed;
-  min-height:10%;top:65%;
-  width:80%;left:10%;
-
-  color: rgba(30,50,155,1);
-  display: block;
-  padding:5px;
-
-  background:rgba(224,224,224,0.7);
-}
-</style>
 </head>
 <body>
-  <div id="head">
-    <div id="headLeft" class="f_left">
-      <span class="headTitle">Footprint</span>
-      <span class="headBody">0.00&nbsp;Watts</span>
-    </div>
-    <div id="headRight" class="f_right">
-      <span class="headTitle">Share</span>
-      <span class="headBody">0.00%</span>
-    </div>
-  </div>
-  <div id="figure" class="blurred">
-    <div class="bar" id="barLowest">
-      <span class="name">Lowest: 0.00W</span>
-      <div class="fill green"></div>
-    </div>
+<h1>Hello!</h1>
 
-    <div class="bar" id="barMe">
-      <span class="name">You</span>
-      <div class="fill blue"></div>
-    </div>
+<p>
+Page loaded time:
+<span id="loaded">Loaded at?</span>
+</p>
 
+<p>
+Last shown in foreground:
+<span id="opened">Opened at?</span>
+</p>
 
-    <div class="bar" id="barMedian">
-      <span class="name">Median</span>
-      <div class="fill orange"></div>
-    </div>
+<p>
+Last thrown to background:
+<span id="closed">closed at?</span>
+</p>
 
-
-    <div class="bar" id="barHighest">
-      <span class="name">Highest: 0.00W</span>
-      <div class="fill red"></div>
-    </div>
-  </div>
-
-  <div id="figureCover">
-    <span id="questionMark">?</span>
-    <span id="message">
-      Sorry, your current energy footprint data is temporarily unavailable. Please check back later!
-      <br/>
-      <em>Please make sure you're in NWC and enabled Bluetooth on your device.<em/>
-    </span>
-  </div>
-
+<p>
+Current state:
+<span id="foreground">Foreground? Backgrodun?</span>
+</p>
 
 </body>
 </html>
