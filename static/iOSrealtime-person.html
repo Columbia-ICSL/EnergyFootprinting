@@ -3,22 +3,55 @@
 <head>
 <title> Personal Energy Footprint html frame test</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/zepto.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/modules/fx.min.js"></script>
 <script type="text/javascript">
-function $(id){return document.getElementById(id);}
+// ==== Helper Functions
 function _now(){
 	return (new Date()).toLocaleString();
 }
+var query=(function(s){
+  var loc=s.indexOf('?');
+  if(loc==-1)return {};
+  var q=s.substr(loc+1);
+  var ret={};
+  q.split('&').map(function(part){
+    var array=part.split('=');
+    var key=decodeURIComponent(array[0]), value=decodeURIComponent(array.slice(1).join("="));
+    ret[key]=value;
+  });
+  return ret;
+})(location.href);
+var personID=query['id'];
+// ==== State management from Android/iOS parent
 function atForeground(){
-	$('opened').innerText=_now();
-	$('foreground').innerText="Foreground.";
+	$('#opened').innerText=_now();
+	$('#foreground').innerText='Foreground.';
 }
 function atBackground(){
-	$('closed').innerText=_now();
-	$('foreground').innerText="Background.";
+	$('#closed').innerText=_now();
+	$('#foreground').innerText='Background.';
 }
 window.onload=function(){
-	$('loaded').innerText=_now();
-	atForeground();
+	$('#loaded').innerText=_now();
+	initVisualization();
+}
+// ==== Visualization
+function initVisualization(){
+	// Check control group
+	$.get('/api/userManagement/',
+		{id:userID},
+		function(response){if(response=='true'){
+			initVisualizationNoControl();
+		}}
+		,'text');
+}
+function initVisualizationNoControl(){
+	// Hide control group message
+	$('#controlGroup').hide();
+	// TODO: render visualization box
+	// Show visualization box
+	$('#mainBody').show();
 }
 </script>
 <style type="text/css">
