@@ -41,9 +41,12 @@ function initVisualization(){
 	// Check control group
 	$.get('/api/userManagement/',
 		{id:userID},
-		function(response){if(response=='true'){
-			initVisualizationNoControl();
-		}}
+		function(isControl){
+			if(isControl=='false')
+				initVisualizationNoControl();
+			else
+				console.info('Control group, do nothing. Check response:',isControl);
+		},
 		,'text');
 }
 function initVisualizationNoControl(){
