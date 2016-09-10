@@ -113,7 +113,6 @@ class DBMgr(object):
 		self.ranking = self.dbc.db.ranking
 		self.ranking.ensure_index('user', unique=True)
 
-		self.suggestionDecisions
 		self.suggestionsML = self.dbc.db.suggestionsML
 		#user registration
 		self.config_col=self.dbc.db.config
