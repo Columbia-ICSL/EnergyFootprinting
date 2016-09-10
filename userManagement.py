@@ -28,8 +28,11 @@ class userManagement:
 				else:
 					public = False
 				user = cloudserver.db.userIDLookup(userData[2])
-				cloudserver.db.rankingUpdateName(user, userData[1], freq, wifi, public)
-				cloudserver.db.screenNameUpdate(userData[1], userData[2])
+				if (!cloudserver.db.rankingUpdateName(user, userData[1], freq, wifi, public)):
+					return "Username Taken"
+				if (!cloudserver.db.screenNameUpdate(userData[1], userData[2])):
+					return "Username Taken"
+				
 				return "updated"
 			return "failed update"
 		username = userData[1]
@@ -37,7 +40,7 @@ class userManagement:
 			return "Special Name"
 		cloudserver.db.userIDRemoveAll(deviceID)
 		if (cloudserver.db.screenNameCheckAvailability(username)):
-			if (cloudserver.db.screenNameRegister(username, deviceID)):
+			if (cloudserver.db.screenNameRegister(username, deviceID, True)):
 				if (len(userData) == 5):
 					cloudserver.db.registerForRankingInfo(username, userData[2], userData[3], userData[4])
 				else:
@@ -49,4 +52,14 @@ class userManagement:
 			return "Username Taken" #username taken
 		return "case 3"
 
+
+	def GET(self):
+		user_data = web.input(id="no data")
+        if (cloudserver.db.getControl(user_data.id) == True):
+        	return "true"
+        else:
+        	return "false"
+
+
 userMGM = web.application(urls, locals());
+

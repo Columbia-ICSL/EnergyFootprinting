@@ -172,12 +172,16 @@ class DBMgr(object):
 		return len(list(self.registration_col1.find({"screenName":screenName}))) == 0
 	
 	def screenNameUpdate(self, screenName, userID):
-		return self.registration_col1.update({"userID": userID},
-			{"$set": {"screenName": screenName}},
-			multi=True)
+		try:
+			self.registration_col1.update({"userID": userID},
+				{"$set": {"screenName": screenName}},
+				multi=True)
+			return True
+		except pymongo.errors.DuplicateKeyError:
+			return False
 
 
-	def screenNameRegister(self, screenName, userID):
+	def screenNameRegister(self, screenName, userID, control=True):
 		self.LogRawData({
 			"type":"screenNameRegister",
 			"time":self._now(),
@@ -187,7 +191,8 @@ class DBMgr(object):
 		try:
 			self.registration_col1.insert({
 				"screenName":screenName,
-				"userID":userID
+				"userID":userID,
+				"control":control
 				})
 			return True
 		except pymongo.errors.DuplicateKeyError:
@@ -210,6 +215,12 @@ class DBMgr(object):
 			return None
 		return ret[0]["screenName"]
 	
+	def getControl(self, userID):
+		user = self.registration_col1.find_one({"userID":userID})
+		if "control" in user:
+			return user.get("control")
+		return True
+
 	def userIDRemoveAll(self, userID):
 		self.registration_col1.remove({"userID":userID})
 
@@ -922,9 +933,13 @@ class DBMgr(object):
 	def rankingUpdateName(self, oldName, newName, frequency, wifi, public):
 		itm = self.ranking.find_one({"user": oldName})
 		object_id = itm.get('_id')
-		return self.ranking.update({'_id': object_id},
+		try:
+			self.ranking.update({'_id': object_id},
 			{"$set": {"user": newName, "frequency":frequency, "wifi":wifi, "public":public}},
 			multi=True)
+			return True
+		except pymongo.errors.DuplicateKeyError:
+			return False
 
 	def getAttributes(self, username, encodeJson=True):
 		json_return={
