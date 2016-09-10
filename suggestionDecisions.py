@@ -12,6 +12,7 @@ class DecisionVals:
 		deviceID = data[0]
 		user = cloudserver.db.userIDLookup(deviceID)
 		messageID = data[1]
+		cloudserver.db.submitAcceptedDecision(deviceID, messageID)
 		cloudserver.db.recordEvent(user, "suggestion received", messageID)
 		cloudserver.db.pushManagementDispUpdate(messageID)
 		coins = int(data[2])
