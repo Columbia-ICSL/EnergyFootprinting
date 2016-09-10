@@ -55,10 +55,11 @@ class userManagement:
 
 	def GET(self):
 		user_data = web.input(id="no data")
-        if (cloudserver.db.getControl(user_data.id) == True):
-        	return "true"
-        else:
-        	return "false"
+		if (cloudserver.db.getControl(user_data.id) == True):
+			return "true"
+		else:
+			return "false"
+		return "true"
 
 
 userMGM = web.application(urls, locals());
