@@ -217,8 +217,9 @@ class DBMgr(object):
 	
 	def getControl(self, userID):
 		user = self.registration_col1.find_one({"userID":userID})
-		if "control" in user:
-			return user.get("control")
+		if user != None:
+			if "control" in user:
+				return user.get("control")
 		return True
 
 	def userIDRemoveAll(self, userID):
