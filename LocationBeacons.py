@@ -113,7 +113,7 @@ class BeaconVals:
             messageID = roomInfo["messageID"]
 
             title="Move to "+roomName
-            body="Sharing spaces with others helps to lower everyone's energy footprint."
+            body="Other people are in " + roomName + ", sharing the room with them can lower everyone's energy footprint. (Don't forget to turn off the lights when you leave!)"
             reward=4
             json_return["suggestions"].append(
                 make_suggestion_item("move",title,body,reward, messageID,0, {"to":roomName,"to_id":roomId})
@@ -125,7 +125,7 @@ class BeaconVals:
             for appliance in applianceList:
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
-                powerUsage = appliance["value"]
+                powerUsage = int(appliance["value"])
                 messageID = "{0}|{1}|{2}".format("turnoff", ID, applianceID)
                 if (powerUsage <= 0):
                     continue
