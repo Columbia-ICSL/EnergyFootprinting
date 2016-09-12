@@ -54,7 +54,9 @@ class userManagement:
 
 
 	def GET(self):
-		user_data = web.input(id="no data")
+		user_data = web.input(id=None)
+		if user_data.id == None:
+			return "Error: please provide valid user ID."
 		if (cloudserver.db.getControl(user_data.id) == True):
 			return "true"
 		else:
