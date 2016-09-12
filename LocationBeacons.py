@@ -103,6 +103,9 @@ class BeaconVals:
 
         json_return["location_id"]=self.labels[location]
         json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
+        control = cloudserver.db.getControl(ID)
+        if (control == True):
+            return cloudserver.db._encode(json_return,False)
         #keys = turnOffApplianceUsers.keys()
         #for i in range(len(keys)):
         #    json_return["debug"].append(keys[i])
