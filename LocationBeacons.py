@@ -103,9 +103,7 @@ class BeaconVals:
 
         json_return["location_id"]=self.labels[location]
         json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
-        control = cloudserver.db.getControl(ID)
-        if (control == True):
-            return cloudserver.db._encode(json_return,False)
+
         #keys = turnOffApplianceUsers.keys()
         #for i in range(len(keys)):
         #    json_return["debug"].append(keys[i])
@@ -157,10 +155,24 @@ class BeaconVals:
         #Check 1: if display timestamp indicates a recent "dismiss", remove the message entirely.
         #TODO: personalize the interval
 
+
+        control = cloudserver.db.getControl(ID)
+        if (control == True):
+            title="Control Group Suggestion"
+            body="Control group: There is no energy saving suggestions for this week. Please take your reward!"
+            reward=4
+            doPush=0
+            messageID= "{0}|{1}|{2}".format("controlMessage", ID, "XXXX")
+            json_return["suggestions"]=[
+                    make_suggestion_item("misc",title, body, reward, messageID, doPush, {})]
+
+
         moveInterval=20*60
         applianceInterval=20*60
+        miscSinceTime=60*60*4 #every 4 hours, now for the control message only.
         moveSinceTime=cloudserver.db._now()-moveInterval
         applianceSinceTime=cloudserver.db._now()-applianceInterval
+        miscSinceTime=cloudserver.db._now()-miscSinceTime
         returnList = []
         for item in json_return["suggestions"]:
             if (item["type"] == "move" and cloudserver.db.pushManagementDispCheck(item["messageID"], moveSinceTime)):
@@ -169,6 +181,10 @@ class BeaconVals:
             if (item["type"] == "turnoff" and cloudserver.db.pushManagementDispCheck(item["messageID"], applianceSinceTime)):
                 returnList.append(item)
                 continue
+            if (item["type"] == "misc" and cloudserver.db.pushManagementDispCheck(item["messageID"], miscSinceTime)):
+                returnList.append(item)
+                continue
+
         json_return["suggestions"]=returnList
         usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
         userFrequency = usernameAttributes["frequency"]
