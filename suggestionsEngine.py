@@ -28,6 +28,8 @@ class suggestionsEngine:
 	changeScheduleUsers = []
 	turnOffApplianceUsers = {}
 	synchronizeApplianceUsers = []
+	lastDayCheckUsers = None
+	lastDayCheckAppliances = None
 	def moveSuggestionHelper(self, roomOrigin, roomDest, messageID, Others={}):
 		Others.update({
 			"roomOrigin": roomOrigin,
@@ -82,8 +84,15 @@ class suggestionsEngine:
 
 ############## TODO #################
 	def changeScheduleSuggestion(self):
-		users = []
-		return users
+		tmp = self.synchronizeApplianceUsers
+		now = datetime.datetime.now()
+		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
+			self.lastDayCheckUsers = now
+			users = []
+			userBins = cloudserver.db.BinUsersLocHistory()
+			for userID in userBins:
+		print("{0}".format(self.lastDayCheckUsers))
+		return tmp
 
 	def turnOffApplianceSuggestion(self):
 		personalUsage = cloudserver.db.CurrentApplianceUsage(5)
@@ -95,8 +104,13 @@ class suggestionsEngine:
 		return personalUsage
 
 	def synchronizeApplianceScheduleSuggestion(self):
-		users = []
-		return users
+		tmp = self.synchronizeApplianceScheduleSuggestion
+		now = datetime.datetime.now()
+		if ((self.lastDayCheckAppliances == None) or ((self.lastDayCheckAppliances.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
+			self.lastDayCheckAppliances = now
+			users = []
+		print("{0}".format(self.lastDayCheckAppliances))
+		return tmp
 #######################################
 
 
@@ -115,7 +129,7 @@ class suggestionsEngine:
 			self.changeScheduleUsers = self.changeScheduleSuggestion()
 			self.turnOffApplianceUsers = self.turnOffApplianceSuggestion()
 			self.synchronizeApplianceUsers = self.synchronizeApplianceScheduleSuggestion()
-			print("Suggestions Generated: #users receiving suggestion= {0}/move {1}/changeSchedule {2}/turnOff {3}/sync".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers)))
+			print("Suggestions Generated: #users receiving suggestion= move:{0} changeSchedule:{1} turnOff:{2} sync:{3}".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers)))
 
 
 

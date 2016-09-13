@@ -169,10 +169,10 @@ class BeaconVals:
 
         moveInterval=20*60
         applianceInterval=20*60
-        miscSinceTime=60*60*4 #every 4 hours, now for the control message only.
+        miscInterval=60*60*4 #every 4 hours, now for the control message only.
         moveSinceTime=cloudserver.db._now()-moveInterval
         applianceSinceTime=cloudserver.db._now()-applianceInterval
-        miscSinceTime=cloudserver.db._now()-miscSinceTime
+        miscSinceTime=cloudserver.db._now()-miscInterval
         returnList = []
         for item in json_return["suggestions"]:
             if (item["type"] == "move" and cloudserver.db.pushManagementDispCheck(item["messageID"], moveSinceTime)):
