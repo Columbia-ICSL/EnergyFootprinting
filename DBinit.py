@@ -39,7 +39,8 @@ class DBInit(object):
                 "space": spaceDefinition,
                 "windowed": windowedDefinition
             }]
-        
+        addRoom("10F_hallway", "NWC 10F Hallway", [0,0], PUBLIC_SPACE, GENERAL_SPACE, NOT_WINDOWED)
+        addRoom("DaninoWetLab", "Danino Wet Lab Space", [0, 0], DANINO_LAB, STUDENT_WORK_SPACE, WINDOWED)
         addRoom("nwc10","NWC 10F Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, NOT_WINDOWED) # public area 10F, elevator bank etc.
         addRoom("nwc10m","NWC 10M Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, NOT_WINDOWED) # public area 10F, elevator bank etc.
         # exits
