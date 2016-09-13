@@ -91,6 +91,7 @@ class suggestionsEngine:
 			users = []
 			userBins = cloudserver.db.BinUsersLocHistory()
 			for userID in userBins:
+				break
 		print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
