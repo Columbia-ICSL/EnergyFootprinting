@@ -9,7 +9,7 @@ import pprint
 import copy
 from threading import Thread
 import sys
-
+from past.builtins import xrange
 
 class MongoJsonEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -691,8 +691,8 @@ class DBMgr(object):
 					dict_users[user_id]+=[item]
 		
 		step=15*60
-		bins_headers=range(int(start),int(end),int(step))
-		bins_ranges=[range(x,x+step) for x in bins_headers]
+		bins_headers=xrange(int(start),int(end),int(step))
+		bins_ranges=[xrange(x,x+step) for x in bins_headers]
 		def get_majority(lst):
 			return max(set(lst), key=lst.count)
 		def get_average(lst):
@@ -751,8 +751,8 @@ class DBMgr(object):
 					dict_appls[appl_id]+=[item]
 		
 		step=15*60
-		bins_headers=range(int(start),int(end),int(step))
-		bins_ranges=[range(x,x+step) for x in bins_headers]
+		bins_headers=xrange(int(start),int(end),int(step))
+		bins_ranges=[xrange(x,x+step) for x in bins_headers]
 		def get_average(lst):
 			return sum(lst)/(1.0*len(lst))
 		for appl_id in dict_appls:
