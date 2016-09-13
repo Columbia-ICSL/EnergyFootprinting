@@ -950,7 +950,14 @@ class DBMgr(object):
             "public":True
 		}
 		itm = self.ranking.find_one({"user":username})
+
 		json_return["username"] = username
+		if (itm == None):
+			if (encodeJson == True):
+				return self._encode(json_return, False)
+			else:
+				return json_return
+
 		json_return["frequency"] = itm.get("frequency")
 		json_return["wifi"] = itm.get("wifi")
 		json_return["public"] = itm.get("public")
