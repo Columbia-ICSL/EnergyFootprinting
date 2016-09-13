@@ -89,9 +89,9 @@ class suggestionsEngine:
 		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
 			self.lastDayCheckUsers = now
 			users = []
-			userBins = cloudserver.db.BinUsersLocHistory()
-			for userID in userBins:
-				break
+			#userBins = cloudserver.db.BinUsersLocHistory()
+			#for userID in userBins:
+		#		break
 		print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
@@ -130,7 +130,7 @@ class suggestionsEngine:
 			self.changeScheduleUsers = self.changeScheduleSuggestion()
 			self.turnOffApplianceUsers = self.turnOffApplianceSuggestion()
 			self.synchronizeApplianceUsers = self.synchronizeApplianceScheduleSuggestion()
-			print("Suggestions Generated: #users receiving suggestion= move:{0} changeSchedule:{1} turnOff:{2} sync:{3}".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers)))
+			#print("Suggestions Generated: #users receiving suggestion= move:{0} changeSchedule:{1} turnOff:{2} sync:{3}".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers()), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers())))
 
 
 

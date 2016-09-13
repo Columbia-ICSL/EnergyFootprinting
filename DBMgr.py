@@ -9,7 +9,7 @@ import pprint
 import copy
 from threading import Thread
 import sys
-from past.builtins import xrange
+#from past.builtins import xrange
 
 class MongoJsonEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -972,7 +972,14 @@ class DBMgr(object):
             "public":True
 		}
 		itm = self.ranking.find_one({"user":username})
+
 		json_return["username"] = username
+		if (itm == None):
+			if (encodeJson == True):
+				return self._encode(json_return, False)
+			else:
+				return json_return
+
 		json_return["frequency"] = itm.get("frequency")
 		json_return["wifi"] = itm.get("wifi")
 		json_return["public"] = itm.get("public")
