@@ -89,6 +89,34 @@ class DBMgr(object):
 			self.list_of_rooms[room["id"]]["appliances"].sort()
 		## Finished appliance bipartite graph.
 
+	def _GracefulReloadGraph(self):
+		print('Reloading values...')
+		try:
+			latest_snapshot=self.snapshots_col_appliances.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
+			if latest_snapshot!=None:
+				for applianceID in latest_snapshot["data"]:
+					value=latest_snapshot["data"][applianceID]["value"]
+					if value>0:
+						print('Recovered Appliance:',applianceID, value)
+						self.updateApplianceValue(applianceID, value)
+			else:
+				print('Appliance latest snapshot not found.')
+		except Exception:
+			add_log('failed to recover appliance power values during graceful reload.',latest_snapshot)
+
+		try:
+			latest_snapshot=self.snapshots_col_users.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
+			if latest_snapshot!=None:
+				for userID in latest_snapshot["data"]:
+					roomID=latest_snapshot["data"][userID]["location"]
+					print('Recovered Location:',userID,roomID)
+					self.updateUserLocation(userID, roomID, None)
+			else:
+				print('User location latest snapshot not found.')
+		except Exception:
+			add_log('failed to recover user locations during graceful reload.',latest_snapshot)
+	
+
 ####################################################################
 ## Room ID and Appliance IDs functions #############################
 ####################################################################
@@ -138,7 +166,9 @@ class DBMgr(object):
 		## TODO: Add a web interface to update config in db, and pull new config into memory.
 
 		self._ConstructInMemoryGraph()
-		## Construct bipartite graph. no recovery for now
+		## Construct bipartite graph.
+		self._GracefulReloadGraph()
+		## Read appliance values from database; TODO: occupants location
 
 		self.watchdogInit()
 
