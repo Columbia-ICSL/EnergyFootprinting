@@ -9,7 +9,7 @@ import pprint
 import copy
 from threading import Thread
 import sys
-from past.builtins import xrange
+#from past.builtins import xrange
 
 class MongoJsonEncoder(json.JSONEncoder):
     def default(self, obj):

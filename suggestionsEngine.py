@@ -130,7 +130,7 @@ class suggestionsEngine:
 			self.changeScheduleUsers = self.changeScheduleSuggestion()
 			self.turnOffApplianceUsers = self.turnOffApplianceSuggestion()
 			self.synchronizeApplianceUsers = self.synchronizeApplianceScheduleSuggestion()
-			print("Suggestions Generated: #users receiving suggestion= move:{0} changeSchedule:{1} turnOff:{2} sync:{3}".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers)))
+			#print("Suggestions Generated: #users receiving suggestion= move:{0} changeSchedule:{1} turnOff:{2} sync:{3}".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers()), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers())))
 
 
 
