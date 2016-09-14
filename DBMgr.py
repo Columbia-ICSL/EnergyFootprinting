@@ -122,6 +122,8 @@ class DBMgr(object):
 ####################################################################
 	def RoomIdToName(self,id):
 		return self.list_of_rooms[id]["name"]
+	def RoomIDToLab(self,id):
+		return self.list_of_rooms[id]["lab"]
 	def ApplIdToName(self,id):
 		return self.list_of_appliances[id]["name"]
 	def ApplIdToVal(self,id):
@@ -972,12 +974,30 @@ class DBMgr(object):
 		except pymongo.errors.DuplicateKeyError:
 			return False
 
+	def labInt(x):
+		return {
+    		'Burke Lab':1,
+        	'Teherani Lab': 2,
+        	'Jiang Lab': 3,
+        	'Sajda Lab': 4,
+        	'Danino Lab': 5
+    	}[x]
+
+	def affiliationInt(x):
+		return {
+    		'Student':1,
+    		'Professor':2,
+    		'Employee':1
+    	}[x]
+
 	def getAttributes(self, username, encodeJson=True):
 		json_return={
             "username":"username",
             "frequency":0,
             "wifi":True,
-            "public":True
+            "public":True,
+            "lab":0,
+            "affiliation":0
 		}
 		itm = self.ranking.find_one({"user":username})
 
@@ -987,7 +1007,9 @@ class DBMgr(object):
 				return self._encode(json_return, False)
 			else:
 				return json_return
-
+		switch
+		json_return["lab"] = labInt(itm.get("lab"))
+		json_return["affiliation"] = affiliationInt(itm.get("affiliation"))
 		json_return["frequency"] = itm.get("frequency")
 		json_return["wifi"] = itm.get("wifi")
 		json_return["public"] = itm.get("public")

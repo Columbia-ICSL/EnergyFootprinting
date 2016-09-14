@@ -6,6 +6,22 @@ from trainingData import training
 
 urls = (
 "/","BeaconVals")
+PUBLIC_SPACE = 0
+BURKE_LAB = 1
+TEHERANI_LAB = 2
+JIANG_LAB = 3
+SAJDA_LAB = 4
+DANINO_LAB = 5
+OFFICE_SPACE = 0
+STUDENT_WORK_SPACE = 1
+GENERAL_SPACE = 2
+WINDOWED = True
+NOT_WINDOWED = False
+ACTIONABLE = True
+NOT_ACTIONABLE = False
+DUTY_CYCLE = True
+NO_DUTY_CYCLE = False
+
 class generateTrainingData:
     trainingData = []
     trainingLabels = []
@@ -80,7 +96,7 @@ class BeaconVals:
 
         balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
 
-
+        usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
 
         if (balance_server == False):
             balance_server = 0
@@ -121,9 +137,16 @@ class BeaconVals:
             )
 
         #json_return["debug"] = turnOffApplianceUsers
+        labInt = usernameAttributes["lab"]
         if (ID in turnOffApplianceUsers.keys()):
             applianceList = turnOffApplianceUsers[ID]
             for appliance in applianceList:
+                if (not appliance["actionable"]):
+                    continue
+                room = appliance["rooms"]
+                if (cloudserver.db.RoomIDToLab(room) != labInt):
+                    print("Exception Log: Caught incorrect lab definition")
+                    continue
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
                 powerUsage = int(appliance["value"])
@@ -186,7 +209,6 @@ class BeaconVals:
                 continue
 
         json_return["suggestions"]=returnList
-        usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
         userFrequency = usernameAttributes["frequency"]
         #default value = every 4 hours
         pushInterval=60*60*4
