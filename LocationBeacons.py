@@ -95,7 +95,8 @@ class BeaconVals:
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
 
         balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
-
+        if (cloudserver.db.userIDLookup(ID) is None):
+            print(ID)
         usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
 
         if (balance_server == False):
