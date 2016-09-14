@@ -1007,8 +1007,8 @@ class DBMgr(object):
 				return self._encode(json_return, False)
 			else:
 				return json_return
-		json_return["lab"] = labInt(itm.get("lab"))
-		json_return["affiliation"] = affiliationInt(itm.get("affiliation"))
+		json_return["lab"] = self.labInt(itm.get("lab"))
+		json_return["affiliation"] = self.affiliationInt(itm.get("affiliation"))
 		json_return["frequency"] = itm.get("frequency")
 		json_return["wifi"] = itm.get("wifi")
 		json_return["public"] = itm.get("public")
