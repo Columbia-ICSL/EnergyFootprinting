@@ -144,6 +144,8 @@ class BeaconVals:
                 if (not appliance["actionable"]):
                     continue
                 room = appliance["rooms"]
+                if (len(room) > 1):
+                    room = room[0]
                 if (cloudserver.db.RoomIDToLab(room) != labInt):
                     print("Exception Log: Caught incorrect lab definition")
                     continue
