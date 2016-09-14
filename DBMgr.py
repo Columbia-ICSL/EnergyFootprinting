@@ -974,7 +974,7 @@ class DBMgr(object):
 		except pymongo.errors.DuplicateKeyError:
 			return False
 
-	def labInt(x):
+	def labInt(self, x):
 		return {
     		'Burke Lab':1,
         	'Teherani Lab': 2,
@@ -983,7 +983,7 @@ class DBMgr(object):
         	'Danino Lab': 5
     	}[x]
 
-	def affiliationInt(x):
+	def affiliationInt(self, x):
 		return {
     		'Student':1,
     		'Professor':2,
