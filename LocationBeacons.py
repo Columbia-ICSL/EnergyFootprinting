@@ -121,6 +121,7 @@ class BeaconVals:
         if (cloudserver.db.userIDLookup(ID) is None):
             print(ID)
             return cloudserver.db._encode(json_return,False)
+        print(ID)
         usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
 
 
