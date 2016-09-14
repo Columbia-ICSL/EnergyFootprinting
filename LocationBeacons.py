@@ -146,7 +146,7 @@ class BeaconVals:
                 room = appliance["rooms"]
                 room = room[0]
                 if (cloudserver.db.RoomIDToLab(room) != labInt):
-                    print("Exception Log: Caught incorrect lab definition {0} {1}", cloudserver.db.RoomIDToLab(room), labInt)
+                    print("Exception Log: Caught incorrect lab definition {0} {1}".format(cloudserver.db.RoomIDToLab(room), labInt))
                     continue
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
