@@ -1034,10 +1034,11 @@ class DBMgr(object):
 			"user": user
 			},
 			{
-			"user": user,
-			"balance": balance
+			"$set":{
+				"balance": balance
+				}
 			},
-			True
+			multi=True
 			)
 
 	def updateUserBalance(self, user, balance):
