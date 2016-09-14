@@ -95,9 +95,6 @@ class BeaconVals:
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
 
         balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
-        if (cloudserver.db.userIDLookup(ID) is None):
-            print(ID)
-        usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
 
         if (balance_server == False):
             balance_server = 0
@@ -107,6 +104,7 @@ class BeaconVals:
             "balance":balance_server,
             "suggestions":[]
         }
+
         def make_suggestion_item(iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
             Others.update({
                 "type":iType,
@@ -120,6 +118,11 @@ class BeaconVals:
 
         json_return["location_id"]=self.labels[location]
         json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
+        if (cloudserver.db.userIDLookup(ID) is None):
+            print(ID)
+            return cloudserver.db._encode(json_return,False)
+        usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
+
 
         #keys = turnOffApplianceUsers.keys()
         #for i in range(len(keys)):
