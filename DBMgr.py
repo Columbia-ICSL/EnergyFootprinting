@@ -1003,6 +1003,7 @@ class DBMgr(object):
 
 		json_return["username"] = username
 		if (itm == None):
+			print("username not found")
 			if (encodeJson == True):
 				return self._encode(json_return, False)
 			else:
