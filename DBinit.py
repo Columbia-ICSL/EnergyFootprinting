@@ -94,6 +94,7 @@ class DBInit(object):
             self.APPLIANCE_DEFINITION+=[item]
 
         addAppliance("nwc1007_plug1", "Plug#1 in Prof Teherani's Office", "Electrical", "nwc1007", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1007_plug2", "Plug#2 in Prof Teherani's Office", "Electrical", "nwc1007", ACTIONABLE, NO_DUTY_CYCLE)
 
         addAppliance("nwc1008_plug1", "Plug#1 in Prof Jiang's Office", "Electrical", "nwc1008", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1008_smartvent1", "SmartVent in Prof Jiang's Office (HVAC Indirect Sensing)", "HVAC", "nwc1008", ACTIONABLE, NO_DUTY_CYCLE)
