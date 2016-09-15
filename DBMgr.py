@@ -978,6 +978,7 @@ class DBMgr(object):
 		return {
     		'Burke Lab':1,
         	'Teherani Lab': 2,
+        	'Professor Teherani\'s Lab':2,
         	'Jiang Lab': 3,
         	'Sajda Lab': 4,
         	'Danino Lab': 5
@@ -1003,7 +1004,7 @@ class DBMgr(object):
 
 		json_return["username"] = username
 		if (itm == None):
-			print("username not found" + username)
+			print("username not found: " + username)
 			if (encodeJson == True):
 				return self._encode(json_return, False)
 			else:

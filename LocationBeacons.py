@@ -163,7 +163,7 @@ class BeaconVals:
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
                 reward=1
                 doPush=0
-                if(powerUsage>100):
+                if(powerUsage>50):
                     #!!TODO: make doPush=1,2,3,4 according to various criteria, not a single threshold.
                     doPush=1
                 json_return["suggestions"].append(
