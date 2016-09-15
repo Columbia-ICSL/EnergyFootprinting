@@ -717,7 +717,7 @@ class DBMgr(object):
 			binItems=binnedData[binId]
 			majority_loc=get_majority([item["location"] for item in binItems])
 			average_power=get_average([item["value"] for item in binItems])
-			data[binId]=(majority_loc, average_power)
+			data[binId*interval]=(majority_loc, average_power)
 
 		realtime_consumptions={"value":0}
 		if person in self.location_of_users:
