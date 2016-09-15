@@ -708,7 +708,7 @@ class DBMgr(object):
 				binId=self._toUnix(shot["timestamp"])//interval
 				if binId not in binnedData:
 					binnedData[binId]=[]
-				binnedData[binId].appen(item)
+				binnedData[binId].append(item)
 				#item["timestamp"]=shot["timestamp"]
 				#result+=[item]
 
