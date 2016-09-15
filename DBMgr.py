@@ -705,7 +705,7 @@ class DBMgr(object):
 		for shot in iterator:
 			if person in shot["data"]:
 				item=shot["data"][person]
-				binId=shot["timestamp"]//interval
+				binId=self._toUnix(shot["timestamp"])//interval
 				if binId not in binnedData:
 					binnedData[binId]=[]
 				binnedData[binId].appen(item)
