@@ -514,7 +514,7 @@ class DBMgr(object):
 	def _getShotAppliances(self, concise=True):
 		return self.list_of_appliances
 
-	def _getShotPersonal(self):
+	def _getShotPersonal(self, concise=True):
 		personal_consumption={}
 		cached_per_room_consumption={}
 		for user_id in self.location_of_users:
@@ -593,6 +593,7 @@ class DBMgr(object):
 		else:
 			ret["rooms"]=self._getShotRooms(concise)
 			ret["appliances"]=self._getShotAppliances(concise)
+			ret["personal"]=self._getShotPersonal(concise)
 			ret["locations"]=self.location_of_users
 			ret["watchdog_user"]=self.watchdogLastSeen_User
 			ret["watchdog_appl"]=self.watchdogLastSeen_Appliance
