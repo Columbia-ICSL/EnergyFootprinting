@@ -47,6 +47,11 @@ def dump_recent_raw_submission():
 
 from Email import SendEmail
 
+def get_majority(lst):
+	return max(set(lst), key=lst.count)
+def get_average(lst):
+	return sum(lst)/(1.0*len(lst))
+
 class DBMgr(object):
 	def _GetConfigValue(self,key):
 		try:
@@ -685,6 +690,45 @@ class DBMgr(object):
 		
 		return self._encode(result,True)
 
+	def QueryPersonPersonalConcise(self,person,start,end):
+		binnedData={}
+		interval=5*60 # 5 minutes
+
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		projection = {"data."+person:1,"timestamp":1,"_id":0}
+		iterator = self.snapshots_col_users.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			if person in shot["data"]:
+				item=shot["data"][person]
+				binId=shot["timestamp"]//interval
+				if binId not in binnedData:
+					binnedData[binId]=[]
+				binnedData[binId].appen(item)
+				#item["timestamp"]=shot["timestamp"]
+				#result+=[item]
+
+		data={}
+		for binId in binnedData:
+			binItems=binnedData[binId]
+			majority_loc=get_majority([item["location"] for item in binItems])
+			average_power=get_average([item["value"] for item in binItems])
+			data[binId]=(majority_loc, average_power)
+
+		realtime_consumptions={"value":0}
+		if person in self.location_of_users:
+			location=self.location_of_users[person]
+			if location!=None:
+				realtime_consumptions=self.calculateRoomFootprint(location)
+		return self._encode({
+			"data":data,
+			"realtime":realtime_consumptions
+			},True)
+
 	def BinUsersLocHistory(self, start=-1, end=0):
 		# Provide two timestamps as time range; by default, we check "yesterday" (24hr, local timezone)
 		# Note: expensive function, called once a day.
@@ -726,10 +770,6 @@ class DBMgr(object):
 		step=15*60
 		bins_headers=xrange(int(start),int(end),int(step))
 		bins_ranges=[xrange(x,x+step) for x in bins_headers]
-		def get_majority(lst):
-			return max(set(lst), key=lst.count)
-		def get_average(lst):
-			return sum(lst)/(1.0*len(lst))
 
 		for user_id in dict_users:
 			time_series=dict_users[user_id]
@@ -786,8 +826,7 @@ class DBMgr(object):
 		step=15*60
 		bins_headers=xrange(int(start),int(end),int(step))
 		bins_ranges=[xrange(x,x+step) for x in bins_headers]
-		def get_average(lst):
-			return sum(lst)/(1.0*len(lst))
+
 		for appl_id in dict_appls:
 			time_series=dict_appls[appl_id]
 			return_bins={}
