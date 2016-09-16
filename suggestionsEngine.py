@@ -89,12 +89,34 @@ class suggestionsEngine:
 		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
 			self.lastDayCheckUsers = now
 			users = []
-			startAvg = None
+			startAvg = 0
+			endAvg = 0
 			userBins = cloudserver.db.BinUsersLocHistory()
+			numUsers = 0
+			userDict = {}
 			for userBin in userBins:
+				numUsers += 1
+				userStart = 0
+				userEnd = 0
 				for binNumber in userBins[userBin]:
+					if ((userStart == 0) and (binNumber["location"] is not None)):
+						userStart = binNumber
+						userEnd = binNumber
+					if (binNumber["location"] is not None):
+						userEnd = binNumber
+				startAvg += userStart
+				endAvg += userEnd
+				userDict[userBin] = (userStart, userEnd)
+				print("{0} {1} {2}".format(userBin, str(userStart), str(userEnd)))
+			startAvg = startAvg/numUsers
+			endAvg = endAvg/numUsers
+			for userRange in userDict:
+				if ((userDict[userRange][0] > startAvg) and (userDict[userRange][1] > endAvg)):
+					print("suggestion: {0} {1}".format(userBin, "earlier"))
+				if ((userDict[userRange][0] < startAvg) and (userDict[userRange][1] < endAvg)):
+					print("suggestion: {0} {1}".format(userBin, "later"))
 
-		print("{0}".format(self.lastDayCheckUsers))
+		#print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
 	def turnOffApplianceSuggestion(self):
