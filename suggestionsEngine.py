@@ -115,11 +115,11 @@ class suggestionsEngine:
 				print("{0} {1}-{2}".format(user_id, str(datetime.datetime.fromtimestamp(userStart)), str(datetime.datetime.fromtimestamp(userEnd))))
 			for labName in xrange(len(startAvg)):
 				if (numUsers[labName] == 0):
-					continue
+					numUsers[labName] = 1
 				startAvg[labName] = startAvg[labName]/numUsers[labName]
 				endAvg[labName] = endAvg[labName]/numUsers[labName]
 				labStrings = ["Burke", "Teherani", "Jiang", "Sajda", "Danino"]
-				print("avg: lab {2}------------------------ {0} {1}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg)), str(labStrings[labName])))
+				print("avg: ------------------------ {0} {1} lab {2}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg)), str(labStrings[labName])))
 			for userRange in userDict:
 				labNum = userDict[userRange][2]
 				if ((userDict[userRange][0] > startAvg[labNum]) and (userDict[userRange][1] > endAvg[labNum])):
