@@ -494,7 +494,7 @@ class DBMgr(object):
 	def phantomApplianceUsage(self, delayTime, warningPowerLimit):
 		ret = {}
 		for roomID in self.list_of_rooms:
-			appliances = self.list_of_rooms[location]["appliances"]
+			appliances = self.list_of_rooms[roomID]["appliances"]
 			maxPower = 0
 			maxAppliance = None
 			for applianceID in appliances:
