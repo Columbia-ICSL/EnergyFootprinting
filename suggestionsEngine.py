@@ -92,7 +92,9 @@ class suggestionsEngine:
 			users = {}
 			startAvg = [0, 0, 0, 0, 0]
 			endAvg = [0, 0, 0, 0, 0]
-			curtime = int(time.mktime(datetime.datetime.now().timetuple()))
+			nowTime = datetime.datetime.now().replace(hour=2, minute=0)
+			print("2AM today: " + str(nowTime))
+			curtime = int(time.mktime(nowTime.timetuple()))
 			dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
 			numUsers = [0, 0, 0, 0, 0]
 			userDict = {}
