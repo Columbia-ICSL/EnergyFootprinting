@@ -91,7 +91,8 @@ class suggestionsEngine:
 			users = []
 			startAvg = 0
 			endAvg = 0
-			dict_users = cloudserver.db.BinUsersLocHistory()
+			curtime = int(time.mktime(datetime.datetime.now().timetuple()))
+			dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
 			numUsers = 0
 			userDict = {}
 			for user_id in dict_users:
@@ -109,9 +110,10 @@ class suggestionsEngine:
 				startAvg += userStart
 				endAvg += userEnd
 				userDict[user_id] = (userStart, userEnd)
-				print("{0} {1} {2}".format(user_id, str(userStart), str(userEnd)))
+				print("{0} {1}-{2}".format(user_id, str(datetime.datetime.fromtimestamp(userStart)), str(datetime.datetime.fromtimestamp(userEnd))))
 			startAvg = startAvg/numUsers
 			endAvg = endAvg/numUsers
+			print("avg:------------------------ {0} {1}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg))))
 			for userRange in userDict:
 				if ((userDict[userRange][0] > startAvg) and (userDict[userRange][1] > endAvg)):
 					print("suggestion: {0} {1}".format(userRange, "earlier"))
