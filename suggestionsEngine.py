@@ -130,10 +130,10 @@ class suggestionsEngine:
 				labNum = userDict[userRange][2]
 				if ((userDict[userRange][0] > startAvg[labNum]) and (userDict[userRange][1] > endAvg[labNum])):
 					print("suggestion: {0} {1}".format(userRange, "earlier"))
-					users[userRange] = "earlier"
+					users[userRange] = ("earlier", startAvg[labNum], endAvg[labNum])
 				if ((userDict[userRange][0] < startAvg[labNum]) and (userDict[userRange][1] < endAvg[labNum])):
 					print("suggestion: {0} {1}".format(userRange, "later"))
-					users[userRange] = "later"
+					users[userRange] = ("later", startAvg[labNum], endAvg[labNum])
 			tmp = users
 		#print("{0}".format(self.lastDayCheckUsers))
 		return tmp

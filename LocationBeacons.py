@@ -22,6 +22,16 @@ NOT_ACTIONABLE = False
 DUTY_CYCLE = True
 NO_DUTY_CYCLE = False
 
+def labIntToName(self, x):
+        return {
+            1:"Burke Lab",
+            2:"Teherani Lab",
+            2:"Teherani Lab",
+            3:"Jiang Lab",
+            4:"Sajda Lab",
+            5:"Danino Lab"
+        }[x]
+
 class generateTrainingData:
     trainingData = []
     trainingLabels = []
@@ -190,23 +200,27 @@ class BeaconVals:
                 #    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID, "power":pwr})
                 #    )
         if (ID in changeScheduleUsers.keys()):
-            timeshift = changeScheduleUsers[ID]
+            (timeshift, startAvg, endAvg) = changeScheduleUsers[ID]
+            startTime = datetime.datetime.fromtimestamp(startAvg)
+            endTime = datetime.datetime.fromtimestamp(endAvg)
+            startStr = "%s:%s" % (startTime.hour, startTime.minute)
+            endStr = "%s:%s" % (endTime.hour, endTime.minute)
             if (timeshift == "earlier"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "earlier")
-                body = "Coming in earlier tomorrow will help to limit excess power usage!"
+                body = "On average, people in the " + labIntToName(labInt) + " start at: " + startStr + "and end at: " + endStr
                 reward = 3
                 doPush = 0
                 print("Shift Schedule: {0} earlier".format(cloudserver.db.userIDLookup(ID)))
                 json_return["suggestions"].append(
-                    make_suggestion_item("change", "Shift schedule 10 minutes earlier", body, reward, messageID, doPush))
+                    make_suggestion_item("change", "Come earlier tomorrow!", body, reward, messageID, doPush))
             elif (timeshift == "later"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "later")
-                body = "Coming in later tomorrow will help to limit excess power usage!"
+                body = "On average, people in the " + labIntToName(labInt) + " start at: " + startStr + "and end at: " + endStr
                 reward = 3
                 doPush = 0
                 print("Shift Schedule: {0} later".format(cloudserver.db.userIDLookup(ID)))
                 json_return["suggestions"].append(
-                    make_suggestion_item("change", "Shift schedule 10 minutes later", body, reward, messageID, doPush))
+                    make_suggestion_item("change", "Come later tomorrow!", body, reward, messageID, doPush))
         
         #filter out message using suggestionIDs
         #Check 1: if display timestamp indicates a recent "dismiss", remove the message entirely.
