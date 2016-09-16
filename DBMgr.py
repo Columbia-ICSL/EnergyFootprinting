@@ -703,12 +703,16 @@ class DBMgr(object):
 		projection = {"data."+person:1,"timestamp":1,"_id":0}
 		iterator = self.snapshots_col_users.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
+			binId=self._toUnix(shot["timestamp"])//interval
+			if binId not in binnedData:
+				binnedData[binId]=[]
 			if person in shot["data"]:
 				item=shot["data"][person]
-				binId=self._toUnix(shot["timestamp"])//interval
-				if binId not in binnedData:
-					binnedData[binId]=[]
 				binnedData[binId].append(item)
+			else:
+				item={"location":None,"value":0}
+				binnedData[binId].append(item)
+
 				#item["timestamp"]=shot["timestamp"]
 				#result+=[item]
 
