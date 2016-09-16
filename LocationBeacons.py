@@ -179,7 +179,24 @@ class BeaconVals:
                 #json_return["suggestions"].append(
                 #    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID, "power":pwr})
                 #    )
-
+        ApplianceUsers = cloudserver.db.synchronizeApplianceUsers
+        if (ID in ApplianceUsers.keys()):
+            timeshift = ApplianceUsers[ID]
+            if (timeshift == "earlier"):
+                messageID = "{0}|{1}|{2}".format("change", ID, "earlier")
+                body = "Shifting your schedule earlier will help to limit excess power usage!"
+                reward = 2
+                doPush = 0
+                json_return["suggestions"].append(
+                    make_suggestion_item("change", "Shift schedule 10 minutes earlier", body, reward, messageID, doPush))
+            if (timeshift == "later"):
+                messageID = "{0}|{1}|{2}".format("change", ID, "later")
+                body = "Shifting your schedule later will help to limit excess power usage!"
+                reward = 2
+                doPush = 0
+                json_return["suggestions"].append(
+                    make_suggestion_item("change", "Shift schedule 10 minutes later", body, reward, messageID, doPush))
+        
         #filter out message using suggestionIDs
         #Check 1: if display timestamp indicates a recent "dismiss", remove the message entirely.
         #TODO: personalize the interval

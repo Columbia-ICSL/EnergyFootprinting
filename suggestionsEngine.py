@@ -27,7 +27,7 @@ class suggestionsEngine:
 	roomOccupancySnapshot = ""
 	changeScheduleUsers = []
 	turnOffApplianceUsers = {}
-	synchronizeApplianceUsers = []
+	synchronizeApplianceUsers = {}
 	lastDayCheckUsers = None
 	lastDayCheckAppliances = None
 	def moveSuggestionHelper(self, roomOrigin, roomDest, messageID, Others={}):
@@ -88,7 +88,7 @@ class suggestionsEngine:
 		now = datetime.datetime.now()
 		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
 			self.lastDayCheckUsers = now
-			users = []
+			users = {}
 			startAvg = [0, 0, 0, 0, 0]
 			endAvg = [0, 0, 0, 0, 0]
 			curtime = int(time.mktime(datetime.datetime.now().timetuple()))
@@ -127,9 +127,11 @@ class suggestionsEngine:
 				labNum = userDict[userRange][2]
 				if ((userDict[userRange][0] > startAvg[labNum]) and (userDict[userRange][1] > endAvg[labNum])):
 					print("suggestion: {0} {1}".format(userRange, "earlier"))
+					users[userRange] = "earlier"
 				if ((userDict[userRange][0] < startAvg[labNum]) and (userDict[userRange][1] < endAvg[labNum])):
 					print("suggestion: {0} {1}".format(userRange, "later"))
-
+					users[userRange] = "later"
+			tmp = users
 		#print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
