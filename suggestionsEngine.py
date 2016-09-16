@@ -92,7 +92,7 @@ class suggestionsEngine:
 			startAvg = 0
 			endAvg = 0
 			curtime = int(time.mktime(datetime.datetime.now().timetuple()))
-			dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
+			dict_users = cloudserver.db.BinUsersLocHistory()#curtime-86400, curtime)
 			numUsers = 0
 			userDict = {}
 			for user_id in dict_users:
