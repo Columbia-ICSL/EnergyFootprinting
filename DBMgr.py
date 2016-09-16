@@ -516,7 +516,7 @@ class DBMgr(object):
 					continue
 			print("Phantom: {0} Suggestion: {1}".format(phantomUser, roomID))
 			if ((phantomUser is not None) and (phantomTime is not None)):
-				ret[phantomUser] = (self.roomIdToName(roomID), maxAppliance, maxPower)
+				ret[phantomUser] = (self.RoomIdToName(roomID), maxAppliance, maxPower)
 				#TODO: if there is more than 1 room
 		return ret
 
