@@ -499,7 +499,7 @@ class DBMgr(object):
 			maxAppliance = None
 			for applianceID in appliances:
 				powerVal = self.list_of_appliances[applianceID]["value"]
-				if ((powerVal > max_power) and (powerVal > warningPowerLimit)):
+				if ((powerVal > maxPower) and (powerVal > warningPowerLimit)):
 					maxPower = powerVal
 					maxAppliance = applianceID
 			if (maxAppliance == None):
