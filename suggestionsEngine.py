@@ -119,7 +119,7 @@ class suggestionsEngine:
 				startAvg[labName] = startAvg[labName]/numUsers[labName]
 				endAvg[labName] = endAvg[labName]/numUsers[labName]
 				labStrings = ["Burke", "Teherani", "Jiang", "Sajda", "Danino"]
-				print("avg: ------------------------ {0} {1} lab {2}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg)), str(labStrings[labName])))
+				print("avg: ------------------------ {0} {1}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg))))
 			for userRange in userDict:
 				labNum = userDict[userRange][2]
 				if ((userDict[userRange][0] > startAvg[labNum]) and (userDict[userRange][1] > endAvg[labNum])):
