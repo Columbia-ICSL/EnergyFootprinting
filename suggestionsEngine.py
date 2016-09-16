@@ -92,7 +92,7 @@ class suggestionsEngine:
 			startAvg = 0
 			endAvg = 0
 			curtime = int(time.mktime(datetime.datetime.now().timetuple()))
-			dict_users = cloudserver.db.BinUsersLocHistory()#curtime-86400, curtime)
+			dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
 			numUsers = 0
 			userDict = {}
 			for user_id in dict_users:
@@ -100,7 +100,7 @@ class suggestionsEngine:
 				userStart = 0
 				userEnd = 0
 				return_bins = dict_users[user_id]
-				for bin_start in return_bins:
+				for bin_start in sorted(return_bins.keys()):
 					BIN_ST = return_bins[bin_start]
 					if ((userStart == 0) and (BIN_ST["location"] is not None)):
 						userStart = bin_start
