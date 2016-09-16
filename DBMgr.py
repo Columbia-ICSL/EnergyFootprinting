@@ -494,6 +494,7 @@ class DBMgr(object):
 	def phantomApplianceUsage(self, delayTime, warningPowerLimit):
 		ret = {}
 		for roomID in self.list_of_rooms:
+			print("Phantom: {0}".format(roomID))
 			appliances = self.list_of_rooms[roomID]["appliances"]
 			maxPower = 0
 			maxAppliance = None
@@ -513,6 +514,7 @@ class DBMgr(object):
 				curtime = int(time.mktime(datetime.datetime.now().timetuple()))
 				if (curtime > phantomTime + delayTime):
 					continue
+			print("Phantom: {0} Suggestion: {1}".format(phantomUser, roomID))
 			if ((phantomUser is not None) and (phantomTime is not None)):
 				ret[phantomUser] = (self.roomIdToName(roomID), maxAppliance, maxPower)
 				#TODO: if there is more than 1 room
