@@ -89,10 +89,11 @@ class suggestionsEngine:
 		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
 			self.lastDayCheckUsers = now
 			users = []
+			startAvg = None
 			userBins = cloudserver.db.BinUsersLocHistory()
 			for userBin in userBins:
 				for binNumber in userBins[userBin]:
-					
+
 		print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
