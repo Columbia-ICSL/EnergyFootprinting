@@ -98,7 +98,9 @@ class suggestionsEngine:
 				numUsers += 1
 				userStart = 0
 				userEnd = 0
-				for binNumber in userBins[userBin]:
+				binDict = userBins[userBin]
+				for BN in binDict:
+					binNumber = binDict[BN]
 					if ((userStart == 0) and (binNumber["location"] is not None)):
 						userStart = binNumber
 						userEnd = binNumber
