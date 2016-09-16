@@ -98,7 +98,8 @@ class suggestionsEngine:
 			for user_id in dict_users:
 				userStart = 0
 				userEnd = 0
-				lab = cloudserver.db.getAttributes(user_id, False)-1 #Burke, Teherani, Jiang, Sajda, Danino
+				attributes = cloudserver.db.getAttributes(user_id, False)#Burke, Teherani, Jiang, Sajda, Danino
+				lab = attributes["lab"]-1
 				numUsers[lab] += 1
 				return_bins = dict_users[user_id]
 				for bin_start in sorted(return_bins.keys()):
