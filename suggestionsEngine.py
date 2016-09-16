@@ -92,7 +92,7 @@ class suggestionsEngine:
 			userBins = cloudserver.db.BinUsersLocHistory()
 			for userBin in userBins:
 				for binNumber in userBins[userBin]:
-					
+					pass	
 		print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
