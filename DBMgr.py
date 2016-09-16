@@ -779,7 +779,10 @@ class DBMgr(object):
 			return_bins={}
 			for bin_start in bins_headers:
 				in_range=[x for x in time_series if x["timestamp"] >= bin_start and  x["timestamp"] <= bin_start+step]
-				majority_loc=get_majority([x["location"] for x in in_range])
+				if (len(in_range) == 0):
+					majority_loc = None
+				else:
+					majority_loc=get_majority([x["location"] for x in in_range])
 				if majority_loc==None:
 					return_bins[bin_start]={"location":None, "value":0}
 				else:
