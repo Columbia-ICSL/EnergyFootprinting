@@ -514,7 +514,7 @@ class DBMgr(object):
 				if (curtime > phantomTime + delayTime):
 					continue
 			if ((phantomUser is not None) and (phantomTime is not None)):
-				ret[phantomUser] = (self.roomIDtoName(roomID), maxAppliance, maxPower)
+				ret[phantomUser] = (self.roomIdToName(roomID), maxAppliance, maxPower)
 				#TODO: if there is more than 1 room
 		return ret
 
