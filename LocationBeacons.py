@@ -278,6 +278,7 @@ class BeaconVals:
         for i in range(len(json_return["suggestions"])):
             if json_return["suggestions"][i]["notification"]!=0:
                 #this is a push message; check if we want to push
+                messageID=json_return["suggestions"][i]["messageID"]
                 if (json_return["suggestions"][i]["type"] == "phantom"):
                     json_return["suggestions"][i]["type"] = "turnoff"
                     if cloudserver.db.pushManagementPushCheck(messageID, phantomPushSinceTime)==False: #last notification too recent
@@ -286,7 +287,6 @@ class BeaconVals:
                     else: #good to go
                         cloudserver.db.pushManagementPushUpdate(messageID)
                     continue
-                messageID=json_return["suggestions"][i]["messageID"]
                 if cloudserver.db.pushManagementPushCheck(messageID, pushSinceTime)==False: #last notification too recent
                     #erase flag
                     json_return["suggestions"][i]["notification"]=0
