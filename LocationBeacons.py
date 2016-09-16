@@ -170,7 +170,9 @@ class BeaconVals:
                     make_suggestion_item("turnoff",title, body, reward, messageID, doPush, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
 
         if (ID in phantomApplianceUsers.keys()):
-            (phantomRoom, phantomMaxAppliance, phantomMaxPower) = phantomApplianceUsers[ID]
+            (phantomRoom, phantomMaxAppliance, phantomMaxPower, phantomRoomLab) = phantomApplianceUsers[ID]
+            if (phantomRoomLab != labInt):
+                continue
             title = "Power usage in room " + str(phantomRoom) + "is consuming a lot of power"
             body = "Did you forget to turn off " + str(phantomMaxAppliance) + " in " + str(phantomRoom) + "? It is consuming " + str(phantomMaxPower) + "Watts."
             print("Phantom: {0} Suggestion: {1}".format(ID, body))
