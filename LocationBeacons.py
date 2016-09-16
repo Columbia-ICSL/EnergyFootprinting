@@ -172,7 +172,7 @@ class BeaconVals:
         if (ID in phantomApplianceUsers.keys()):
             (phantomRoom, phantomMaxAppliance, phantomMaxPower, phantomRoomLab) = phantomApplianceUsers[ID]
             if (phantomRoomLab == labInt):
-                title = "Power usage in room " + str(phantomRoom) + "is consuming a lot of power"
+                title = "Appliance left running in " + str(phantomRoom) + "?"
                 body = "Did you forget to turn off " + str(phantomMaxAppliance) + " in " + str(phantomRoom) + "? It is consuming " + str(int(phantomMaxPower)) + " Watts."
                 print("Phantom: {0} Suggestion: {1}".format(ID, body))
                 reward = 3
