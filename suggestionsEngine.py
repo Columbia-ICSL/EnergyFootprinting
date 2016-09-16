@@ -89,11 +89,38 @@ class suggestionsEngine:
 		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
 			self.lastDayCheckUsers = now
 			users = []
-			userBins = cloudserver.db.BinUsersLocHistory()
-			for userBin in userBins:
-				for binNumber in userBins[userBin]:
-					pass	
-		print("{0}".format(self.lastDayCheckUsers))
+			startAvg = 0
+			endAvg = 0
+			curtime = int(time.mktime(datetime.datetime.now().timetuple()))
+			dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
+			numUsers = 0
+			userDict = {}
+			for user_id in dict_users:
+				numUsers += 1
+				userStart = 0
+				userEnd = 0
+				return_bins = dict_users[user_id]
+				for bin_start in sorted(return_bins.keys()):
+					BIN_ST = return_bins[bin_start]
+					if ((userStart == 0) and (BIN_ST["location"] is not None)):
+						userStart = bin_start
+						userEnd = bin_start
+					if (BIN_ST["location"] is not None):
+						userEnd = bin_start
+				startAvg += userStart
+				endAvg += userEnd
+				userDict[user_id] = (userStart, userEnd)
+				print("{0} {1}-{2}".format(user_id, str(datetime.datetime.fromtimestamp(userStart)), str(datetime.datetime.fromtimestamp(userEnd))))
+			startAvg = startAvg/numUsers
+			endAvg = endAvg/numUsers
+			print("avg:------------------------ {0} {1}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg))))
+			for userRange in userDict:
+				if ((userDict[userRange][0] > startAvg) and (userDict[userRange][1] > endAvg)):
+					print("suggestion: {0} {1}".format(userRange, "earlier"))
+				if ((userDict[userRange][0] < startAvg) and (userDict[userRange][1] < endAvg)):
+					print("suggestion: {0} {1}".format(userRange, "later"))
+
+		#print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
 	def turnOffApplianceSuggestion(self):
