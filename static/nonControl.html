@@ -191,7 +191,7 @@ function renderTimeline(ungrouped_timeline){
 		return bars.map(function(bar,id){
 			var hash=Math.abs(bar[0].hashCode());
 			var color=colors[hash%colors.length];
-			color=Highcharts.Color(color).setOpacity(0.85).get('rgba');
+			color=Highcharts.Color(color).setOpacity(0.6).get('rgba');
 			if(!useColor)color=oneColor;
 			var text=bar[0];
 			var ret={
