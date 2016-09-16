@@ -179,9 +179,8 @@ class BeaconVals:
                 #json_return["suggestions"].append(
                 #    make_suggestion_item("turnoff",title,body,reward,{"appl":applianceName,"appl_id":applianceID, "power":pwr})
                 #    )
-        ApplianceUsers = cloudserver.db.synchronizeApplianceUsers
-        if (ID in ApplianceUsers.keys()):
-            timeshift = ApplianceUsers[ID]
+        if (ID in changeScheduleUsers.keys()):
+            timeshift = changeScheduleUsers[ID]
             if (timeshift == "earlier"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "earlier")
                 body = "Shifting your schedule earlier will help to limit excess power usage!"

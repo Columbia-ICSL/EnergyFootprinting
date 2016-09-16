@@ -25,7 +25,7 @@ class suggestionsEngine:
 	sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
 	sortedRoomOccupancy = [0] * len(sortedRoomList)
 	roomOccupancySnapshot = ""
-	changeScheduleUsers = []
+	changeScheduleUsers = {}
 	turnOffApplianceUsers = {}
 	synchronizeApplianceUsers = {}
 	lastDayCheckUsers = None
@@ -84,7 +84,7 @@ class suggestionsEngine:
 
 ############## TODO #################
 	def changeScheduleSuggestion(self):
-		tmp = self.synchronizeApplianceUsers
+		tmp = self.changeScheduleUsers
 		now = datetime.datetime.now()
 		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
 			self.lastDayCheckUsers = now
