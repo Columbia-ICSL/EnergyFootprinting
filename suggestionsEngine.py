@@ -98,7 +98,10 @@ class suggestionsEngine:
 			for user_id in dict_users:
 				userStart = 0
 				userEnd = 0
-				attributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(user_id), False)#Burke, Teherani, Jiang, Sajda, Danino
+				userName = cloudserver.db.userIDLookup(user_id)
+				if userName == None:
+					continue
+				attributes = cloudserver.db.getAttributes(userName, False)#Burke, Teherani, Jiang, Sajda, Danino
 				lab = attributes["lab"]-1
 				numUsers[lab] += 1
 				return_bins = dict_users[user_id]
