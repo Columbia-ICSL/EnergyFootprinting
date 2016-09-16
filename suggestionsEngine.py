@@ -91,32 +91,32 @@ class suggestionsEngine:
 			users = []
 			startAvg = 0
 			endAvg = 0
-			userBins = cloudserver.db.BinUsersLocHistory()
+			dict_users = cloudserver.db.BinUsersLocHistory()
 			numUsers = 0
 			userDict = {}
-			for userBin in userBins:
+			for user_id in dict_users:
 				numUsers += 1
 				userStart = 0
 				userEnd = 0
-				binDict = userBins[userBin]
-				for BN in binDict:
-					binNumber = binDict[BN]
-					if ((userStart == 0) and (binNumber["location"] is not None)):
-						userStart = binNumber
-						userEnd = binNumber
-					if (binNumber["location"] is not None):
-						userEnd = binNumber
+				return_bins = dict_users[user_id]
+				for bin_start in return_bins:
+					BIN_ST = return_bins[bin_start]
+					if ((userStart == 0) and (BIN_ST["location"] is not None)):
+						userStart = bin_start
+						userEnd = bin_start
+					if (BIN_ST["location"] is not None):
+						userEnd = bin_start
 				startAvg += userStart
 				endAvg += userEnd
-				userDict[userBin] = (userStart, userEnd)
-				print("{0} {1} {2}".format(userBin, str(userStart), str(userEnd)))
+				userDict[user_id] = (userStart, userEnd)
+				print("{0} {1} {2}".format(user_id, str(userStart), str(userEnd)))
 			startAvg = startAvg/numUsers
 			endAvg = endAvg/numUsers
 			for userRange in userDict:
 				if ((userDict[userRange][0] > startAvg) and (userDict[userRange][1] > endAvg)):
-					print("suggestion: {0} {1}".format(userBin, "earlier"))
+					print("suggestion: {0} {1}".format(userRange, "earlier"))
 				if ((userDict[userRange][0] < startAvg) and (userDict[userRange][1] < endAvg)):
-					print("suggestion: {0} {1}".format(userBin, "later"))
+					print("suggestion: {0} {1}".format(userRange, "later"))
 
 		#print("{0}".format(self.lastDayCheckUsers))
 		return tmp
