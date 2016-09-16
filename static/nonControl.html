@@ -1,0 +1,475 @@
+<!doctype>
+<html>
+<head>
+<title>Energy Footprint Personal Visualization</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highstock.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/themes/gray.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highcharts-more.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/modules/solid-gauge.js"></script>
+<script type="text/javascript">
+var query=(function(s){
+  var loc=s.indexOf('?');
+  if(loc==-1)return {};
+  var q=s.substr(loc+1);
+  var ret={};
+  q.split('&').map(function(part){
+    var array=part.split('=');
+    var key=decodeURIComponent(array[0]), value=decodeURIComponent(array.slice(1).join("="));
+    ret[key]=value;
+  });
+  return ret;
+})(location.href);
+var userID=query['id'];
+
+
+
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr, len;
+  if (this.length === 0) return hash;
+  for (i = 0, len = this.length; i < len; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
+
+
+window.onload=fetchAndRender;
+//var storageKey='personal_snapshot_timeline';
+var API_endpoint='/api/Query/QueryPersonPersonalConcise/a734c0a09b1fe358?client=AJAX+phone+UI';
+function fetchAndRender(){
+	var end=Math.floor((+new Date())/1000);
+	var start=end-86400*3;
+	$.get(API_endpoint,{
+		start:start,
+		end:end
+	},function(data){
+		receivedLatest(data);
+	},"json");
+
+}
+
+function receivedLatest(data){
+	if(!data || !data.realtime){
+		$('#header_value').text('?');
+		//show popout?
+		alert('Error loading data.');
+		return;
+	}
+	renderHeader(
+		Math.round(data.realtime.value*100)/100,
+		Math.max(60,data.realtime.value)
+	);
+	renderAppliance(data.realtime.consumptions);
+	$('#header_value').text(Math.ceil(data.realtime.value));
+	renderTimeline(data.data);
+}
+
+function renderAppliance(appls){
+	if(!appls || !appls.length){
+		$('#appl_list').text('List Currently Unavailable...');
+		return;
+	}
+	$('#appl_list').text('');
+	var format=function(num){
+		if(num==0)return '0';
+		return (1*num).toFixed(1);
+	}
+	appls.sort(function(a,b){return b.value-a.value})
+		.map(function(appl){
+			$('<div>').addClass('appliances_cell')
+				.addClass(appl.value==0?'cell_inactive':'cell_active')
+				.append($('<p>').addClass('cell_title').text(appl.name))
+				.append($('<p>').addClass('cell_number').text(format(appl.value)+' W'))
+				.append($('<p>').addClass('clear'))
+				.appendTo('#appl_list');
+		});
+}
+
+var transparent='rgba(0,0,0,0)';
+var whiteStyle={color:'#fff'};
+function renderHeader(value, max){
+	var options={
+		chart: {
+	        type: 'solidgauge',
+	        backgroundColor:transparent,
+    	},
+    	title:null,
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor: 'white',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+        tooltip: {
+            enabled: false
+        },
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.1, '#00BF1B'], // green
+                [0.5, '#EEEF0D'], // yellow
+                [0.9, '#EF2323'] // red
+            ],
+            lineWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            labels: {
+                y: 16
+            },
+            min: 0,
+            max: max,
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Watts',
+            data: [value],
+        }]
+
+    };
+    $('#container_gauge').highcharts(options);
+}
+function renderTimeline(ungrouped_timeline){
+	console.log('Rendering timeline, source=',ungrouped_timeline);
+	//1. generate time series
+	var series_data=[];
+	for(var time in ungrouped_timeline){
+		var timestr=new Date(parseInt(time)*1000).toLocaleString();
+		var locstr=ungrouped_timeline[time][0];
+		if(locstr==null)locstr='Out of Lab';
+		else locstr='In: '+locstr;
+		series_data.push({
+			x:new Date(parseInt(time)*1000),
+			y:ungrouped_timeline[time][1],
+			name:timestr+'<br>'+locstr,
+		});
+	}
+	console.log('Timeline series=',series_data);
+	//2. get location bars
+	var bars=[];
+	var lastLoc=null, lastTime=-1, maxTime=-1;
+	var halfIntv=5*60/2;
+	for(var time in ungrouped_timeline){
+		var newLoc=ungrouped_timeline[time][0];
+		if(newLoc!=lastLoc){
+			if(lastLoc!=null)
+				bars.push([lastLoc, lastTime-halfIntv, time-halfIntv]);
+			lastLoc=newLoc;
+			lastTime=time;
+		}
+		maxTime=time;
+	}
+	bars.push([lastLoc, lastTime-halfIntv, maxTime]);
+
+	//var colors=Highcharts.getOptions().colors.slice(1,5);
+	var colors=["#8085e9", "#8d4654", "#7798BF", "#7cb5ec", "#f7a35c", "#90ee7e", "#DF5353", "#7798BF", "#aaeeee", "#f45b5b"];
+	var oneColor='#8085e9';//skyBlue;
+	var getPlotBands=function(useColor){
+		var pos=[];
+		return bars.map(function(bar,id){
+			var hash=Math.abs(bar[0].hashCode());
+			var color=colors[hash%colors.length];
+			color=Highcharts.Color(color).setOpacity(0.6).get('rgba');
+			if(!useColor)color=oneColor;
+			var text=bar[0];
+			var ret={
+			    color: color, // Color value
+			    id:id,
+			    from: 1000*parseInt(bar[1]), // Start of the plot band
+			    to: 1000*parseInt(bar[2]) // End of the plot band
+			};
+			return ret;
+		});
+	}
+	console.log('Location series=',bars,getPlotBands());
+	var hasBand=true;
+	
+	$('#chart_timeline').highcharts('StockChart', {
+		chart: {
+	        backgroundColor:transparent,
+	        style: {
+	        	color:'#fff',
+           		fontFamily: 'sans-serif',
+        	}
+    	},
+        rangeSelector: {
+        	labelStyle:whiteStyle,
+	        inputEnabled:false,
+            selected: 0,
+            height:20,//originally 35
+            buttons: [{
+				type: 'minute',
+				count: 1*60,
+				text: '1H'
+			}, {
+				type: 'minute',
+				count: 3*60,
+				text: '3H'
+			}, {
+				type: 'minute',
+				count: 6*60,
+				text: '6H'
+			}, {
+				type: 'minute',
+				count: 24*60,
+				text: '1D'
+			}, {
+				type: 'minute',
+				count: 24*60*3,
+				text: '3D'
+			}, {
+				type: 'all',
+				text: 'All'
+			}]
+        },
+        navigator:{
+        	enabled:false
+        },
+        credits: {
+            enabled: false
+        },
+        title:null,
+        xAxis:{
+        	labels:{style:whiteStyle},
+			plotBands:getPlotBands(true),
+			events: {
+	            afterSetExtremes: function (e) {
+	            	var chart=$('#chart_timeline').highcharts();
+	            	if(e.max-e.min<=3600000*6){
+	            		if(!hasBand){
+	            			//Use color
+	            			for(var i=0;i<bars.length;i++)
+		            			chart.xAxis[0].removePlotBand(i);
+
+		            		var bands=getPlotBands(true);
+		            		console.log('Add bands with names',bands);
+		            		for(var i=0;i<bars.length;i++)
+		            			chart.xAxis[0].addPlotBand(bands[i]);
+	            		}
+	            		hasBand=true;
+	            	}else
+	            	{
+		            	if(hasBand){
+		            		//Use no-color
+		            		console.log('Use bands without names',bars.length);
+		            		for(var i=0;i<bars.length;i++)
+		            			chart.xAxis[0].removePlotBand(i);
+
+		            		var bands=getPlotBands(false);
+		            		for(var i=0;i<bars.length;i++)
+		            			chart.xAxis[0].addPlotBand(bands[i]);
+		            	}
+	            		hasBand=false;
+	            	}
+	            }
+	        },
+        },
+        yAxis:{
+        	labels:{style:whiteStyle}
+        },
+        tooltip: {
+            valueDecimals: 2,
+            valuePrefix: '',
+            valueSuffix: ' Watts'
+        },
+        series: [{
+            name: 'Footprint',
+            data: series_data,
+            tooltip: {
+                valueDecimals: 2
+            },
+            // gradient-filled area
+            type : 'areaspline',
+            fillColor : {
+                linearGradient : {
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: 1
+                },
+                stops : [
+                    [0, Highcharts.getOptions().colors[0]],
+                    [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get('rgba')]
+                ]
+            }
+        }]
+    });
+}
+</script>
+<style>
+body{margin:0;padding:0;}
+#mainBody{
+	width:100%;
+	font-family:Helvetica, Roboto, sans-serif; 
+	color:white;
+}
+#header{
+	height:15%;
+	width:100%;
+}
+#header_left{
+	position:absolute;
+	height:15%;
+	width:50%;
+	margin-left:10%;
+}
+#header_right{
+	position:absolute;
+	height:15%;
+	width:35%;
+	margin-left:60%;
+}
+#header_left #header_wrapper{
+	/*vertical-align:middle;*/
+	position: absolute;
+  	top: 50%;
+  	transform: translateY(-50%);
+}
+#header_left #header_left_title{
+	width:100%;
+	font-size:14pt;
+	text-align:center;
+}
+#header_left #header_left_body{
+	margin-top:8pt;
+	width:100%;
+	text-align:center;
+	font-size:18pt;
+}
+#header_left #header_left_body span{
+	padding:5px;
+	background:#777;
+}
+#header_right #container_gauge{
+	width:100%;
+	height:100%;
+}
+
+#timeline{
+	height:50%;
+	width:100%;
+}
+#chart_timeline{
+	height:100%;
+	width:100%;
+}
+#detail{
+	width:100%;
+}
+#detail_title, #timeline_title{
+	width: 100%;
+	text-align: center;
+	font-size: 16pt;
+	margin-top:8pt;
+}
+
+.appliances_cell{
+	border-radius:15px;
+	padding-left:5px;
+	margin:5px 5px 5px 5px;
+}
+.cell_active {
+	background: rgba(100,255,100,0.3);
+	color:white;
+}
+.cell_inactive{
+	color:#ccc;
+	background: rgba(100,100,100,0.3);
+}
+.appliances_cell .cell_title{
+	width:70%;
+	float:left;
+	text-align: center;
+	vertical-align: middle;
+}
+.appliances_cell .cell_number{
+	width:30%;
+	float:right;
+	font-size: 16pt;
+	text-align: center;
+	vertical-align: middle;
+}
+.clear{clear:both;}
+</style>
+</head>
+<body>
+<div id="mainBody">
+	<div id="header">
+		<div id="header_left">
+			<div id="header_wrapper">
+				<div id="header_left_title">Your Energy Footprint:
+				</div>
+				<div id="header_left_body">
+				<span><span id="header_value">?</span> Watts</span>
+				</div>
+			</div>
+		</div>
+		<div id="header_right">
+			<div id="container_gauge"></div>
+		</div>
+	</div>
+			<div id="timeline_title">Energy History:</div>
+	<div id="timeline">
+			<div id="chart_timeline"></div>		
+	</div>
+	<div id="detail">
+		<div id="detail_title">Energy Consumption Around You:</div>
+		<div id="appl_list">
+		<div class="appliances_cell cell_active">
+			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
+			<p class="cell_number">20 W</p>
+			<p class="clear"></p>
+		</div>
+		<div class="appliances_cell cell_active">
+			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
+			<p class="cell_number">20 W</p>
+			<p class="clear"></p>
+		</div>
+		<div class="appliances_cell cell_active">
+			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
+			<p class="cell_number">20 W</p>
+			<p class="clear"></p>
+		</div>
+		<div class="appliances_cell cell_active">
+			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
+			<p class="cell_number">20 W</p>
+			<p class="clear"></p>
+		</div>
+
+		<div class="appliances_cell cell_inactive">
+			<p class="cell_title">Power strip #2 in Mezzaine Level, Aisle #3</p>
+			<p class="cell_number">0 W</p>
+			<p class="clear"></p>
+		</div>
+		<div class="appliances_cell cell_inactive">
+			<p class="cell_title">Power strip #2 in Mezzaine Level, Aisle #3</p>
+			<p class="cell_number">0 W</p>
+			<p class="clear"></p>
+		</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
