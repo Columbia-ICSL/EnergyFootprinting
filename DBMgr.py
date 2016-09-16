@@ -721,6 +721,8 @@ class DBMgr(object):
 			binItems=binnedData[binId]
 			majority_loc=get_majority([item["location"] for item in binItems])
 			average_power=get_average([item["value"] for item in binItems])
+			if majority_loc!=None:
+				majority_loc=self.RoomIdToName(majority_loc)
 			data[binId*interval]=(majority_loc, average_power)
 
 		realtime_consumptions={"value":0}
