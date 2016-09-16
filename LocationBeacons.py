@@ -176,7 +176,7 @@ class BeaconVals:
             reward = 3
             doPush = 1
             messageID = "{0}|{1}|{2}".format("phantom", ID, phantomRoom)
-                json_return["suggestions"].append(
+            json_return["suggestions"].append(
                     make_suggestion_item("phantom",title, body, reward, messageID, doPush))
                 #applianceID="nwc1003b_c_plug"
                 #applianceName=cloudserver.db.ApplIdToName(applianceID)
