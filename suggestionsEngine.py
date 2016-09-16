@@ -89,16 +89,17 @@ class suggestionsEngine:
 		if ((self.lastDayCheckUsers == None) or ((self.lastDayCheckUsers.day != now.day) and (now.hour >= 2) and (now.hour < 5))):
 			self.lastDayCheckUsers = now
 			users = []
-			startAvg = 0
-			endAvg = 0
+			startAvg = [0, 0, 0, 0, 0]
+			endAvg = [0, 0, 0, 0, 0]
 			curtime = int(time.mktime(datetime.datetime.now().timetuple()))
 			dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
-			numUsers = 0
+			numUsers = [0, 0, 0, 0, 0]
 			userDict = {}
 			for user_id in dict_users:
-				numUsers += 1
 				userStart = 0
 				userEnd = 0
+				lab = cloudserver.db.getAttributes(user_id, False)-1 #Burke, Teherani, Jiang, Sajda, Danino
+				numUsers[lab] += 1
 				return_bins = dict_users[user_id]
 				for bin_start in sorted(return_bins.keys()):
 					BIN_ST = return_bins[bin_start]
@@ -107,17 +108,19 @@ class suggestionsEngine:
 						userEnd = bin_start
 					if (BIN_ST["location"] is not None):
 						userEnd = bin_start
-				startAvg += userStart
-				endAvg += userEnd
-				userDict[user_id] = (userStart, userEnd)
+				startAvg[lab] += userStart
+				endAvg[lab] += userEnd
+				userDict[user_id] = (userStart, userEnd, lab)
 				print("{0} {1}-{2}".format(user_id, str(datetime.datetime.fromtimestamp(userStart)), str(datetime.datetime.fromtimestamp(userEnd))))
-			startAvg = startAvg/numUsers
-			endAvg = endAvg/numUsers
-			print("avg:------------------------ {0} {1}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg))))
+			for labName in xrange(len(startAvg)):
+				startAvg[labName] = startAvg[labName]/numUsers[labName]
+				endAvg[labName] = endAvg[labName]/numUsers[labName]
+				print("avg:------------------------ {0} {1}".format(str(datetime.datetime.fromtimestamp(startAvg)), str(datetime.datetime.fromtimestamp(endAvg))))
 			for userRange in userDict:
-				if ((userDict[userRange][0] > startAvg) and (userDict[userRange][1] > endAvg)):
+				labNum = userDict[userRange][2]
+				if ((userDict[userRange][0] > startAvg[labNum]) and (userDict[userRange][1] > endAvg[labNum])):
 					print("suggestion: {0} {1}".format(userRange, "earlier"))
-				if ((userDict[userRange][0] < startAvg) and (userDict[userRange][1] < endAvg)):
+				if ((userDict[userRange][0] < startAvg[labNum]) and (userDict[userRange][1] < endAvg[labNum])):
 					print("suggestion: {0} {1}".format(userRange, "later"))
 
 		#print("{0}".format(self.lastDayCheckUsers))
