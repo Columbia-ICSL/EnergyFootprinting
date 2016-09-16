@@ -173,6 +173,7 @@ class BeaconVals:
             (phantomRoom, phantomMaxAppliance, phantomMaxPower) = phantomApplianceUsers[ID]
             title = "Power usage in room " + phantomRoom + "is consuming a lot of power"
             body = "Did you forget to turn off " + phantomMaxAppliance + " in " + phantomRoom + "? It is consuming " + phantomMaxPower + "Watts."
+            print("Phantom: {0} Suggestion: {1}".format(ID, body))
             reward = 3
             doPush = 1
             messageID = "{0}|{1}|{2}".format("phantom", ID, phantomRoom)
