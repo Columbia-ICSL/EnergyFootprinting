@@ -173,7 +173,7 @@ class BeaconVals:
             (phantomRoom, phantomMaxAppliance, phantomMaxPower, phantomRoomLab) = phantomApplianceUsers[ID]
             if (phantomRoomLab == labInt):
                 title = "Power usage in room " + str(phantomRoom) + "is consuming a lot of power"
-                body = "Did you forget to turn off " + str(phantomMaxAppliance) + " in " + str(phantomRoom) + "? It is consuming " + str(phantomMaxPower) + "Watts."
+                body = "Did you forget to turn off " + str(phantomMaxAppliance) + " in " + str(phantomRoom) + "? It is consuming " + str(int(phantomMaxPower)) + " Watts."
                 print("Phantom: {0} Suggestion: {1}".format(ID, body))
                 reward = 3
                 doPush = 1
@@ -285,6 +285,7 @@ class BeaconVals:
                         json_return["suggestions"][i]["notification"]=0
                     else: #good to go
                         cloudserver.db.pushManagementPushUpdate(messageID)
+                    continue
                 messageID=json_return["suggestions"][i]["messageID"]
                 if cloudserver.db.pushManagementPushCheck(messageID, pushSinceTime)==False: #last notification too recent
                     #erase flag

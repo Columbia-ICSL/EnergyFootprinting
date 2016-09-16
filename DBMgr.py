@@ -504,7 +504,7 @@ class DBMgr(object):
 				powerVal = self.list_of_appliances[applianceID]["value"]
 				if ((powerVal > maxPower) and (powerVal > warningPowerLimit)):
 					maxPower = powerVal
-					maxAppliance = applianceID
+					maxAppliance = self.list_of_appliances[applianceID]["name"]
 			if (maxAppliance == None):
 				continue
 			if "phantom_user" in self.list_of_rooms[roomID]:
