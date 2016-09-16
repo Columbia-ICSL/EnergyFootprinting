@@ -461,7 +461,7 @@ class DBMgr(object):
 		self.watchdogRefresh_User(personID)
 
 		if roomID!=None and roomID not in self.list_of_rooms:
-			"if no legitimate roomID, then he's out of tracking."
+			#"if no legitimate roomID, then he's out of tracking."
 			newS=None
 			self.recordEvent(personID,"illegitimateLocationReported",roomID)
 		else:
@@ -471,12 +471,13 @@ class DBMgr(object):
 
 		if newS!=None:
 			self.list_of_rooms[newS]["phantom_user"]=personID
+			self.list_of_rooms[newS]["phantom_time"] = int(time.mktime(datetime.datetime.now().timetuple()))
 
-		"people change; should we update now?"
+		#"people change; should we update now?"
 		self.OptionalSaveShot();
 
 	def OptionalSaveShot(self):
-		"minimum interval: 10s; in lieu with regular snapshotting"
+		#"minimum interval: 10s; in lieu with regular snapshotting"
 		if self._latestSuccessShot< self._now() -10 :
 			self.SaveShot();
 
@@ -489,6 +490,34 @@ class DBMgr(object):
 		for roomID in self.list_of_rooms:
 			ret[roomID]=self.list_of_rooms[roomID]["users"]
 		return ret
+
+	def phantomApplianceUsage(self, delayTime, warningPowerLimit):
+		ret = {}
+		for roomID in self.list_of_rooms:
+			appliances = self.list_of_rooms[location]["appliances"]
+			maxPower = 0
+			maxAppliance = None
+			for applianceID in appliances:
+				powerVal = self.list_of_appliances[applianceID]["value"]
+				if ((powerVal > max_power) and (powerVal > warningPowerLimit)):
+					maxPower = powerVal
+					maxAppliance = applianceID
+			if (maxAppliance == None):
+				continue
+			if "phantom_user" in self.list_of_rooms[roomID]:
+				phantomUser = self.list_of_rooms[roomID]["phantom_user"]
+			else:
+				continue
+			if "phantom_time" in self.list_of_rooms[roomID]:
+				phantomTime = self.list_of_rooms[roomID]["phantom_time"]
+				curtime = int(time.mktime(datetime.datetime.now().timetuple()))
+				if (curtime > phantomTime + delayTime):
+					continue
+			if ((phantomUser is not None) and (phantomTime is not None)):
+				ret[phantomUser] = (self.roomIDtoName(roomID), maxAppliance, maxPower)
+				#TODO: if there is more than 1 room
+		return ret
+
 
 	def CurrentApplianceUsage(self, limit=3):
 		ret = {}

@@ -93,7 +93,7 @@ class BeaconVals:
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
-
+        phantomApplianceUsers = cloudserver.SE.phantomApplianceUsers
         balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
 
         if (balance_server == False):
@@ -169,7 +169,15 @@ class BeaconVals:
                 json_return["suggestions"].append(
                     make_suggestion_item("turnoff",title, body, reward, messageID, doPush, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
 
-
+        if (ID in phantomApplianceUsers.keys()):
+            (phantomRoom, phantomMaxAppliance, phantomMaxPower) = phantomApplianceUsers[ID]
+            title = "Power usage in room " + phantomRoom + "is consuming a lot of power"
+            body = "Did you forget to turn off " + phantomMaxAppliance + " in " + phantomRoom + "? It is consuming " + phantomMaxPower + "Watts."
+            reward = 3
+            doPush = 1
+            messageID = "{0}|{1}|{2}".format("phantom", ID, phantomRoom)
+                json_return["suggestions"].append(
+                    make_suggestion_item("phantom",title, body, reward, messageID, doPush))
                 #applianceID="nwc1003b_c_plug"
                 #applianceName=cloudserver.db.ApplIdToName(applianceID)
                 #title="Shut off "+applianceName+"?"
@@ -183,15 +191,15 @@ class BeaconVals:
             timeshift = changeScheduleUsers[ID]
             if (timeshift == "earlier"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "earlier")
-                body = "Shifting your schedule earlier will help to limit excess power usage!"
-                reward = 2
+                body = "Coming in earlier tomorrow will help to limit excess power usage!"
+                reward = 3
                 doPush = 0
                 json_return["suggestions"].append(
                     make_suggestion_item("change", "Shift schedule 10 minutes earlier", body, reward, messageID, doPush))
             if (timeshift == "later"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "later")
-                body = "Shifting your schedule later will help to limit excess power usage!"
-                reward = 2
+                body = "Coming in later tomorrow will help to limit excess power usage!"
+                reward = 3
                 doPush = 0
                 json_return["suggestions"].append(
                     make_suggestion_item("change", "Shift schedule 10 minutes later", body, reward, messageID, doPush))
@@ -214,16 +222,28 @@ class BeaconVals:
 
         moveInterval=20*60
         applianceInterval=20*60
+        changeInterval = 20*60*60
+        phantomInterval = 10*60
         miscInterval=60*60*4 #every 4 hours, now for the control message only.
+
         moveSinceTime=cloudserver.db._now()-moveInterval
         applianceSinceTime=cloudserver.db._now()-applianceInterval
+        changeSinceTime = cloudserver.db._now()-changeInterval
+        phantomSinceTime = cloudserver.db._now()-phantomInterval
         miscSinceTime=cloudserver.db._now()-miscInterval
+
         returnList = []
         for item in json_return["suggestions"]:
             if (item["type"] == "move" and cloudserver.db.pushManagementDispCheck(item["messageID"], moveSinceTime)):
                 returnList.append(item)
                 continue
             if (item["type"] == "turnoff" and cloudserver.db.pushManagementDispCheck(item["messageID"], applianceSinceTime)):
+                returnList.append(item)
+                continue
+            if (item["type"] == "phantom" and cloudserver.db.pushManagementDispCheck(item["messageID"], phantomSinceTime)):
+                returnList.append(item)
+                continue
+            if (item["type"] == "change" and cloudserver.db.pushManagementDispCheck(item["messageID"], changeSinceTime)):
                 returnList.append(item)
                 continue
             if (item["type"] == "misc" and cloudserver.db.pushManagementDispCheck(item["messageID"], miscSinceTime)):
@@ -234,21 +254,35 @@ class BeaconVals:
         userFrequency = usernameAttributes["frequency"]
         #default value = every 4 hours
         pushInterval=60*60*4
+        phantomPushInterval = 10*1000000
         if (userFrequency == 0):
             pushInterval = 60*1000000
+            phantomPushInterval = 60*1000000
         if (userFrequency == 33):
             pushInterval = 60*60*24
+            phantomPushInterval = 10*60
         if (userFrequency == 66):
             pushInterval = 60*60*4
+            phantomPushInterval = 10*60
         if (userFrequency == 100):
             pushInterval = 60*30
+            phantomPushInterval = 10*60
+
         #Check 2: if push timeout is too short, erase the push flag.
         #TODO: personalized push interval from DB (notification frequency in config)
          # !!!! TESTINT ONLY ### should be >= than display timeout anyway
+        phantomPushSinceTime = cloudserver.db._now()-phantomPushInterval
         pushSinceTime=cloudserver.db._now()-pushInterval
         for i in range(len(json_return["suggestions"])):
             if json_return["suggestions"][i]["notification"]!=0:
                 #this is a push message; check if we want to push
+                if (json_return["suggestions"][i]["type"] == "phantom"):
+                    json_return["suggestions"][i]["type"] = "turnoff"
+                    if cloudserver.db.pushManagementPushCheck(messageID, phantomPushSinceTime)==False: #last notification too recent
+                    #erase flag
+                        json_return["suggestions"][i]["notification"]=0
+                    else: #good to go
+                        cloudserver.db.pushManagementPushUpdate(messageID)
                 messageID=json_return["suggestions"][i]["messageID"]
                 if cloudserver.db.pushManagementPushCheck(messageID, pushSinceTime)==False: #last notification too recent
                     #erase flag

@@ -28,6 +28,7 @@ class suggestionsEngine:
 	changeScheduleUsers = {}
 	turnOffApplianceUsers = {}
 	synchronizeApplianceUsers = {}
+	phantomApplianceUsers = {}
 	lastDayCheckUsers = None
 	lastDayCheckAppliances = None
 	def moveSuggestionHelper(self, roomOrigin, roomDest, messageID, Others={}):
@@ -135,13 +136,16 @@ class suggestionsEngine:
 		#print("{0}".format(self.lastDayCheckUsers))
 		return tmp
 
+	def phantomApplianceSuggestion(self):
+		return cloudserver.db.phantomApplianceUsage(10*60, 50) #delayTime, power limit
+
 	def turnOffApplianceSuggestion(self):
 		personalUsage = cloudserver.db.CurrentApplianceUsage(5)
-		users = {}
-		for person in personalUsage:
+		#users = {}
+		#for person in personalUsage:
 			#for appliance in personalUsage[person]:
 			#	messageID = "{0}|{1}|{2}".format("turnoff", str(person), appliance["id"])
-			users[person] = personalUsage[person]
+		#	users[person] = personalUsage[person]
 		return personalUsage
 
 	def synchronizeApplianceScheduleSuggestion(self):
@@ -168,6 +172,7 @@ class suggestionsEngine:
 			time.sleep(self.checkInterval)
 			self.moveUsers = self.moveSuggestion()
 			self.changeScheduleUsers = self.changeScheduleSuggestion()
+			self.phantomApplianceUsers = self.phantomApplianceSuggestion()
 			self.turnOffApplianceUsers = self.turnOffApplianceSuggestion()
 			self.synchronizeApplianceUsers = self.synchronizeApplianceScheduleSuggestion()
 			#print("Suggestions Generated: #users receiving suggestion= move:{0} changeSchedule:{1} turnOff:{2} sync:{3}".format(len(self.moveUsers.keys()), len(self.changeScheduleUsers()), len(self.turnOffApplianceUsers.keys()), len(self.synchronizeApplianceUsers())))
