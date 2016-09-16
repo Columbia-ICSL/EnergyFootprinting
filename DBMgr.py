@@ -694,7 +694,6 @@ class DBMgr(object):
 		
 		dict_raw_snapshots={}
 		dict_users={}
-
 		condition = {
 			"timestamp":{
 				"$gte":datetime.datetime.utcfromtimestamp(start),
@@ -721,10 +720,10 @@ class DBMgr(object):
 					item=dict_raw_snapshots[ts]["data"][user_id]
 					item["timestamp"]=ts
 					dict_users[user_id]+=[item]
-		
 		step=15*60
 		bins_headers=xrange(int(start),int(end),int(step))
-		bins_ranges=[xrange(x,x+step) for x in bins_headers]
+		#bins_ranges=[xrange(x,x+step) for x in bins_headers]
+		#bins_tails=[x+step for x in bins_headers]
 		def get_majority(lst):
 			return max(set(lst), key=lst.count)
 		def get_average(lst):
@@ -733,14 +732,14 @@ class DBMgr(object):
 		for user_id in dict_users:
 			time_series=dict_users[user_id]
 			return_bins={}
-			for bin_range in bins_ranges:
-				in_range=[x for x in time_series if x["timestamp"] in bin_range]
+			for bin_start in bins_headers:
+				in_range=[x for x in time_series if x["timestamp"] >= bin_start and  x["timestamp"] <= bin_start+step]
 				majority_loc=get_majority([x["location"] for x in in_range])
 				if majority_loc==None:
-					return_bins[bin_range.start]={"location":None, "value":0}
+					return_bins[bin_start]={"location":None, "value":0}
 				else:
 					majority_average=get_average([x["value"] for x in in_range if x["location"]==majority_loc])
-					return_bins[bin_range.start]={"location":majority_loc,"value":majority_average}
+					return_bins[bin_start]={"location":majority_loc,"value":majority_average}
 			dict_users[user_id]=return_bins
 
 		return dict_users
