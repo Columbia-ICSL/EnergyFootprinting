@@ -196,13 +196,15 @@ class BeaconVals:
                 body = "Coming in earlier tomorrow will help to limit excess power usage!"
                 reward = 3
                 doPush = 0
+                print("Shift Schedule: {0} earlier".format(cloudserver.db.userIDLookup(ID)))
                 json_return["suggestions"].append(
                     make_suggestion_item("change", "Shift schedule 10 minutes earlier", body, reward, messageID, doPush))
-            if (timeshift == "later"):
+            elif (timeshift == "later"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "later")
                 body = "Coming in later tomorrow will help to limit excess power usage!"
                 reward = 3
                 doPush = 0
+                print("Shift Schedule: {0} later".format(cloudserver.db.userIDLookup(ID)))
                 json_return["suggestions"].append(
                     make_suggestion_item("change", "Shift schedule 10 minutes later", body, reward, messageID, doPush))
         
