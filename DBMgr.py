@@ -734,7 +734,7 @@ class DBMgr(object):
 			}
 		}
 		projection = {"data."+person:1,"timestamp":1,"_id":0}
-		iterator = self.snapshots_col_users.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_users.find(condition, projection)#.sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			binId=self._toUnix(shot["timestamp"])//interval
 			if binId not in binnedData:
