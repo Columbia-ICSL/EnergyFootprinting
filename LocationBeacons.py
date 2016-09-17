@@ -3,7 +3,8 @@ import web
 import cloudserver
 from KNNalgo import KNearestNeighbors
 from trainingData import training
-
+import datetime
+import time
 urls = (
 "/","BeaconVals")
 PUBLIC_SPACE = 0
@@ -23,14 +24,13 @@ DUTY_CYCLE = True
 NO_DUTY_CYCLE = False
 
 def labIntToName(self, x):
-        return {
-            1:"Burke Lab",
-            2:"Teherani Lab",
-            2:"Teherani Lab",
-            3:"Jiang Lab",
-            4:"Sajda Lab",
-            5:"Danino Lab"
-        }[x]
+    return {
+        1:"Burke Lab",
+        2:"Teherani Lab",
+        3:"Jiang Lab",
+        4:"Sajda Lab",
+        5:"Danino Lab"
+    }[x]
 
 class generateTrainingData:
     trainingData = []
