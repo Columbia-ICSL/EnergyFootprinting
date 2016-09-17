@@ -184,15 +184,19 @@ function renderTimeline(ungrouped_timeline){
 	bars.push([lastLoc, lastTime-halfIntv, maxTime]);
 
 	//var colors=Highcharts.getOptions().colors.slice(1,5);
-	var colors=["#8085e9", "#8d4654", "#7798BF", "#7cb5ec", "#f7a35c", "#90ee7e", "#DF5353", "#7798BF", "#aaeeee", "#f45b5b"];
+	var colors=["#8085e9", "#8d4654", "#7798BF", "#7cb5ec", "#f7a35c", "#DF5353", "#7798BF", "#aaeeee", "#f45b5b"];
 	var oneColor='#8085e9';//skyBlue;
 	var getPlotBands=function(useColor){
 		var pos=[];
 		return bars.map(function(bar,id){
 			var hash=Math.abs(bar[0].hashCode());
 			var color=colors[hash%colors.length];
-			color=Highcharts.Color(color).setOpacity(0.6).get('rgba');
-			if(!useColor)color=oneColor;
+			color=Highcharts.Color(color).setOpacity(0.35).get('rgba');
+			if(!useColor){
+				color=oneColor;
+				color=Highcharts.Color(color).setOpacity(0.2).get('rgba');
+			}
+			
 			var text=bar[0];
 			var ret={
 			    color: color, // Color value
@@ -360,7 +364,7 @@ body{margin:0;padding:0;}
 }
 #header_left #header_left_body span{
 	padding:5px;
-	background:#777;
+	/*background:#777;*/
 }
 #header_right #container_gauge{
 	width:100%;
@@ -412,12 +416,29 @@ body{margin:0;padding:0;}
 	vertical-align: middle;
 }
 .clear{clear:both;}
+
+.boxSectionRegular{
+	border-radius:25px;
+	background: rgba(200,200,200,0.3);
+	margin: 20px 3px 20px 3px;
+	padding:20px;
+}
+
+.boxSectionEnergy{
+	border-radius:25px;
+	background: rgba(200,200,200,0.3);
+	margin: 20px 3px 20px 3px;
+	padding:20px 20px 10px 20px;
+}
+
 </style>
 </head>
 <body>
 <div id="mainBody">
+	<div class="boxSectionRegular">
 	<div id="header">
 		<div id="header_left">
+
 			<div id="header_wrapper">
 				<div id="header_left_title">Your Energy Footprint:
 				</div>
@@ -430,10 +451,16 @@ body{margin:0;padding:0;}
 			<div id="container_gauge"></div>
 		</div>
 	</div>
+	</div>
+
+	<div class="boxSectionEnergy">
 			<div id="timeline_title">Energy History:</div>
 	<div id="timeline">
 			<div id="chart_timeline"></div>		
 	</div>
+	</div>
+	
+	<div class="boxSectionRegular">
 	<div id="detail">
 		<div id="detail_title">Energy Consumption Around You:</div>
 		<div id="appl_list">
@@ -470,6 +497,8 @@ body{margin:0;padding:0;}
 		</div>
 		</div>
 	</div>
+	</div>
+
 </div>
 </body>
 </html>

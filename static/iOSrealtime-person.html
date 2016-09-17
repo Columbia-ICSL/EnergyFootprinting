@@ -45,13 +45,14 @@ function initVisualization(){
 			if(isControl=='false')
 				initVisualizationNoControl();
 			else
+				$('#controlGroup').show();
 				console.info('Control group, do nothing. Check response:',isControl);
 		},
 		'text');
 }
 function initVisualizationNoControl(){
 	// Hide control group message
-	$('#controlGroup').hide();
+	//$('#controlGroup').hide();
 	// TODO: render visualization box
 	// Show visualization box
 	$('#mainBody').show();
@@ -79,7 +80,7 @@ body{
 </head>
 <body>
 
-<div id="controlGroup">
+<div id="controlGroup" style="display:none;">
 	<h1>Control Study</h1>
 	<p>
 	There are no specific energy usage feedback or suggestions this week. <b>Please continue using you appliances as usual.</b>
