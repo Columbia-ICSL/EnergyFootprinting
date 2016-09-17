@@ -23,7 +23,7 @@ NOT_ACTIONABLE = False
 DUTY_CYCLE = True
 NO_DUTY_CYCLE = False
 
-def labIntToName(self, x):
+def labIntToName(x):
     return {
         1:"Burke Lab",
         2:"Teherani Lab",
