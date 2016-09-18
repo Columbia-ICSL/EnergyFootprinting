@@ -8,10 +8,10 @@ db=DBMgr.DBMgr()
 nowTime = datetime.datetime.now().replace(hour=4, minute=0)
 print("4AM today: " + str(nowTime))
 curtime = int(time.mktime(nowTime.timetuple()))
-dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
+dict_users = db.BinUsersLocHistory(curtime-86400, curtime)
 numUsers = [0, 0, 0, 0, 0]
 userDict = {}
-with open('changeSchedule.csv', 'w') as csvfile:
+with open('changeScheduleTest.csv', 'w') as csvfile:
 	writer = csv.writer(csvfile, delimiter=' ',
 		quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	user_list = []
