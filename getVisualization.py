@@ -40,13 +40,15 @@ with open(changeScheduleFile, 'w') as csvfile:
 			else:
 				user_list.append(BIN_ST["value"])
 		writer.writerow(user_list)
-
+print("wrote changeScheduleTest.csv")
 curtime = int(time.mktime(nowTime.timetuple()))-(n*86400)
 dict_appl = db.BinApplPowerHistory(curtime-86400, curtime)
 applDict = {}
 roomDict = {}
 applianceFile = 'applianceVisualization.csv'
+applianceUsersFile = 'applianceUsersVisualization.csv'
 os.remove(applianceFile)
+os.remove(applianceUsersFile)
 with open(applianceFile, 'w') as csvfile:
 	writer = csv.writer(csvfile, delimiter=' ',
 		quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -69,5 +71,34 @@ with open(applianceFile, 'w') as csvfile:
 			if (BIN_ST["value"] == None):
 				appl_list.append(0)
 			else:
-				appl_list.append(BIN_ST["value"])
+				if (BIN_ST["value"] < 0 or BIN_ST["value"] > 5000):
+					appl_list.append(0)
+				else:
+					appl_list.append(BIN_ST["value"])
 		writer.writerow(appl_list)
+print("wrote applianceVisualization.csv")
+with open(applianceUsersFile, 'w') as csvfile:
+	writer = csv.writer(csvfile, delimiter=' ',
+		quotechar='|', quoting=csv.QUOTE_MINIMAL)
+	appl_list = []
+	appl_list.append(0)
+	return_bins = dict_appl[dict_appl.keys()[0]]
+	for bin_start in sorted(return_bins.keys()):
+		appl_list.append(bin_start)
+	writer.writerow(appl_list)
+	appl_list = []
+	for appl_id in dict_appl:
+		appl_list = []
+		applName = db.ApplIdToName(appl_id)
+		if applName == None:
+			applName = appl_id
+		appl_list.append(applName.replace(" ", ""))
+		return_bins = dict_appl[appl_id]
+		for bin_start in sorted(return_bins.keys()):
+			BIN_ST = return_bins[bin_start]
+			if (BIN_ST["avg_users"] == 0):
+				appl_list.append(0)
+			else:
+				appl_list.append(BIN_ST["avg_users"])
+		writer.writerow(appl_list)
+print("wrote applianceUsersVisualization.csv")
