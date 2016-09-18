@@ -864,16 +864,23 @@ class DBMgr(object):
 		
 		step=15*60
 		bins_headers=xrange(int(start),int(end),int(step))
-		bins_ranges=[xrange(x,x+step) for x in bins_headers]
+		#bins_ranges=[xrange(x,x+step) for x in bins_headers]
 
 		for appl_id in dict_appls:
 			time_series=dict_appls[appl_id]
 			return_bins={}
-			for bin_range in bins_ranges:
-				in_range=[x for x in time_series if x["timestamp"] in bin_range]
-				avg_power=get_average([x["value"] for x in in_range])
-				avg_users=get_average([x["total_users"] for x in in_range])
-				return_bins[bin_range.start]={"avg_users":avg_users, "value":avg_power}	
+			for bin_start in bins_headers:
+				in_range = [x for x in time_series if x["timestamp"] >= bin_start and  x["timestamp"] <= bin_start+step]
+				if (len(in_range) == 0):
+					majority_loc = None
+				else:
+					majority_loc=get_majority([x["location"] for x in in_range])
+				if majority_loc==None:
+					return_bins[bin_start]={"location":None, "value":0}
+				else:	
+					avg_power=get_average([x["value"] for x in in_range])
+					avg_users=get_average([x["total_users"] for x in in_range])
+					return_bins[bin_range.start]={"avg_users":avg_users, "value":avg_power}	
 			dict_appls[appl_id]=return_bins
 
 		return dict_appls
