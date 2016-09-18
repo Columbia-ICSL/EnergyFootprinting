@@ -103,7 +103,14 @@ class DBInit(object):
         addAppliance("nwc1003b_a_plug", "Plugmeter in 1003B Lab Area A (Peter)", "Electrical", "nwc1003b_a", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1003b_b_plug", "Plugmeter in 1003B Lab Area B (Danny&Stephen)", "Electrical", "nwc1003b_b", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1003b_c_plug", "Plugmeter in 1003B Lab Area C (Rishi)", "Electrical", "nwc1003b_c", ACTIONABLE, NO_DUTY_CYCLE)
-
+        
+        addAppliance("nwc1003b_fin", "Fin Tube Radiator in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003b_vav", "Air Vent in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003b_lex", "Fume Hoods in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc10_ahu", "Air Intake System for 10F", "HVAC", "nwc10.*", ACTIONABLE, NO_DUTY_CYCLE)
+        # TODO: Map the FCUs (Fan Coils) to rooms, given floor plan
+        addAppliance("nwc1003g_vav", "Air Vent in 1003G", "HVAC", "nwc1003g.*", ACTIONABLE, NO_DUTY_CYCLE)
+        
         addAppliance("nwc1003g_plug1", "Plugmeter in 1003G (Printer&Computer)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1003g_plug2", "Plugmeter in 1003G (Soldering Station)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
