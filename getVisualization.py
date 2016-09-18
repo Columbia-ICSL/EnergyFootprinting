@@ -25,7 +25,7 @@ with open('changeScheduleTest.csv', 'w') as csvfile:
 	user_list = []
 	for user_id in dict_users:
 		user_list = []
-		userName = db.userIDLookup(user_id)
+		userName = db.userIDLookup(user_id).strip()
 		if userName == None:
 			userName = user_id
 		user_list.append(userName)
