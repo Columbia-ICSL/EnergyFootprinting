@@ -15,7 +15,10 @@ dict_users = db.BinUsersLocHistory(curtime-86400, curtime)
 userDict = {}
 roomDict = {}
 changeScheduleFile = 'changeScheduleTest.csv'
-os.remove(changeScheduleFile)
+try:
+    os.remove(changeScheduleFile)
+except OSError:
+    pass
 with open(changeScheduleFile, 'w') as csvfile:
 	writer = csv.writer(csvfile, delimiter=' ',
 		quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -47,8 +50,15 @@ applDict = {}
 roomDict = {}
 applianceFile = 'applianceVisualization.csv'
 applianceUsersFile = 'applianceUsersVisualization.csv'
-os.remove(applianceFile)
-os.remove(applianceUsersFile)
+try:
+    os.remove(applianceFile)
+except OSError:
+    pass
+try:
+    os.remove(applianceUsersFile)
+except OSError:
+    pass
+
 with open(applianceFile, 'w') as csvfile:
 	writer = csv.writer(csvfile, delimiter=' ',
 		quotechar='|', quoting=csv.QUOTE_MINIMAL)
