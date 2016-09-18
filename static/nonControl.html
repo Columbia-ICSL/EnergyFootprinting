@@ -191,15 +191,22 @@ function renderTimeline(ungrouped_timeline){
 		return bars.map(function(bar,id){
 			var hash=Math.abs(bar[0].hashCode());
 			var color=colors[hash%colors.length];
-			color=Highcharts.Color(color).setOpacity(0.35).get('rgba');
+			color=Highcharts.Color(color).setOpacity(0.9).get('rgba');
 			if(!useColor){
 				color=oneColor;
-				color=Highcharts.Color(color).setOpacity(0.2).get('rgba');
+				color=Highcharts.Color(color).setOpacity(0.6).get('rgba');
 			}
+			var colorTransparent=Highcharts.Color(color).setOpacity(0).get('rgba');
 			
 			var text=bar[0];
 			var ret={
-			    color: color, // Color value
+			    color: {
+			    	linearGradient: {x1:0, x2:0, y1:0, y2:1},
+			    	stops:[
+			    		[0, color],
+			    		[0.55, colorTransparent],
+			    	]
+			    }, // Color value
 			    id:id,
 			    from: 1000*parseInt(bar[1]), // Start of the plot band
 			    to: 1000*parseInt(bar[2]) // End of the plot band
@@ -418,14 +425,14 @@ body{margin:0;padding:0;}
 .clear{clear:both;}
 
 .boxSectionRegular{
-	border-radius:25px;
+	border-radius:25px 50px;
 	background: rgba(200,200,200,0.3);
 	margin: 20px 3px 20px 3px;
 	padding:20px;
 }
 
 .boxSectionEnergy{
-	border-radius:25px;
+	border-radius:25px 50px;
 	background: rgba(200,200,200,0.3);
 	margin: 20px 3px 20px 3px;
 	padding:20px 20px 10px 20px;
