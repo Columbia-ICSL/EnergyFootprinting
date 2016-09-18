@@ -5,7 +5,9 @@ import time
 
 db=DBMgr.DBMgr()
 
-nowTime = datetime.datetime.now().replace(hour=4, minute=0)
+n = int(raw_input("How many days back?").strip())
+
+nowTime = datetime.datetime.now().replace(hour=4, minute=0)-(n*86400)
 print("4AM today: " + str(nowTime))
 curtime = int(time.mktime(nowTime.timetuple()))
 dict_users = db.BinUsersLocHistory(curtime-86400, curtime)
