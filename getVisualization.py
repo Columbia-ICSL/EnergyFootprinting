@@ -23,7 +23,9 @@ with open('changeScheduleTest.csv', 'w') as csvfile:
 	user_list = []
 	for user_id in dict_users:
 		user_list = []
-		userName = cloudserver.db.userIDLookup(user_id)
+		userName = db.userIDLookup(user_id)
+		if userName == None:
+			userName = user_id
 		user_list.append(userName)
 		return_bins = dict_users[user_id]
 		for bin_start in sorted(return_bins.keys()):
