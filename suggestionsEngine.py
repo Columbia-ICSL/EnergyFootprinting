@@ -100,7 +100,7 @@ class suggestionsEngine:
 			numUsers = [0, 0, 0, 0, 0]
 			userDict = {}
 
-			with open('changeSchedule.txt', 'w', newline='') as csvfile:
+			with open('changeSchedule.csv', 'w') as csvfile:
 				writer = csv.writer(csvfile, delimiter=' ',
 					quotechar='|', quoting=csv.QUOTE_MINIMAL)
 				user_list = []
