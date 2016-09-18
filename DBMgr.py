@@ -855,7 +855,8 @@ class DBMgr(object):
 				if appl_id not in dict_raw_snapshots[ts]["data"]:
 					dict_appls[appl_id]+=[{
 						"timestamp":ts,
-						"location":None,
+						"total_users":0,
+						"value":0
 					}]
 				else:
 					item=dict_raw_snapshots[ts]["data"][appl_id]
@@ -872,15 +873,12 @@ class DBMgr(object):
 			for bin_start in bins_headers:
 				in_range = [x for x in time_series if x["timestamp"] >= bin_start and  x["timestamp"] <= bin_start+step]
 				if (len(in_range) == 0):
-					majority_loc = None
-				else:
-					majority_loc=get_majority([x["location"] for x in in_range])
-				if majority_loc==None:
-					return_bins[bin_start]={"location":None, "value":0}
+					avg_users = 0
+					avg_power = 0
 				else:	
 					avg_power=get_average([x["value"] for x in in_range])
 					avg_users=get_average([x["total_users"] for x in in_range])
-					return_bins[bin_range.start]={"avg_users":avg_users, "value":avg_power}	
+				return_bins[bin_range.start]={"avg_users":avg_users, "value":avg_power}	
 			dict_appls[appl_id]=return_bins
 
 		return dict_appls
