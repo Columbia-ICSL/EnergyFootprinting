@@ -207,7 +207,7 @@ class BeaconVals:
             endStr = "%s:%s" % (endTime.hour, endTime.minute)
             if (timeshift == "earlier"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "earlier")
-                body = "On average, people in the " + labIntToName(labInt) + " start at: " + startStr + "and end at: " + endStr
+                body = "On average, people in the " + labIntToName(labInt) + " start at: " + startStr + " and end at: " + endStr
                 reward = 3
                 doPush = 0
                 print("Shift Schedule: {0} earlier".format(cloudserver.db.userIDLookup(ID)))
@@ -215,7 +215,7 @@ class BeaconVals:
                     make_suggestion_item("change", "Come earlier tomorrow!", body, reward, messageID, doPush))
             elif (timeshift == "later"):
                 messageID = "{0}|{1}|{2}".format("change", ID, "later")
-                body = "On average, people in the " + labIntToName(labInt) + " start at: " + startStr + "and end at: " + endStr
+                body = "On average, people in the " + labIntToName(labInt) + " start at: " + startStr + " and end at: " + endStr
                 reward = 3
                 doPush = 0
                 print("Shift Schedule: {0} later".format(cloudserver.db.userIDLookup(ID)))

@@ -40,7 +40,7 @@ String.prototype.hashCode = function() {
 
 window.onload=fetchAndRender;
 //var storageKey='personal_snapshot_timeline';
-var API_endpoint='/api/Query/QueryPersonPersonalConcise/a734c0a09b1fe358?client=AJAX+phone+UI';
+var API_endpoint='/api/Query/QueryPersonPersonalConcise/'+userID+'?client=AJAX+phone+UI';
 function fetchAndRender(){
 	var end=Math.floor((+new Date())/1000);
 	var start=end-86400*3;
@@ -471,37 +471,6 @@ body{margin:0;padding:0;}
 	<div id="detail">
 		<div id="detail_title">Energy Consumption Around You:</div>
 		<div id="appl_list">
-		<div class="appliances_cell cell_active">
-			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
-			<p class="cell_number">20 W</p>
-			<p class="clear"></p>
-		</div>
-		<div class="appliances_cell cell_active">
-			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
-			<p class="cell_number">20 W</p>
-			<p class="clear"></p>
-		</div>
-		<div class="appliances_cell cell_active">
-			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
-			<p class="cell_number">20 W</p>
-			<p class="clear"></p>
-		</div>
-		<div class="appliances_cell cell_active">
-			<p class="cell_title">Power strip #1 in Mezzaine Level, Aisle #3</p>
-			<p class="cell_number">20 W</p>
-			<p class="clear"></p>
-		</div>
-
-		<div class="appliances_cell cell_inactive">
-			<p class="cell_title">Power strip #2 in Mezzaine Level, Aisle #3</p>
-			<p class="cell_number">0 W</p>
-			<p class="clear"></p>
-		</div>
-		<div class="appliances_cell cell_inactive">
-			<p class="cell_title">Power strip #2 in Mezzaine Level, Aisle #3</p>
-			<p class="cell_number">0 W</p>
-			<p class="clear"></p>
-		</div>
 		</div>
 	</div>
 	</div>

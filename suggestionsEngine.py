@@ -2,6 +2,7 @@ import cloudserver
 from threading import Thread
 import time
 import datetime
+import csv
 
 PUBLIC_SPACE = 0
 BURKE_LAB = 1
@@ -98,6 +99,32 @@ class suggestionsEngine:
 			dict_users = cloudserver.db.BinUsersLocHistory(curtime-86400, curtime)
 			numUsers = [0, 0, 0, 0, 0]
 			userDict = {}
+
+            with open('changeSchedule.txt', 'w', newline='') as csvfile:
+            	writer = csv.writer(csvfile, delimiter=' ',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            	user_list = []
+            	for user_id in dict_users:
+            		user_list.append(0)
+            		return_bins = dict_users[user_id]
+            		for bin_start in sorted(return_bins.keys()):
+            			user_list.append(bin_start)
+            		break
+            	writer.writerow(user_list)
+            	user_list = []
+            	for user_id in dict_users:
+            		user_list = []
+            		userName = cloudserver.db.userIDLookup(user_id)
+            		user_list.append(userName)
+            		return_bins = dict_users[user_id]
+            		for bin_start in sorted(return_bins.keys()):
+            			BIN_ST = return_bins[bin_start]
+            			if (BIN_ST["value"] == None):
+            				user_list.append(0)
+            			else:
+            				user_list.append(BIN_ST["value"])
+            		writer.writerow(user_list)
+
 			for user_id in dict_users:
 				userStart = 0
 				userEnd = 0
