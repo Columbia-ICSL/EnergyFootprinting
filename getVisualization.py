@@ -62,7 +62,7 @@ with open(applianceFile, 'w') as csvfile:
 		applName = db.ApplIdToName(appl_id)
 		if applName == None:
 			applName = appl_id
-		appl_list.append(applName.strip())
+		appl_list.append(applName.replace(" ", ""))
 		return_bins = dict_appl[appl_id]
 		for bin_start in sorted(return_bins.keys()):
 			BIN_ST = return_bins[bin_start]
