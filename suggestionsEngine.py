@@ -104,10 +104,10 @@ class suggestionsEngine:
 				writer = csv.writer(csvfile, delimiter=' ',
 					quotechar='|', quoting=csv.QUOTE_MINIMAL)
 				user_list = []
-				user1 = dict_users[dict_users.keys()[0]]
+
 				user_list.append(0)
 
-				return_bins = dict_users[user1]
+				return_bins = dict_users[dict_users.keys()[0]]
 				for bin_start in sorted(return_bins.keys()):
 					user_list.append(bin_start)
 
