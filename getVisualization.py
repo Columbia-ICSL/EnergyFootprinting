@@ -25,10 +25,10 @@ with open('changeScheduleTest.csv', 'w') as csvfile:
 	user_list = []
 	for user_id in dict_users:
 		user_list = []
-		userName = db.userIDLookup(user_id).strip()
+		userName = db.userIDLookup(user_id)
 		if userName == None:
 			userName = user_id
-		user_list.append(userName)
+		user_list.append(userName.strip())
 		return_bins = dict_users[user_id]
 		for bin_start in sorted(return_bins.keys()):
 			BIN_ST = return_bins[bin_start]
