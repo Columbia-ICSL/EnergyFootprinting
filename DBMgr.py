@@ -878,7 +878,7 @@ class DBMgr(object):
 				else:	
 					avg_power=get_average([x["value"] for x in in_range])
 					avg_users=get_average([x["total_users"] for x in in_range])
-				return_bins[bin_range.start]={"avg_users":avg_users, "value":avg_power}	
+				return_bins[bin_start]={"avg_users":avg_users, "value":avg_power}	
 			dict_appls[appl_id]=return_bins
 
 		return dict_appls
