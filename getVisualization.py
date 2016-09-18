@@ -2,6 +2,7 @@ import DBMgr
 import datetime
 import csv
 import time
+import os
 
 db=DBMgr.DBMgr()
 
@@ -13,7 +14,9 @@ curtime = int(time.mktime(nowTime.timetuple()))-(n*86400)
 dict_users = db.BinUsersLocHistory(curtime-86400, curtime)
 userDict = {}
 roomDict = {}
-with open('changeScheduleTest.csv', 'w') as csvfile:
+changeScheduleFile = 'changeScheduleTest.csv'
+os.remove(changeScheduleFile)
+with open(changeScheduleFile, 'w') as csvfile:
 	writer = csv.writer(csvfile, delimiter=' ',
 		quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	user_list = []
@@ -42,7 +45,9 @@ curtime = int(time.mktime(nowTime.timetuple()))-(n*86400)
 dict_appl = db.BinApplPowerHistory(curtime-86400, curtime)
 applDict = {}
 roomDict = {}
-with open('applianceVisualization.csv', 'w') as csvfile:
+applianceFile = 'applianceVisualization.csv'
+os.remove(applianceFile)
+with open(applianceFile, 'w') as csvfile:
 	writer = csv.writer(csvfile, delimiter=' ',
 		quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	appl_list = []
