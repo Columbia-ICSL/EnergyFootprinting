@@ -115,6 +115,23 @@ function mergeDataWithStorage(data){
 	return data;
 }
 
+function getMaximum(value){
+	if(value<100)return 200;
+	//what we want:
+	// 0. it's sorta log-scale
+	// 1. shows relative 50% for 100w
+	// 2. shows relative 100% for 1000w
+	// afterwards, goes to 100% always
+	var scaleVal=Math.log(value);
+	var point1=Math.log(100), point2=Math.log(1000);
+	var percentage=50+50*(scaleVal-point1)/(point2-point1);
+	if(percentage>100)percentage=100;
+
+	var maximumOnGauge=value/percentage*100;
+	maximumOnGauge=50*Math.ceil(maximumOnGauge/50);
+	return maximumOnGauge;
+}
+
 function receivedLatest(data){
 	if(!data || !data.realtime){
 		$('#header_value').text('?');
@@ -124,7 +141,7 @@ function receivedLatest(data){
 	}
 	renderHeader(
 		Math.round(data.realtime.value*100)/100,
-		Math.max(60,data.realtime.value)
+		getMaximum(data.realtime.value)
 	);
 	renderAppliance(data.realtime.consumptions);
 	$('#header_value').text(Math.ceil(data.realtime.value));
@@ -153,7 +170,7 @@ function receivedUpdate(data){
 	//show new list
 	renderHeader(
 		Math.round(data.realtime.value*100)/100,
-		Math.max(60,data.realtime.value)
+		getMaximum(data.realtime.value)
 	);
 	renderAppliance(data.realtime.consumptions);
 	$('#header_value').text(Math.ceil(data.realtime.value));
@@ -459,6 +476,11 @@ function renderTimeline(ungrouped_timeline){
 </script>
 <style>
 body{margin:0;padding:0;}
+*:not(input):not(textarea) {
+-webkit-user-select: none; /* disable selection/Copy of UIWebView */
+-webkit-touch-callout: none; /* disable the IOS popup when long-press on a link */
+}
+
 #mainBody{
 	width:100%;
 	font-family:Helvetica, Roboto, sans-serif; 
