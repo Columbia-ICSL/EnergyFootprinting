@@ -166,6 +166,8 @@ class BeaconVals:
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
                 powerUsage = int(appliance["value"])
+                applianceAction = appliance["actionable"]
+                applianceType = appliance["type"]
                 messageID = "{0}|{1}|{2}".format("turnoff", ID, applianceID)
                 if (powerUsage <= 0):
                     continue
@@ -173,7 +175,7 @@ class BeaconVals:
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
                 reward=1
                 doPush=0
-                if(powerUsage>50):
+                if(powerUsage>50 and applianceType!="HVAC" and applianceAction == ACTIONABLE):
                     #!!TODO: make doPush=1,2,3,4 according to various criteria, not a single threshold.
                     doPush=1
                 json_return["suggestions"].append(
@@ -183,10 +185,12 @@ class BeaconVals:
             (phantomRoom, phantomMaxAppliance, phantomMaxPower, phantomRoomLab) = phantomApplianceUsers[ID]
             if (phantomRoomLab == labInt):
                 title = "Appliance left running in " + str(phantomRoom) + "?"
-                body = "Did you forget to turn off " + str(phantomMaxAppliance) + " in " + str(phantomRoom) + "? It is consuming " + str(int(phantomMaxPower)) + " Watts."
+                body = "Did you forget to turn off " + str(phantomMaxAppliance["name"]) + " in " + str(phantomRoom) + "? It is consuming " + str(int(phantomMaxPower)) + " Watts."
                 print("Phantom: {0} Suggestion: {1}".format(ID, body))
                 reward = 3
-                doPush = 1
+                doPush = 0
+                if (phantomMaxAppliance["type"] != "HVAC" and phantomMaxAppliance["actionable"] == ACTIONABLE):
+                    doPush = 1
                 messageID = "{0}|{1}|{2}".format("phantom", ID, phantomRoom)
                 json_return["suggestions"].append(
                         make_suggestion_item("phantom",title, body, reward, messageID, doPush))
