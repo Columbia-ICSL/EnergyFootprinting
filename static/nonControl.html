@@ -36,21 +36,83 @@ String.prototype.hashCode = function() {
   return hash;
 };
 
+var isForeground=true;
+function atForeground(){
+	isForeground=true;
+}
+function atBackground(){
+	isForeground=false;
+}
+//For app frame to call.
+var foreground_delay=1000*60*0.5;
+var background_delay=1000*60*3;
+
+var firstLoaded=+(new Date()), page_expiry=3600*1000*4;//3 hours
+function backgroundWake(){
+	if(+new Date()-firstLoaded>page_expiry)
+		location.reload();
+	fetchAndUpdate();
+	setTimeout(backgroundWake,isForeground?foreground_delay:background_delay)
+}
+
+function init(){
+	fetchAndRender();
+	setTimeout(backgroundWake,foreground_delay)
+}
+
+window.onload=init;
 
 
-window.onload=fetchAndRender;
-//var storageKey='personal_snapshot_timeline';
+var storageKey='personal_snapshot_timeline';
 var API_endpoint='/api/Query/QueryPersonPersonalConcise/'+userID+'?client=AJAX+phone+UI';
 function fetchAndRender(){
 	var end=Math.floor((+new Date())/1000);
-	var start=end-86400*3;
+	var start=getStorageUpperBound();
 	$.get(API_endpoint,{
 		start:start,
 		end:end
 	},function(data){
 		receivedLatest(data);
 	},"json");
+}
 
+function getStorageUpperBound(){
+	var end=Math.floor((+new Date())/1000);
+	var start=end-86400*3;
+	try{
+		var oldData=localStorage.getItem(storageKey);
+		if(oldData!=null){
+			oldData=JSON.parse(oldData);
+			var maxValue=start;
+			for(var index in oldData.data)
+				if(parseInt(index)>maxValue)
+					maxValue=parseInt(index);
+			console.log('Storage timestamp max=',maxValue,'current end ts:',end);
+			return Math.min(maxValue,end-5*60);
+		}
+	}catch(e){}
+	return start;
+}
+
+function mergeDataWithStorage(data){
+	try{
+		var oldData=localStorage.getItem(storageKey);
+		if(oldData!=null){
+			oldData=JSON.parse(oldData);
+		}else{
+			//oldData is null
+			oldData={data:{},realtime:{}};
+		}
+		//merge
+		for(var key in data.data)
+			oldData.data[key]=data.data[key];
+		data.data=oldData.data;
+		localStorage.setItem(storageKey,JSON.stringify(data));
+		return data;
+	}catch(e){
+		console.warn('Failed to decode localStorate');
+	}
+	return data;
 }
 
 function receivedLatest(data){
@@ -66,7 +128,55 @@ function receivedLatest(data){
 	);
 	renderAppliance(data.realtime.consumptions);
 	$('#header_value').text(Math.ceil(data.realtime.value));
+	
+	//storage management
+	data=mergeDataWithStorage(data);
+	//send entire dataset to renderTimeline
 	renderTimeline(data.data);
+}
+
+function fetchAndUpdate(){
+	var end=Math.floor((+new Date())/1000);
+	//var start=getStorageUpperBound();
+	//only gets the latest state, do not request snapshots
+	$.get(API_endpoint,{
+		start:end,
+		end:end
+	},function(data){
+		receivedUpdate(data);
+	},"json");
+}
+function receivedUpdate(data){
+	if(!data || !data.realtime)
+		return;
+	//Note: do not use these low-freq data for graph; instead, use realtime consumption.
+	//show new list
+	renderHeader(
+		Math.round(data.realtime.value*100)/100,
+		Math.max(60,data.realtime.value)
+	);
+	renderAppliance(data.realtime.consumptions);
+	$('#header_value').text(Math.ceil(data.realtime.value));
+	
+	//add new data to Timeline
+	var time=Math.floor((+new Date())/1000);
+	//location first:
+	if(data.realtime.location!=null){
+		bars.push([data.realtime.location, maxTime, time]);
+		maxTime=time;
+	}
+
+	//new point
+	var timestr=new Date(parseInt(time)*1000).toLocaleString();
+	var locstr=data.realtime.location;
+	if(locstr==null)locstr='Out of Lab';
+	else locstr='In: '+locstr;
+	var chart=$('#chart_timeline').highcharts();
+	chart.series[0].addPoint({
+		x:new Date(parseInt(time)*1000),
+		y:data.realtime.value,
+		name:timestr+'<br>'+locstr,
+	});
 }
 
 function renderAppliance(appls){
@@ -155,7 +265,7 @@ function renderHeader(value, max){
 function renderTimeline(ungrouped_timeline){
 	console.log('Rendering timeline, source=',ungrouped_timeline);
 	//1. generate time series
-	var series_data=[];
+	window.series_data=[];
 	for(var time in ungrouped_timeline){
 		var timestr=new Date(parseInt(time)*1000).toLocaleString();
 		var locstr=ungrouped_timeline[time][0];
@@ -169,8 +279,9 @@ function renderTimeline(ungrouped_timeline){
 	}
 	console.log('Timeline series=',series_data);
 	//2. get location bars
-	var bars=[];
-	var lastLoc=null, lastTime=-1, maxTime=-1;
+	window.bars=[];
+	window.maxTime=-1;
+	var lastLoc=null, lastTime=-1;
 	var halfIntv=5*60/2;
 	for(var time in ungrouped_timeline){
 		var newLoc=ungrouped_timeline[time][0];
@@ -279,6 +390,7 @@ function renderTimeline(ungrouped_timeline){
         },
         title:null,
         xAxis:{
+        	ordinal: false,
         	labels:{style:whiteStyle},
 			plotBands:getPlotBands(true),
 			events: {

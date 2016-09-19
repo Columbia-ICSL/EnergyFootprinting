@@ -758,11 +758,12 @@ class DBMgr(object):
 				majority_loc=self.RoomIdToName(majority_loc)
 			data[binId*interval]=(majority_loc, average_power)
 
-		realtime_consumptions={"value":0}
+		realtime_consumptions={"value":0, "consumptions":[],"location":None}
 		if person in self.location_of_users:
 			location=self.location_of_users[person]
 			if location!=None:
 				realtime_consumptions=self.calculateRoomFootprint(location)
+				realtime_consumptions["location"]=location
 		return self._encode({
 			"data":data,
 			"realtime":realtime_consumptions
