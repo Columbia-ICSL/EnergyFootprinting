@@ -84,7 +84,8 @@ function renderAppliance(appls){
 			$('<div>').addClass('appliances_cell')
 				.addClass(appl.value==0?'cell_inactive':'cell_active')
 				.append($('<p>').addClass('cell_title').text(appl.name))
-				.append($('<p>').addClass('cell_number').text(format(appl.value)+' W'))
+				.append($('<p>').addClass('cell_number').text('Total: ' + format(appl.value)+' W'))
+				.append($('<p>').addClass('cell_share_number').text('Share: ' +format(appl.share) + ' W'))
 				.append($('<p>').addClass('clear'))
 				.appendTo('#appl_list');
 		});
@@ -410,18 +411,27 @@ body{margin:0;padding:0;}
 	background: rgba(100,100,100,0.3);
 }
 .appliances_cell .cell_title{
-	width:70%;
-	float:left;
 	text-align: center;
-	vertical-align: middle;
+	padding-top:15px;
+	width:100%;
+
 }
 .appliances_cell .cell_number{
-	width:30%;
-	float:right;
+	width:50%;
+	float:left;
+	text-align:center;
 	font-size: 16pt;
-	text-align: center;
-	vertical-align: middle;
+	margin-bottom:30px;
 }
+
+.appliances_cell .cell_share_number{
+	width:50%;
+	float:right;
+	text-align:center;
+	font-size: 16pt;
+	margin-bottom:30px;
+}
+
 .clear{clear:both;}
 
 .boxSectionRegular{
@@ -471,6 +481,13 @@ body{margin:0;padding:0;}
 	<div id="detail">
 		<div id="detail_title">Energy Consumption Around You:</div>
 		<div id="appl_list">
+			<div class="appliances_cell cell_active"> 
+				<p class="cell_title">Power strip #1 in Mezzanaine Level, Aisle #3</p>
+				<p class="cell_number">Share: 20 W</p>
+				<p class="cell_share_number">Total: 22 W</p>
+				<p class="clear"></p>
+			</div>
+
 		</div>
 	</div>
 	</div>
