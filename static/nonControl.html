@@ -160,11 +160,12 @@ function receivedUpdate(data){
 	
 	//add new data to Timeline
 	var time=Math.floor((+new Date())/1000);
-	//location first:
-	if(data.realtime.location!=null){
-		bars.push([data.realtime.location, maxTime, time]);
-		maxTime=time;
-	}
+	//location first
+	//if loc==null, will show "out of lab afterwards"
+	bars.push([data.realtime.location, maxTime, time]);
+	maxTime=time;
+	//force redraw
+	redrawBands(hasColorBand);
 
 	//new point
 	var timestr=new Date(parseInt(time)*1000).toLocaleString();
@@ -262,6 +263,47 @@ function renderHeader(value, max){
     };
     $('#container_gauge').highcharts(options);
 }
+
+function getPlotBands(useColor){
+	//var colors=Highcharts.getOptions().colors.slice(1,5);
+	var colors=["#8085e9", "#8d4654", "#7798BF", "#7cb5ec", "#f7a35c", "#DF5353", "#7798BF", "#aaeeee", "#f45b5b"];
+	var oneColor='#8085e9';//skyBlue;
+	var pos=[];
+	return bars.map(function(bar,id){
+		var hash=bar[0]?Math.abs(bar[0].hashCode()):0;
+		var color=colors[hash%colors.length];
+		color=Highcharts.Color(color).setOpacity(0.9).get('rgba');
+		if(!useColor){
+			color=oneColor;
+			color=Highcharts.Color(color).setOpacity(0.6).get('rgba');
+		}
+		var colorTransparent=Highcharts.Color(color).setOpacity(0).get('rgba');
+		
+		var text=bar[0];
+		var ret={
+		    color: {
+		    	linearGradient: {x1:0, x2:0, y1:0, y2:1},
+		    	stops:[
+		    		[0, color],
+		    		[0.55, colorTransparent],
+		    	]
+		    }, // Color value
+		    id:id,
+		    from: 1000*parseInt(bar[1]), // Start of the plot band
+		    to: 1000*parseInt(bar[2]) // End of the plot band
+		};
+		return ret;
+	});
+}
+function redrawBands(hasColor){
+	var chart=$('#chart_timeline').highcharts();
+	for(var i=0;i<bars.length;i++)
+		chart.xAxis[0].removePlotBand(i);
+	var bands=getPlotBands(hasColor);
+	for(var i=0;i<bars.length;i++)
+		chart.xAxis[0].addPlotBand(bands[i]);
+}
+
 function renderTimeline(ungrouped_timeline){
 	console.log('Rendering timeline, source=',ungrouped_timeline);
 	//1. generate time series
@@ -295,39 +337,8 @@ function renderTimeline(ungrouped_timeline){
 	}
 	bars.push([lastLoc, lastTime-halfIntv, maxTime]);
 
-	//var colors=Highcharts.getOptions().colors.slice(1,5);
-	var colors=["#8085e9", "#8d4654", "#7798BF", "#7cb5ec", "#f7a35c", "#DF5353", "#7798BF", "#aaeeee", "#f45b5b"];
-	var oneColor='#8085e9';//skyBlue;
-	var getPlotBands=function(useColor){
-		var pos=[];
-		return bars.map(function(bar,id){
-			var hash=bar[0]?Math.abs(bar[0].hashCode()):0;
-			var color=colors[hash%colors.length];
-			color=Highcharts.Color(color).setOpacity(0.9).get('rgba');
-			if(!useColor){
-				color=oneColor;
-				color=Highcharts.Color(color).setOpacity(0.6).get('rgba');
-			}
-			var colorTransparent=Highcharts.Color(color).setOpacity(0).get('rgba');
-			
-			var text=bar[0];
-			var ret={
-			    color: {
-			    	linearGradient: {x1:0, x2:0, y1:0, y2:1},
-			    	stops:[
-			    		[0, color],
-			    		[0.55, colorTransparent],
-			    	]
-			    }, // Color value
-			    id:id,
-			    from: 1000*parseInt(bar[1]), // Start of the plot band
-			    to: 1000*parseInt(bar[2]) // End of the plot band
-			};
-			return ret;
-		});
-	}
-	console.log('Location series=',bars,getPlotBands());
-	var hasBand=true;
+	console.log('Location series=',bars);
+	window.hasColorBand=true;
 
 	Highcharts.setOptions({
         global: {
@@ -395,32 +406,21 @@ function renderTimeline(ungrouped_timeline){
 			plotBands:getPlotBands(true),
 			events: {
 	            afterSetExtremes: function (e) {
-	            	var chart=$('#chart_timeline').highcharts();
 	            	if(e.max-e.min<=3600000*6){
-	            		if(!hasBand){
+	            		if(!hasColorBand){
+	            			hasColorBand=true;
+	            			redrawBands(true);
 	            			//Use color
-	            			for(var i=0;i<bars.length;i++)
-		            			chart.xAxis[0].removePlotBand(i);
-
-		            		var bands=getPlotBands(true);
-		            		console.log('Add bands with names',bands);
-		            		for(var i=0;i<bars.length;i++)
-		            			chart.xAxis[0].addPlotBand(bands[i]);
+	            			console.log('Add bands with colors');
 	            		}
-	            		hasBand=true;
-	            	}else
-	            	{
-		            	if(hasBand){
+	            	}else{
+		            	if(hasColorBand){
+		            		hasColorBand=false;
+	            			redrawBands(false);
 		            		//Use no-color
-		            		console.log('Use bands without names',bars.length);
-		            		for(var i=0;i<bars.length;i++)
-		            			chart.xAxis[0].removePlotBand(i);
-
-		            		var bands=getPlotBands(false);
-		            		for(var i=0;i<bars.length;i++)
-		            			chart.xAxis[0].addPlotBand(bands[i]);
+	            			console.log('Add bands with no color');
 		            	}
-	            		hasBand=false;
+	            		hasColorBand=false;
 	            	}
 	            }
 	        },

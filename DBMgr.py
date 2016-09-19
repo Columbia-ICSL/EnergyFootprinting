@@ -768,7 +768,7 @@ class DBMgr(object):
 			location=self.location_of_users[person]
 			if location!=None:
 				realtime_consumptions=self.calculateRoomFootprint(location)
-				realtime_consumptions["location"]=location
+				realtime_consumptions["location"]=self.RoomIdToName(location)
 		return self._encode({
 			"data":data,
 			"realtime":realtime_consumptions
