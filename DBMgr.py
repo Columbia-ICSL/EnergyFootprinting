@@ -504,13 +504,18 @@ class DBMgr(object):
 				powerVal = self.list_of_appliances[applianceID]["value"]
 				if ((powerVal > maxPower) and (powerVal > warningPowerLimit)):
 					maxPower = powerVal
-					maxAppliance = self.list_of_appliances[applianceID]["name"]
+					maxAppliance = self.list_of_appliances[applianceID]
 			if (maxAppliance == None):
 				continue
 			if "phantom_user" in self.list_of_rooms[roomID]:
 				phantomUser = self.list_of_rooms[roomID]["phantom_user"]
 			else:
 				continue
+			userLoc = getUserLocation(phantomUser)
+			if userLoc is not None:
+				if maxAppliance["name"] in self.list_of_rooms[userLoc]["appliances"]:
+					print("Warning Log: user moved to a different space with same appliance footprint")
+					continue
 			if "phantom_time" in self.list_of_rooms[roomID]:
 				phantomTime = self.list_of_rooms[roomID]["phantom_time"]
 				curtime = int(time.mktime(datetime.datetime.now().timetuple()))
