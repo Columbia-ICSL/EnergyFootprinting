@@ -189,7 +189,7 @@ function renderTimeline(ungrouped_timeline){
 	var getPlotBands=function(useColor){
 		var pos=[];
 		return bars.map(function(bar,id){
-			var hash=Math.abs(bar[0].hashCode());
+			var hash=bar[0]?Math.abs(bar[0].hashCode()):0;
 			var color=colors[hash%colors.length];
 			color=Highcharts.Color(color).setOpacity(0.9).get('rgba');
 			if(!useColor){
@@ -216,6 +216,12 @@ function renderTimeline(ungrouped_timeline){
 	}
 	console.log('Location series=',bars,getPlotBands());
 	var hasBand=true;
+
+	Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
 	
 	$('#chart_timeline').highcharts('StockChart', {
 		chart: {
@@ -224,6 +230,15 @@ function renderTimeline(ungrouped_timeline){
 	        	color:'#fff',
            		fontFamily: 'sans-serif',
         	}
+    	},
+    	scrollbar:{
+    		enabled:true,
+    		height:26,
+    		liveRedraw:true,
+    		buttonArrowColor:'#33f',
+    		buttonBackgroundColor:'88f',
+    		trackBackgroundColor:'#eee',
+    		rifleColor:'#33f'
     	},
         rangeSelector: {
         	labelStyle:whiteStyle,
