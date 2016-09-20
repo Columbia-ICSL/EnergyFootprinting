@@ -421,6 +421,13 @@ class DBMgr(object):
 		try:
 			app=self.list_of_appliances[applianceID]
 			known_room=app["rooms"]
+			if value<0:
+				add_log("Negative value found on energy report?",{
+					"deviceID":applianceID,
+					"value":value,
+					"raw":raw_data
+					})
+				return
 			self.updateApplianceValue(app["id"], value)
 
 		except:
@@ -937,6 +944,13 @@ class DBMgr(object):
 		# check phantom user
 		if self.list_of_rooms["nwc1000m_a1"]["phantom_user"] != "testUser1":
 			print("phantom_user not set correctly.")
+			sys.exit(-1)
+
+		# check negative energy
+		self.ReportEnergyValue("nwc1008_light", 2, {"testing":True,"message":"unit_test_negative_device"})
+		self.ReportEnergyValue("nwc1008_light", -3, {"testing":True,"message":"unit_test_negative_device"})
+		if self.list_of_appliances["nwc1008_light"]["value"]!=2:
+			print('Failed when negative energy report arrives')
 			sys.exit(-1)
 
 
