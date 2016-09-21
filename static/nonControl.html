@@ -218,7 +218,7 @@ function renderAppliance(appls){
 				.addClass(appl.value==0?'cell_inactive':'cell_active')
 				.append($('<p>').addClass('cell_title').text(appl.name))
 				.append($('<p>').addClass('cell_number').text('Total: ' + format(appl.value)+' W'))
-				.append($('<p>').addClass('cell_share_number').text('Share: ' +format(appl.share) + ' W'))
+				.append($('<p>').addClass('cell_share_number').text('Your Share: ' +format(appl.share) + ' W'))
 				.append($('<p>').addClass('clear'))
 				.appendTo('#appl_list');
 		});
