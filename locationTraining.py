@@ -2,17 +2,37 @@ import json
 import web
 import cloudserver
 from KNNalgo import KNearestNeighbors
-from trainingData import training
 from LocationBeacons import BeaconVals
 urls = (
 "/","train")
 
+
+class generateTrainingData:
+    trainingData = []
+    trainingLabels = []
+    def generate(self):
+        infile = "backup2.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        for i in range(len(x)):
+            y = x[i].split('\t')
+            last = y[-1].split('\n')
+            y[-1] = last[0]
+            y = map(int, y)
+            self.trainingData.append(y)
+
+        infile = "backuplabels2.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        for j in range(len(x)):
+            y = x[j]
+            last = y.split('\n')
+            y = last[0]
+            self.trainingLabels.append(y)
+
 class train:
-    points = training.datapoints
-    labels = training.labelNames
-    labelNumber = training.labelNumber
     K = 11
-    KNN = KNearestNeighbors(3, points, labelNumber)
+    #KNN = KNearestNeighbors(3, points, labelNumber)
     rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
     def POST(self):
         raw_data=web.data()
@@ -32,17 +52,17 @@ class train:
             infile = "backuplabels2.txt"
             f = open(infile, 'r')
             x = f.readlines()
-            BeaconVals.labelNumber = []
+            BeaconVals.labels = []
             for j in range(len(x)):
                 y = x[j]
                 last = y.split('\n')
                 y = last[0]
 
-                BeaconVals.labelNumber += [self.rooms.index(y)]               
+                BeaconVals.labels.append(y)              
             return "successful reupload"
         if (locs[0] == "DES"):
             BeaconVals.points = []
-            BeaconVals.labelNumber = []
+            BeaconVals.labels = []
             return "successful destroy"
 
         l = locs[1:]
@@ -52,20 +72,20 @@ class train:
                 file.writelines('\t'.join(str(j) for j in i) + '\n' for i in BeaconVals.points)
             outfile2 = "backuplabels2.txt"
             with open(outfile2, 'w') as file:
-                file.writelines(str(self.rooms[i]) + '\n' for i in BeaconVals.labelNumber)
+                file.writelines(str(self.rooms[i]) + '\n' for i in BeaconVals.labels)
             locs = map(int, l)
-            if (len(BeaconVals.labelNumber) < self.K):
+            if (len(BeaconVals.labels) < self.K):
                 ret = "not enough data,"
-                ret += str(len(BeaconVals.labelNumber))
+                ret += str(len(BeaconVals.labels))
                 return ret
-            K = KNearestNeighbors(self.K, BeaconVals.points, BeaconVals.labelNumber)
+            K = KNearestNeighbors(self.K, BeaconVals.points, BeaconVals.labels)
             location = K.classifier(locs)
-            return self.rooms[location] + ",LOL"
+            return str(location) + ",LOL"
         ID = locs[0]
-        intID = int(ID)
+        intID = ID
         locs = map(int, l)
         BeaconVals.points.append(locs)
-        BeaconVals.labelNumber.append(intID)
+        BeaconVals.labels.append(intID)
         cloudserver.db.SaveLocationData(intID, locs)
         return str(len(BeaconVals.labelNumber)) + " LOL"
 

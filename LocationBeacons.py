@@ -2,9 +2,9 @@ import json
 import web
 import cloudserver
 from KNNalgo import KNearestNeighbors
-from trainingData import training
 import datetime
 import time
+from locationTraining import generateTrainingData
 urls = (
 "/","BeaconVals")
 PUBLIC_SPACE = 0
@@ -32,47 +32,22 @@ def labIntToName(x):
         5:"Danino Lab"
     }[x]
 
-class generateTrainingData:
-    trainingData = []
-    trainingLabels = []
-    def generate(self):
-        rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
-        infile = "backup2.txt"
-        f = open(infile, 'r')
-        x = f.readlines()
-        for i in range(len(x)):
-            y = x[i].split('\t')
-            last = y[-1].split('\n')
-            y[-1] = last[0]
-            y = map(int, y)
-            self.trainingData.append(y)
-
-        infile = "backuplabels2.txt"
-        f = open(infile, 'r')
-        x = f.readlines()
-        for j in range(len(x)):
-            y = x[j]
-            last = y.split('\n')
-            y = last[0]
-            self.trainingLabels += [rooms.index(y)]
 
 class BeaconVals:
     trainingDataGenerator = generateTrainingData()
     trainingDataGenerator.generate()
     points = trainingDataGenerator.trainingData
-    labels = training.labelNames
-    labelNumber = trainingDataGenerator.trainingLabels
-    sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
+    #labels = training.labelNames
+    labels = trainingDataGenerator.trainingLabels
+    #sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
 
     def POST(self):
-
-        
         raw_data=web.data()
         locs = raw_data.split(',')
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        KNN = KNearestNeighbors(11, self.points, self.labelNumber)
+        KNN = KNearestNeighbors(11, self.points, self.labels)
         location = KNN.classifier(locs)
 
 
@@ -98,7 +73,7 @@ class BeaconVals:
             cloudserver.db.ReportLocationAssociation(ID, None)
             return cloudserver.db._encode(unknown_return,False)
 
-        cloudserver.db.ReportLocationAssociation(ID, self.labels[location])
+        cloudserver.db.ReportLocationAssociation(ID, location)
         moveUsers = cloudserver.SE.moveUsers
         changeScheduleUsers = cloudserver.SE.changeScheduleUsers
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
@@ -126,8 +101,8 @@ class BeaconVals:
                 })
             return Others
 
-        json_return["location_id"]=self.labels[location]
-        json_return["location"]=cloudserver.db.RoomIdToName(self.labels[location])
+        json_return["location_id"]=location
+        json_return["location"]=cloudserver.db.RoomIdToName(location)
         if (cloudserver.db.userIDLookup(ID) is None):
             print(ID)
             return cloudserver.db._encode(json_return,False)
