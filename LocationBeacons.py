@@ -4,7 +4,7 @@ import cloudserver
 from KNNalgo import KNearestNeighbors
 import datetime
 import time
-from locationTraining import generateTrainingData
+from locationTraining import train
 urls = (
 "/","BeaconVals")
 PUBLIC_SPACE = 0
@@ -34,11 +34,11 @@ def labIntToName(x):
 
 
 class BeaconVals:
-    trainingDataGenerator = generateTrainingData()
+    trainingDataGenerator = train()
     trainingDataGenerator.generate()
-    points = trainingDataGenerator.trainingData
+    #points = trainingDataGenerator.trainingData
     #labels = training.labelNames
-    labels = trainingDataGenerator.trainingLabels
+    #labels = trainingDataGenerator.trainingLabels
     #sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
 
     def POST(self):
@@ -47,7 +47,7 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        KNN = KNearestNeighbors(11, self.points, self.labels)
+        KNN = KNearestNeighbors(11, trainingDataGenerator.trainingData, trainingDataGenerator.trainingLabels)
         location = KNN.classifier(locs)
 
 
