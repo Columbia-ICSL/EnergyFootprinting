@@ -3,8 +3,7 @@
 <head>
 <title> Personal Energy Footprint html frame test</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/zepto.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/zepto/1.1.6/modules/fx.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript">
 // ==== Helper Functions
 function _now(){
@@ -25,28 +24,29 @@ var query=(function(s){
 var userID=query['id'];
 // ==== State management from Android/iOS parent
 function atForeground(){
-	$('#opened').innerText=_now();
-	$('#foreground').innerText='Foreground.';
+	$('#opened').text(_now());
+	initVisualization();
 }
 function atBackground(){
-	$('#closed').innerText=_now();
-	$('#foreground').innerText='Background.';
+	//control page does nothing.
 }
 window.onload=function(){
-	$('#loaded').innerText=_now();
 	initVisualization();
 }
 // ==== Visualization
 function initVisualization(){
 	// Check control group
 	$.get('/api/userManagement/',
-		{id:userID},
+		{id:userID, rand:Math.random()},
 		function(isControl){
-			if(isControl=='false')
+			if(isControl=='false'){
+				$('#controlGroup').hide();
 				initVisualizationNoControl();
-			else
+			}
+			else{
 				$('#controlGroup').show();
 				console.info('Control group, do nothing. Check response:',isControl);
+			}
 		},
 		'text');
 }
@@ -55,7 +55,7 @@ function initVisualizationNoControl(){
 	//$('#controlGroup').hide();
 	// TODO: render visualization box
 	// Show visualization box
-	$('#mainBody').show();
+	// $('#mainBody').show();
 	location.href='./nonControl.html?id='+userID;
 }
 </script>
@@ -88,25 +88,19 @@ body{
 	<p>
 	Stay tuned!
 	</p>
+
+	<span id="opened" style="opacity:0.0">Loaded at?</span>
 </div>
 
+
 <div id="mainBody">
-	Here are the actual figures. TODO.
+	Loading...
 </div>
 
 <div id="debugInfo">
-<h1>Hello!</h1>
 <p>
 Page loaded time:
 <span id="loaded">Loaded at?</span>
-</p>
-<p>
-Last shown in foreground:
-<span id="opened">Opened at?</span>
-</p>
-<p>
-Last thrown to background:
-<span id="closed">closed at?</span>
 </p>
 <p>
 Current state:
