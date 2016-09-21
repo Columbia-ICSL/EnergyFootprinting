@@ -78,14 +78,20 @@ function fetchAndRender(){
 function getStorageUpperBound(){
 	var end=Math.floor((+new Date())/1000);
 	var start=end-86400*3;
+	var minValue=end;
 	try{
 		var oldData=localStorage.getItem(storageKey);
 		if(oldData!=null){
 			oldData=JSON.parse(oldData);
 			var maxValue=start;
-			for(var index in oldData.data)
+			for(var index in oldData.data){
 				if(parseInt(index)>maxValue)
 					maxValue=parseInt(index);
+				if(parseInt(index)<minValue)
+					minValue=parseInt(index);
+			}
+			if(minValue>start)return start;
+			
 			console.log('Storage timestamp max=',maxValue,'current end ts:',end);
 			return Math.min(maxValue,end-5*60);
 		}
@@ -212,7 +218,7 @@ function renderAppliance(appls){
 				.addClass(appl.value==0?'cell_inactive':'cell_active')
 				.append($('<p>').addClass('cell_title').text(appl.name))
 				.append($('<p>').addClass('cell_number').text('Total: ' + format(appl.value)+' W'))
-				.append($('<p>').addClass('cell_share_number').text('Share: ' +format(appl.share) + ' W'))
+				.append($('<p>').addClass('cell_share_number').text('Your Share: ' +format(appl.share) + ' W'))
 				.append($('<p>').addClass('clear'))
 				.appendTo('#appl_list');
 		});
@@ -361,6 +367,8 @@ function renderTimeline(ungrouped_timeline){
             useUTC: false
         }
     });
+
+    var linePower=200;
 	
 	$('#chart_timeline').highcharts('StockChart', {
 		chart: {
@@ -442,7 +450,16 @@ function renderTimeline(ungrouped_timeline){
 	        },
         },
         yAxis:{
-        	labels:{style:whiteStyle}
+        	labels:{style:whiteStyle},
+        	plotLines:[{
+		        value: linePower,
+		        color: 'red',
+		        dashStyle: 'shortdash',
+		        width: 2,
+		        label: {
+		            text: 'Recommended Footprint'
+		        }
+		    }],
         },
         tooltip: {
             valueDecimals: 2,
@@ -465,8 +482,10 @@ function renderTimeline(ungrouped_timeline){
                     y2: 1
                 },
                 stops : [
-                    [0, Highcharts.getOptions().colors[0]],
-                    [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get('rgba')]
+                    [0, 'rgba(255, 155, 14, 0.8)'],
+                    [0.4, 'rgba(225, 225, 14, 0.5)'],
+                    [0.8, 'rgba(100, 255, 14, 0.3)'],
+                    [1, 'rgba(0, 255, 14, 0.1)']
                 ]
             }
         }]
