@@ -135,6 +135,7 @@ class train:
             #    ret += str(len(self.trainingLabels))
             #    return ret
 
+            locs = map(int, l)
             self.generate()
             KNN = KNearestNeighbors(list(zip(self.trainingData, self.trainingLabels)))
             pairs=KNN.get_nearest_pairs(locs)
