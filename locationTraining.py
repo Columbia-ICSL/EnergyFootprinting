@@ -136,10 +136,12 @@ class train:
             #    return ret
 
             locs = map(int, l)
-            self.generate()
+            print('Location Predict request:',locs)
             KNN = KNearestNeighbors(list(zip(self.trainingData, self.trainingLabels)))
             pairs=KNN.get_nearest_pairs(locs)
+            print('Predicted pairs:',pairs)
             location = KNN.majority_vote(pairs)
+            print(location)
             return str(location[0])+':'+str(location[1]) + ",LOL"
         ID = locs[0]
         intID = ID
