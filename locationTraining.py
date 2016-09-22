@@ -134,7 +134,7 @@ class train:
                 ret = "not enough data,"
                 ret += str(len(self.trainingLabels))
                 return ret
-                
+
             self.generate()
             KNN = KNearestNeighbors(list(zip(self.trainingData, self.trainingLabels)))
             pairs=KNN.get_nearest_pairs(locs)
@@ -145,7 +145,6 @@ class train:
         locs = map(int, l)
         self.trainingData.append(locs)
         self.trainingLabels.append(intID)
-        cloudserver.db.SaveLocationData(intID, locs)
         return str(len(self.trainingLabels)) + " LOL"
 
     def GET(self):
