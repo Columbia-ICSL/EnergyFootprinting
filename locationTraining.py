@@ -6,6 +6,60 @@ from KNNalgo import KNearestNeighbors
 urls = (
 "/","train")
 
+class LocationPredictor:
+    def __init__(self):
+        #read sample data from DB
+        samples=cloudserver.db.getAllLocationSamples()
+        pairs=[(s["sample"],s["label"]) for s in samples]
+
+        #prepare KNN
+        self.KNN=KNearestNeighbors(pairs)
+
+        #list_of_rooms={}
+        list_of_rooms_each_lab={}
+        for room in cloudserver.db.ROOM_DEFINITION:
+            id=room["id"]
+            lab=room["lab"]
+            #if id not in list_of_rooms:
+            #    list_of_rooms[id]=id
+
+            if lab not in list_of_rooms_each_lab:
+                list_of_rooms_each_lab[lab]=[]
+            list_of_rooms_each_lab[lab]+=[id]
+
+        #prepare lab prior, as a list of votes (roomID, #vote)
+        prior_vote_const=2
+        self.prior_votes={}
+        self.prior_votes[0]=[]
+        for lab in list_of_rooms_each_lab:
+            if lab>0:
+                prior=[]
+                for id in list_of_rooms_each_lab[lab]:
+                    prior.append((id,prior_vote_const))
+                self.prior_votes[lab]=prior
+
+        print("prior votes:")
+        print(self.prior_votes)
+
+
+    def personal_classifier(self, ID, sample):
+        prior=[]
+        screenName=cloudserver.db.userIDLookup(ID)
+        if screenName!=None:
+            usernameAttributes = cloudserver.db.getAttributes(screenName, False)
+            labInt = usernameAttributes["lab"]
+            prior=self.prior_votes[labInt]
+
+        nearest_votes=self.KNN.get_nearest_pairs(sample)
+        result_pair=self.KNN.majority_vote(prior+nearest_votes)
+
+        return result_pair[0]
+     
+        #prepare prior knowledge, or None
+        #run KNN
+        #find maximum
+        #return roomID
+
 class train:
     trainingData = []
     trainingLabels = []
@@ -17,7 +71,7 @@ class train:
             y = x[i].split('\t')
             last = y[-1].split('\n')
             y[-1] = last[0]
-            y = map(int, y)
+            y=[int(v) for v in y]
             self.trainingData.append(y)
 
         infile = "backuplabels2.txt"
@@ -28,9 +82,14 @@ class train:
             last = y.split('\n')
             y = last[0]
             self.trainingLabels.append(y)
-    K = 11
-    #KNN = KNearestNeighbors(3, points, labelNumber)
-    rooms = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
+
+        if(len(self.trainingData)!=len(self.trainingLabels)):
+            raise Exception("Training data and Training label length don't match.")
+        cloudserver.db.DestroyLocationSamples()
+        for i in range(len(self.trainingLabels)):
+            cloudserver.db.addLocationSample(self.trainingLabels[i],self.trainingData[i])
+        print(str(len(self.trainingLabels))+" samples Added to database from text file.")
+
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
@@ -87,7 +146,7 @@ class train:
         return str(len(self.trainingLabels)) + " LOL"
 
     def GET(self):
-        result = cloudserver.db.QueryLocationData(0)
-        return result
+        #result = cloudserver.db.QueryLocationData(0)
+        return
 
 locationTraining = web.application(urls, locals());

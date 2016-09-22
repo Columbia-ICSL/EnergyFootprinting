@@ -62,7 +62,7 @@ function init(){
 
 window.onload=init;
 
-var storageKey='personal_snapshot_timeline_v1:'+userID;
+var storageKey='personal_snapshot_timeline_v2:'+userID;
 var API_endpoint='/api/Query/QueryPersonPersonalConcise/'+userID+'?client=AJAX+phone+UI';
 function fetchAndRender(){
 	var end=Math.floor((+new Date())/1000);

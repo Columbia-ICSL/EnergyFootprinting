@@ -1,13 +1,12 @@
 import web
-import json
 import os
 import datetime
 import time
 import calendar
-import pymongo
 
-import blog
 import DBMgr
+db=DBMgr.DBMgr()
+
 import Energy
 import Location
 import LocationBeacons
@@ -45,20 +44,6 @@ urls = (
 
 from DBMgr import MongoJsonEncoder
 
-               
-#trainingData = training.datapoints
-#trainingLabels = training.labelNumber
-#outfile = "backup2.txt"
-#with open(outfile, 'w') as file:
-#    file.writelines('\t'.join(str(j) for j in i) + '\n' for i in trainingData)
-#outfile2 = "backuplabels2.txt"
-#with open(outfile2, 'w') as file:
-#    file.writelines(str(rooms[i]) + '\n' for i in trainingLabels)
-
-#client = pymongo.MongoClient()
-#client = pymongo.MongoClient('localhost', 27017)
-#db = client.test_database
-db=DBMgr.DBMgr()
 SE = suggestionsEngine.suggestionsEngine()
 #TD = generateTrainingData()
 

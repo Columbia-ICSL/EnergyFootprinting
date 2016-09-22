@@ -242,11 +242,6 @@ class DBMgr(object):
 		return ret[0]["userID"]
 	
 	def userIDLookup(self, userID):
-		self.LogRawData({
-			"type":"userIDLookup",
-			"time":self._now(),
-			"userID":userID
-			})
 		ret=list(self.registration_col1.find({"userID":userID}))
 		if len(ret)!=1:
 			return None
@@ -1176,25 +1171,21 @@ class DBMgr(object):
 
 ####################################################################
 
-	def SaveLocationData(self, person, location):
-		self.dbc.db1.coll1.insert({
-			"location":location,
-			"person":person,
+	def addLocationSample(self, label, sample):
+		return self.dbc.loc_db.sample_col.insert({
+			"label":label,
+			"sample":sample,
 			"timestamp":datetime.datetime.utcnow()
 		})
 
-	def DestroyLocationData(self):
-		self.dbc.db1.coll1.remove({})
+	def getAllLocationSamples(self):
+		return list(self.dbc.loc_db.sample_col.find())
 
-	def QueryLocationData(self, person):
-		result = []
-		condition = {
-			"person":person
-		}
-		iterator = self.dbc.db1.coll1.find(condition).sort([("timestamp",pymongo.DESCENDING)])
-		x = list(iterator)
-		y = x[0]
-		return y['l1']
+
+	def DestroyLocationSamples(self):
+		self.dbc.loc_db.sample_col.remove({})
+
+		
 
 if __name__ == "__main__":
 	dbm=DBMgr(False)
