@@ -83,12 +83,12 @@ class train:
             y = last[0]
             self.trainingLabels.append(y)
 
-        if(len(self.trainingData)!=len(self.trainingLabels)):
-            raise Exception("Training data and Training label length don't match.")
-        cloudserver.db.DestroyLocationSamples()
-        for i in range(len(self.trainingLabels)):
-            cloudserver.db.addLocationSample(self.trainingLabels[i],self.trainingData[i])
-        print(str(len(self.trainingLabels))+" samples Added to database from text file.")
+        #if(len(self.trainingData)!=len(self.trainingLabels)):
+        #    raise Exception("Training data and Training label length don't match.")
+        #cloudserver.db.DestroyLocationSamples()
+        #for i in range(len(self.trainingLabels)):
+        #    cloudserver.db.addLocationSample(self.trainingLabels[i],self.trainingData[i])
+        #print(str(len(self.trainingLabels))+" samples Added to database from text file.")
 
     def POST(self):
         raw_data=web.data()
@@ -123,17 +123,17 @@ class train:
 
         l = locs[1:]
         if (locs[0] == "GET"):
-            outfile = "backup2.txt"
-            with open(outfile, 'w') as file:
-                file.writelines('\t'.join(str(j) for j in i) + '\n' for i in self.trainingData)
-            outfile2 = "backuplabels2.txt"
-            with open(outfile2, 'w') as file:
-                file.writelines(str(self.rooms[i]) + '\n' for i in self.trainingLabels)
-            locs = map(int, l)
-            if (len(self.trainingLabels) < self.K):
-                ret = "not enough data,"
-                ret += str(len(self.trainingLabels))
-                return ret
+            #outfile = "backup2.txt"
+            #with open(outfile, 'w') as file:
+            #    file.writelines('\t'.join(str(j) for j in i) + '\n' for i in self.trainingData)
+            #outfile2 = "backuplabels2.txt"
+            #with open(outfile2, 'w') as file:
+            #    file.writelines(str(self.rooms[i]) + '\n' for i in self.trainingLabels)
+            #locs = map(int, l)
+            #if (len(self.trainingLabels) < self.K):
+            #    ret = "not enough data,"
+            #    ret += str(len(self.trainingLabels))
+            #    return ret
 
             self.generate()
             KNN = KNearestNeighbors(list(zip(self.trainingData, self.trainingLabels)))
@@ -145,7 +145,9 @@ class train:
         locs = map(int, l)
         self.trainingData.append(locs)
         self.trainingLabels.append(intID)
-        return str(len(self.trainingLabels)) + " LOL"
+        print('Submitted ID=',ID)
+        print('Training sample=',locs)
+        #return str(len(self.trainingLabels)) + " LOL"
 
     def GET(self):
         #result = cloudserver.db.QueryLocationData(0)
