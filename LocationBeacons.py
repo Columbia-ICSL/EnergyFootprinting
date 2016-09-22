@@ -43,7 +43,7 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        location = predictor.personal_classifier(ID,locs)
+        location = self.predictor.personal_classifier(ID,locs)
 
         checkUnknown = False
         for loc in locs:
