@@ -1,10 +1,11 @@
 import json
 import web
 import cloudserver
-from KNNalgo import KNearestNeighbors
+
+import locationTraining  
+
 import datetime
 import time
-from locationTraining import train
 urls = (
 "/","BeaconVals")
 PUBLIC_SPACE = 0
@@ -34,30 +35,16 @@ def labIntToName(x):
 
 
 class BeaconVals:
-    trainingDataGenerator = train()
-    trainingDataGenerator.generate()
-    #points = trainingDataGenerator.trainingData
-    #labels = training.labelNames
-    #labels = trainingDataGenerator.trainingLabels
-    #sortedRoomList = ["nwc4", "nwc7", "nwc8", "nwc10", "nwc10m", "nwc1000m_a1", "nwc1000m_a2", "nwc1000m_a3", "nwc1000m_a4", "nwc1000m_a5", "nwc1000m_a6", "nwc1000m_a7", "nwc1000m_a8", "nwc1003b", "nwc1003g","nwc1006", "nwc1007", "nwc1008", "nwc1009", "nwc1010", "nwc1003b_t", "nwc1003b_a", "nwc1003b_b", "nwc1003b_c", "10F_hallway", "DaninoWetLab"]
-
+    predictor=locationTraining.LocationPredictor()
+    
     def POST(self):
         raw_data=web.data()
         locs = raw_data.split(',')
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        KNN = KNearestNeighbors(11, self.trainingDataGenerator.trainingData, self.trainingDataGenerator.trainingLabels)
-        location = KNN.classifier(locs)
+        location = predictor.personal_classifier(ID,locs)
 
-
-        #username = cloudserver.db.userIDLookup(ID)
-        #if (username is not None):
-        #    alpha = username.split('_')
-        #    if (len(alpha >= 1)):
-        #        if (alpha[0] == "alpha"):
-        #            ID = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
-        #            location = cloudserver.db.getUserLocation(ID)
         checkUnknown = False
         for loc in locs:
             if (loc != -100):
