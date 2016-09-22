@@ -27,7 +27,7 @@ class KNearestNeighbors:
 				vote_map[pair[0]]+=pair[1]
 			merged_votes=[]
 			for roomID in vote_map:
-				merged_votes+=(roomID,merged_votes[roomID])
+				merged_votes+=(roomID,vote_map[roomID])
 			return merged_votes
 
 		vote_pairs=merge_same_votes(vote_pairs)
