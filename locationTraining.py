@@ -134,8 +134,11 @@ class train:
                 ret = "not enough data,"
                 ret += str(len(self.trainingLabels))
                 return ret
-            K = KNearestNeighbors(self.K, self.trainingData, self.trainingLabels)
-            location = K.classifier(locs)
+                
+            self.generate()
+            KNN = KNearestNeighbors(list(zip(self.trainingData, self.trainingLabels)))
+            pairs=KNN.get_nearest_pairs(locs)
+            location = KNN.majority_vote(pairs)
             return str(location) + ",LOL"
         ID = locs[0]
         intID = ID
