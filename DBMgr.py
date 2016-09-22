@@ -515,7 +515,7 @@ class DBMgr(object):
 				continue
 			userLoc = self.getUserLocation(phantomUser)
 			if userLoc is not None:
-				if maxAppliance["name"] in self.list_of_rooms[userLoc]["appliances"]:
+				if maxAppliance["id"] in self.list_of_rooms[userLoc]["appliances"]:
 					print("Warning Log: user moved to a different space with same appliance footprint")
 					continue
 			if "phantom_time" in self.list_of_rooms[roomID]:
