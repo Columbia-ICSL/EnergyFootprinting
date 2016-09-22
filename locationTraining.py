@@ -140,7 +140,7 @@ class train:
             KNN = KNearestNeighbors(list(zip(self.trainingData, self.trainingLabels)))
             pairs=KNN.get_nearest_pairs(locs)
             location = KNN.majority_vote(pairs)
-            return str(location[0]+':'+location[1]) + ",LOL"
+            return str(location[0])+':'+str(location[1]) + ",LOL"
         ID = locs[0]
         intID = ID
         locs = map(int, l)
