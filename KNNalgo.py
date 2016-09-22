@@ -5,7 +5,7 @@ class KNearestNeighbors:
 	def get_nearest_pairs(self, sample, K=7):
 		distances=[]
 		for i in xrange(len(self.samplePairs)):
-			dist = self.EUDist(self.samplePairs[i][0], measurement)
+			dist = self.EUDist(self.samplePairs[i][0], sample)
 			distances.append((dist, self.samplePairs[i][1]))
 		sortedDistances = sorted(distances, key=lambda dist:dist[0])
 		return [(pair[1],1) for pair in sortedDistances[0:K]]
