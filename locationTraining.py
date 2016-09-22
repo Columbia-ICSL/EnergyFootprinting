@@ -147,7 +147,8 @@ class train:
         self.trainingLabels.append(intID)
         print('Submitted ID=',ID)
         print('Training sample=',locs)
-        #return str(len(self.trainingLabels)) + " LOL"
+        cloudserver.db.addLocationSample(ID, locs)
+        return str(cloudserver.db.countLocationSamples())+" LOL"
 
     def GET(self):
         #result = cloudserver.db.QueryLocationData(0)
