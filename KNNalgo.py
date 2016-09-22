@@ -8,9 +8,17 @@ class KNearestNeighbors:
 			dist = self.EUDist(self.samplePairs[i][0], sample)
 			distances.append((dist, self.samplePairs[i][1]))
 		sortedDistances = sorted(distances, key=lambda dist:dist[0])
-		return [(pair[1],1) for pair in sortedDistances[0:K]]
-		#majority = self.majority_vote(sortedDistances[0:self.K])
-		#return majority[0]
+		nearestPairs=sortedDistances[0:K]
+		#return [(pair[1],1) for pair in nearestPairs]
+
+		minDist=min([pair[0] for pair in nearestPairs])
+		if minDist<1:
+			minDist=1
+		def weight(dist):
+			if dist<1:
+				dist=1
+			return minDist*1.0/dist	
+		return [(pair[1],weight(pair[0])) for pair in nearestPairs]
 		
 	def EUDist(self, Xmeas, Ymeas):
 		sum = 0
