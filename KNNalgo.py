@@ -1,3 +1,11 @@
+def zero_offset(item, mismatch_penalty=-10):
+	default = -100
+	count=sum([1 for x in item if x!=default])
+	if(count==0):count=1
+	total=sum([x for x in item if x!=default])
+	offset=total*1.0/count
+	return [x-(int(x!=default)*offset)-(int(x==default)*(default-mismatch_penalty)) for x in item]
+
 class KNearestNeighbors:
 	def __init__(self, samplePairs):#pairs of (sample, label)
 		self.samplePairs = samplePairs
@@ -5,7 +13,7 @@ class KNearestNeighbors:
 	def get_nearest_pairs(self, sample, K=7):
 		distances=[]
 		for i in xrange(len(self.samplePairs)):
-			dist = self.EUDist(self.samplePairs[i][0], sample)
+			dist = self.EUDist(zero_offset(self.samplePairs[i][0]), zero_offset(sample))
 			distances.append((dist, self.samplePairs[i][1]))
 		sortedDistances = sorted(distances, key=lambda dist:dist[0])
 		nearestPairs=sortedDistances[0:K]
