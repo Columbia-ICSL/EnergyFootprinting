@@ -151,7 +151,7 @@ class BeaconVals:
                 print("Phantom: {0} Suggestion: {1}".format(ID, body))
                 reward = 3
                 doPush = 0
-                if (phantomMaxAppliance["type"] != "HVAC" and phantomMaxAppliance["actionable"] == ACTIONABLE):
+                if (phantomMaxAppliance["type"] != "HVAC"):
                     doPush = 1
                 messageID = "{0}|{1}|{2}".format("phantom", ID, phantomRoom)
                 json_return["suggestions"].append(

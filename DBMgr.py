@@ -503,6 +503,10 @@ class DBMgr(object):
 			maxPower = 0
 			maxAppliance = None
 			for applianceID in appliances:
+				peopleNumber = self.list_of_appliances[applianceID]["total_users"]
+				actionable = self.list_of_appliances[applianceID]["actionable"]
+				if (peopleNumber != 0 or not actionable):
+					continue
 				powerVal = self.list_of_appliances[applianceID]["value"]
 				if ((powerVal > maxPower) and (powerVal > warningPowerLimit)):
 					maxPower = powerVal
