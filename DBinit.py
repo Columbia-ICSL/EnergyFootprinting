@@ -119,8 +119,12 @@ class DBInit(object):
 
         for a in range(1,9,1):#1..8
             for p in range(1,3,1):#1..2
-                addAppliance("nwc1000m_a"+str(a)+"_plug"+str(p), "Power strip #"+str(p)+" in Mezzaine Level, Aisle #"+str(a), "Electrical", "nwc1000m_a"+str(a), ACTIONABLE, NO_DUTY_CYCLE)
+                if not (a==7 and p==1):
+                    addAppliance("nwc1000m_a"+str(a)+"_plug"+str(p), "Power strip #"+str(p)+" in Mezzaine Level, Aisle #"+str(a), "Electrical", "nwc1000m_a"+str(a), ACTIONABLE, NO_DUTY_CYCLE)
         
+        addAppliance("nwc1000m_a7_plug1", "Power strip #3 (Refrigerator&Zack) in Mezzaine Level, Aisle #6", "Electrical", "nwc1000m_a6", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1000m_a1_plug3", "Power strip #3 in Mezzaine Level, Aisle #1", "Electrical", "nwc1000m_a1", ACTIONABLE, NO_DUTY_CYCLE)
+
         addAppliance("nwc1000m_light", "Shared Lighting in Mezzaine Level", "Light", "nwc1000m_.*", NOT_ACTIONABLE, NO_DUTY_CYCLE)
 
         self._SetConfigValue("APPLIANCE_DEFINITION",self.APPLIANCE_DEFINITION)

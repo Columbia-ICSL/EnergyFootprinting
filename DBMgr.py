@@ -1189,6 +1189,8 @@ class DBMgr(object):
 	def DestroyLocationSamples(self):
 		self.dbc.loc_db.sample_col.remove({})
 
+	def countLocationSamples(self):
+		return self.dbc.loc_db.sample_col.count({})
 		
 
 if __name__ == "__main__":
