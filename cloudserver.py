@@ -20,7 +20,7 @@ from bson import ObjectId
 from threading import Thread
 import suggestionsEngine
 from trainingData import training
-
+import visualizationAPI
 urls = (
  
     "/api/EnergyReport",Energy.EnergyReport,
@@ -37,6 +37,7 @@ urls = (
     "/api/SaveShot",Manage.Manager,
     "/realtime/(.*)","Realtime",
     "/realtime","Realtime",
+    "/api/visualization", visualizationAPI.visualization,
     "/debug","Debug",
     "/recent","Recent",
     "/","index"
