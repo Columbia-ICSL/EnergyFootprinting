@@ -78,6 +78,7 @@ function fetchAndRender(){
 function getStorageUpperBound(){
 	var end=Math.floor((+new Date())/1000);
 	var start=end-86400*3;
+	return start;//Temporarily disabled localstorage
 	var minValue=end;
 	try{
 		var oldData=localStorage.getItem(storageKey);
@@ -100,6 +101,7 @@ function getStorageUpperBound(){
 }
 
 function mergeDataWithStorage(data){
+	return data;//Temporarily disabled localstorage
 	try{
 		var oldData=localStorage.getItem(storageKey);
 		if(oldData!=null){

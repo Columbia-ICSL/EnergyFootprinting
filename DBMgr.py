@@ -797,7 +797,7 @@ class DBMgr(object):
 			}
 		}
 		projection = {"_id":0}
-		iterator = self.snapshots_col_users.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_users.find(condition, projection)#.sort([("timestamp", pymongo.DESCENDING)])
 		for snapshot in iterator:
 			ts=self._toUnix(snapshot["timestamp"])
 			dict_raw_snapshots[ts]=snapshot
@@ -854,7 +854,7 @@ class DBMgr(object):
 			}
 		}
 		projection = {"_id":0}
-		iterator = self.snapshots_col_appliances.find(condition, projection).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_appliances.find(condition, projection)#.sort([("timestamp", pymongo.DESCENDING)])
 		for snapshot in iterator:
 			ts=self._toUnix(snapshot["timestamp"])
 			dict_raw_snapshots[ts]=snapshot
