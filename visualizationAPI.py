@@ -58,10 +58,10 @@ class binRoomOccupancy:
 			return_bins = dict_appl[appl_id]
 			for bin_start in sorted(return_bins.keys()):
 				BIN_ST = return_bins[bin_start]
-				if (BIN_ST["value"] == None):
+				if (BIN_ST["avg_users"] == None):
 					appl_list.append(0)
 				else:
-					appl_list.append(BIN_ST["value"])
+					appl_list.append(BIN_ST["avg_users"])
 			json_return[appl_id] = appl_list
 		return cloudserver.db._encode(json_return, False)
 
