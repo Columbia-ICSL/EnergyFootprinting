@@ -147,7 +147,7 @@ class DBMgr(object):
 		self.registration_col1.ensure_index('screenName', unique=True)
 		self.ranking = self.dbc.db.ranking
 		self.ranking.ensure_index('user', unique=True)
-
+		self.indirectSensing = self.dbc.db.indirectSensing
 		self.suggestionsML = self.dbc.db.suggestionsML
 		#user registration
 		self.config_col=self.dbc.db.config
@@ -407,7 +407,6 @@ class DBMgr(object):
 	def LogRawData(self,obj):
 		obj["_log_timestamp"]=datetime.datetime.utcnow()
 		self.raw_data.insert(obj)
-
 
 
 	def ReportEnergyValue(self, applianceID, value, raw_data=None):
@@ -1160,8 +1159,13 @@ class DBMgr(object):
 		return U["balance"]
 
 
-
-
+	def indirectSensingCollecting(self, applianceID, value):
+		self.indirectSensing.insert({
+			"applianceID":applianceID,
+			"value":value,
+			"timestamp":datetime.datetime.utcnow()
+			})
+		
 ####################################################################
 ## Machine Learning Functions, for self.suggestionsML ##############
 ####################################################################

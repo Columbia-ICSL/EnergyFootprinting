@@ -8,6 +8,7 @@ import DBMgr
 db=DBMgr.DBMgr()
 
 import Energy
+import indirectSensingCollection
 import Location
 import LocationBeacons
 import locationTraining
@@ -19,11 +20,13 @@ import Manage
 from bson import ObjectId
 from threading import Thread
 import suggestionsEngine
+
 from trainingData import training
 import visualizationAPI
 urls = (
  
     "/api/EnergyReport",Energy.EnergyReport,
+    "api/IndirectSensing", indirectSensingCollection.IndirectSensing,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
