@@ -26,7 +26,7 @@ import visualizationAPI
 urls = (
  
     "/api/EnergyReport",Energy.EnergyReport,
-    "api/IndirectSensing", indirectSensingCollection.IndirectSensing,
+    "/api/IndirectSensing", indirectSensingCollection.IndirectSensing,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
