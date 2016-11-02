@@ -9,6 +9,7 @@ db=DBMgr.DBMgr()
 
 import Energy
 import indirectSensingCollection
+import particleSensorCollection
 import Location
 import LocationBeacons
 import locationTraining
@@ -27,6 +28,7 @@ urls = (
  
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/IndirectSensing", indirectSensingCollection.IndirectSensing,
+    "/api/particleSensing", particleSensorCollection.particleSensing,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range

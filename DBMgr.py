@@ -148,6 +148,7 @@ class DBMgr(object):
 		self.ranking = self.dbc.db.ranking
 		self.ranking.ensure_index('user', unique=True)
 		self.indirectSensing = self.dbc.db.indirectSensing
+		self.particleSensor = self.dbc.db.particleSensor
 		self.suggestionsML = self.dbc.db.suggestionsML
 		#user registration
 		self.config_col=self.dbc.db.config
@@ -1165,6 +1166,24 @@ class DBMgr(object):
 			"value":value,
 			"timestamp":datetime.datetime.utcnow()
 			})
+	
+	def particleSensorCollecting(self, particleSensorNum, PM1L, PM2_5L, PM10L, PM1_0A, PM2_5A, PM10A, um03, um05, um1, um25, um5, um10):
+		self.particleSensor.insert({
+			"particleSensor":particleSensorNum,
+			"PM1":PM1L,
+			"PM2":PM2_5L,
+			"PM3":PM10L,
+			"PM4":PM1_0A,
+			"PM5":PM2_5A,
+			"PM6":PM10A,
+			"um03":um03,
+			"um05":um05,
+			"um1":um1,
+			"um25":um25,
+			"um5":um5,
+			"um10":um10,
+			"timestamp":datetime.datetime.utcnow()
+			})	
 		
 ####################################################################
 ## Machine Learning Functions, for self.suggestionsML ##############
