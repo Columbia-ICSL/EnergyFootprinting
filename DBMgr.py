@@ -133,6 +133,10 @@ class DBMgr(object):
 		return self.list_of_appliances[id]["name"]
 	def ApplIdToVal(self,id):
 		return self.list_of_appliances[id]["value"]
+	def ApplIdToType(self,id):
+		return self.list_of_appliances[id]["type"]
+	def ApplIdToRoom(self,id):
+		return self.list_of_appliances[id]["room"]
 ####################################################################
 
 	def _encode(self,data,isPretty):
@@ -202,6 +206,73 @@ class DBMgr(object):
 			"data":data,
 			"timestamp":datetime.datetime.utcnow()
 			})
+
+####################################################################
+## Data Visualization ##############################################
+####################################################################
+
+	def buildingFootprint(self, start, end):
+		### HERE ###
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		iterator = self.snapshots_col_rooms.find(condition).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			lst = shot["data"]
+			energyVal = 0
+			item = {}
+			item["timestamp"] = shot["timestamp"]
+			for app in lst:
+				energyVal += app["value"]
+			item["data"] = energyVal
+			result += [item]
+		return self._encode(result, True)
+
+	def buildingFootprintDisaggregated(self, start, end):
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		iterator = self.snapshots_col_rooms.find(condition).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			lst = shot["data"]
+			energyVal = {}
+			energyVal["HVAC"] = 0
+			energyVal["Light"] = 0
+			energyVal["Electrical"] = 0
+			item = {}
+			item["timestamp"] = shot["timestamp"]
+			for app in lst:
+				applType = ApplIdToType(app)
+				if (applType not in energyVal):
+					continue
+				energyVal[applType] += lst[app]["value"]
+			item["data"] = energyVal
+			result += [item]
+		return self._encode(result, True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ####################################################################
 ## Login Information, for self.registration_col1 ###################

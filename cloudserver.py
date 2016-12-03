@@ -18,6 +18,7 @@ import suggestionDecisions
 import userManagement
 import Query
 import Manage
+import newDataAnalytics
 from bson import ObjectId
 from threading import Thread
 import suggestionsEngine
@@ -33,6 +34,7 @@ urls = (
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
+    "/api/dataExtraction", newDataAnalytics.dataExtraction, 
     "/api/Beacons", LocationBeacons.Beacons,
     "/api/userRankings", userRanking.userRankings,
     "/api/locationTraining", locationTraining.locationTraining,
