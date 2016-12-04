@@ -227,7 +227,7 @@ class DBMgr(object):
 			item = {}
 			item["timestamp"] = shot["timestamp"]
 			for app in lst:
-				energyVal += app["value"]
+				energyVal += lst[app]["value"]
 			item["data"] = energyVal
 			result += [item]
 		return self._encode(result, True)
