@@ -110,50 +110,15 @@ body {
 		  
 		  function render1(input){
 		  	input=input.reverse();
-			function distinct_types(input){
-	          var types={};
-	          input.map(function(s){
-	            if(s.type_aggregate)
-	              for(var t in s.type_aggregate)
-	                types[t]=true;
-	          });
-	          var ret=[];
-	          for(var t in types)
-	            ret.push(t);
-	          return ret;
-	        }
-	        var types=distinct_types(input);
-	        var type_indices={};for(var i in types)type_indices[types[i]]=1*i;
-	        console.log(types,type_indices);
-	        var data = new google.visualization.DataTable();
-	        var dlen=0;
-	        dlen++;data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-	        types.forEach(function(t){data.addColumn('number', t);dlen++;});
 
-	        dlen++;data.addColumn({type:'string', role:'annotation'}); // annotation role col.
-	        dlen++;data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
-	        console.log('dlen',dlen);
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
 	          var item=input[i];
-	          var ret=new Array(dlen);
-	          for(var j=1;j<dlen-2;j++)ret[j]=0;
-	          for(var t in item.type_aggregate){
-	            ret[ type_indices[t]+1 ]=item.type_aggregate[t].value;
-	          }
-	          if(item.roomID!=lastR){
-	            lastR=''+item.roomID;
-	            ret[dlen-2]=lastR;
-	            ret[dlen-1]="Entered "+lastR;
-	            console.log("enter room",lastR,item.timestamp);
-	          }
-
-	          if(!item.timestamp)return;
-	          if(ret[0]!=undefined)alert('index access violation');
-	          ret[0]=new Date(item.timestamp*1000);
 	          //console.log('row',ret);
-	          data.addRow(ret);
+	          data.addRow([item.timestamp, item.data]);
 	        };
 			console.log(data);
 	        
