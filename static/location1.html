@@ -113,6 +113,7 @@ body {
 
 	        var data = new google.visualization.DataTable();
 	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        data.addColumn('number', 'WATTS')
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
