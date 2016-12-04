@@ -94,17 +94,9 @@ body {
 
  		$(frm1).children('button').on('click', function () {
 		    var $btn = $(this).button('loading');
-		    var personID=frm1.personID1.value;
-		    if(personID.length<2){
-		    	$(frm1.personID1).parent().addClass('has-error');
-		    	$btn.button('reset');
-		    	return;
-		    }
-		    $(frm1.personID1).removeClass('has-error');
-		    $.get("/api/Query/QueryPerson/"+personID,{
+		    $.get("/api/dataExtraction/BuildingFootprint/",{
 		    		start:getUTCSeconds(frm1.startDate1.value),
 		    		end:getUTCSeconds(frm1.endDate1.value),
-		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
@@ -184,6 +176,21 @@ body {
       </div>
     </div>
   </div>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
   <div class="panel panel-default">
