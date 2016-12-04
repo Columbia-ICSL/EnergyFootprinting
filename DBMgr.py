@@ -220,7 +220,7 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		iterator = self.snapshots_col_rooms.find(condition).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_appliances.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			lst = shot["data"]
 			energyVal = 0
@@ -240,7 +240,7 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		iterator = self.snapshots_col_rooms.find(condition).sort([("timestamp", pymongo.DESCENDING)])
+		iterator = self.snapshots_col_appliances.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			lst = shot["data"]
 			energyVal = {}
