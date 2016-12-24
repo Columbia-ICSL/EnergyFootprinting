@@ -10,33 +10,31 @@ import blog
 import DBMgr
 import Energy
 import Location
+import LocationBeacons
+import suggestionDecisions
 import Query
-
+import Manage
 from bson import ObjectId
 
 urls = (
+ 
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
+    "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
+#    "/api/Beacons", "beacons",
+    "/api/Beacons", LocationBeacons.Beacons,
+    "/api/suggestionDecisions", suggestionDecisions.Decisions,
     "/frontend/(.+)", "frontend",
-    "/(.+)/index","index"
-
+    "/api/SaveShot",Manage.Manager,
+    "/realtime/(.*)","Realtime",
+    "/realtime","Realtime",
+    "/debug","Debug",
+    "/recent","Recent",
+    "/","index"
 )
 
-class MongoJsonEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            #return obj.isoformat()
-            utc_seconds = calendar.timegm(obj.utctimetuple())
-            return utc_seconds
-        elif isinstance(obj, datetime.date):
-            return obj.isoformat()
-        elif isinstance(obj, datetime.timedelta):
-            return (datetime.datetime.min + obj).time().isoformat()
-        elif isinstance(obj, ObjectId):
-            return str(obj)
-        else:
-            return super(MongoJsonEncoder, self).default(obj)
+from DBMgr import MongoJsonEncoder
 
 
 
@@ -45,15 +43,25 @@ class MongoJsonEncoder(json.JSONEncoder):
 #db = client.test_database
 db=DBMgr.DBMgr()
 
+
 render = web.template.render('templates/')
 
+class Debug:
+    def GET(self):
+        return DBMgr.dump_debug_log()
+class Recent:
+    def GET(self):
+        return DBMgr.dump_recent_raw_submission()
+class Realtime:
+    def GET(self,person=None):
+        if "full" in web.input():
+            return db.ShowRealtime(concise=False)
+        return db.ShowRealtime(person)
 
 class index:
-    def GET(self, path):
-        if path=="":
-            return "Hello world from bitbucket! this is the icsl energy foot-print api; try out /api/query/room/* "
-        print "{0}".format(path)
-        return "Energy foot-print"
+    def GET(self):
+
+        return web.seeother('/static/')
 
 
 
@@ -75,6 +83,14 @@ class room:
         #return input+" {0}".format(name)
         return db.QueryRoom(room,0,2**32)
 
+#class beacons: 
+#    def POST(self):
+#        raw_data = web.data()
+#        db.SaveLocationData(0,12)
+#        return str(raw_data)
+#    def GET(self):
+#        result = db.QueryLocationData(0)
+#        return result
 
 
 

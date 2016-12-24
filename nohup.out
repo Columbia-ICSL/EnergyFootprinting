@@ -1,0 +1,19 @@
+129.236.227.247:56432 - - [12/Oct/2015 16:08:54] "HTTP/1.1 GET /sdf/index" - 200 OK
+129.236.227.247:56432 - - [12/Oct/2015 16:09:02] "HTTP/1.1 GET /sdf/index" - 200 OK
+129.236.227.247:56432 - - [12/Oct/2015 16:09:06] "HTTP/1.1 GET /sdfasdf/index" - 200 OK
+Traceback (most recent call last):
+  File "run.py", line 4, in <module>
+    import cloudserver
+  File "/home/fs2523/python_server/foot_print/cloudserver.py", line 11, in <module>
+    import Energy
+  File "/home/fs2523/python_server/foot_print/Energy.py", line 32
+    return 0
+SyntaxError: 'return' outside function
+Traceback (most recent call last):
+  File "run.py", line 4, in <module>
+    import cloudserver
+  File "/home/fs2523/python_server/foot_print/cloudserver.py", line 11, in <module>
+    import Energy
+  File "/home/fs2523/python_server/foot_print/Energy.py", line 32
+    return 0
+SyntaxError: 'return' outside function

@@ -1,0 +1,95 @@
+<html>
+  <head>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+
+        //135=60 light+71 plug(44+27) + 7 HVAC
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Your Footprint', 138]
+        ]);
+
+        var options = {
+          //width: 400, height: 120,
+          max:500,
+          redFrom: 450, redTo: 500,
+          yellowFrom:400, yellowTo: 450,
+          greenFrom:0,greenTo:50,
+          //majorTicks:['0','100','200','300','400','500'],
+          minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+      window.onload=function(){
+        var c=document.getElementById('chart_div');
+        c.style.height=c.scrollWidth+'px';
+        var l=document.getElementById('list_div');
+        l.style.height=(document.body.clientHeight-c.scrollWidth)+'px';
+      }
+    </script>
+  </head>
+  <body style="height:100%;width:90%;padding:0;margin:0 auto;">
+    <div id="chart_div" style="margin:auto; width: 75%;"></div>
+    <div id="list_div" style="margin:auto;max-width:600px;  overflow-y:scroll;">
+
+    <div class="panel panel-success ">
+      <div class="panel-heading">
+        <h3 class="panel-title">Energy Footprint Component of TESTUSER</h3>
+      </div>
+      <div class="panel-body" style="background:#ccc">
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-info">
+          <h4 class="list-group-item-heading">
+
+            <span class="label label-default label-pill pull-xs-right">71 Watts</span>
+            Wall Outlet (Electricity)
+          </h4>
+          <p class="list-group-item-text">
+            Location: Room 1008.
+          </p>
+          <ul class="list-group">
+            <li class="list-group-item">Plug #2: 44 Watts</li>
+            <li class="list-group-item">Plug #1: 27 Watts</li>
+          </ul>
+        </a>
+
+        <a href="#" class="list-group-item">
+          <h4 class="list-group-item-heading">
+
+            <span class="label label-default label-pill pull-xs-right">60 Watts</span>
+            Indoor Light (Lighting)
+          </h4>
+          <p class="list-group-item-text">
+            Location: Room 1008.
+          </p>
+        </a>
+        
+
+        <a href="#" class="list-group-item">
+          <h4 class="list-group-item-heading">
+
+            <span class="label label-default label-pill pull-xs-right">7 Watts</span>
+            Central Heating (HVAC)
+          </h4>
+          <p class="list-group-item-text">
+            Location: Floor 10.
+          </p>
+        </a>
+        
+      </div>
+      </div>
+    </div>
+
+    </div>
+
+  </body>
+</html>
