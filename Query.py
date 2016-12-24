@@ -6,10 +6,10 @@ import datetime
 import cloudserver
 urls = (
     "/QueryRoom/(.+?)","QueryRoom", #room ID + time range
+    "/QueryPersonPersonalConcise/(.+?)","QueryPersonPersonalConcise", #person ID +
     "/QueryPerson/(.+?)","QueryPerson", #person ID +
     "/QueryPersonMulti/(.+)","QueryPersonMulti", #person ID +
     "/QueryEvents/(.*)","QueryEvents", #person ID +
-
 )
 
 class QueryRoom:
@@ -31,6 +31,23 @@ class QueryRoom:
             start=float(raw_time['start'])
         return cloudserver.db.QueryRoom(room,start,end)
 
+class QueryPersonPersonalConcise:
+    def POST(self,person):
+        return
+    def GET(self,person):
+        if person=="":
+            return web.notfound("Error: no person name provided")
+        raw_time=web.input()
+        if "end" not in raw_time:
+            end=calendar.timegm(datetime.datetime.utcnow().utctimetuple())
+        else:
+            end=float(raw_time['end'])
+        if "start" not in raw_time:
+            start=calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60
+        else:
+            start=float(raw_time['start'])
+        return cloudserver.db.QueryPersonPersonalConcise(person,start,end)
+
 class QueryPerson:
 
     def POST(self,person):
@@ -47,8 +64,6 @@ class QueryPerson:
             start=calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60
         else:
             start=float(raw_time['start'])
-            
-        
         return cloudserver.db.QueryPerson(person,start,end)
 
 class QueryPersonMulti:
@@ -69,7 +84,7 @@ class QueryPersonMulti:
             start=float(raw_time['start'])
         
         people=personList.split(",")
-        print people
+        print(people)
         return cloudserver.db.QueryPersonMulti(people,start,end)
 
 

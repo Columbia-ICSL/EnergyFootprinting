@@ -1,0 +1,133 @@
+<!doctype>
+<html>
+<head>
+<title>Energy Footprint Personal Visualization</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highstock.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/themes/gray.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highcharts-more.js"></script>
+<script type="text/javascript">
+$(function(){
+	$.get('/realtime',{},function(data){
+		var usrs=data.locations;
+		var select=$('#select').html('');
+		for(var id in usrs){
+			$('<option>')
+				.html(id).attr('data-id',id)
+				.appendTo(select);
+		}
+		$('#go').click(function(){
+			var url='./nonControl.html?id='+select.val();
+			$('#iframe').attr('src',url);
+		});
+
+	},'json');
+
+	Date.prototype.toInputValue = (function() {
+	    var local = new Date(this);
+	    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+	    return local.toJSON().slice(0,16);
+	});
+	function getUTCSeconds(LocalDateStr){
+		var utcDate=new Date(LocalDateStr);
+		utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
+		return Math.floor(+utcDate/1000);
+	}
+	var oneDayBefore=new Date();oneDayBefore.setSeconds((new Date()).getSeconds()-86400);
+	$('#start').val(oneDayBefore.toInputValue());
+	$('#end').val(new Date().toInputValue());
+	$('#draw').click(function(){
+		var start=getUTCSeconds($('#start').val());
+		var end=getUTCSeconds($('#end').val());
+		var endpoint=$('#endpoint').val();
+		console.log(start,end,endpoint);
+		$.get(endpoint,{
+			start:start,
+			end:end,
+			from:'ajax_GenerateVisualization'
+		},function(resp){
+			drawFigure(resp);
+		},'json');
+	});
+});
+
+function drawFigure(resp){
+	console.log(r=resp);
+	var seriesData=[];
+	for(var name in resp){
+		seriesData.push({
+			name:name,
+			data:resp[name]
+		});
+	}
+
+	$('#chart').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        xAxis: {
+            type: 'datetime',
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        yAxis: {
+            minorGridLineWidth: 0,
+            gridLineWidth: 0,
+            alternateGridColor: null,
+        },
+        plotOptions: {
+            spline: {
+                lineWidth: 2,
+                states: {
+                    hover: {
+                        lineWidth: 5
+                    }
+                },
+                marker: {
+                    enabled: false
+                },
+                //pointInterval: 3600000, // one hour
+                //pointStart: Date.UTC(2015, 4, 31, 0, 0, 0)
+            }
+        },
+        series: seriesData,
+    });
+}
+</script>
+<style>
+iframe {
+	width:50%;
+	height:50%;
+	/*background:rgba(100,155,60,0.75);*/
+}
+div#chart {
+	width:90%;
+	height:90%;	
+}
+</style>
+</head>
+<body>
+1. Choose user:
+<select id="select"></select>
+<button id="go">Go</button>
+<iframe id="iframe"></iframe>
+<hr/>
+2. Draw Stack:
+<br/>
+Start: <input id="start" type="datetime-local" />
+End: <input id="end" type="datetime-local" />
+Type: <select id="endpoint">
+	<option>/api/visualization/binAllUsers/</option>
+	<option>/api/visualization/binRoomOccupancy/</option>
+	<option>/api/visualization/binAppliancePower/</option>
+</select>
+<button id="draw">Draw</button>
+<br>
+<div id="chart">
+	
+</div>
+
+</body>
+</html>

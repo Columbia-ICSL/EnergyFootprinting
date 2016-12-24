@@ -1,0 +1,688 @@
+<!doctype>
+<html>
+<head>
+<title>Energy Footprint Personal Visualization</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highstock.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/themes/gray.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highcharts-more.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/modules/solid-gauge.js"></script>
+<script type="text/javascript">
+var query=(function(s){
+  var loc=s.indexOf('?');
+  if(loc==-1)return {};
+  var q=s.substr(loc+1);
+  var ret={};
+  q.split('&').map(function(part){
+    var array=part.split('=');
+    var key=decodeURIComponent(array[0]), value=decodeURIComponent(array.slice(1).join("="));
+    ret[key]=value;
+  });
+  return ret;
+})(location.href);
+var userID=query['id'];
+
+
+
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr, len;
+  if (this.length === 0) return hash;
+  for (i = 0, len = this.length; i < len; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
+var isForeground=true;
+function atForeground(){
+	isForeground=true;
+}
+function atBackground(){
+	isForeground=false;
+}
+//For app frame to call.
+var foreground_delay=1000*60*0.5;
+var background_delay=1000*60*3;
+
+var firstLoaded=+(new Date()), page_expiry=3600*1000*4;//3 hours
+function backgroundWake(){
+	if(+new Date()-firstLoaded>page_expiry)
+		location.reload();
+	fetchAndUpdate();
+	setTimeout(backgroundWake,isForeground?foreground_delay:background_delay)
+}
+
+function init(){
+	fetchAndRender();
+	setTimeout(backgroundWake,foreground_delay)
+}
+
+window.onload=init;
+
+var storageKey='personal_snapshot_timeline_v2:'+userID;
+var API_endpoint='/api/Query/QueryPersonPersonalConcise/'+userID+'?client=AJAX+phone+UI';
+function fetchAndRender(){
+	var end=Math.floor((+new Date())/1000);
+	var start=getStorageUpperBound();
+	$.get(API_endpoint,{
+		start:start,
+		end:end
+	},function(data){
+		receivedLatest(data);
+	},"json");
+}
+
+function getStorageUpperBound(){
+	var end=Math.floor((+new Date())/1000);
+	var start=end-86400*3;
+	return start;//Temporarily disabled localstorage
+	var minValue=end;
+	try{
+		var oldData=localStorage.getItem(storageKey);
+		if(oldData!=null){
+			oldData=JSON.parse(oldData);
+			var maxValue=start;
+			for(var index in oldData.data){
+				if(parseInt(index)>maxValue)
+					maxValue=parseInt(index);
+				if(parseInt(index)<minValue)
+					minValue=parseInt(index);
+			}
+			if(minValue>start)return start;
+			
+			console.log('Storage timestamp max=',maxValue,'current end ts:',end);
+			return Math.min(maxValue,end-5*60);
+		}
+	}catch(e){}
+	return start;
+}
+
+function mergeDataWithStorage(data){
+	return data;//Temporarily disabled localstorage
+	try{
+		var oldData=localStorage.getItem(storageKey);
+		if(oldData!=null){
+			oldData=JSON.parse(oldData);
+		}else{
+			//oldData is null
+			oldData={data:{},realtime:{}};
+		}
+		//merge
+		for(var key in data.data)
+			oldData.data[key]=data.data[key];
+		data.data=oldData.data;
+		localStorage.setItem(storageKey,JSON.stringify(data));
+		return data;
+	}catch(e){
+		console.warn('Failed to decode localStorate');
+	}
+	return data;
+}
+
+function getMaximum(value){
+	if(value<100)return 200;
+	//what we want:
+	// 0. it's sorta log-scale
+	// 1. shows relative 50% for 100w
+	// 2. shows relative 100% for 1000w
+	// afterwards, goes to 100% always
+	var scaleVal=Math.log(value);
+	var point1=Math.log(100), point2=Math.log(1000);
+	var percentage=50+50*(scaleVal-point1)/(point2-point1);
+	if(percentage>100)percentage=100;
+
+	var maximumOnGauge=value/percentage*100;
+	maximumOnGauge=50*Math.ceil(maximumOnGauge/50);
+	return maximumOnGauge;
+}
+
+function receivedLatest(data){
+	if(!data || !data.realtime){
+		$('#header_value').text('?');
+		//show popout?
+		alert('Error loading data.');
+		return;
+	}
+	renderHeader(
+		Math.round(data.realtime.value*100)/100,
+		getMaximum(data.realtime.value)
+	);
+	renderAppliance(data.realtime.consumptions);
+	$('#header_value').text(Math.ceil(data.realtime.value));
+	
+	//storage management
+	data=mergeDataWithStorage(data);
+	//send entire dataset to renderTimeline
+	renderTimeline(data.data);
+}
+
+function fetchAndUpdate(){
+	var end=Math.floor((+new Date())/1000);
+	//var start=getStorageUpperBound();
+	//only gets the latest state, do not request snapshots
+	$.get(API_endpoint,{
+		start:end,
+		end:end
+	},function(data){
+		receivedUpdate(data);
+	},"json");
+}
+function receivedUpdate(data){
+	if(!data || !data.realtime)
+		return;
+	//Note: do not use these low-freq data for graph; instead, use realtime consumption.
+	//show new list
+	renderHeader(
+		Math.round(data.realtime.value*100)/100,
+		getMaximum(data.realtime.value)
+	);
+	renderAppliance(data.realtime.consumptions);
+	$('#header_value').text(Math.ceil(data.realtime.value));
+	
+	//add new data to Timeline
+	var time=Math.floor((+new Date())/1000);
+	//location first
+	//if loc==null, will show "out of lab afterwards"
+	bars.push([data.realtime.location, maxTime, time]);
+	maxTime=time;
+	//force redraw
+	redrawBands(hasColorBand);
+
+	//new point
+	var timestr=new Date(parseInt(time)*1000).toLocaleString();
+	var locstr=data.realtime.location;
+	if(locstr==null)locstr='Out of Lab';
+	else locstr='In: '+locstr;
+	var chart=$('#chart_timeline').highcharts();
+	chart.series[0].addPoint({
+		x:new Date(parseInt(time)*1000),
+		y:data.realtime.value,
+		name:timestr+'<br>'+locstr,
+	});
+}
+
+function renderAppliance(appls){
+	if(!appls || !appls.length){
+		$('#appl_list').text('List Currently Unavailable...');
+		return;
+	}
+	$('#appl_list').text('');
+	var format=function(num){
+		if(num==0)return '0';
+		return (1*num).toFixed(1);
+	}
+	appls.sort(function(a,b){return b.value-a.value})
+		.map(function(appl){
+			$('<div>').addClass('appliances_cell')
+				.addClass(appl.value==0?'cell_inactive':'cell_active')
+				.append($('<p>').addClass('cell_title').text(appl.name))
+				.append($('<p>').addClass('cell_number').text('Total: ' + format(appl.value)+' W'))
+				.append($('<p>').addClass('cell_share_number').text('Your Share: ' +format(appl.share) + ' W'))
+				.append($('<p>').addClass('clear'))
+				.appendTo('#appl_list');
+		});
+}
+
+var transparent='rgba(0,0,0,0)';
+var whiteStyle={color:'#fff'};
+function renderHeader(value, max){
+	var options={
+		chart: {
+	        type: 'solidgauge',
+	        backgroundColor:transparent,
+    	},
+    	title:null,
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor: 'white',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+        tooltip: {
+            enabled: false
+        },
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.1, '#00BF1B'], // green
+                [0.5, '#EEEF0D'], // yellow
+                [0.9, '#EF2323'] // red
+            ],
+            lineWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            labels: {
+                y: 16
+            },
+            min: 0,
+            max: max,
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Watts',
+            data: [value],
+        }]
+
+    };
+    $('#container_gauge').highcharts(options);
+}
+
+function getPlotBands(useColor){
+	//var colors=Highcharts.getOptions().colors.slice(1,5);
+	var colors=["#8085e9", "#8d4654", "#7798BF", "#7cb5ec", "#f7a35c", "#DF5353", "#7798BF", "#aaeeee", "#f45b5b"];
+	var oneColor='#8085e9';//skyBlue;
+	var pos=[];
+	return bars.map(function(bar,id){
+		var hash=bar[0]?Math.abs(bar[0].hashCode()):0;
+		var color=colors[hash%colors.length];
+		color=Highcharts.Color(color).setOpacity(0.9).get('rgba');
+		if(!useColor){
+			color=oneColor;
+			color=Highcharts.Color(color).setOpacity(0.6).get('rgba');
+		}
+		var colorTransparent=Highcharts.Color(color).setOpacity(0).get('rgba');
+		
+		var text=bar[0];
+		var ret={
+		    color: {
+		    	linearGradient: {x1:0, x2:0, y1:0, y2:1},
+		    	stops:[
+		    		[0, color],
+		    		[0.55, colorTransparent],
+		    	]
+		    }, // Color value
+		    id:id,
+		    from: 1000*parseInt(bar[1]), // Start of the plot band
+		    to: 1000*parseInt(bar[2]) // End of the plot band
+		};
+		return ret;
+	});
+}
+function redrawBands(hasColor){
+	var chart=$('#chart_timeline').highcharts();
+	for(var i=0;i<bars.length;i++)
+		chart.xAxis[0].removePlotBand(i);
+	var bands=getPlotBands(hasColor);
+	for(var i=0;i<bars.length;i++)
+		chart.xAxis[0].addPlotBand(bands[i]);
+}
+
+function renderTimeline(ungrouped_timeline){
+	console.log('Rendering timeline, source=',ungrouped_timeline);
+	//1. generate time series
+	window.series_data=[];
+	for(var time in ungrouped_timeline){
+		var timestr=new Date(parseInt(time)*1000).toLocaleString();
+		var locstr=ungrouped_timeline[time][0];
+		if(locstr==null)locstr='Out of Lab';
+		else locstr='In: '+locstr;
+		series_data.push({
+			x:new Date(parseInt(time)*1000),
+			y:ungrouped_timeline[time][1],
+			name:timestr+'<br>'+locstr,
+		});
+	}
+	console.log('Timeline series=',series_data);
+	//2. get location bars
+	window.bars=[];
+	window.maxTime=-1;
+	var lastLoc=null, lastTime=-1;
+	var halfIntv=5*60/2;
+	for(var time in ungrouped_timeline){
+		var newLoc=ungrouped_timeline[time][0];
+		if(newLoc!=lastLoc){
+			if(lastLoc!=null)
+				bars.push([lastLoc, lastTime-halfIntv, time-halfIntv]);
+			lastLoc=newLoc;
+			lastTime=time;
+		}
+		maxTime=time;
+	}
+	bars.push([lastLoc, lastTime-halfIntv, maxTime]);
+
+	console.log('Location series=',bars);
+	window.hasColorBand=true;
+
+	Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+
+    var linePower=200;
+	
+	$('#chart_timeline').highcharts('StockChart', {
+		chart: {
+	        backgroundColor:transparent,
+	        style: {
+	        	color:'#fff',
+           		fontFamily: 'sans-serif',
+        	}
+    	},
+    	scrollbar:{
+    		enabled:true,
+    		height:26,
+    		liveRedraw:true,
+    		buttonArrowColor:'#33f',
+    		buttonBackgroundColor:'88f',
+    		trackBackgroundColor:'#eee',
+    		rifleColor:'#33f'
+    	},
+        rangeSelector: {
+        	labelStyle:whiteStyle,
+	        inputEnabled:false,
+            selected: 0,
+            height:20,//originally 35
+            buttons: [{
+				type: 'minute',
+				count: 1*60,
+				text: '1H'
+			}, {
+				type: 'minute',
+				count: 3*60,
+				text: '3H'
+			}, {
+				type: 'minute',
+				count: 6*60,
+				text: '6H'
+			}, {
+				type: 'minute',
+				count: 24*60,
+				text: '1D'
+			}, {
+				type: 'minute',
+				count: 24*60*3,
+				text: '3D'
+			}, {
+				type: 'all',
+				text: 'All'
+			}]
+        },
+        navigator:{
+        	enabled:false
+        },
+        credits: {
+            enabled: false
+        },
+        title:null,
+        xAxis:{
+        	ordinal: false,
+        	labels:{style:whiteStyle},
+			plotBands:getPlotBands(true),
+			events: {
+	            afterSetExtremes: function (e) {
+	            	if(e.max-e.min<=3600000*6){
+	            		if(!hasColorBand){
+	            			hasColorBand=true;
+	            			redrawBands(true);
+	            			//Use color
+	            			console.log('Add bands with colors');
+	            		}
+	            	}else{
+		            	if(hasColorBand){
+		            		hasColorBand=false;
+	            			redrawBands(false);
+		            		//Use no-color
+	            			console.log('Add bands with no color');
+		            	}
+	            		hasColorBand=false;
+	            	}
+	            }
+	        },
+        },
+        yAxis:{
+        	labels:{style:whiteStyle},
+        	plotLines:[{
+		        value: linePower,
+		        color: 'red',
+		        dashStyle: 'shortdash',
+		        width: 2,
+		        label: {
+		            text: 'Recommended Footprint'
+		        }
+		    }],
+        },
+        tooltip: {
+            valueDecimals: 2,
+            valuePrefix: '',
+            valueSuffix: ' Watts'
+        },
+        series: [{
+            name: 'Footprint',
+            data: series_data,
+            tooltip: {
+                valueDecimals: 2
+            },
+            // gradient-filled area
+            type : 'areaspline',
+            fillColor : {
+                linearGradient : {
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: 1
+                },
+                stops : [
+                    [0, 'rgba(255, 155, 14, 0.8)'],
+                    [0.4, 'rgba(225, 225, 14, 0.5)'],
+                    [0.8, 'rgba(100, 255, 14, 0.3)'],
+                    [1, 'rgba(0, 255, 14, 0.1)']
+                ]
+            }
+        }]
+    });
+}
+</script>
+<style>
+body{margin:0;padding:0;}
+*:not(input):not(textarea) {
+-webkit-user-select: none; /* disable selection/Copy of UIWebView */
+-webkit-touch-callout: none; /* disable the IOS popup when long-press on a link */
+}
+
+#mainBody{
+	width:100%;
+	font-family:Helvetica, Roboto, sans-serif; 
+	color:white;
+}
+#header{
+	height:15%;
+	width:100%;
+}
+#header_left{
+	position:absolute;
+	height:15%;
+	width:50%;
+	margin-left:10%;
+}
+#header_right{
+	position:absolute;
+	height:15%;
+	width:35%;
+	margin-left:60%;
+}
+#header_left #header_wrapper{
+	/*vertical-align:middle;*/
+	position: absolute;
+  	top: 50%;
+  	transform: translateY(-50%);
+}
+#header_left #header_left_title{
+	width:100%;
+	font-size:14pt;
+	text-align:center;
+	font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+}
+#header_left #header_left_body{
+	margin-top:8pt;
+	width:100%;
+	text-align:center;
+	font-size:16pt;
+	font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+}
+#header_left #header_left_body span{
+	padding:5px;
+	font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+    font-size:16pt;
+	/*background:#777;*/
+}
+#header_right #container_gauge{
+	width:100%;
+	height:100%;
+}
+
+#timeline{
+	height:40%;
+	width:100%;
+}
+#chart_timeline{
+	height:100%;
+	width:100%;
+}
+#detail{
+	width:100%;
+}
+#detail_title, #timeline_title{
+	width: 100%;
+	text-align: center;
+	font-size: 14pt;
+	font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+	margin-top:4pt;
+}
+
+.appliances_cell{
+	border-radius:15px;
+	padding-left:5px;
+	margin:5px 5px 5px 5px;
+}
+.cell_active {
+	background: rgba(100,255,100,0.3);
+	color:white;
+}
+.cell_inactive{
+	color:#ccc;
+	background: rgba(100,100,100,0.3);
+}
+.appliances_cell .cell_title{
+	font-size: 12pt;
+	text-align: center;
+	padding-top:15px;
+	width:100%;
+	font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+
+}
+.appliances_cell .cell_number{
+	width:50%;
+	float:left;
+	text-align:center;
+	font-size: 12pt;
+	margin-bottom:30px;
+	font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+}
+
+.appliances_cell .cell_share_number{
+	width:50%;
+	float:right;
+	text-align:center;
+	font-size: 12pt;
+	margin-bottom:30px;
+	font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+}
+@font-face {
+    font-family: "ADAM.CG PRO";
+    src: url("ADAM.CG PRO.otf") format("opentype");
+}
+p.ADAMCGPRO { 
+    font-family: "ADAM.CG PRO", Verdana, Tahoma;
+}
+.clear{clear:both;}
+
+.boxSectionRegular{
+	border-radius:25px 50px;
+	background: rgba(200,200,200,0.3);
+	margin: 10px 3px 10px 3px;
+	padding:20px;
+}
+
+.boxSectionEnergy{
+	border-radius:25px 50px;
+	background: rgba(200,200,200,0.3);
+	margin: 10px 3px 0px 3px;
+	padding:20px 0px 0px 0px;
+}
+
+</style>
+</head>
+<body>
+<div id="mainBody">
+	<div class="boxSectionRegular">
+	<div id="header">
+		<div id="header_left">
+
+			<div id="header_wrapper">
+				<div id="header_left_title">Your Current Energy Footprint:
+				</div>
+				<div id="header_left_body">
+				<span><span id="header_value">?</span> Watts</span>
+				</div>
+			</div>
+		</div>
+		<div id="header_right">
+			<div id="container_gauge"></div>
+		</div>
+	</div>
+	</div>
+
+	<div class="boxSectionEnergy">
+			<div id="timeline_title">Energy Footprint:</div>
+	<div id="timeline">
+			<div id="chart_timeline"></div>		
+	</div>
+	</div>
+	
+	<div class="boxSectionRegular">
+	<div id="detail">
+		<div id="detail_title">Energy Consumption<br> Around You:</div>
+		<div id="appl_list">
+			<!--<div class="appliances_cell cell_active"> 
+				<p class="cell_title">Power strip #1 in Mezzanaine Level, Aisle #3</p>
+				<p class="cell_number ADAMCGPRO">Share: 20 W</p>
+				<p class="cell_share_number">Total: 22 W</p>
+				<p class="clear"></p>
+			</div>-->
+
+		</div>
+	</div>
+	</div>
+
+</div>
+</body>
+</html>

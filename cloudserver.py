@@ -1,34 +1,50 @@
 import web
-import json
 import os
 import datetime
 import time
 import calendar
-import pymongo
 
-import blog
 import DBMgr
+db=DBMgr.DBMgr()
+
 import Energy
+import indirectSensingCollection
+import particleSensorCollection
 import Location
 import LocationBeacons
+import locationTraining
+import userRanking
 import suggestionDecisions
+import userManagement
 import Query
 import Manage
+import newDataAnalytics
 from bson import ObjectId
+from threading import Thread
+import suggestionsEngine
 
+from trainingData import training
+import visualizationAPI
 urls = (
  
     "/api/EnergyReport",Energy.EnergyReport,
+    "/api/IndirectSensing", indirectSensingCollection.IndirectSensing,
+    "/api/particleSensing", particleSensorCollection.particleSensing,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
+    "/api/dataExtraction", newDataAnalytics.dataExtraction, 
     "/api/Beacons", LocationBeacons.Beacons,
+    "/api/userRankings", userRanking.userRankings,
+    "/api/locationTraining", locationTraining.locationTraining,
+    "/api/userManagement", userManagement.userMGM,
     "/api/suggestionDecisions", suggestionDecisions.Decisions,
     "/frontend/(.+)", "frontend",
     "/api/SaveShot",Manage.Manager,
     "/realtime/(.*)","Realtime",
     "/realtime","Realtime",
+    "/api/visualization", visualizationAPI.visualization,
     "/debug","Debug",
     "/recent","Recent",
     "/","index"
@@ -36,13 +52,8 @@ urls = (
 
 from DBMgr import MongoJsonEncoder
 
-
-
-#client = pymongo.MongoClient()
-#client = pymongo.MongoClient('localhost', 27017)
-#db = client.test_database
-db=DBMgr.DBMgr()
-
+SE = suggestionsEngine.suggestionsEngine()
+#TD = generateTrainingData()
 
 render = web.template.render('templates/')
 
@@ -56,6 +67,8 @@ class Realtime:
     def GET(self,person=None):
         if "full" in web.input():
             return db.ShowRealtime(concise=False)
+        if "personal" in web.input():
+            return db.ShowRealtimePersonalSummary()
         return db.ShowRealtime(person)
 
 class index:
@@ -68,7 +81,7 @@ class index:
         #return "Hello {0}".format(name)
 class frontend:
     def GET(self,person):
-        print person
+        print(person)
         t = time.time() 
         result = db.QueryPerson(person,t-86400*7+1,t)
         #data=json.dumps(result)
@@ -77,8 +90,8 @@ class frontend:
 class room:
     def GET(self,room):
         input=str(web.input())
-        print input
-        print room
+        print(input)
+        print(room)
 
         #return input+" {0}".format(name)
         return db.QueryRoom(room,0,2**32)
