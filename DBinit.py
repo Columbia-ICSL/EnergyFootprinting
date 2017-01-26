@@ -103,6 +103,7 @@ class DBInit(object):
         addAppliance("nwc1003b_a_plug", "Plugmeter in 1003B Lab Area A (Peter)", "Electrical", "nwc1003b_a", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1003b_b_plug", "Plugmeter in 1003B Lab Area B (Danny&Stephen)", "Electrical", "nwc1003b_b", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1003b_c_plug", "Plugmeter in 1003B Lab Area C (Rishi)", "Electrical", "nwc1003b_c", ACTIONABLE, NO_DUTY_CYCLE)
+	addAppliance("testDevice", "Aeon Labs Smart Switch 6 testings", "Electrical", "nwc1003b_c", ACTIONABLE, NO_DUTY_CYCLE)
         
         addAppliance("nwc1003b_fin", "Fin Tube Radiator in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1003b_vav", "Air Vent in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
