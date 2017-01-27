@@ -131,7 +131,8 @@ class train:
                 last = y.split('\n')
                 y = last[0]
                 self.trainingLabels.append(y)                
-            return "successful reupload"
+            print "successful reupload"
+            return
         if (locs[0] == "DES"):
             self.trainingData = []
             self.trainingLabels = []
