@@ -95,7 +95,7 @@ class train:
         locs = raw_data.split(',')
 
         if (locs[0] == "REUP"):
-            infile = "backup2.txt"
+            infile = "backup.txt"
             f = open(infile, 'r')
             x = f.readlines()
             self.trainingData = []
@@ -105,7 +105,7 @@ class train:
                 y[-1] = last[0]
                 y = map(int, y)
                 self.trainingData.append(y)
-            infile = "backuplabels2.txt"
+            infile = "backuplabels.txt"
             f = open(infile, 'r')
             x = f.readlines()
             self.trainingLabels = []
@@ -113,8 +113,24 @@ class train:
                 y = x[j]
                 last = y.split('\n')
                 y = last[0]
-
-                self.trainingLabels.append(y)              
+                self.trainingLabels.append(y)
+            infile = "backup2.txt"
+            f = open(infile, 'r')
+            x = f.readlines()
+            for i in range(len(x)):
+                y = x[i].split('\t')
+                last = y[-1].split('\n')
+                y[-1] = last[0]
+                y = map(int, y)
+                self.trainingData.append(y)
+            infile = "backuplabels2.txt"
+            f = open(infile, 'r')
+            x = f.readlines()
+            for j in range(len(x)):
+                y = x[j]
+                last = y.split('\n')
+                y = last[0]
+                self.trainingLabels.append(y)                
             return "successful reupload"
         if (locs[0] == "DES"):
             self.trainingData = []
