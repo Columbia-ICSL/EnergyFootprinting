@@ -15,9 +15,13 @@ class Save:
     def POST(self,Id):
         raw_data=web.data()
         data=json.loads(raw_data)
-        cloudserver.db.ReportEnergyValue(Id,data['energy'],data['raw'])
+        if ('raw' not in data):
+            cloudserver.db.ReportEnergyValue(Id,data['energy'],None)
+        else:
+            cloudserver.db.ReportEnergyValue(Id,data['energy'],data['raw'])
         print(str(data))
         return "200 OK"
+        
 class SaveHVAC:
     def POST(self,room):
         raw_data=web.data()
