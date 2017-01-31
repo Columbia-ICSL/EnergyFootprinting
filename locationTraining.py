@@ -46,7 +46,7 @@ class LocationPredictor:
             last = y.split('\n')
             y = last[0]
             self.trainingLabels.append(y)   
-        assert(len(self.trainingData > 0))
+        assert(len(self.trainingData) > 0)
         assert(len(self.trainingData) == len(self.trainingLabels))
         print(len(self.trainingData))
         for k in range(len(self.trainingData)):
