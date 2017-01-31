@@ -10,6 +10,42 @@ class LocationPredictor:
     trainingData = []
     trainingLabels = []
     def __init__(self):
+        #self.addTrainingSamples()
+        #read sample data from DB
+        samples=cloudserver.db.getAllLocationSamples()
+        print(len(samples))
+        pairs=[(s["sample"],s["label"]) for s in samples]
+
+        #prepare KNN
+        self.KNN=KNearestNeighbors(pairs)
+
+        #list_of_rooms={}
+        list_of_rooms_each_lab={}
+        for room in cloudserver.db.ROOM_DEFINITION:
+            id=room["id"]
+            lab=room["lab"]
+            #if id not in list_of_rooms:
+            #    list_of_rooms[id]=id
+
+            if lab not in list_of_rooms_each_lab:
+                list_of_rooms_each_lab[lab]=[]
+            list_of_rooms_each_lab[lab]+=[id]
+
+        #prepare lab prior, as a list of votes (roomID, #vote)
+        prior_vote_const=2
+        self.prior_votes={}
+        self.prior_votes[0]=[]
+        for lab in list_of_rooms_each_lab:
+            if lab>0:
+                prior=[]
+                for id in list_of_rooms_each_lab[lab]:
+                    prior.append((id,prior_vote_const))
+                self.prior_votes[lab]=prior
+
+        print("prior votes:")
+        print(self.prior_votes)
+
+    def addTrainingSamples(self):
         infile = "backup.txt"
         f = open(infile, 'r')
         x = f.readlines()
@@ -52,43 +88,7 @@ class LocationPredictor:
         for k in range(len(self.trainingData)):
             cloudserver.db.addLocationSample(self.trainingLabels[k], self.trainingData[k])             
         print "successful reupload"
-
-
-        #read sample data from DB
-        samples=cloudserver.db.getAllLocationSamples()
-        print(len(samples))
-        pairs=[(s["sample"],s["label"]) for s in samples]
-
-        #prepare KNN
-        self.KNN=KNearestNeighbors(pairs)
-
-        #list_of_rooms={}
-        list_of_rooms_each_lab={}
-        for room in cloudserver.db.ROOM_DEFINITION:
-            id=room["id"]
-            lab=room["lab"]
-            #if id not in list_of_rooms:
-            #    list_of_rooms[id]=id
-
-            if lab not in list_of_rooms_each_lab:
-                list_of_rooms_each_lab[lab]=[]
-            list_of_rooms_each_lab[lab]+=[id]
-
-        #prepare lab prior, as a list of votes (roomID, #vote)
-        prior_vote_const=2
-        self.prior_votes={}
-        self.prior_votes[0]=[]
-        for lab in list_of_rooms_each_lab:
-            if lab>0:
-                prior=[]
-                for id in list_of_rooms_each_lab[lab]:
-                    prior.append((id,prior_vote_const))
-                self.prior_votes[lab]=prior
-
-        print("prior votes:")
-        print(self.prior_votes)
-
-        
+        return
 
     def personal_classifier(self, ID, sample):
         prior=[]
