@@ -258,9 +258,22 @@ class DBMgr(object):
 			result += [item]
 		return self._encode(result, True)
 
-
-
-
+	def personalFootprint(self, person, start, end):
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			if person in shot["data"]:
+				item=shot["data"][person]
+				item["timestamp"]=shot["timestamp"]
+				result+=[item]
+		
+		return self._encode(result,True)		
 
 
 
