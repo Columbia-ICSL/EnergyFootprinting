@@ -7,9 +7,56 @@ urls = (
 "/","train")
 
 class LocationPredictor:
+    trainingData = []
+    trainingLabels = []
     def __init__(self):
+        infile = "backup.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        self.trainingData = []
+        for i in range(len(x)):
+            y = x[i].split('\t')
+            last = y[-1].split('\n')
+            y[-1] = last[0]
+            y = map(int, y)
+            self.trainingData.append(y)
+        infile = "backuplabels.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        self.trainingLabels = []
+        for j in range(len(x)):
+            y = x[j]
+            last = y.split('\n')
+            y = last[0]
+            self.trainingLabels.append(y)
+        infile = "backup2.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        for i in range(len(x)):
+            y = x[i].split('\t')
+            last = y[-1].split('\n')
+            y[-1] = last[0]
+            y = map(int, y)
+            self.trainingData.append(y)
+        infile = "backuplabels2.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        for j in range(len(x)):
+            y = x[j]
+            last = y.split('\n')
+            y = last[0]
+            self.trainingLabels.append(y)   
+        assert(len(self.trainingData > 0))
+        assert(len(self.trainingData) == len(self.trainingLabels))
+        print(len(self.trainingData))
+        for k in range(len(self.trainingData)):
+            cloudserver.db.addLocationSample(self.trainingLabels[k], self.trainingData[k])             
+        print "successful reupload"
+
+
         #read sample data from DB
         samples=cloudserver.db.getAllLocationSamples()
+        print(len(samples))
         pairs=[(s["sample"],s["label"]) for s in samples]
 
         #prepare KNN
@@ -41,6 +88,7 @@ class LocationPredictor:
         print("prior votes:")
         print(self.prior_votes)
 
+        
 
     def personal_classifier(self, ID, sample):
         prior=[]
