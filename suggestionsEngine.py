@@ -167,7 +167,6 @@ class suggestionsEngine:
 
 	def turnOffApplianceSuggestion(self):
 		personalUsage = cloudserver.db.CurrentApplianceUsage(5)
-		print(personalUsage)
 		#users = {}
 		#for person in personalUsage:
 			#for appliance in personalUsage[person]:
