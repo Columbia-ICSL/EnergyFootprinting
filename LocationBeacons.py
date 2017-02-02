@@ -113,6 +113,7 @@ class BeaconVals:
 
         #json_return["debug"] = turnOffApplianceUsers
         labInt = usernameAttributes["lab"]
+        print("waiting for suggestion")
         if (ID in turnOffApplianceUsers.keys()):
             print("found ID")
             print(turnOffApplianceUsers[ID])
@@ -131,7 +132,7 @@ class BeaconVals:
                 applianceAction = appliance["actionable"]
                 applianceType = appliance["type"]
                 messageID = "{0}|{1}|{2}".format("turnoff", ID, applianceID)
-                if (powerUsage <= 0):
+                if (powerUsage < 0):
                     continue
                 title="Reduce power of "+applianceName
                 body=applianceName+" is consuming excess power (" + str(powerUsage) + " watts), please see if you can switch off some appliance."
