@@ -116,16 +116,16 @@ class BeaconVals:
         print("waiting for suggestion")
         if (ID in turnOffApplianceUsers.keys()):
             print("found ID " + ID)
-            print(turnOffApplianceUsers[ID])
             applianceList = turnOffApplianceUsers[ID]
             for appliance in applianceList:
                 if (not appliance["actionable"]):
                     continue
                 room = appliance["rooms"]
                 room = room[0]
-                if (cloudserver.db.RoomIDToLab(room) != labInt):
-                    print("Exception Log: Caught incorrect lab definition {0} {1}".format(cloudserver.db.RoomIDToLab(room), labInt))
-                    continue
+                #if (cloudserver.db.RoomIDToLab(room) != labInt):
+                #    print("Exception Log: Caught incorrect lab definition {0} {1}".format(cloudserver.db.RoomIDToLab(room), labInt))
+                #    continue
+                print("GOT HERE 0")
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
                 powerUsage = int(appliance["value"])
@@ -141,6 +141,7 @@ class BeaconVals:
                 if(powerUsage>50 and applianceType!="HVAC" and applianceAction == ACTIONABLE):
                     #!!TODO: make doPush=1,2,3,4 according to various criteria, not a single threshold.
                     doPush=1
+                print("GOT HERE 1")
                 json_return["suggestions"].append(
                     make_suggestion_item("turnoff",title, body, reward, messageID, doPush, {"appl":applianceName,"appl_id":applianceID, "power":powerUsage}))
 
