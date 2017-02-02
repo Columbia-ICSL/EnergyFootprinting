@@ -114,6 +114,8 @@ class BeaconVals:
         #json_return["debug"] = turnOffApplianceUsers
         labInt = usernameAttributes["lab"]
         if (ID in turnOffApplianceUsers.keys()):
+            print("found ID")
+            print(turnOffApplianceUsers[ID])
             applianceList = turnOffApplianceUsers[ID]
             for appliance in applianceList:
                 if (not appliance["actionable"]):
