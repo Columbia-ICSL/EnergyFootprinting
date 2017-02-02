@@ -293,6 +293,9 @@ class DBMgr(object):
 	def screenNameCheckAvailability(self, screenName):
 		return len(list(self.registration_col1.find({"screenName":screenName}))) == 0
 	
+	def deviceIDCheckAvailability(self, deviceID):
+		return len(list(self.registration_col1.find({"userID":deviceID}))) == 0
+		
 	def screenNameUpdate(self, screenName, userID):
 		try:
 			self.registration_col1.update({"userID": userID},
