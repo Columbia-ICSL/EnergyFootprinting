@@ -91,7 +91,6 @@ class BeaconVals:
         json_return["location_id"]=location
         json_return["location"]=cloudserver.db.RoomIdToName(location)
         if (cloudserver.db.userIDLookup(ID) is None):
-            print(ID)
             return cloudserver.db._encode(json_return,False)
         usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
 
