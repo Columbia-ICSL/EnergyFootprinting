@@ -482,7 +482,6 @@ class DBMgr(object):
 		total_con=0.0
 		for applianceID in app_list:
 			app=self.list_of_appliances[applianceID]
-			print(app)
 			app["share"]=app["value"]/(1.0*app["total_users"])
 
 			total_con+=app["share"]
@@ -499,6 +498,9 @@ class DBMgr(object):
 		"maintenance tree node's energy consumption item, and update a sum value"
 		known_room=None
 		try:
+			if (applianceID not in self.list_of_appliances):
+				print("applianceID " + applianceID + " not in list of appliances.")
+				return
 			app=self.list_of_appliances[applianceID]
 			known_room=app["rooms"]
 			if value<0:
