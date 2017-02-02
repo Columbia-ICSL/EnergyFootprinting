@@ -482,6 +482,7 @@ class DBMgr(object):
 		total_con=0.0
 		for applianceID in app_list:
 			app=self.list_of_appliances[applianceID]
+			print(app)
 			app["share"]=app["value"]/(1.0*app["total_users"])
 
 			total_con+=app["share"]
