@@ -115,7 +115,7 @@ class BeaconVals:
         labInt = usernameAttributes["lab"]
         print("waiting for suggestion")
         if (ID in turnOffApplianceUsers.keys()):
-            print("found ID")
+            print("found ID " + ID)
             print(turnOffApplianceUsers[ID])
             applianceList = turnOffApplianceUsers[ID]
             for appliance in applianceList:
@@ -276,7 +276,8 @@ class BeaconVals:
                 else: #good to go
                     #remember this push, do not repeat.
                     cloudserver.db.pushManagementPushUpdate(messageID)
-
+        print("HERE IS THE JSON")
+        print(json_return)
         return cloudserver.db._encode(json_return,False)
 
     def GET(self):
