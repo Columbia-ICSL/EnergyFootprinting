@@ -19,7 +19,6 @@ class Save:
             cloudserver.db.ReportEnergyValue(Id,data['energy'],None)
         else:
             cloudserver.db.ReportEnergyValue(Id,data['energy'],data['raw'])
-        print(str(data))
         return "200 OK"
         
 class SaveHVAC:
