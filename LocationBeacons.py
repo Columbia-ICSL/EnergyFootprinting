@@ -44,7 +44,9 @@ class BeaconVals:
         ID = locs[0]
         locs = map(int, l)
         location = self.predictor.personal_classifier(ID,locs)
-
+        print("Location Data for user " + ID)
+        print(locs)
+        print(location)
         checkUnknown = False
         for loc in locs:
             if (loc != -100):
