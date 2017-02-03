@@ -10,10 +10,15 @@ class userManagement:
 			return "case 1"
 		length = len(userData)
 		deviceID = userData[0]
-		if (len(userData) > 1):
+		if (len(userData) == 1):
 			if (not cloudserver.db.deviceIDCheckAvailability(deviceID)):
+				return "0" #already registered
+			else:
+				return "1" #need to register
+		if (len(userData) > 1):
+			if (not cloudserver.db.deviceIDCheckAvailability(deviceID)): #not available
 				return "device already registered"
-			if (not cloudserver.db.screenNameCheckAvailability(userData[1])):
+			if (not cloudserver.db.screenNameCheckAvailability(userData[1])): #not available
 				return "screen name taken"
 			cloudserver.db.screenNameRegister(userData[1], deviceID, True)
 		return "0"
