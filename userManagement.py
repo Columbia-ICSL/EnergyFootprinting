@@ -7,7 +7,7 @@ class userManagement:
 		raw_data=web.data()
 		userData=raw_data.split(',')
 		if (len(userData) == 0):
-			return "case 1"
+			return "no username provided"
 		length = len(userData)
 		deviceID = userData[0]
 		if (len(userData) == 1):
@@ -15,13 +15,16 @@ class userManagement:
 				return "0" #already registered
 			else:
 				return "1" #need to register
-		if (len(userData) > 1):
+		if (len(userData) == 2):
 			if (not cloudserver.db.deviceIDCheckAvailability(deviceID)): #not available
 				return "device already registered"
 			if (not cloudserver.db.screenNameCheckAvailability(userData[1])): #not available
 				return "screen name taken"
 			cloudserver.db.screenNameRegister(userData[1], deviceID, True)
-		return "0"
+			return "0"
+		if (len(userData) == 3):
+			cloudserver.db.userIDRemoveAll(deviceID)
+			return "0"
 		#if (len(userData) == 1):
 		#	ret = cloudserver.db.userIDLookup(deviceID)
 		#	if (ret is None):
