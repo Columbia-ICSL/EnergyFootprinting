@@ -43,6 +43,9 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
+        print(raw_data)
+        print(ID)
+        print(locs)
         location = self.predictor.personal_classifier(ID,locs)
         print("Location Data for user " + ID)
         print(locs)
