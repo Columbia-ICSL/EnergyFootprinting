@@ -10,7 +10,7 @@ class LocationPredictor:
     trainingData = []
     trainingLabels = []
     def __init__(self):
-        #self.addTrainingSamples()
+        self.addTrainingSamples()
         #read sample data from DB
         samples=cloudserver.db.getAllLocationSamples()
         print(len(samples))
