@@ -25,6 +25,7 @@ class userManagement:
 		if (len(userData) == 3):
 			cloudserver.db.userIDRemoveAll(deviceID)
 			return "0"
+		return "too many parameters"
 		#if (len(userData) == 1):
 		#	ret = cloudserver.db.userIDLookup(deviceID)
 		#	if (ret is None):
