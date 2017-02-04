@@ -13,7 +13,7 @@ class KNearestNeighbors:
 	def get_nearest_pairs(self, sample, K=7):
 		distances=[]
 		print("sample lengths:")
-		print((len(self.sample), len(self.samplePairs[0][0])))
+		print((len(sample), len(self.samplePairs[0][0])))
 		for i in xrange(len(self.samplePairs)):
 			dist = self.EUDist(zero_offset(self.samplePairs[i][0]), zero_offset(sample))
 			distances.append((dist, self.samplePairs[i][1]))
