@@ -48,7 +48,7 @@ class LocationPredictor:
     def addTrainingSamples(self):
         samples=cloudserver.db.getAllLocationSamples()
         if (len(samples) > 0):
-            print(len(samples) + " samples found")
+            print(str(len(samples)) + " samples found")
             return
         print("no samples found")
         infile = "backup.txt"
