@@ -13,6 +13,6 @@ class appSupport:
 			location = cloudserver.db.getUserLocation(data.id)
 			print location
 			ret = cloudserver.db.calculateEnergyFootprint(location)
-		return ret["value"]
+		return ret
 
 appURL = web.application(urls, locals());

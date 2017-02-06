@@ -481,17 +481,25 @@ class DBMgr(object):
 		ret={
 			"value":0,
 			"HVAC":0,
-			"Lighting":0,
-			"Plugmeters":0
+			"Light":0,
+			"Electrical":0
 		}
 		total_con = 0.0
 		print("starting appliances")
 		for applianceID in app_list:
 			app = self.list_of_appliances[applianceID]
-			total_con += app["value"]/(1.0*app["total_users"])
-			print(app["type"])
+			appValue = app["value"]/(1.0*app["total_users"])
+			total_con += appValue
+			if (app["type"] == "Electrical"):
+				ret["Electrical"] += appValue
+				continue
+			if (app["type"] == "HVAC"):
+				ret["HVAC"] += appValue
+				continue
+			if (app["type"] == "Light"):
+				ret["Light"] += appValue
 		ret["value"]=total_con
-		return ret
+		return self._encode(ret, false)
 
 	def calculateRoomFootprint(self, roomID):
 		app_list=self.list_of_rooms[roomID]["appliances"]
