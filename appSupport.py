@@ -4,7 +4,7 @@ import cloudserver
 urls = ("/", "appSupport")
 
 class appSupport:
-	def GET(self):
+	def POST(self):
 		return "hello world"
 
-appSPT = web.application(urls, locals());
+appURL = web.application(urls, locals());
