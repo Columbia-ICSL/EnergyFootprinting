@@ -499,7 +499,7 @@ class DBMgr(object):
 			if (app["type"] == "Light"):
 				ret["Light"] += appValue
 		ret["value"]=total_con
-		return self._encode(ret, false)
+		return self._encode(ret, False)
 
 	def calculateRoomFootprint(self, roomID):
 		app_list=self.list_of_rooms[roomID]["appliances"]
