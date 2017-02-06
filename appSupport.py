@@ -9,7 +9,9 @@ class appSupport:
 		if cloudserver.db.userIDLookup(data.id) == None :
 			return "Invalid userID"
 		else:
+			print "user found"
 			location = cloudserver.db.getUserLocation(data.id)
+			print location
 		return location
 
 appURL = web.application(urls, locals());
