@@ -14,6 +14,7 @@ import Location
 import LocationBeacons
 import locationTraining
 import userRanking
+import appSupport
 import suggestionDecisions
 import userManagement
 import Query
@@ -34,6 +35,7 @@ urls = (
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
+    "/api/appSupport", appSupport.appSPT,
     "/api/dataExtraction", newDataAnalytics.dataExtraction, 
     "/api/Beacons", LocationBeacons.Beacons,
     "/api/userRankings", userRanking.userRankings,
