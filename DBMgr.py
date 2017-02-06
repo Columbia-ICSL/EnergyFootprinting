@@ -485,6 +485,7 @@ class DBMgr(object):
 			"Plugmeters":0
 		}
 		total_con = 0.0
+		print("starting appliances")
 		for applianceID in app_list:
 			app = self.list_of_appliances[applianceID]
 			total_con += app["value"]/(1.0*app["total_users"])
