@@ -43,8 +43,13 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
+        print(raw_data)
+        print(ID)
+        print(locs)
         location = self.predictor.personal_classifier(ID,locs)
-
+        print("Location Data for user " + ID)
+        print(locs)
+        print(location)
         checkUnknown = False
         for loc in locs:
             if (loc != -100):
@@ -91,9 +96,7 @@ class BeaconVals:
         json_return["location_id"]=location
         json_return["location"]=cloudserver.db.RoomIdToName(location)
         if (cloudserver.db.userIDLookup(ID) is None):
-            print(ID)
             return cloudserver.db._encode(json_return,False)
-        print(ID)
         usernameAttributes = cloudserver.db.getAttributes(cloudserver.db.userIDLookup(ID), False)
 
 
@@ -122,9 +125,9 @@ class BeaconVals:
                     continue
                 room = appliance["rooms"]
                 room = room[0]
-                if (cloudserver.db.RoomIDToLab(room) != labInt):
-                    print("Exception Log: Caught incorrect lab definition {0} {1}".format(cloudserver.db.RoomIDToLab(room), labInt))
-                    continue
+                #if (cloudserver.db.RoomIDToLab(room) != labInt):
+                #    print("Exception Log: Caught incorrect lab definition {0} {1}".format(cloudserver.db.RoomIDToLab(room), labInt))
+                #    continue
                 applianceID = appliance["id"]
                 applianceName = appliance["name"]
                 powerUsage = int(appliance["value"])

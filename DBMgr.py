@@ -258,9 +258,22 @@ class DBMgr(object):
 			result += [item]
 		return self._encode(result, True)
 
-
-
-
+	def personalFootprint(self, person, start, end):
+		result=[]
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
+		for shot in iterator:
+			if person in shot["data"]:
+				item=shot["data"][person]
+				item["timestamp"]=shot["timestamp"]
+				result+=[item]
+		
+		return self._encode(result,True)		
 
 
 
@@ -280,6 +293,9 @@ class DBMgr(object):
 	def screenNameCheckAvailability(self, screenName):
 		return len(list(self.registration_col1.find({"screenName":screenName}))) == 0
 	
+	def deviceIDCheckAvailability(self, deviceID):
+		return len(list(self.registration_col1.find({"userID":deviceID}))) == 0
+		
 	def screenNameUpdate(self, screenName, userID):
 		try:
 			self.registration_col1.update({"userID": userID},
@@ -458,7 +474,7 @@ class DBMgr(object):
 				self.list_of_appliances[applianceID]["total_users"]-=1
 		
 	def updateApplianceValue(self, applianceID, value):
-		self.list_of_appliances[applianceID]["value"]=value
+		self.list_of_appliances[applianceID]["value"]=int(value)
 
 	def calculateRoomFootprint(self, roomID):
 		app_list=self.list_of_rooms[roomID]["appliances"]
@@ -485,6 +501,9 @@ class DBMgr(object):
 		"maintenance tree node's energy consumption item, and update a sum value"
 		known_room=None
 		try:
+			if (applianceID not in self.list_of_appliances):
+				print("applianceID " + applianceID + " not in list of appliances.")
+				return
 			app=self.list_of_appliances[applianceID]
 			known_room=app["rooms"]
 			if value<0:
