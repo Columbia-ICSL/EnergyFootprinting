@@ -35,7 +35,7 @@ urls = (
     "/api/LocationReportAlt",Location.LocationReportAlt, #room ID, +(timestamp)?
     "/api/Query",Query.query, #room ID + time range
 #    "/api/Beacons", "beacons",
-    "/api/appSupport", appSupport.appSPT,
+    "/api/appSupport", appSupport.appURL,
     "/api/dataExtraction", newDataAnalytics.dataExtraction, 
     "/api/Beacons", LocationBeacons.Beacons,
     "/api/userRankings", userRanking.userRankings,
