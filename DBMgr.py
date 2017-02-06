@@ -476,6 +476,23 @@ class DBMgr(object):
 	def updateApplianceValue(self, applianceID, value):
 		self.list_of_appliances[applianceID]["value"]=int(value)
 
+	def calculateEnergyFootprint(self, roomID):
+		app_list=self.list_of_rooms[roomID]["appliances"]
+		ret={
+			"value":0,
+			"HVAC":0,
+			"Lighting":0,
+			"Plugmeters":0
+		}
+		total_con = 0.0
+		print("starting appliances")
+		for applianceID in app_list:
+			app = self.list_of_appliances[applianceID]
+			total_con += app["value"]/(1.0*app["total_users"])
+			print(app["type"])
+		ret["value"]=total_con
+		return ret
+
 	def calculateRoomFootprint(self, roomID):
 		app_list=self.list_of_rooms[roomID]["appliances"]
 		ret={

@@ -12,7 +12,7 @@ class appSupport:
 			print "user found"
 			location = cloudserver.db.getUserLocation(data.id)
 			print location
-			ret = cloudserver.db.calculateRoomFootprint(location)
+			ret = cloudserver.db.calculateEnergyFootprint(location)
 		return ret["value"]
 
 appURL = web.application(urls, locals());
