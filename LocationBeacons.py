@@ -26,11 +26,12 @@ NO_DUTY_CYCLE = False
 
 def labIntToName(x):
     return {
+        0:"Jiang Lab",
         1:"Burke Lab",
         2:"Teherani Lab",
         3:"Jiang Lab",
         4:"Sajda Lab",
-        5:"Danino Lab"
+        5:"Danino Lab",
     }[x]
 
 
