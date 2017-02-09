@@ -311,13 +311,17 @@ class DBMgr(object):
 			"type":"screenNameRegister",
 			"time":self._now(),
 			"screenName":screenName,
-			"userID":userID
+			"userID":userID,
+			"rewards":0,
+			"tempRewards":0
 			})
 		try:
 			self.registration_col1.insert({
 				"screenName":screenName,
 				"userID":userID,
-				"control":control
+				"control":control,
+				"balance":0,
+				"tempBalance":0
 				})
 			return True
 		except pymongo.errors.DuplicateKeyError:
@@ -1249,31 +1253,36 @@ class DBMgr(object):
 			"public":public
 			})
 
-	def updateRankingData(self, user, balance):
-		self.ranking.update({
-			"user": user
+	def updateTempBalanceData(self, deviceID, balance):
+		self.registration_col1.update({
+			"userID": deviceID
 			},
 			{
 			"$set":{
-				"balance": balance
+				"tempBalance": balance
 				}
 			},
 			multi=True
 			)
 
-	def updateUserBalance(self, user, balance):
-		old_balance = self.getUserBalance(user)
-		self.updateRankingData(user, old_balance + balance)
+	def updateUserBalance(self, deviceID, balance):
+		old_balance = self.getUserTempBalance(deviceID)
+		self.updateTempBalanceData(deviceID, old_balance + balance)
 
 	def getRankingData(self):
 		return self.ranking.find().sort([("balance",-1),("user",1)])
 
-	def getUserBalance(self, user):
-		U = self.ranking.find_one({"user":user})
+	def getUserTempBalance(self, deviceID):
+		U = self.registration_col1.find_one({"userID":deviceID})
+		if (U == None):
+			return False
+		return U["tempBalance"]
+
+	def getUserBalance(self, deviceID):
+		U = self.registration_col1.find_one({"userID":deviceID})
 		if (U == None):
 			return False
 		return U["balance"]
-
 
 	def indirectSensingCollecting(self, applianceID, value):
 		self.indirectSensing.insert({

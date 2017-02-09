@@ -60,7 +60,8 @@ class BeaconVals:
             unknown_return={
             "location":"Unknown Location",
             "location_id":"Unknown Location",
-            "balance":cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID)),
+            "balance":cloudserver.db.getUserBalance(ID),
+            "tempBalance":cloudserver.db.getUserTempBalance(ID),
             "suggestions":[]
             }
             cloudserver.db.ReportLocationAssociation(ID, None)
@@ -72,14 +73,16 @@ class BeaconVals:
         turnOffApplianceUsers = cloudserver.SE.turnOffApplianceUsers
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
         phantomApplianceUsers = cloudserver.SE.phantomApplianceUsers
-        balance_server = cloudserver.db.getUserBalance(cloudserver.db.userIDLookup(ID))
-
+        balance_server = cloudserver.db.getUserBalance(ID)
+        tempBalance_server = cloudserver.db.getUserTempBalance(ID)
         if (balance_server == False):
             balance_server = 0
+            tempBalance_server = 0
         json_return={
             "location":"Location Name",
             "location_id":"locationIDString",
             "balance":balance_server,
+            "tempBalance": tempBalance_server,
             "suggestions":[]
         }
 
