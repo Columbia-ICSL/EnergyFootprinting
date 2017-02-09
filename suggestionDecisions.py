@@ -16,7 +16,7 @@ class DecisionVals:
 		cloudserver.db.recordEvent(user, "suggestion received", messageID)
 		cloudserver.db.pushManagementDispUpdate(messageID)
 		coins = int(data[2])
-		cloudserver.db.updateUserBalance(user, coins)
+		cloudserver.db.updateUserBalance(deviceID, coins)
 		return "success"
 
 	def GET(self):
