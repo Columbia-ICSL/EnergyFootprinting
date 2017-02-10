@@ -76,6 +76,8 @@ class BeaconVals:
         balance_server = cloudserver.db.getUserBalance(ID)
         tempBalance_server = cloudserver.db.getUserTempBalance(ID)
         if (balance_server == False):
+            print(cloudserver.db.userIDLookup(ID))
+            print("Balance error")
             balance_server = 0
             tempBalance_server = 0
         json_return={
