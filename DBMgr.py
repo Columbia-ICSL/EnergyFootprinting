@@ -1282,10 +1282,9 @@ class DBMgr(object):
 
 	def getUserBalance(self, deviceID):
 		U = list(self.registration_col1.find({"userID":deviceID}))
-		print("user balance")
-		print(U)
 		if (len(U) == 0):
 			return False
+		print(U[0].get('balance'))
 		return U[0]["balance"]
 
 	def indirectSensingCollecting(self, applianceID, value):
