@@ -25,6 +25,12 @@ class userManagement:
 		if (len(userData) == 3):
 			cloudserver.db.userIDRemoveAll(deviceID)
 			return "0"
+		if (len(userData) == 4):
+			username = userData[1]
+			if (cloudserver.db.updateName(deviceID, username)):
+				return "0" #successfully changed device ID
+			else:
+				return "1" #screen name not found
 		return "too many parameters"
 		#if (len(userData) == 1):
 		#	ret = cloudserver.db.userIDLookup(deviceID)
