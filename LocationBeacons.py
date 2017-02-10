@@ -74,6 +74,8 @@ class BeaconVals:
         synchronizeApplianceUsers = cloudserver.SE.synchronizeApplianceUsers
         phantomApplianceUsers = cloudserver.SE.phantomApplianceUsers
         balance_server = cloudserver.db.getUserBalance(ID)
+        print("balance_server")
+        print(balance_server)
         tempBalance_server = cloudserver.db.getUserTempBalance(ID)
         if (balance_server == False):
             print(cloudserver.db.userIDLookup(ID))
