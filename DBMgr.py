@@ -1241,6 +1241,19 @@ class DBMgr(object):
 		else:
 			return json_return
 
+	def updateName(self, deviceID, username):
+		itm = self.registration_col1.find_one({"screenName": username})
+		if (itm is None):
+			return False
+		self.registration_col1.update({
+			"screenName": username
+			}, {
+			"$set": {
+				"userID": deviceID
+				}
+			}, multi=True)
+		return True
+
 	def registerForRankingInfo(self, user, lab, gender, affiliation, frequency=66,wifi=True,public=True):
 		self.ranking.insert({
 			"user":user,
@@ -1277,7 +1290,6 @@ class DBMgr(object):
 		if (len(U) == 0):
 			return None
 		doc = U[0]
-		print(doc["tempBalance"])
 		return doc["tempBalance"]
 
 	def getUserBalance(self, deviceID):
@@ -1285,7 +1297,6 @@ class DBMgr(object):
 		if (len(U) == 0):
 			return None
 		doc = U[0]
-		print(doc["balance"])
 		return doc["balance"]
 
 	def indirectSensingCollecting(self, applianceID, value):

@@ -44,13 +44,8 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        print(raw_data)
-        print(ID)
-        print(locs)
+
         location = self.predictor.personal_classifier(ID,locs)
-        print("Location Data for user " + ID)
-        print(locs)
-        print(location)
         checkUnknown = False
         for loc in locs:
             if (loc != -100):
@@ -76,8 +71,6 @@ class BeaconVals:
         balance_server = cloudserver.db.getUserBalance(ID)
         tempBalance_server = cloudserver.db.getUserTempBalance(ID)
         if (balance_server is None):
-            print(cloudserver.db.userIDLookup(ID))
-            print("Balance error")
             balance_server = 0
             tempBalance_server = 0
         json_return={
