@@ -1273,16 +1273,20 @@ class DBMgr(object):
 		return self.ranking.find().sort([("balance",-1),("user",1)])
 
 	def getUserTempBalance(self, deviceID):
-		U = self.registration_col1.find_one({"userID":deviceID})
-		if (U == None):
+		U = list(self.registration_col1.find({"userID":deviceID}))
+		print("user temp balance")
+		print(U)
+		if (len(U) == 0):
 			return False
-		return U["tempBalance"]
+		return U[0]["tempBalance"]
 
 	def getUserBalance(self, deviceID):
-		U = self.registration_col1.find_one({"userID":deviceID})
-		if (U == None):
+		U = list(self.registration_col1.find({"userID":deviceID}))
+		print("user balance")
+		print(U)
+		if (len(U) == 0):
 			return False
-		return U["balance"]
+		return U[0]["balance"]
 
 	def indirectSensingCollecting(self, applianceID, value):
 		self.indirectSensing.insert({
