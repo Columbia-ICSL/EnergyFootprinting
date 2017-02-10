@@ -1278,15 +1278,15 @@ class DBMgr(object):
 			return False
 		doc = U[0]
 		print(doc["tempBalance"])
-		print(doc[unicode('tempBalance')])
-		return U[0]["tempBalance"]
+		return doc["tempBalance"]
 
 	def getUserBalance(self, deviceID):
 		U = list(self.registration_col1.find({"userID":deviceID}))
 		if (len(U) == 0):
 			return False
-		print(U[0])
-		return U[0]["balance"]
+		doc = U[0]
+		print(doc["balance"])
+		return doc["balance"]
 
 	def indirectSensingCollecting(self, applianceID, value):
 		self.indirectSensing.insert({
