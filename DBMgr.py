@@ -1276,7 +1276,9 @@ class DBMgr(object):
 		U = list(self.registration_col1.find({"userID":deviceID}))
 		if (len(U) == 0):
 			return False
-		print(U[0])
+		doc = U[0]
+		print(doc["tempBalance"])
+		print(doc[unicode('tempBalance')])
 		return U[0]["tempBalance"]
 
 	def getUserBalance(self, deviceID):
