@@ -481,13 +481,15 @@ class DBMgr(object):
 		self.list_of_appliances[applianceID]["value"]=int(value)
 
 	def calculateEnergyFootprint(self, roomID):
-		app_list=self.list_of_rooms[roomID]["appliances"]
 		ret={
 			"value":0,
 			"HVAC":0,
 			"Light":0,
 			"Electrical":0
 		}
+		if (roomID is None):
+			return ret
+		app_list=self.list_of_rooms[roomID]["appliances"]
 		total_con = 0.0
 		print("starting appliances")
 		for applianceID in app_list:
@@ -563,7 +565,10 @@ class DBMgr(object):
 		self.watchdogRefresh_Appliance(applianceID)
 		
 	def getUserLocation(self, user_id):
-		return self.location_of_users[user_id]
+		if user_id in self.location_of_users:
+			return self.location_of_users[user_id]
+		else:
+			return None
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
 		oldS=None
