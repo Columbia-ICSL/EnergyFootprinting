@@ -8,7 +8,8 @@ urls = (
 "/(.+)/SavePlug","SavePlug", #raw values: watts, kwh
 "/(.+)/SaveHVAC","SaveHVAC",  #raw values: pressure+temp
 "/(.+)/SaveLight","SaveLight", #raw values: on or off / watts
-"/(.+)","Save"
+"/(.+)","Save",
+"/SaveBACNET","SaveBACNET"
 )
 
 class Save:

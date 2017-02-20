@@ -8,6 +8,7 @@ import DBMgr
 db=DBMgr.DBMgr()
 
 import Energy
+import EnergyHVAC
 import indirectSensingCollection
 import particleSensorCollection
 import Location
@@ -29,6 +30,7 @@ import visualizationAPI
 urls = (
  
     "/api/EnergyReport",Energy.EnergyReport,
+    "/api/EnergyHVAC", EnergyHVAC.EnergyReportBACNET,
     "/api/IndirectSensing", indirectSensingCollection.IndirectSensing,
     "/api/particleSensing", particleSensorCollection.particleSensing,
     "/api/LocationReport",Location.LocationReport, #room ID, +(timestamp)?
