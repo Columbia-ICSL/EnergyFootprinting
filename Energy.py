@@ -12,13 +12,6 @@ urls = (
 "/SaveBACNET","SaveBACNET"
 )
 
-class SaveBACNET:
-    def POST(self):
-        raw_data=web.data()
-        data=json.loads(raw_data)
-        for device in data:
-            cloudserver.db.ReportEnergyValue(device, data[device], None)
-        return "200 OK"
 class Save:
     def POST(self,Id):
         raw_data=web.data()
