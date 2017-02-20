@@ -106,6 +106,8 @@ class DBInit(object):
 	addAppliance("testDevice", "Aeon Labs Smart Switch 6 testings", "Electrical", "nwc1003b_c", ACTIONABLE, NO_DUTY_CYCLE)
         
         addAppliance("nwc1003g1_vav", "Heating Unit in 1003G", "HVAC", "nwc1003g.*", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003t2_vav", "Heating Unit in 1003b", "HVAC", "nwc1003b_a|nwc1003b_b|nwc1003b_t", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003o1_vav", "Heating Unit in 1003b", "HVAC", "nwc1003b_c|nwc1003b_danino", ACTIONABLE, NO_DUTY_CYCLE)
         # addAppliance("nwc1003b_fin", "Fin Tube Radiator in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
         # addAppliance("nwc1003b_vav", "Air Vent in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
         # addAppliance("nwc1003b_lex", "Fume Hoods in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)

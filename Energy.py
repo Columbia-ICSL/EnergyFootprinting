@@ -8,9 +8,17 @@ urls = (
 "/(.+)/SavePlug","SavePlug", #raw values: watts, kwh
 "/(.+)/SaveHVAC","SaveHVAC",  #raw values: pressure+temp
 "/(.+)/SaveLight","SaveLight", #raw values: on or off / watts
-"/(.+)","Save"
+"/(.+)","Save",
+"/SaveBACNET","SaveBACNET"
 )
 
+class SaveBACNET:
+    def POST(self):
+        raw_data=web.data()
+        data=json.loads(raw_data)
+        for device in data:
+            cloudserver.db.ReportEnergyValue(device, data[device], None)
+        return "200 OK"
 class Save:
     def POST(self,Id):
         raw_data=web.data()

@@ -25,7 +25,7 @@ class userManagement:
 		if (len(userData) == 3):
 			cloudserver.db.userIDRemoveAll(deviceID)
 			return "0"
-		if (len(userData) == 4):
+		if (len(userData) == 4): # device ID, username, nothing, nothing
 			username = userData[1]
 			if (cloudserver.db.updateName(deviceID, username)):
 				return "0" #successfully changed device ID
