@@ -582,7 +582,7 @@ class DBMgr(object):
 			if loc not in roomDict:
 				print "no location found"
 				continue
-			ret[user] = (roomDict[loc], loc)
+			ret[str(user)] = (roomDict[loc], loc)
 		print(ret)
 		return self._encode(ret, False)
 

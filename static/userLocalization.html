@@ -12,7 +12,26 @@ $(function(){
                 {},
                 function(payload){
                         console.log('Received data',payload);
-                        if(!payload.appliances){alert('error!');}
+			var obj = payload;
+                        var data = [];
+			var ul = document.getElementById("list");
+			$("ul").empty();
+			for (var key in obj) {
+			var item = document.createElement("ul");
+			item.appendChild(document.createTextNode(key));
+			var newItem = document.createElement("li");
+			newItem.appendChild(document.createTextNode(payload[key][0]));
+			var locationItem = document.createElement("li");
+			locationItem.appendChild(document.createTextNode(payload[key][1]));
+			item.appendChild(newItem);
+			item.appendChild(locationItem);
+			ul.appendChild(item);
+			
+			/*	data.push({id:key,
+					power:payload[key][0],
+					loc:payload[key][1]
+				});*/
+			}
                 },
                 'json');
         }).click();
@@ -31,7 +50,7 @@ ul li:nth-child(even) {
 </style>
 </head>
 <body>
-<h1>Debug interface: all appliances</h1>
+<h1>Building Energy Footprinting Localization Page</h1>
 <button id="reload">Reload</button>
 <ul id="list">
 
