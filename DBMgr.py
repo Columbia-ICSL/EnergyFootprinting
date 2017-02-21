@@ -573,9 +573,15 @@ class DBMgr(object):
 			for appliance in appliances:
 				room_val += self.list_of_appliances[appliance]["value"]
 			numUsers = len(self.list_of_rooms[room]["users"])
-			roomDict[room] = room_val/numUsers
+			if numUsers > 0:
+				roomDict[room] = room_val/numUsers
+			else:
+				roomDict[room] = room_val
 		for user in self.location_of_users:
 			loc = self.location_of_users[user]
+			if loc not in roomDict:
+				print "no location found"
+				continue
 			ret[user] = (roomDict[loc], loc)
 		print(ret)
 		return self._encode(ret, False)
