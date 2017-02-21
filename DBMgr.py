@@ -563,7 +563,24 @@ class DBMgr(object):
 			"raw":raw_data
 			})
 		self.watchdogRefresh_Appliance(applianceID)
-		
+	
+	def getUserLocalizationAPI(self):
+		ret = {}
+		roomDict = {}
+		for room in self.list_of_rooms:
+			appliances = self.list_of_rooms[room]["appliances"]
+			room_val = 0.0
+			for appliance in appliances:
+				room_val += self.list_of_appliances[appliance]["value"]
+			numUsers = len(self.list_of_rooms[room]["users"])
+			roomDict[room] = room_val/numUsers
+		for user in self.location_of_users:
+			loc = self.location_of_users[user]
+			ret[user] = (roomDict[loc], loc)
+		print(ret)
+		return self._encode(ret, False)
+
+
 	def getUserLocation(self, user_id):
 		if user_id in self.location_of_users:
 			return self.location_of_users[user_id]

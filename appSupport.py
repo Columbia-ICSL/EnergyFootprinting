@@ -1,7 +1,8 @@
 import web
 import cloudserver
 
-urls = ("/", "appSupport")
+urls = ("/", "appSupport",
+"/localization/", "userLocalizationAPI")
 
 class appSupport:
 	def GET(self):
@@ -15,4 +16,7 @@ class appSupport:
 			ret = cloudserver.db.calculateEnergyFootprint(location)
 		return ret
 
+class userLocalizationAPI:
+	def GET(self):
+		return cloudserver.db.getUserLocalizationAPI()
 appURL = web.application(urls, locals());
