@@ -205,7 +205,7 @@ class BeaconVals:
             json_return["suggestions"]=[
                     make_suggestion_item("misc",title, body, reward, messageID, doPush, {})]
             now = datetime.datetime.now()
-            if (now.hour > 9 and now.hour < 15):
+            if (now.hour > 9 and now.hour < 16):
                 print("MORNING CHECK PASSED")
                 print((now.hour, now.minute))
                 title="Morning App Check"
