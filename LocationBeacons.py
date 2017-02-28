@@ -198,12 +198,22 @@ class BeaconVals:
         control = cloudserver.db.getControl(ID)
         if (control == True):
             title="Control Group Suggestion"
-            body="Control group: There is no energy saving suggestions for this week. Please take your reward!"
-            reward=4
+            body="Control group: There is no energy saving suggestions for this week."
+            reward=0
             doPush=0
             messageID= "{0}|{1}|{2}".format("controlMessage", ID, "XXXX")
             json_return["suggestions"]=[
                     make_suggestion_item("misc",title, body, reward, messageID, doPush, {})]
+            now = datetime.datetime.now()
+            if (now.hour > 9 and now.hour < 15):
+                print("MORNING CHECK PASSED")
+                print((now.hour, now.minute))
+            title="Morning App Check"
+            body="Thank you for opening the app this morning! Please take your reward."
+            reward=1
+            doPush=0
+            messageID= "{0}|{1}|{2}".format("morningMessage", ID, "YYYY")
+            json_return["suggestions"].append(make_suggestion_item("morning",title,body,reward,doPush,{}))
 
 
         moveInterval=20*60
@@ -211,12 +221,15 @@ class BeaconVals:
         changeInterval = 20*60*60
         phantomInterval = 10*60
         miscInterval=60*60*4 #every 4 hours, now for the control message only.
+        morningInterval = 60*60*12 #every 12 hours, for the morning message.
 
-        moveSinceTime=cloudserver.db._now()-moveInterval
-        applianceSinceTime=cloudserver.db._now()-applianceInterval
-        changeSinceTime = cloudserver.db._now()-changeInterval
-        phantomSinceTime = cloudserver.db._now()-phantomInterval
-        miscSinceTime=cloudserver.db._now()-miscInterval
+        nowTime = cloudserver.db._now()
+        moveSinceTime=nowTime-moveInterval
+        applianceSinceTime=nowTime-applianceInterval
+        changeSinceTime = nowTime-changeInterval
+        phantomSinceTime = nowTime-phantomInterval
+        miscSinceTime= nowTime-miscInterval
+        morningSinceTime = nowTime-morningInterval
 
         returnList = []
         for item in json_return["suggestions"]:
@@ -235,6 +248,8 @@ class BeaconVals:
             if (item["type"] == "misc" and cloudserver.db.pushManagementDispCheck(item["messageID"], miscSinceTime)):
                 returnList.append(item)
                 continue
+            if (item["type"] == "morning" and cloudserver.db.pushManagementDispCheck(item["messageID"], morningSinceTime)):
+                returnList.append(item)
 
         json_return["suggestions"]=returnList
         userFrequency = usernameAttributes["frequency"]
