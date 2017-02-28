@@ -208,12 +208,12 @@ class BeaconVals:
             if (now.hour > 9 and now.hour < 15):
                 print("MORNING CHECK PASSED")
                 print((now.hour, now.minute))
-            title="Morning App Check"
-            body="Thank you for opening the app this morning! Please take your reward."
-            reward=1
-            doPush=0
-            messageID= "{0}|{1}|{2}".format("morningMessage", ID, "YYYY")
-            json_return["suggestions"].append(make_suggestion_item("morning",title,body,reward,doPush,{}))
+                title="Morning App Check"
+                body="Thank you for opening the app this morning! Please take your reward."
+                reward=1
+                doPush=0
+                messageID= "{0}|{1}|{2}".format("morningMessage", ID, "YYYY")
+                json_return["suggestions"].append(make_suggestion_item("morning",title,body,reward,messageID,doPush,{}))
 
 
         moveInterval=20*60
