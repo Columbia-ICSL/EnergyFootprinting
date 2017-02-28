@@ -13,7 +13,6 @@ class LocationPredictor:
         self.addTrainingSamples()
         #read sample data from DB
         samples=cloudserver.db.getAllLocationSamples()
-        print(len(samples))
         pairs=[(s["sample"],s["label"]) for s in samples]
 
         #prepare KNN
@@ -89,7 +88,6 @@ class LocationPredictor:
             self.trainingLabels.append(y)   
         assert(len(self.trainingData) > 0)
         assert(len(self.trainingData) == len(self.trainingLabels))
-        print(len(self.trainingData))
         for k in range(len(self.trainingData)):
             cloudserver.db.addLocationSample(self.trainingLabels[k], self.trainingData[k])             
         print "successful reupload"
