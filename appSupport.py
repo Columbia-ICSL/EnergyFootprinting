@@ -17,7 +17,7 @@ class appSupport:
 					"Light":0,
 					"Electrical":0
 				}
-				return ret
+				return cloudserver.db._encode(ret, False)
 			location = cloudserver.db.getUserLocation(data.id)
 			ret = cloudserver.db.calculateEnergyFootprint(location)
 			return ret
