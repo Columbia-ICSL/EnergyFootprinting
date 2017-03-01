@@ -19,9 +19,9 @@ class appSupport:
 				}
 				return ret
 			location = cloudserver.db.getUserLocation(data.id)
-			print location
 			ret = cloudserver.db.calculateEnergyFootprint(location)
-		return ret
+			return ret
+		return "How did you get here"
 
 class userLocalizationAPI:
 	def GET(self):
