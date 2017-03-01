@@ -292,8 +292,9 @@ class BeaconVals:
                 else: #good to go
                     #remember this push, do not repeat.
                     cloudserver.db.pushManagementPushUpdate(messageID)
-
-        return cloudserver.db._encode(json_return,False)
+        ret = cloudserver.db._encode(json_return,False)
+        print(ret)
+        return ret
 
     def GET(self):
         return 0
