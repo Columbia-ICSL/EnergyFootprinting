@@ -109,9 +109,9 @@ class DBInit(object):
         addAppliance("nwc1003t2_vav", "Heating Unit in 1003b", "HVAC", "nwc1003b_a|nwc1003b_b|nwc1003b_t", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1003o1_vav", "Heating Unit in 1003b", "HVAC", "nwc1003b_c|nwc1003b_danino", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1008_fcu", "Heating Vent in 1008", "HVAC", "nwc1008", ACTIONABLE, NO_DUTY_CYCLE)
-        addAppliance("nwcM1_fcu", "10F Mezzanine Heating Vent 1", "HVAC", "nwc1000m_a1|nwc1000m_a2|nwc1000m_a3", ACTIONABLE, NO_DUTY_CYCLE)
-        addAppliance("nwcM2_fcu", "10F Mezzanine Heating Vent 2", "HVAC", "nwc1000m_a4|nwc1000m_a5", ACTIONABLE, NO_DUTY_CYCLE)
-        addAppliance("nwcM3_fcu", "10F Mezzanine Heating Vent 3", "HVAC", "nwc1000m_a6|nwc1000m_a7", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwcM2_fcu", "10F Mezzanine Heating Vent 1", "HVAC", "nwc1000m_a1|nwc1000m_a2|nwc1000m_a3", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwcM3_fcu", "10F Mezzanine Heating Vent 2", "HVAC", "nwc1000m_a4|nwc1000m_a5", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwcM1_fcu", "10F Mezzanine Heating Vent 3", "HVAC", "nwc1000m_a6|nwc1000m_a7", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwcM4_fcu", "10F Mezzanine Heating Vent 4", "HVAC", "nwc1000m_a8", ACTIONABLE, NO_DUTY_CYCLE)
 
         # addAppliance("nwc1003b_fin", "Fin Tube Radiator in 1003B", "HVAC", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
