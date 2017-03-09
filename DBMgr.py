@@ -342,7 +342,9 @@ class DBMgr(object):
 		user = self.registration_col1.find_one({"userID": deviceID})
 		if user is not None:
 			if (user.get("email") == email) and (user.get("password") == password):
+				self.registration_col1.update({"userID":deviceID}, {"$set":{"loggedIn":True}})
 				return "0"
+
 			else:
 				return "1"
 		return "404"
