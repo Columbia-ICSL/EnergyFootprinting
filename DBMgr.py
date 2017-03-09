@@ -392,6 +392,8 @@ class DBMgr(object):
 		ret=list(self.registration_col1.find({"userID":userID}))
 		if len(ret)!=1:
 			return None
+		if "name" in ret[0]:
+			return ret[0]["name"]
 		return ret[0]["screenName"]
 	
 	def getControl(self, userID):
