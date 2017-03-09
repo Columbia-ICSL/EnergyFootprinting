@@ -47,7 +47,7 @@ class newUserManagement:
 		name = userData[1]
 		email = userData[2]
 		password = userData[3]
-		if (cloudserver.db.fullRegistration(deviceID, name, email, password))
+		if (cloudserver.db.fullRegistration(deviceID, name, email, password)):
 			return "0"
 		else:
 			return "1"
