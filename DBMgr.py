@@ -308,7 +308,7 @@ class DBMgr(object):
 	def fullRegistration(self, deviceID, name, email, password):
 		try:
 			self.registration_col1.insert({
-				"userID": userID,
+				"userID": deviceID,
 				"name": name,
 				"email": email,
 				"password": password,
