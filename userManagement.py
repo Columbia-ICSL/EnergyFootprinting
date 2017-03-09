@@ -1,6 +1,10 @@
 import web
 import cloudserver
-urls = ("/","userManagement")
+urls = ("/","userManagement",
+	"/newUser/", "newUserManagement",
+	"/checkUser/", "checkLogin",
+	"/login/", "login",
+	"/logout/", "logout")
 
 class userManagement:
 	def POST(self):
@@ -32,47 +36,42 @@ class userManagement:
 			else:
 				return "1" #screen name not found
 		return "too many parameters"
-		#if (len(userData) == 1):
-		#	ret = cloudserver.db.userIDLookup(deviceID)
-		#	if (ret is None):
-		#		return "100"
-		#	else:
-		#		return cloudserver.db.getAttributes(ret)
-		#if (userData[0] == "^^^"):
-		#	if (len(userData) == 6):
-		#		freq = int(float(userData[3]))
-		#		if (userData[4] == "true"):
-		#			wifi = True
-		#		else:
-		#			wifi = False
-		#		if (userData[5] == "true"):
-		#			public = True
-		#		else:
-		#			public = False
-		#		user = cloudserver.db.userIDLookup(userData[2])
-		#		if (cloudserver.db.rankingUpdateName(user, userData[1], freq, wifi, public)== False):
-		#			return "Username Taken"
-		#		if (cloudserver.db.screenNameUpdate(userData[1], userData[2])== False):
-		#			return "Username Taken"
-		#		return "updated"
-		#	return "failed update"
-		#username = userData[1]
-		#if (username == "100"):
-		#	return "Special Name"
-		#cloudserver.db.userIDRemoveAll(deviceID)
-		#if (cloudserver.db.screenNameCheckAvailability(username)):
-		#	if (cloudserver.db.screenNameRegister(username, deviceID, True)):
-		#		if (len(userData) == 5):
-		#			cloudserver.db.registerForRankingInfo(username, userData[2], userData[3], userData[4])
-		#		else:
-		#			cloudserver.db.registerForRanking(username)
-		#		return "0" #success
-		#	else:
-		#		return "Duplicate Username" #duplicate username
-		#else:
-		#	return "Username Taken" #username taken
-		#return "case 3"
 
+class newUserManagement:
+	def POST(self):
+		raw_data=web.data()
+		userData=raw_data.split(',')
+		if (len(userData) != 4):
+			return "1"
+		deviceID = userData[0]
+		name = userData[1]
+		email = userData[2]
+		password = userData[3]
+		if (cloudserver.db.fullRegistration(deviceID, name, email, password))
+			return "0"
+		else:
+			return "1"
+
+class checkLogin:
+	def POST(self):
+		raw_data=web.data()
+		return cloudserver.db.checkLoginFlow(raw_data)
+
+class login:
+	def POST(self):
+		raw_data=web.data()
+		userData=raw_data.split(',')
+		if (len(userData) != 3):
+			return "1"
+		deviceID = userData[0]
+		email = userData[1]
+		password = userData[2]
+		return cloudserver.db.login(deviceID, email, password)
+
+class logout:
+	def POST(self):
+		raw_data=web.data()
+		return cloudserver.db.logout(raw_data)
 
 	def GET(self):
 		user_data = web.input(id=None)

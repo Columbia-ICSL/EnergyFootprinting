@@ -305,6 +305,61 @@ class DBMgr(object):
 		except pymongo.errors.DuplicateKeyError:
 			return False
 
+	def fullRegistration(self, deviceID, name, email, password):
+		try:
+			self.registration_col1.insert({
+				"userID": userID,
+				"name": name,
+				"email": email,
+				"password": password,
+				"control": True,
+				"balance": 0,
+				"tempBalance": 0,
+				"loggedIn": True
+				})
+			return True
+		except pymongo.errors.DuplicateKeyError:
+			return False
+
+	def checkLoginFlow(self, deviceID):
+		user = self.registration_col1.find_one({"userID": deviceID})
+		if user is not None:
+			if user.get("loggedIn"):
+				return "0" #user is logged in
+			else:
+				return "1" #user not logged in
+		return "404" #user not registered
+
+	def logout(self, deviceID):
+		try:
+			self.registration_col1.update({"userID": deviceID},
+				{"$set":{"loggedIn": False}})
+			return "0"
+		except pymongo.errors.DuplicateKeyError:
+			return "1"
+
+	def login(self, deviceID, email, password):
+		user = self.registration_col1.find_one({"userID": deviceID})
+		if user is not None:
+			if (user.get("email") == email) and (user.get("password") == password):
+				return "0"
+			else:
+				return "1"
+		return "404"
+
+	def changeEmailAndPassword(self, deviceID, email, password):
+		try:
+			self.registration_col1.update({"userID":deviceID}, {"$set":{"email":email}})
+			self.registration_col1.update({"userID":deviceID}, {"$set":{"password":password}})
+			return True
+		except pymongo.errors.DuplicateKeyError:
+			return False
+
+
+
+
+
+
 
 	def screenNameRegister(self, screenName, userID, control=True):
 		self.LogRawData({
