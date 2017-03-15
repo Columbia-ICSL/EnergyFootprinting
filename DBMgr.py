@@ -309,6 +309,7 @@ class DBMgr(object):
 		try:
 			self.registration_col1.insert({
 				"userID": deviceID})
+			print("successfully inserted new user")
 			self.registration_col1.update({"userID": deviceID},{"$set":{
 				"name": name,
 				"email": email,

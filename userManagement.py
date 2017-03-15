@@ -53,7 +53,7 @@ class newUserManagement:
 		if (cloudserver.db.fullRegistration(deviceID, name, email, password)):
 			return "0"
 		else:
-			return "1"
+			return "2"
 
 class checkLogin:
 	def POST(self):
