@@ -148,9 +148,7 @@ class DBMgr(object):
 		coll1 = db1.test_collection
 
 		self.registration_col1=self.dbc.db.registration_col1
-		self.registration_col1.ensure_index('screenName', unique=True)
 		self.ranking = self.dbc.db.ranking
-		self.ranking.ensure_index('user', unique=True)
 		self.indirectSensing = self.dbc.db.indirectSensing
 		self.particleSensor = self.dbc.db.particleSensor
 		self.suggestionsML = self.dbc.db.suggestionsML
