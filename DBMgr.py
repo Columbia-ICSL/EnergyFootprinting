@@ -308,7 +308,8 @@ class DBMgr(object):
 	def fullRegistration(self, deviceID, name, email, password):
 		try:
 			self.registration_col1.insert({
-				"userID": deviceID,
+				"userID": deviceID})
+			self.registration_col1.update({"userID": deviceID},{"$set":{
 				"name": name,
 				"email": email,
 				"password": password,
@@ -316,7 +317,7 @@ class DBMgr(object):
 				"balance": 0,
 				"tempBalance": 0,
 				"loggedIn": True
-				})
+				}})
 			return True
 		except pymongo.errors.DuplicateKeyError:
 			return False
