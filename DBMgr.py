@@ -330,6 +330,10 @@ class DBMgr(object):
 				return "1" #user not logged in
 		return "404" #user not registered
 
+	def getNameFromDeviceID(self, deviceID):
+		user = self.registration_col1.find_one({"userID": deviceID})
+		return user.get("name")
+		
 	def logout(self, deviceID):
 		try:
 			self.registration_col1.update({"userID": deviceID},

@@ -3,6 +3,7 @@ import cloudserver
 urls = ("/","userManagement",
 	"/newUser/", "newUserManagement",
 	"/checkUser/", "checkLogin",
+	"/returnUser/", "checkLoginNew",
 	"/login/", "login",
 	"/logout/", "logout")
 
@@ -59,6 +60,20 @@ class checkLogin:
 	def POST(self):
 		raw_data=web.data()
 		return cloudserver.db.checkLoginFlow(raw_data)
+
+class checkLoginNew:
+	def POST(self):
+		raw_data=web.data()
+		status = cloudserver.db.checkLoginFlow(raw_data)
+		username = ""
+		if (status == "0" or status == "1"):
+			username = cloudserver.db.getNameFromDeviceID(raw_data)
+		json_return = {
+			"status":status,
+			"username":username,
+			"energySaved":0
+		}
+		return cloudserver.db._encode(json_return, False)
 
 class login:
 	def POST(self):
