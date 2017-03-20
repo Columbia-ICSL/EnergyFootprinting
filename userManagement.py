@@ -71,7 +71,10 @@ class checkLoginNew:
 		json_return = {
 			"status":status,
 			"username":username,
-			"energySaved":0
+			"energySaved":0,
+			"labname":"unknown",
+			"rewardsClaimed":0,
+			"suggestionsTaken":0
 		}
 		return cloudserver.db._encode(json_return, False)
 
