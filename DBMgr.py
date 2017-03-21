@@ -365,6 +365,8 @@ class DBMgr(object):
 		try:
 			self.registration_col1.update({"userID":deviceID}, {"$set":{"token":token}})
 			return "0"
+		except pymongo.errors.DuplicateKeyError:
+			return "404"
 		return "400"
 
 
