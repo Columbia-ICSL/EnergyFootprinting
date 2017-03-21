@@ -361,7 +361,11 @@ class DBMgr(object):
 		except pymongo.errors.DuplicateKeyError:
 			return False
 
-
+	def addPushToken(self, deviceID, token):
+		try:
+			self.registration_col1.update({"userID":deviceID}, {"$set":{"token":token}})
+			return "0"
+		return "400"
 
 
 

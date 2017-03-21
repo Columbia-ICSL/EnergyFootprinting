@@ -5,7 +5,8 @@ urls = ("/","userManagement",
 	"/checkUser/", "checkLogin",
 	"/returnUser/", "checkLoginNew",
 	"/login/", "login",
-	"/logout/", "logout")
+	"/logout/", "logout",
+	"/addPush/", "addPush")
 
 class userManagement:
 	def POST(self):
@@ -88,6 +89,16 @@ class login:
 		email = userData[1]
 		password = userData[2]
 		return cloudserver.db.login(deviceID, email, password)
+
+class addPush:
+	def POST(self):
+		raw_data=web.data()
+		userData=raw_data.split(',')
+		if (len(userData) != 2):
+			return "1"
+		deviceID = userData[0]
+		token = userData[1]
+		return cloudserver.db.addPushToken(deviceID, token)
 
 class logout:
 	def POST(self):
