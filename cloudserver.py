@@ -21,6 +21,8 @@ import userManagement
 import Query
 import Manage
 import newDataAnalytics
+import externalTraining
+
 from bson import ObjectId
 from threading import Thread
 import suggestionsEngine
@@ -28,7 +30,7 @@ import suggestionsEngine
 from trainingData import training
 import visualizationAPI
 urls = (
- 
+    "/api/externalTraining", externalTraining.externalLocationTraining,
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/EnergyHVAC", EnergyHVAC.EnergyReportBACNET,
     "/api/IndirectSensing", indirectSensingCollection.IndirectSensing,
