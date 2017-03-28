@@ -15,7 +15,7 @@ class externalTraining:
 			outfile1 = "newDataLabels.txt"
 			f = open(outfile, "a+")
 			f1 = open(outfile1, "a+")
-			for i in range(len(beaconData))
+			for i in range(len(beaconData)):
 				beaconString += beaconData[i]
 				if (i != (len(beaconData)-1)):
 					beaconString += "\t"
