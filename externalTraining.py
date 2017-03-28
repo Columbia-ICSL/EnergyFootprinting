@@ -19,6 +19,7 @@ class externalTraining:
 			beaconString += beaconData[i]
 			if (i != (len(beaconData)-1)):
 				beaconString += "\t"
+		beaconString += "\n"
 		print(beaconString)
 		f.write(beaconString)
 		f1.write(locs[0])
