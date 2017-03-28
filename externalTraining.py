@@ -23,7 +23,7 @@ class externalTraining:
 		print(beaconString)
 		f.write(beaconString)
 		f1.write(locs[0])
-
+		f1.write("\n")
 		f.close()
 		f1.close()
 
