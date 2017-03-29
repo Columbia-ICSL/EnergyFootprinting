@@ -461,6 +461,10 @@ class DBMgr(object):
 		self.watchdogLastSeen_Appliance={}
 
 	def watchdogRefresh_User(self, userID):
+		print("\n\n")
+		print("Refreshing User:")
+		print(userID)
+		print("\n\n")
 		if userID not in self.watchdogLastSeen_User:
 			self.watchdogLastSeen_User[userID]=0
 		self.watchdogLastSeen_User[userID]=max(self._now(), self.watchdogLastSeen_User[userID])
