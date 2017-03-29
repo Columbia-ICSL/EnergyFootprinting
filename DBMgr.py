@@ -658,6 +658,8 @@ class DBMgr(object):
 		print("\n\n\n")
 		print("Location of users:")
 		print(self.location_of_users)
+		print("\n")
+		print(self.watchdogUserLastSeen())
 		print("\n\n\n")
 		return self._encode(ret, False)
 
