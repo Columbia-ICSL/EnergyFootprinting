@@ -59,6 +59,10 @@ class BeaconVals:
             "tempBalance":cloudserver.db.getUserTempBalance(ID),
             "suggestions":[]
             }
+            print("\n\n")
+            print(ID)
+            print(locs)
+            print("\n\n")
             cloudserver.db.ReportLocationAssociation(ID, None)
             return cloudserver.db._encode(unknown_return,False)
 
@@ -205,7 +209,7 @@ class BeaconVals:
             json_return["suggestions"]=[
                     make_suggestion_item("misc",title, body, reward, messageID, doPush, {})]
             now = datetime.datetime.now()
-            if (now.hour >= 9 and now.hour < 12):
+            if (now.hour >= 7 and now.hour < 14):
                 print("MORNING CHECK PASSED")
                 print((now.hour, now.minute))
                 title="Morning App Check"
