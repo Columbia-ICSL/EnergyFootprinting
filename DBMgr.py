@@ -688,6 +688,8 @@ class DBMgr(object):
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
 		#self.watchdogUserLastSeen()
+		print("Reporting Location for user:")
+		print(personID)
 		oldS=None
 		newS=roomID
 		if personID in self.location_of_users:
