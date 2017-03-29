@@ -655,7 +655,10 @@ class DBMgr(object):
 				continue
 			screenName = self.userIDLookup(user)
 			ret[screenName] = (roomDict[loc], loc)
-			print(ret)
+		print("\n\n\n")
+		print("Location of users:")
+		print(self.location_of_users)
+		print("\n\n\n")
 		return self._encode(ret, False)
 
 
