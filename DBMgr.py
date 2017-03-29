@@ -663,7 +663,9 @@ class DBMgr(object):
 				print "no location found"
 				continue
 			screenName = self.userIDLookup(user)
-			timeSinceLastSeen = timeNow-self.watchdogUserLastSeen(user)
+			timeSinceLastSeen = -1
+			if (self.watchdogUserLastSeen(user) is not None):
+				timeSinceLastSeen = timeNow-self.watchdogUserLastSeen(user)
 			ret[screenName] = (roomDict[loc], loc, timeSinceLastSeen)
 		#print("\n\n\n")
 		#print("Location of users:")
