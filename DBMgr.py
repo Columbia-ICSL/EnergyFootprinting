@@ -655,6 +655,7 @@ class DBMgr(object):
 				continue
 			screenName = self.userIDLookup(user)
 			ret[screenName] = (roomDict[loc], loc)
+			print(ret)
 		return self._encode(ret, False)
 
 
@@ -665,7 +666,7 @@ class DBMgr(object):
 			return None
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
-		self.watchdogUserLastSeen()
+		#self.watchdogUserLastSeen()
 		oldS=None
 		newS=roomID
 		if personID in self.location_of_users:
