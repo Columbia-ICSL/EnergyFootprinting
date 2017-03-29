@@ -44,7 +44,10 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-
+        print("\n\n")
+        print(ID)
+        print(locs)
+        print("\n\n")
         location = self.predictor.personal_classifier(ID,locs)
         checkUnknown = False
         for loc in locs:
@@ -59,10 +62,7 @@ class BeaconVals:
             "tempBalance":cloudserver.db.getUserTempBalance(ID),
             "suggestions":[]
             }
-            print("\n\n")
-            print(ID)
-            print(locs)
-            print("\n\n")
+
             cloudserver.db.ReportLocationAssociation(ID, None)
             return cloudserver.db._encode(unknown_return,False)
 
