@@ -470,8 +470,10 @@ class DBMgr(object):
 			self.watchdogLastSeen_Appliance[applID]=0
 		self.watchdogLastSeen_Appliance[applID]=max(self._now(), self.watchdogLastSeen_Appliance[applID])
 
-	def watchdogUserLastSeen(self):
-		print(self.watchdogLastSeen_User)
+	def watchdogUserLastSeen(self, userID):
+		if (userID in self.watchdogLastSeen_User):
+			return self.watchdogLastSeen_User[userID]
+		return None
 
 	def watchdogCheck_User(self):
 		outOfRange_List=[]
@@ -482,10 +484,6 @@ class DBMgr(object):
 				outOfRange_List+=[userID]
 		for userID in self.location_of_users:
 			if userID not in self.watchdogLastSeen_User:
-				print("\n\n")
-				print("User is not here but is still localized\n")
-				print(userID)
-				print("\n\n")
 				outOfRange_List+=[userID]
 
 		self.LogRawData({
@@ -646,7 +644,6 @@ class DBMgr(object):
 		self.watchdogRefresh_Appliance(applianceID)
 	
 	def getUserLocalizationAPI(self):
-		self.watchdogCheck_User()
 		ret = {}
 		roomDict = {}
 		for room in self.list_of_rooms:
@@ -659,13 +656,15 @@ class DBMgr(object):
 				roomDict[room] = room_val/numUsers
 			else:
 				roomDict[room] = room_val
+		timeNow = self._now()
 		for user in self.location_of_users:
 			loc = self.location_of_users[user]
 			if loc not in roomDict:
 				print "no location found"
 				continue
 			screenName = self.userIDLookup(user)
-			ret[screenName] = (roomDict[loc], loc)
+			timeSinceLastSeen = timeNow-self.watchdogUserLastSeen(user)
+			ret[screenName] = (roomDict[loc], loc, timeSinceLastSeen)
 		#print("\n\n\n")
 		#print("Location of users:")
 		#print(self.location_of_users)
