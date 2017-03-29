@@ -471,7 +471,7 @@ class DBMgr(object):
 		self.watchdogLastSeen_Appliance[applID]=max(self._now(), self.watchdogLastSeen_Appliance[applID])
 
 	def watchdogUserLastSeen(self):
-		print(self.watchdogLastSeen_user)
+		print(self.watchdogLastSeen_User)
 
 	def watchdogCheck_User(self):
 		outOfRange_List=[]
