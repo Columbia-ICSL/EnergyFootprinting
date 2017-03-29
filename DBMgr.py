@@ -470,6 +470,8 @@ class DBMgr(object):
 			self.watchdogLastSeen_Appliance[applID]=0
 		self.watchdogLastSeen_Appliance[applID]=max(self._now(), self.watchdogLastSeen_Appliance[applID])
 
+	def watchdogUserLastSeen(self):
+		print(self.watchdogLastSeen_user)
 
 	def watchdogCheck_User(self):
 		outOfRange_List=[]
@@ -663,7 +665,7 @@ class DBMgr(object):
 			return None
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
-		print((personID, roomID))
+		self.watchdogUserLastSeen()
 		oldS=None
 		newS=roomID
 		if personID in self.location_of_users:
