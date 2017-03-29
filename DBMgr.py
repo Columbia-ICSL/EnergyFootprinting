@@ -663,6 +663,7 @@ class DBMgr(object):
 			return None
 
 	def ReportLocationAssociation(self, personID, roomID, raw_data=None):
+		print((personID, roomID))
 		oldS=None
 		newS=roomID
 		if personID in self.location_of_users:
