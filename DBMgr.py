@@ -480,6 +480,13 @@ class DBMgr(object):
 		for userID in self.watchdogLastSeen_User:
 			if self.watchdogLastSeen_User[userID]<minTime:
 				outOfRange_List+=[userID]
+		for userID in self.location_of_users:
+			if userID not in self.watchdogLastSeen_User:
+				print("\n\n")
+				print("User is not here but is still localized\n")
+				print(userID)
+				print("\n\n")
+				outOfRange_List+=[userID]
 
 		self.LogRawData({
 			"type":"watchdogCheck_User",
