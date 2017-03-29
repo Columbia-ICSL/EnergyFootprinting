@@ -643,6 +643,7 @@ class DBMgr(object):
 		self.watchdogRefresh_Appliance(applianceID)
 	
 	def getUserLocalizationAPI(self):
+		self.watchdogCheck_User()
 		ret = {}
 		roomDict = {}
 		for room in self.list_of_rooms:
@@ -662,12 +663,12 @@ class DBMgr(object):
 				continue
 			screenName = self.userIDLookup(user)
 			ret[screenName] = (roomDict[loc], loc)
-		print("\n\n\n")
-		print("Location of users:")
-		print(self.location_of_users)
-		print("\n")
-		print(self.watchdogUserLastSeen())
-		print("\n\n\n")
+		#print("\n\n\n")
+		#print("Location of users:")
+		#print(self.location_of_users)
+		#print("\n")
+		#print(self.watchdogUserLastSeen())
+		#print("\n\n\n")
 		return self._encode(ret, False)
 
 
