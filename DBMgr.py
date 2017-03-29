@@ -497,7 +497,10 @@ class DBMgr(object):
 			})
 
 		for userID in outOfRange_List:
-			last_seen=self.watchdogLastSeen_User[userID]
+			if (userID in self.watchdogLastSeen_User):
+				last_seen=self.watchdogLastSeen_User[userID]
+			else:
+				last_seen=None
 			self.ReportLocationAssociation(userID, None, {"Note":"Reported by Watchdog","last_seen": last_seen})
 
 
