@@ -63,7 +63,7 @@ class BeaconVals:
             "suggestions":[]
             }
 
-            cloudserver.db.ReportLocationAssociation(ID, None)
+            cloudserver.db.ReportLocationAssociation(ID, "outOfLab")
             return cloudserver.db._encode(unknown_return,False)
 
         cloudserver.db.ReportLocationAssociation(ID, location)

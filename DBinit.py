@@ -48,6 +48,7 @@ class DBInit(object):
         addRoom("nwc7","NWC 7F Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, WINDOWED)# public area 7F
         addRoom("nwc4","NWC 4F Public Area", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, WINDOWED) # public area 4F
 
+        addRoom("outOfLab", "Out of the Lab", [40.810174, -73.962006], PUBLIC_SPACE, GENERAL_SPACE, WINDOWED)
         # 10F space units
         addRoom("nwc1008","NWC 1008 Office", [40.809997, -73.961983], JIANG_LAB, OFFICE_SPACE, WINDOWED)
         addRoom("nwc1006","NWC 1006 Office", [40.809997, -73.961983], BURKE_LAB, OFFICE_SPACE, WINDOWED)
