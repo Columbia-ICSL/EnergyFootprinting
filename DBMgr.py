@@ -1478,6 +1478,23 @@ class DBMgr(object):
 	def countLocationSamples(self):
 		return self.dbc.loc_db.sample_col.count({})
 		
+#######################################
+## Misc Functions - Rishi ##
+#######################################
+        def getAllUsers(self):
+            userNames = []
+            users = list(self.registration_col1.find())
+            #print users
+            for user in users:
+                if name not in user:
+                    continue
+                #print "debug", user
+                usernames.append(user["name"])
+            nameList = ",".join(usernames)
+            ret = {
+                    "names":usernames
+            }
+            return self._encode(ret, False)
 
 if __name__ == "__main__":
 	dbm=DBMgr(False)

@@ -2,7 +2,11 @@ import web
 import cloudserver
 
 urls = ("/", "appSupport",
-"/localization/", "userLocalizationAPI")
+"/localization/", "userLocalizationAPI", "/userNames/", "userNames")
+
+class userNames:
+        def GET(self):
+                return cloudserver.db.getAllUsers()
 
 class appSupport:
 	def GET(self):
