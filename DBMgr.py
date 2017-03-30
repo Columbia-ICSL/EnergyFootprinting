@@ -1486,11 +1486,11 @@ class DBMgr(object):
 ## Misc Functions - Rishi ##
 #######################################
         def getAllUsers(self):
-            userNames = []
+            usernames = []
             users = list(self.registration_col1.find())
             #print users
             for user in users:
-                if name not in user:
+                if "name" not in user:
                     continue
                 #print "debug", user
                 usernames.append(user["name"])
