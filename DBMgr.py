@@ -1482,7 +1482,7 @@ class DBMgr(object):
 ## Misc Functions - Rishi ##
 #######################################
         def getAllUsers(self):
-            userNames = []
+            usernames = []
             users = list(self.registration_col1.find())
             #print users
             for user in users:
