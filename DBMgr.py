@@ -484,7 +484,8 @@ class DBMgr(object):
 				outOfRange_List+=[userID]
 		for userID in self.location_of_users:
 			if userID not in self.watchdogLastSeen_User:
-				outOfRange_List+=[userID]
+				oldS=self.location_of_users[userID]
+				updateUserLocation(userID, oldS, "outOfLab")
 
 		self.LogRawData({
 			"type":"watchdogCheck_User",
