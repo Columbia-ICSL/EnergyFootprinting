@@ -553,9 +553,10 @@ class DBMgr(object):
 			for applianceID in self.list_of_rooms[in_id]["appliances"]:
 				self.list_of_appliances[applianceID]["total_users"]+=1
 		if out_id!=None and self.list_of_rooms[out_id]!=None:
-			self.list_of_rooms[out_id]["users"].remove(user_id)
-			for applianceID in self.list_of_rooms[out_id]["appliances"]:
-				self.list_of_appliances[applianceID]["total_users"]-=1
+			if (user_id in self.list_of_rooms[out_id]["users"]):
+				self.list_of_rooms[out_id]["users"].remove(user_id)
+				for applianceID in self.list_of_rooms[out_id]["appliances"]:
+					self.list_of_appliances[applianceID]["total_users"]-=1
 		
 	def updateApplianceValue(self, applianceID, value):
 		self.list_of_appliances[applianceID]["value"]=int(value)
