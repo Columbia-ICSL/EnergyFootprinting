@@ -37,10 +37,7 @@ class userManagement:
 			username = userData[1]
 			if (cloudserver.db.updateName(deviceID, username)):
 				return "0" #successfully changed device ID
-			        dash = command.Popen("python /home/icsl/python_webservice/static/freeboard/genDash.py > dashboard.json", stdout = command.PIPE, shell = True)
-                                (output, err) = dash.communicate()
-                                dash_status = dash.wait()
-                                print output
+			        
                         else:
 				return "1" #screen name not found
 		return "too many parameters"
@@ -57,6 +54,10 @@ class newUserManagement:
 		password = userData[3]
 		if (cloudserver.db.fullRegistration(deviceID, name, email, password)):
 			return "0"
+                        dash = command.Popen("python /home/icsl/python_webservice/static/freeboard/genDash.py > /home/icsl/python_webservice/static/freeboard/dashboard.json", stdout = command.PIPE, shell = True)
+                        (output, err) = dash.communicate()
+                        dash_status = dash.wait()
+                        print "status of dashboard update:", output
 		else:
 			return "2"
 
