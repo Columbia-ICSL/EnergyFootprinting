@@ -662,10 +662,10 @@ class DBMgr(object):
 			else:
 				roomDict[room] = room_val
 		timeNow = self._now()
-		print("\n\n")
-		print("Users in the space:")
-		print(self.location_of_users)
-		print("\n\n")
+		#print("\n\n")
+		#print("Users in the space:")
+		#print(self.location_of_users)
+		#print("\n\n")
 		for user in self.location_of_users:
 			loc = self.location_of_users[user]
 			if loc not in roomDict:

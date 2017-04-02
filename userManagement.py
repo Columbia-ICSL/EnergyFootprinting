@@ -43,9 +43,6 @@ class newUserManagement:
 	def POST(self):
 		raw_data=web.data()
 		userData=raw_data.split(',')
-		print("CHECK USER")
-		print(userData)
-		print(len(userData))
 		if (len(userData) != 4):
 			return "1"
 		deviceID = userData[0]
