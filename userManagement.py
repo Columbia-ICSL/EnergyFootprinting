@@ -53,11 +53,12 @@ class newUserManagement:
 		email = userData[2]
 		password = userData[3]
 		if (cloudserver.db.fullRegistration(deviceID, name, email, password)):
-			return "0"
+                        print "Updating Dashboard"
                         dash = command.Popen("python /home/icsl/python_webservice/static/freeboard/genDash.py > /home/icsl/python_webservice/static/freeboard/dashboard.json", stdout = command.PIPE, shell = True)
                         (output, err) = dash.communicate()
                         dash_status = dash.wait()
                         print "status of dashboard update:", output
+			return "0"
 		else:
 			return "2"
 
