@@ -1,5 +1,7 @@
 import web
 import cloudserver
+import subprocess as command
+
 urls = ("/","userManagement",
 	"/newUser/", "newUserManagement",
 	"/checkUser/", "checkLogin",
@@ -35,7 +37,11 @@ class userManagement:
 			username = userData[1]
 			if (cloudserver.db.updateName(deviceID, username)):
 				return "0" #successfully changed device ID
-			else:
+			        dash = command.Popen("python /home/icsl/python_webservice/static/freeboard/genDash.py > dashboard.json", stdout = command.PIPE, shell = True)
+                                (output, err) = dash.communicate()
+                                dash_status = dash.wait()
+                                print output
+                        else:
 				return "1" #screen name not found
 		return "too many parameters"
 
