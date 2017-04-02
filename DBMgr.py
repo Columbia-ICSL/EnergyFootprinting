@@ -482,6 +482,9 @@ class DBMgr(object):
 		for userID in self.watchdogLastSeen_User:
 			if self.watchdogLastSeen_User[userID]<minTime:
 				outOfRange_List+=[userID]
+				if userID in self.location_of_users:
+					oldS=self.location_of_users[userID]
+					self.updateUserLocation(userID, oldS, "outOfLab")
 		for userID in self.location_of_users:
 			if userID not in self.watchdogLastSeen_User:
 				oldS=self.location_of_users[userID]
@@ -500,7 +503,7 @@ class DBMgr(object):
 				last_seen=self.watchdogLastSeen_User[userID]
 			else:
 				last_seen=None
-			self.ReportLocationAssociation(userID, "outOfLab", {"Note":"Reported by Watchdog","last_seen": last_seen})
+			#self.ReportLocationAssociation(userID, "outOfLab", {"Note":"Reported by Watchdog","last_seen": last_seen})
 
 
 	def watchdogCheck_Appliance(self):
