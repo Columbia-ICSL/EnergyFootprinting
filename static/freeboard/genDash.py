@@ -3,7 +3,7 @@ from collections import OrderedDict as ODict
 import urllib2
 
 ###### Widget Associations ##########
-widgets = [["text_widget", "Energy", 0, "Watts"],
+widgets = [["gauge_widget", "Energy", 0, "Watts"],
 	["text_widget", "Location", 1, ""], 
 	["text_widget", "Last Seen", 2, "Seconds ago"]]
 
@@ -39,7 +39,9 @@ for user in userNames:
             "size": "regular",
             "value": "datasources[\"ices\"][\""+user+"\"]["+str(widget[2])+ "]",
             "animate": True,
-            "units": widget[3]
+            "units": widget[3],
+            "min_value":0,
+            "max_value":1500
             }
         }
     )
