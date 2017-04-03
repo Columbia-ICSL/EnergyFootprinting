@@ -115,7 +115,7 @@ class DBMgr(object):
 				for userID in latest_snapshot["data"]:
 					roomID=latest_snapshot["data"][userID]["location"]
 					print('Recovered Location:',userID,roomID)
-					self.updateUserLocation(userID, roomID, None)
+					#self.updateUserLocation(userID, roomID, None)
 			else:
 				print('User location latest snapshot not found.')
 		except Exception:
