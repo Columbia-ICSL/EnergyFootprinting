@@ -44,13 +44,9 @@ class LocationPredictor:
         print("prior votes:")
         print(self.prior_votes)
 
-    def addTrainingSamples(self):
-        samples=cloudserver.db.getAllLocationSamples()
-        if (len(samples) > 0):
-            print(str(len(samples)) + " samples found")
-            return
-        print("no samples found")
-        infile = "newData.txt"
+    def addSamples(self, sampleFile):
+        infile = sampleFile + ".txt"
+        print("Loading from " + infile + "...")
         f = open(infile, 'r')
         x = f.readlines()
         self.trainingData = []
@@ -60,7 +56,8 @@ class LocationPredictor:
             y[-1] = last[0]
             y = map(int, y)
             self.trainingData.append(y)
-        infile = "newDataLabels.txt"
+        infile = sampleFile + "Labels.txt"
+        print("Loading from " + infile + "...")
         f = open(infile, 'r')
         x = f.readlines()
         self.trainingLabels = []
@@ -69,29 +66,30 @@ class LocationPredictor:
             last = y.split('\n')
             y = last[0]
             self.trainingLabels.append(y)
-        #infile = "backup2.txt"
-        #f = open(infile, 'r')
-        #x = f.readlines()
-        #for i in range(len(x)):
-        #    y = x[i].split('\t')
-        #    last = y[-1].split('\n')
-        #    y[-1] = last[0]
-        #    y = map(int, y)
-        #    self.trainingData.append(y)
-        #infile = "backuplabels2.txt"
-        #f = open(infile, 'r')
-        #x = f.readlines()
-        #for j in range(len(x)):
-        #    y = x[j]
-        #    last = y.split('\n')
-        #    y = last[0]
-        #    self.trainingLabels.append(y)   
+
         assert(len(self.trainingData) > 0)
         assert(len(self.trainingData) == len(self.trainingLabels))
         for k in range(len(self.trainingData)):
-            cloudserver.db.addLocationSample(self.trainingLabels[k], self.trainingData[k])             
+            cloudserver.db.addLocationSample(self.trainingLabels[k], self.trainingData[k])
+
+
+    def addTrainingSamples(self):
+        cloudserver.db.DestroyLocationSamples()
+        samples=cloudserver.db.getAllLocationSamples()
+        if (len(samples) > 0):
+            print(str(len(samples)) + " samples found")
+            return
+        self.addAdditionalSamples()
+        print("no samples found")
+        infile = "trainingFilesList.txt"
+        f = open(infile, 'r')
+        x = f.readlines()
+        for i in range(len(x)):
+            filename = x[i]
+            last = filename.split('\n')
+            self.addSamples(last[0])
+            print("added samples from " + last[0])
         print "successful reupload"
-        return
 
     def personal_classifier(self, ID, sample):
         prior=[]
