@@ -79,7 +79,6 @@ class LocationPredictor:
         if (len(samples) > 0):
             print(str(len(samples)) + " samples found")
             return
-        self.addAdditionalSamples()
         print("no samples found")
         infile = "trainingFilesList.txt"
         f = open(infile, 'r')
