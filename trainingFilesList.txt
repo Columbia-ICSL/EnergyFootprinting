@@ -1,2 +1,3 @@
 trainingFiles/baselineData
 trainingFiles/mezzanine7and8
+trainingFiles/nwc7
