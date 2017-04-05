@@ -42,7 +42,7 @@ def dump_debug_log():
 	indent=2)
 def dump_recent_raw_submission():
 	return pprint.pformat(
-		list(pymongo.MongoClient().db.raw_data.find().sort([("_log_timestamp", -1)]).limit(500)),
+		list(pymongo.MongoClient().db.raw_data.find().sort([("_log_timestamp", -1)]).limit(50)),
 	indent=2)
 
 from Email import SendEmail
@@ -92,7 +92,23 @@ class DBMgr(object):
 
 		for room in self.ROOM_DEFINITION:
 			self.list_of_rooms[room["id"]]["appliances"].sort()
+		
 		## Finished appliance bipartite graph.
+
+	def _HardcodeValues(self):
+		if ("nwc1000m_light" in self.list_of_appliances):
+			self.list_of_appliances["nwc1000m_light"] = 300
+		if ("nwc10hallway_light" in self.list_of_appliances):
+			self.list_of_appliances["nwc10hallway_light"] = 100
+		if ("nwc10elevator_light" in self.list_of_appliances):
+			self.list_of_appliances["nwc10elevator_light"] = 150
+		if ("nwc8_light" in self.list_of_appliances):
+			self.list_of_appliances["nwc8_light"] = 150
+		if ("nwc7_light" in self.list_of_appliances):
+			self.list_of_appliances["nwc7_light"] = 150
+		if ("nwc1003b_light" in self.list_of_appliances):
+			self.list_of_appliances["nwc1003b_light"] = 300
+
 
 	def _GracefulReloadGraph(self):
 		print('Reloading values...')
@@ -179,7 +195,7 @@ class DBMgr(object):
 		## Construct bipartite graph.
 		self._GracefulReloadGraph()
 		## Read appliance values from database; TODO: occupants location
-
+		self._HardcodeValues()
 		self.watchdogInit()
 
 

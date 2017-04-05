@@ -139,6 +139,11 @@ class DBInit(object):
         addAppliance("nwc1000m_a1_plug3", "Power strip #3 in Mezzaine Level, Aisle #1", "Electrical", "nwc1000m_a1", ACTIONABLE, NO_DUTY_CYCLE)
 
         addAppliance("nwc1000m_light", "Shared Lighting in Mezzaine Level", "Light", "nwc1000m_.*", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc10hallway_light", "Hallway Lights", "Light", "nwc10_hallway", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc10elevator_light", "Common Area Lights", "Light", "nwc10", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc8_light", "8F Common Area Lights", "Light", "nwc8", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc7_light", "7F Common Area Lights", "Light", "nwc7", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+
 
         self._SetConfigValue("APPLIANCE_DEFINITION",self.APPLIANCE_DEFINITION)
 
