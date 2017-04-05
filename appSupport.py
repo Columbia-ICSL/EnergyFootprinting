@@ -2,7 +2,9 @@ import web
 import cloudserver
 
 urls = ("/", "appSupport",
-"/localization/", "userLocalizationAPI", "/userNames/", "userNames")
+"/localization/", "userLocalizationAPI", 
+"/userNames/", "userNames",
+"/buildingFootprint/", "buildingFootprint")
 
 class userNames:
         def GET(self):
@@ -26,6 +28,11 @@ class appSupport:
 			ret = cloudserver.db.calculateEnergyFootprint(location)
 			return ret
 		return "How did you get here"
+
+class buildingFootprint:
+	def GET(self):
+		return cloudserver.db.buildingEnergyFootprint()
+
 
 class userLocalizationAPI:
 	def GET(self):

@@ -48,8 +48,12 @@ class BeaconVals:
         print(ID)
         print(locs)
         print("\n\n")
+
+        cloudserver.db.LogRawData({"ID":ID,"RSSI":locs})
+
         location = self.predictor.personal_classifier(ID,locs)
         checkUnknown = False
+
         for loc in locs:
             if (loc != -100):
                 checkUnknown = True
@@ -215,7 +219,7 @@ class BeaconVals:
                 title="Morning App Check"
                 body="Thank you for opening the app this morning! Please take your reward."
                 reward=1
-                doPush=0
+                doPush=1
                 messageID= "{0}|{1}|{2}".format("morningMessage", ID, "YYYY")
                 json_return["suggestions"].append(make_suggestion_item("morning",title,body,reward,messageID,doPush,{}))
 

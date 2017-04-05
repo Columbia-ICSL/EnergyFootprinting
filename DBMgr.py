@@ -591,6 +591,34 @@ class DBMgr(object):
 		ret["value"]=total_con
 		return self._encode(ret, False)
 
+	def buildingEnergyFootprint(self):
+		ret={
+			"value":0,
+			"HVAC":0,
+			"Light":0,
+			"Electrical":0
+		}
+		app_list=self.list_of_rooms[roomID]["appliances"]
+		total_con = 0.0
+		print("starting appliances")
+		for applianceID in app_list:
+			app = self.list_of_appliances[applianceID]
+			total_con += app["value"]
+			if (app["type"] == "Electrical"):
+				ret["Electrical"] += appValue
+				continue
+			if (app["type"] == "HVAC"):
+				ret["HVAC"] += appValue
+				continue
+			if (app["type"] == "Light"):
+				ret["Light"] += appValue
+		ret["value"]=total_con
+		return self._encode(ret, False)
+
+
+
+
+
 	def calculateRoomFootprint(self, roomID):
 		app_list=self.list_of_rooms[roomID]["appliances"]
 		ret={
