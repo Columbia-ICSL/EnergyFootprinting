@@ -598,7 +598,7 @@ class DBMgr(object):
 			"Light":0,
 			"Electrical":0
 		}
-		app_list=self.list_of_rooms[roomID]["appliances"]
+		app_list=self.list_of_appliances
 		total_con = 0.0
 		print("starting appliances")
 		for applianceID in app_list:
