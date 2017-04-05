@@ -603,7 +603,8 @@ class DBMgr(object):
 		print("starting appliances")
 		for applianceID in app_list:
 			app = self.list_of_appliances[applianceID]
-			total_con += app["value"]
+			appValue = app["value"]
+			total_con += appValue
 			if (app["type"] == "Electrical"):
 				ret["Electrical"] += appValue
 				continue
