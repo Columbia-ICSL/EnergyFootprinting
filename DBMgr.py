@@ -97,17 +97,17 @@ class DBMgr(object):
 
 	def _HardcodeValues(self):
 		if ("nwc1000m_light" in self.list_of_appliances):
-			self.list_of_appliances["nwc1000m_light"] = 300
+			self.list_of_appliances["nwc1000m_light"]["value"] = 300
 		if ("nwc10hallway_light" in self.list_of_appliances):
-			self.list_of_appliances["nwc10hallway_light"] = 100
+			self.list_of_appliances["nwc10hallway_light"]["value"] = 100
 		if ("nwc10elevator_light" in self.list_of_appliances):
-			self.list_of_appliances["nwc10elevator_light"] = 150
+			self.list_of_appliances["nwc10elevator_light"]["value"] = 150
 		if ("nwc8_light" in self.list_of_appliances):
-			self.list_of_appliances["nwc8_light"] = 150
+			self.list_of_appliances["nwc8_light"]["value"] = 150
 		if ("nwc7_light" in self.list_of_appliances):
-			self.list_of_appliances["nwc7_light"] = 150
+			self.list_of_appliances["nwc7_light"]["value"] = 150
 		if ("nwc1003b_light" in self.list_of_appliances):
-			self.list_of_appliances["nwc1003b_light"] = 300
+			self.list_of_appliances["nwc1003b_light"]["value"] = 300
 
 
 	def _GracefulReloadGraph(self):
