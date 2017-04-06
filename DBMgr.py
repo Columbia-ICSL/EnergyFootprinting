@@ -119,7 +119,7 @@ class DBMgr(object):
 			else:
 				print("Didn't recover cumulative energy")
 		except Exception:
-			continue
+			print ""
 		try:
 			latest_snapshot=self.snapshots_col_appliances.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
 			if latest_snapshot!=None:
