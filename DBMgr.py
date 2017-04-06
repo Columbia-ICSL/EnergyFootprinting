@@ -254,14 +254,18 @@ class DBMgr(object):
 		self.cumulativeEnergy += self.total_consumption*(float(timeDiff)/3600.0)
 
 		now = datetime.datetime.now()
-		if (now.hour > 22):
+		if (now.hour > 12):
 			dateEnergy = self.historicalCumulativeEnergy.find_one({"year": now.year, "month": now.month, "day": now.day})
+			print("\n\n\nDate Energy")
+			print(dateEnergy)
+			print("Date Energy\n\n\n")
 			if (dateEnergy is None):
 				obj = {"value":self.cumulativeEnergy}
 				obj["year"] = now.year
 				obj["month"] = now.month
 				obj["day"] = now.day
 				self.historicalCumulativeEnergy.insert(obj)
+				print(obj)
 				self.history_con=self.history_con[1:] + [self.cumulativeEnergy]
 				self.cumulativeEnergy=0.0
 				return
