@@ -113,7 +113,7 @@ class DBMgr(object):
 	def _GracefulReloadGraph(self):
 		print('Reloading values...')
 		try:
-			latest_snapshot=self.todayCumulativeEnergy.find_one(sort=[("_log_timestamp", pymongo.ASCENDING)]);
+			latest_snapshot=self.todayCumulativeEnergy.find_one(sort=[("_log_timestamp", pymongo.DESCENDING)]);
 			if (latest_snapshot != None):
 				self.cumulativeEnergy = latest_snapshot["value"]
 				print("Loaded: " + str(self.cumulativeEnergy))
