@@ -240,7 +240,7 @@ class DBMgr(object):
 	def _accumulator(self):
 		self.cumulativeEnergy=0.0
 		self.lastTimeStamp=self._now()
-		self.total_con=0.0
+		self.total_consumption=0.0
 		self.history_con=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 		
 		for i in range(1,7):
@@ -251,7 +251,7 @@ class DBMgr(object):
 
 	def accumulate(self):
 		timeDiff = self._now()-self.lastTimeStamp
-		self.cumulativeEnergy += self.total_con*(timeDiff/3600.0)
+		self.cumulativeEnergy += self.total_consumption*(float(timeDiff)/3600.0)
 
 		now = datetime.datetime.now()
 		if (now.hour > 22):
@@ -676,7 +676,7 @@ class DBMgr(object):
 			if (app["type"] == "Light"):
 				ret["Light"] += appValue
 		ret["value"]=total_con
-		self.currentTotalConsumption=total_con
+		self.total_consumption=total_con
 		return self._encode(ret, False)
 
 
