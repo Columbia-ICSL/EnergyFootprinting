@@ -269,8 +269,6 @@ class DBMgr(object):
 		obj["_log_timestamp"]=datetime.datetime.utcnow()
 		self.todayCumulativeEnergy.insert(obj)
 
-	def 
-
 	def buildingFootprint(self, start, end):
 		### HERE ###
 		result=[]
