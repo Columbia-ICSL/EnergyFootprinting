@@ -54,6 +54,16 @@ class BeaconVals:
         location = self.predictor.personal_classifier(ID,locs)
         checkUnknown = False
 
+        #HACK TO FIX 7th BEACON POWER OVERWHELMING
+        if (locs[6] != -100):
+            for i in range(len(locs)):
+            if (i != 6 and loc[i] != -100):
+                checkUnknown = True
+                break
+            if (checkUnknown == False):
+                cloudserver.db.watchdogRefresh_User(ID)
+
+
         for loc in locs:
             if (loc != -100):
                 checkUnknown = True

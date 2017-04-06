@@ -113,6 +113,14 @@ class DBMgr(object):
 	def _GracefulReloadGraph(self):
 		print('Reloading values...')
 		try:
+			latest_snapshot=self.todayCumulativeEnergy.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
+			if (latest_snapshot != None):
+				self.cumulativeEnergy = latest_snapshot["value"]
+			else:
+				print("Didn't recover cumulative energy")
+		except Exception:
+			continue
+		try:
 			latest_snapshot=self.snapshots_col_appliances.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
 			if latest_snapshot!=None:
 				for applianceID in latest_snapshot["data"]:
@@ -185,6 +193,9 @@ class DBMgr(object):
 		self.pushManagement_disp_col=self.dbc.db.pushManagement_disp_col
 		#push management timestamp storage
 
+		self.historicalCumulativeEnergy=self.dbc.db.historicalCumulativeEnergy
+		self.todayCumulativeEnergy=self.dbc.db.todayCumulativeEnergy
+
 		self._latestSuccessShot=0
 
 		self._ReadConfigs()
@@ -193,6 +204,7 @@ class DBMgr(object):
 
 		self._ConstructInMemoryGraph()
 		## Construct bipartite graph.
+		self._accumulator()
 		self._GracefulReloadGraph()
 		## Read appliance values from database; TODO: occupants location
 		self._HardcodeValues()
@@ -224,6 +236,40 @@ class DBMgr(object):
 ####################################################################
 ## Data Visualization ##############################################
 ####################################################################
+
+	def _accumulator(self):
+		self.cumulativeEnergy=0.0
+		self.lastTimeStamp=self._now()
+		self.total_con=0.0
+		self.history_con=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		
+		for i in range(1,7):
+			dayi=datetime.datetime.now() - datetime.timedelta(days=i)
+			dateEnergy = self.historicalCumulativeEnergy.find_one({"year": dayi.year, "month": dayi.month, "day": dayi.day})
+			if (dateEnergy is not None):
+				self.history_con[-i] = dateEnergy.get("value")
+
+	def accumulate(self):
+		timeDiff = self._now()-self.lastTimeStamp
+		self.cumulativeEnergy += self.total_con*(timeDiff/3600.0)
+
+		now = datetime.datetime.now()
+		if (now.hour > 22):
+			dateEnergy = self.historicalCumulativeEnergy.find_one({"year": now.year, "month": now.month, "day": now.day})
+			if (dateEnergy is None):
+				obj = {"value":self.cumulativeEnergy}
+				obj["year"] = now.year
+				obj["month"] = now.month
+				obj["day"] = now.day
+				self.historicalCumulativeEnergy.insert(obj)
+				self.history_con=self.history_con[1:] + [self.cumulativeEnergy]
+				self.cumulativeEnergy=0.0
+				return
+		obj = {"value":self.cumulativeEnergy}
+		obj["_log_timestamp"]=datetime.datetime.utcnow()
+		self.todayCumulativeEnergy.insert(obj)
+
+	def 
 
 	def buildingFootprint(self, start, end):
 		### HERE ###
@@ -612,7 +658,9 @@ class DBMgr(object):
 			"value":0,
 			"HVAC":0,
 			"Light":0,
-			"Electrical":0
+			"Electrical":0,
+			"history":self.history_con,
+			"energy":self.cumulativeEnergy
 		}
 		app_list=self.list_of_appliances
 		total_con = 0.0
@@ -630,6 +678,7 @@ class DBMgr(object):
 			if (app["type"] == "Light"):
 				ret["Light"] += appValue
 		ret["value"]=total_con
+		self.currentTotalConsumption=total_con
 		return self._encode(ret, False)
 
 
@@ -875,6 +924,7 @@ class DBMgr(object):
 
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
+		self.accumulate()
 		self.snapshots_col_rooms.insert({
 			"timestamp":datetime.datetime.utcnow(),
 			"data":self._getShotRooms()
