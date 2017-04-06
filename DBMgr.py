@@ -252,7 +252,7 @@ class DBMgr(object):
 	def accumulate(self):
 		timeDiff = self._now()-self.lastTimeStamp
 		self.cumulativeEnergy += self.total_consumption*(float(timeDiff)/3600.0)
-
+		self.lastTimeStamp = self._now()
 		now = datetime.datetime.now()
 		if (now.hour > 20):
 			dateEnergy = self.historicalCumulativeEnergy.find_one({"year": now.year, "month": now.month, "day": now.day})
@@ -661,8 +661,17 @@ class DBMgr(object):
 			"Light":0,
 			"Electrical":0,
 			"history":self.history_con,
-			"energy":self.cumulativeEnergy
+			"energy":self.cumulativeEnergy,
+			"historyStrings":[]
 		}
+		stringArray = ["","","","","","",""]
+		for i in range(6,-1,-1):
+			dayi=datetime.datetime.now() - datetime.timedelta(days=i)
+			m = dayi.month
+			d = dayi.day
+			stringArray[6-i] = str(dayi.month)+"/"+str(dayi.day)
+		ret["historyStrings"] = stringArray
+
 		app_list=self.list_of_appliances
 		total_con = 0.0
 		print("starting appliances")
