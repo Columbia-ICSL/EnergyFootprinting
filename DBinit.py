@@ -7,6 +7,7 @@ TEHERANI_LAB = 2
 JIANG_LAB = 3
 SAJDA_LAB = 4
 DANINO_LAB = 5
+BIOMED_LAB = 6
 OFFICE_SPACE = 0
 STUDENT_WORK_SPACE = 1
 GENERAL_SPACE = 2
@@ -57,6 +58,7 @@ class DBInit(object):
         addRoom("nwc1010","NWC 1010 Office", [40.809997, -73.961983], SAJDA_LAB, OFFICE_SPACE, WINDOWED)
 
         addRoom("nwc1003g","1003 Optics G Lab", [40.809965, -73.962063], JIANG_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
+	addRoom("nwc1003g_a", "1003 Optics G Lab A", [40.809965, -73.962063], BIOMED_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
         #addRoom("nwc1003b","1003B Lab",[40.810022, -73.962075])
         addRoom("nwc1003b_a","1003B Lab Area A",[40.809980, -73.962159], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Peter/Daniel
         addRoom("nwc1003b_b","1003B Lab Area B",[40.809947, -73.962050], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Danny/Stephen
@@ -122,6 +124,8 @@ class DBInit(object):
         # TODO: Map the FCUs (Fan Coils) to rooms, given floor plan
         # addAppliance("nwc1003g_vav", "Air Vent in 1003G", "HVAC", "nwc1003g.*", ACTIONABLE, NO_DUTY_CYCLE)
         
+	addAppliance("nwc1003g_a_plug1", "Power outlet 1 in 1003G", "Electrical", "nwc1003g_a", ACTIONABLE, DUTY_CYCLE)
+	addAppliance("nwc1003g_a_plug2", "Power outlet 2 in 1003G", "Electrical", "nwc1003g_a", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1003g_plug1", "Plugmeter in 1003G (Printer&Computer)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1003g_plug2", "Plugmeter in 1003G (Soldering Station)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
