@@ -57,7 +57,7 @@ class BeaconVals:
         #HACK TO FIX 7th BEACON POWER OVERWHELMING
         if (locs[6] != -100):
             for i in range(len(locs)):
-                if (i != 6 and loc[i] != -100):
+                if (i != 6 and locs[i] != -100):
                     checkUnknown = True
                     break
             if (checkUnknown == False):
