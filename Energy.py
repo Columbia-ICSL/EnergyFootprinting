@@ -15,7 +15,11 @@ urls = (
 class Save:
     def POST(self,Id):
         raw_data=web.data()
-        data=json.loads(raw_data)
+        data = None
+        try:
+            data=json.loads(raw_data)
+        except ValueError:
+            print("Invalid data")
         if ('raw' not in data):
             cloudserver.db.ReportEnergyValue(Id,data['energy'],None)
         else:

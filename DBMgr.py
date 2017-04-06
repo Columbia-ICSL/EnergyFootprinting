@@ -265,9 +265,7 @@ class DBMgr(object):
 				self.history_con=self.history_con[1:] + [self.cumulativeEnergy]
 				self.cumulativeEnergy=0.0
 				return
-		obj = {"value":self.cumulativeEnergy}
-		obj["_log_timestamp"]=datetime.datetime.utcnow()
-		self.todayCumulativeEnergy.insert(obj)
+		
 
 	def buildingFootprint(self, start, end):
 		### HERE ###
@@ -625,6 +623,7 @@ class DBMgr(object):
 		self.list_of_appliances[applianceID]["value"]=int(value)
 
 	def calculateEnergyFootprint(self, roomID):
+		self.accumulate()
 		ret={
 			"value":0,
 			"HVAC":0,
@@ -922,7 +921,10 @@ class DBMgr(object):
 
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
-		self.accumulate()
+		obj = {"value":self.cumulativeEnergy}
+		obj["_log_timestamp"]=datetime.datetime.utcnow()
+		self.todayCumulativeEnergy.insert(obj)
+
 		self.snapshots_col_rooms.insert({
 			"timestamp":datetime.datetime.utcnow(),
 			"data":self._getShotRooms()
