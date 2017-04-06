@@ -116,10 +116,11 @@ class DBMgr(object):
 			latest_snapshot=self.todayCumulativeEnergy.find_one(sort=[("timestamp", pymongo.ASCENDING)]);
 			if (latest_snapshot != None):
 				self.cumulativeEnergy = latest_snapshot["value"]
+				print("Loaded: " + self.cumulativeEnergy)
 			else:
 				print("Didn't recover cumulative energy")
 		except Exception:
-			print ""
+			print("Exception when trying to load energy value")
 		try:
 			latest_snapshot=self.snapshots_col_appliances.find_one(sort=[("timestamp", pymongo.DESCENDING)]);
 			if latest_snapshot!=None:
