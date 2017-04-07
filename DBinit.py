@@ -58,12 +58,18 @@ class DBInit(object):
         addRoom("nwc1010","NWC 1010 Office", [40.809997, -73.961983], SAJDA_LAB, OFFICE_SPACE, WINDOWED)
 
         addRoom("nwc1003g","1003 Optics G Lab", [40.809965, -73.962063], JIANG_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
-	addRoom("nwc1003g_a", "1003 Optics G Lab A", [40.809965, -73.962063], BIOMED_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
+    	addRoom("nwc1003g_a", "1003 Optics G Lab A", [40.809965, -73.962063], BIOMED_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
+        addRoom("nwc1003g_b", "1003 Optics G Lab B", [40.809965, -73.962063], TEHERANI_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
+        addRoom("nwc1003g_c", "1003 Optics G Lab C", [40.809965, -73.962063], BIOMED_LAB, STUDENT_WORK_SPACE, NOT_WINDOWED)
+
         #addRoom("nwc1003b","1003B Lab",[40.810022, -73.962075])
         addRoom("nwc1003b_a","1003B Lab Area A",[40.809980, -73.962159], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Peter/Daniel
         addRoom("nwc1003b_b","1003B Lab Area B",[40.809947, -73.962050], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Danny/Stephen
         addRoom("nwc1003b_c","1003B Lab Area C",[40.810005, -73.962072], JIANG_LAB, STUDENT_WORK_SPACE, WINDOWED) # Seat for Rishi
         addRoom("nwc1003b_t","1003B Teherani Lab",[40.809897, -73.962138], TEHERANI_LAB, STUDENT_WORK_SPACE, WINDOWED) # Prof. Teherani's space
+        addRoom("nwc1003a", "1003A Hall Area", [40.809897, -73.962138], BURKE_LAB, GENERAL_SPACE, NOT_WINDOWED)
+        addRoom("nwc1003b", "1003B Hall Area", [40.809897, -73.962138], TEHERANI_LAB, GENERAL_SPACE, NOT_WINDOWED)
+        addRoom("nwc1001l", "1001L Hall Area", [40.809897, -73.962138], SAJDA_LAB, GENERAL_SPACE, NOT_WINDOWED)
 
 
         # 10M space units, aisle 1-8
@@ -131,6 +137,17 @@ class DBInit(object):
         addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1003b_light", "Lights in 1003B Lab", "Light", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc1003g_light", "Lights in 1003G Lab", "Light", "nwc1003g", ACTIONABLE, NO_DUTY_CYCLE)
+
+        addAppliance("nwc1003gA_vav", "Heating Unit in 1003G_A", "HVAC", "nwc1003g_a", ACTIONABLE, DUTY_CYCLE) #BIOMED LAB 1
+        addAppliance("nwc1003gB_vav", "Heating Unit in 1003G_B", "HVAC", "nwc1003g_b", ACTIONABLE, DUTY_CYCLE) #TEHERANI LAB
+        addAppliance("nwc1003gC_vav", "Heating Unit in 1003G_C", "HVAC", "nwc1003g_c", ACTIONABLE, DUTY_CYCLE) #BIOMED LAB 2
+        addAppliance("nwc1003A_vav", "Heating Unit in 1003A", "HVAC", "nwc1003a", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1003B_vav", "Heating Unit in 1003B", "HVAC", "nwc1003b", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1001L_vav", "Heating Unit in 1001L", "HVAC", "nwc1001L", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc10T1_vav", "Heating Unit in Danino Wetlab Space", "HVAC", "nwc1003b_danino", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc10F_vav", "Heating Unit at 10F Elevators", "HVAC", "nwc10", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc8F_vav", "Heating Unit at 8F Elevators", "HVAC", "nwc8", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc7F_vav", "Heating Unit at 7F Elevators", "HVAC", "nwc7", ACTIONABLE, DUTY_CYCLE)
 
         for a in range(1,9,1):#1..8
             for p in range(1,3,1):#1..2

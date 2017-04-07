@@ -605,6 +605,7 @@ class DBMgr(object):
 			"notWorking_List":notWorking_List,
 			"raw":self.watchdogLastSeen_Appliance,
 			})
+		self._HardcodeValues()
 
 
 
