@@ -22,7 +22,7 @@ Indirect Sensing
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    IndirectSensing
 .. Indices and tables
