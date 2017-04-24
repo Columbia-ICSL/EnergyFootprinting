@@ -326,7 +326,7 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		user = self.userIDLookup(person)
+		user = self.nameLookup(person)
 		if (user is None):
 			user = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
 		print("Personal Footprint for: " + user + ", looking for " + person)
@@ -466,6 +466,14 @@ class DBMgr(object):
 			return None
 		return ret[0]["userID"]
 	
+	def nameLookup(self, name):
+		ret=list(self.registration_col1.find({"name":name}))
+		if len(ret)!=1:
+			return None
+		if "userID" in ret[0]:
+			return ret[0]["userID"]
+		return None
+
 	def userIDLookup(self, userID):
 		ret=list(self.registration_col1.find({"userID":userID}))
 		if len(ret)!=1:
