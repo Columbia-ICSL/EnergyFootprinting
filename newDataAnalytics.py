@@ -37,6 +37,7 @@ class BuildingFootprintDisaggregated:
 
 class PersonalConsumption:
 	def GET(self):
+		print("Got to Personal Consumption")
 		raw_data = web.input()
 		end = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
 		if "end" in raw_data:
