@@ -314,7 +314,9 @@ class DBMgr(object):
 				if (applType not in energyVal):
 					continue
 				energyVal[applType] += lst[app]["value"]
-			item["data"] = energyVal
+			item["HVAC"] = energyVal["HVAC"]
+			item["Light"] = energyVal["Light"]+energyVal["HVAC"]
+			item["Electric"] = energyVal["Electric"]+energyVal["Light"]+energyVal["HVAC"]
 			result += [item]
 		return self._encode(result, True)
 

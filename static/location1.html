@@ -326,7 +326,7 @@ body {
     <div class="panel-heading" role="tab" id="headingFour">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-          Remaining Energy Consumption
+          Building Footprint Disaggregated
         </a>
       </h4>
     </div>
@@ -347,123 +347,55 @@ body {
 		<script>
 		var ch4=document.getElementById('chart4');
 		var frm4=document.getElementById('form4');
-		var people;
+		//ch1 is the chart, frm1 is the form
+
  		$(frm4).children('button').on('click', function () {
 		    var $btn = $(this).button('loading');
-		    var personIDs=frm4.personID4.value;
-		    people=personIDs.split(",");
-		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 		    		start:getUTCSeconds(frm4.startDate4.value),
 		    		end:getUTCSeconds(frm4.endDate4.value),
-		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
 		    	$btn.button('reset');
-		    	render4(data,people);
+		    	render4(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
 			    $btn.button('reset');
 			});
 		  });
- 		
+		  
+		  function render4(input){
+		  	input=input.reverse();
 
- 		function render4(input, people){
- 			d=input;
- 			var
- 				totalCon={}, roomCon={};
- 			people.forEach(function(p){
- 				totalCon[p]=0;roomCon[p]={};
- 			});
- 			for(var i=0;i<input.length;i++)
- 				try{
- 					var tdiff=60;
- 					if(input[i+1] && input[i+1].timestap) tdiff=input[i+1].timestamp-input[i].timestamp;
- 					var item=input[i].data;
- 					people.forEach(function(p){
- 						if(item[p]){
- 							var thisV=item[p].value*tdiff;//unit: W * s
- 							thisV=thisV/1000/3600;//unit: kW * h
- 							totalCon[p]+=thisV;
- 							var r=item[p].roomID;
- 							roomCon[p][r] = roomCon[p][r] || 0;
- 							roomCon[p][r]+=thisV;
- 						}
- 					});
- 				}
- 				catch(e){
- 					console.log("error parsing input at",i,input[i]);
-	 			}
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        data.addColumn('number', 'HVAC (W)');
+	        data.addColumn('number', 'Lighting (W)');
+	        data.addColumn('number', 'Electric (W)');
 
- 			var formattedTotalCon=[], formattedRoomCon=[];
- 			var colors = Highcharts.getOptions().colors;
- 			people.forEach(function(p,i){
- 				formattedTotalCon.push({
-		            name: p,
-		            y: totalCon[p],
-		            color: colors[i]
-		        });
-		        var j=0;
-		        for(var r in roomCon[p]){
-		        	j++;
-		        	formattedRoomCon.push({
-		            	name: p + " at " +r,
-		            	y: roomCon[p][r],
-		            	color: colors[i],
-		            	brightness: j%2?0.2:0
-		        	});
-		        }
-		        
- 			});
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          //console.log('row',ret);
+	          var date = new Date(item.timestamp*1000)
+	          data.addRow([date, item.HVAC, item.Light, item.Electrical]);
+	        };
+			console.log(data);
+	        
 
-			$('#chart4').show().highcharts({
-		        chart: {
-		            type: 'pie'
-		        },
-		        title: {
-		            text: 'Drilldown of footprint by person ~ room'
-		        },
-		        yAxis: {
-		            title: {
-		                text: 'Total percent market share'
-		            }
-		        },
-		        plotOptions: {
-		            pie: {
-		                shadow: true,
-		                center: ['50%', '50%']
-		            }
-		        },
-		        tooltip: {
-		            valueSuffix: 'kWh'
-		        },
-		        series: [{
-		            name: 'Consumption',
-		            data: formattedTotalCon,
-		            size: '55%',
-		            dataLabels: {
-		                formatter: function () {
-		                    // display only if larger than 1
-		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
-		                },
-		              distance:-50
-		            }
-		        }, {
-		            name: 'Consumption by room',
-		            data: formattedRoomCon,
-		            size: '80%',
-		            innerSize: '90%',
-		            dataLabels: {
-		                formatter: function () {
-		                    // display only if larger than 1
-		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
-		                }
-		            }
-		        }]
-		    });
- 		}
-
-		</script>
+			var chart = new google.visualization.AreaChart(ch4);
+	        var options = {
+	          //width:800,
+	          //height:500,
+	          //annotations: {'*': {style: 'line'}}
+	        };
+	        $(ch4).show(0,function(){
+	        	chart.draw(data, options);
+	        	$(ch4).slideToggle(0).slideToggle(1000);	
+	        });
+		  }
+		  </script>
       </div>
     </div>
   </div>
