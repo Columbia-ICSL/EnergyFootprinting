@@ -49,7 +49,7 @@ class PersonalConsumption:
 
 		user = "Peter Wei"
 		if "user" in raw_data:
-			user = float(raw_data['user'])
+			user = raw_data['user']
 
 		return cloudserver.db.personalFootprint(user, start, end)
 

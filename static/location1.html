@@ -190,11 +190,11 @@ body {
 		var ch2=document.getElementById('chart2');
 		var frm2=document.getElementById('form2');
 		var people;
-		console.log("got here");
+
  		$(frm2).children('button').on('click', function () {
 		    var $btn2 = $(this).button('loading');
 		    $.get("/api/dataExtraction/PersonalConsumption/",{
-		    		user:frm2.personID2,
+		    		user:frm2.personID2.value,
 		    		start:getUTCSeconds(frm2.startDate2.value),
 		    		end:getUTCSeconds(frm2.endDate2.value),
 	    		},
