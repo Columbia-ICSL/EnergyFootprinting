@@ -336,6 +336,7 @@ class DBMgr(object):
 				item={}
 				item["value"]=shot["data"][user]["value"]
 				item["timestamp"]=shot["timestamp"]
+				item["user"]=person
 				result+=[item]
 		return self._encode(result,True)	
 

@@ -224,9 +224,11 @@ body {
 	        };
 			console.log(data);
 	        
-
+			var titleString = 'Personal Footprint For: ';
+			titleString = titleString.concat(item.user);
 			var chart = new google.visualization.AreaChart(ch2);
 	        var options = {
+	        	title:titleString
 	          //width:800,
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
@@ -248,7 +250,7 @@ body {
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-           Room Occupancy
+           Historical Building Consumption
         </a>
       </h4>
     </div>
@@ -256,20 +258,12 @@ body {
       <div class="panel-body">
         
         <form id="form3" onsubmit="return false;"  class="form-inline">
-		  <div class="form-group">
-		    <label for="startDate3">startDate</label>
-		    <input type="datetime-local" class="form-control" id="startDate3"  data-date-prefill="one-day-before">
-		  </div>
-		  <div class="form-group">
-		    <label for="endDate3">endDate</label>
-		    <input type="datetime-local" class="form-control" id="endDate3"  data-date-prefill="now">
-		  </div>
 		  <!--<div class="checkbox">
 		    <label>
 		      <input type="checkbox"> Check me out
 		    </label>
 		  </div>-->
-		  <button type="button" class="btn btn-default">Query</button>
+		  <button type="button" class="btn btn-default">Get History</button>
 		</form>
 		<div id="chart3" class="panel-body" style="height:500px;display:none;"></div>
 		<script>
