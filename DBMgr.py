@@ -327,7 +327,8 @@ class DBMgr(object):
 			}
 		}
 		user = self.userIDLookup(person)
-		print("Finding person: " + user)
+		if (user is None):
+			user = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
 		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if user in shot["data"]:
