@@ -316,7 +316,7 @@ class DBMgr(object):
 				energyVal[applType] += lst[app]["value"]
 			item["HVAC"] = energyVal["HVAC"]
 			item["Light"] = energyVal["Light"]+energyVal["HVAC"]
-			item["Electric"] = energyVal["Electric"]+energyVal["Light"]+energyVal["HVAC"]
+			item["Electrical"] = energyVal["Electrical"]+energyVal["Light"]+energyVal["HVAC"]
 			result += [item]
 		return self._encode(result, True)
 
