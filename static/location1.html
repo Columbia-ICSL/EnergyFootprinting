@@ -190,8 +190,9 @@ body {
 		var ch2=document.getElementById('chart2');
 		var frm2=document.getElementById('form2');
 		var people;
+		console.log("got here");
  		$(frm2).children('button').on('click', function () {
-		    var $btn = $(this).button('loading');
+		    var $btn2 = $(this).button('loading');
 		    $.get("/api/dataExtraction/PersonalConsumption/",{
 		    		user:frm2.personID2,
 		    		start:getUTCSeconds(frm2.startDate2.value),
@@ -199,11 +200,11 @@ body {
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	$btn.button('reset');
+		    	$btn2.button('reset');
 		    	render2(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    $btn.button('reset');
+			    $btn2.button('reset');
 			});
 		  });
 		  
