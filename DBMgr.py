@@ -329,14 +329,14 @@ class DBMgr(object):
 		user = self.userIDLookup(person)
 		if (user is None):
 			user = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
+		print("Personal Footprint for: " + user)
 		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if user in shot["data"]:
 				item={}
-				item["value"]=shot["data"]["value"]
+				item["value"]=shot["data"][user]["value"]
 				item["timestamp"]=shot["timestamp"]
 				result+=[item]
-		print(result)
 		return self._encode(result,True)	
 
 
