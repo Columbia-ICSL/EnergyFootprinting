@@ -370,16 +370,16 @@ body {
 
 	        var data = new google.visualization.DataTable();
 	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-	        data.addColumn('number', 'HVAC (W)');
+			data.addColumn('number', 'Electric (W)');
 	        data.addColumn('number', 'Lighting (W)');
-	        data.addColumn('number', 'Electric (W)');
+	        data.addColumn('number', 'HVAC (W)');
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
 	          var item=input[i];
 	          //console.log('row',ret);
 	          var date = new Date(item.timestamp*1000)
-	          data.addRow([date, item.HVAC, item.Light, item.Electrical]);
+	          data.addRow([date, item.Electrical, item.Light, item.HVAC]);
 	        };
 			console.log(data);
 	        
