@@ -326,7 +326,7 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		user = userIDLookup(person)
+		user = self.userIDLookup(person)
 		print("Finding person: " + user)
 		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
