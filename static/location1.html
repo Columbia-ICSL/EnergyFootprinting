@@ -192,84 +192,40 @@ body {
 		var people;
  		$(frm2).children('button').on('click', function () {
 		    var $btn = $(this).button('loading');
-		    var personIDs=frm2.personID2.value;
-		    people=personIDs.split(",");
-		    if(people.length<2){
-		    	$(frm2.personID2).parent().addClass('has-error');
-		    	$btn.button('reset');
-		    	return;
-		    }
-		    $(frm2.personID2).removeClass('has-error');
-		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    $.get("/api/dataExtraction/PersonalConsumption/",{
+		    		user:frm2.personID2,
 		    		start:getUTCSeconds(frm2.startDate2.value),
 		    		end:getUTCSeconds(frm2.endDate2.value),
-		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
 		    	$btn.button('reset');
-		    	render2(data,people);
+		    	render2(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
 			    $btn.button('reset');
 			});
 		  });
- 		
-
- 		function render2(input, people){
-			var N=input.length;
+		  
+		  function render2(input){
 		  	input=input.reverse();
-		  	var people_indices={};
-		  	
+
 	        var data = new google.visualization.DataTable();
-	        var dlen=0;
+	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        data.addColumn('number', 'WATTS')
+
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          //console.log('row',ret);
+	          var date = new Date(item.timestamp*1000)
+	          data.addRow([date, item.value]);
+	        };
+			console.log(data);
 	        
-	        dlen++;data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-	        people.forEach(function(t){
-	        	data.addColumn('number', t);
-	        	people_indices[t]=dlen;
-				data.addColumn({type:'string', role:'annotation'}); // annotation role col.
-        		data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
-        		dlen+=3;
-	        });
-
-	        console.log('dlen',dlen);
-
-	        //sanitation!
-	        for(var i=0;i<N;i++){
-	        	for(var ID in people_indices)
-	        		if(typeof input[i].data[ID]!='object')input[i].data[ID]={roomID:undefined}
-	        }
-
-	        for(var i=0;i<N;i++){
-	        	var flag=false;
-	        	var item=input[i];
-	        	var ret=new Array(dlen);
-	        	ret[0]=new Date(item.timestamp*1000);
-	        	for(var personID in item.data){
-	        		var idx=people_indices[personID];
-	        		ret[idx]=item.data[personID]["value"];
-	        		if(i==0 || (item.data[personID]["roomID"] != input[i-1].data[personID]["roomID"] ))
-	        		{
-	        			var room=item.data[personID]["roomID"];
-	        			if(!room || room=="unknown"){
-	        				room="unknown";
-	        				ret[idx]=0;
-	        			}
-	        			ret[idx+1]=room;
-	        			ret[idx+2]=personID+" entered "+room;
-	        			console.log("enter room",item.data[personID]["roomID"],personID,item.timestamp);
-	        		}
-	        	}
-	          data.addRow(ret);
-	        }
-
-	        var isStacked=frm2.chk2.checked;
 
 			var chart = new google.visualization.AreaChart(ch2);
 	        var options = {
-	          displayAnnotations: 1,
-	          isStacked: isStacked,
 	          //width:800,
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
@@ -279,7 +235,7 @@ body {
 	        	$(ch2).slideToggle(0).slideToggle(1000);	
 	        });
 		  }
-		</script>
+		  </script>
 
       </div>
     </div>

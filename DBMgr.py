@@ -326,14 +326,15 @@ class DBMgr(object):
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
+		user = userIDLookup(person)
 		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
-			if person in shot["data"]:
-				item=shot["data"][person]
+			if user in shot["data"]:
+				item=shot["data"][user]
 				item["timestamp"]=shot["timestamp"]
 				result+=[item]
 		
-		return self._encode(result,True)		
+		return self._encode(result,True)	
 
 
 
