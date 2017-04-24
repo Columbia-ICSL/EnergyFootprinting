@@ -310,7 +310,7 @@ class DBMgr(object):
 			item = {}
 			item["timestamp"] = shot["timestamp"]
 			for app in lst:
-				applType = ApplIdToType(app)
+				applType = self.ApplIdToType(app)
 				if (applType not in energyVal):
 					continue
 				energyVal[applType] += lst[app]["value"]
