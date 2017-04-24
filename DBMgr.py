@@ -327,13 +327,15 @@ class DBMgr(object):
 			}
 		}
 		user = userIDLookup(person)
+		print("Finding person: " + user)
 		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
 			if user in shot["data"]:
-				item=shot["data"][user]
+				item={}
+				item["value"]=shot["data"]["value"]
 				item["timestamp"]=shot["timestamp"]
 				result+=[item]
-		
+		print(result)
 		return self._encode(result,True)	
 
 
