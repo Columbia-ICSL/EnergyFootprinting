@@ -270,73 +270,50 @@ body {
 		var ch3=document.getElementById('chart3');
 		var frm3=document.getElementById('form3');
 		var people;
+
  		$(frm3).children('button').on('click', function () {
-		    var $btn = $(this).button('loading');
-		    var personIDs=frm3.personID3.value;
-		    people=personIDs.split(",");
-		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
-		    		start:getUTCSeconds(frm3.startDate3.value),
-		    		end:getUTCSeconds(frm3.endDate3.value),
-		    		client:"AJAX debug frontend"
+		    var $btn3 = $(this).button('loading');
+		    $.get("/api/dataExtraction/HistoricalConsumption/",{
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	$btn.button('reset');
-		    	render3(data,people);
+		    	$btn3.button('reset');
+		    	render3(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    $btn.button('reset');
+			    $btn3.button('reset');
 			});
 		  });
- 		
-
- 		function render3(input, people){
-			var N=input.length;
+		  
+		  function render3(input){
 		  	input=input.reverse();
 
-		  	var time_slice=10*1000;//10 second is the minimum reporting interval of monitor app?
-		  	var people_indices={};
-		  	people.forEach(function(ID){people_indices[ID]=true;});
-	        //sanitation!
-	        for(var i=0;i<N;i++){
-	        	for(var ID in people_indices)
-	        		if(typeof input[i].data[ID]!='object')input[i].data[ID]={roomID:undefined}
-	        }
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('date', 'DATE'); // Implicit domain label col.
+	        data.addColumn('number', 'WATTS')
 
- 			var dataTable = new google.visualization.DataTable();
-			dataTable.addColumn({ type: 'string', id: 'Person ID' });
-			dataTable.addColumn({ type: 'string', id: 'Room' });
-			dataTable.addColumn({ type: 'datetime', id: 'Start' });
-			dataTable.addColumn({ type: 'datetime', id: 'End' });
-
-	    	//generate by each person
-	    	for(var ID in people_indices){
-	    		console.log("id",ID);
-	    		for(var i=0;i<N;i++){
-	    			var startR=input[i].data[ID].roomID;
-	    			var ptr=i;
-	    			while(ptr<N-1 && input[ptr+1].data[ID].roomID==startR)ptr++;
-	    			console.log('range',i,ptr);
-	    			var startTS=new Date(input[i].timestamp*1000);
-	    			var endTS=new Date(input[ptr].timestamp*1000+(i==ptr?time_slice:0));
-	    			if(startR && startR!="undefined")
-	    			{
-		    			dataTable.addRow([ ID, startR, startTS, endTS ]);
-		    			console.log([ ID, ""+startR, startTS, endTS ]);
-	    			}
-	    			//var ts=input[i].timestamp;
-	    			i=ptr;
-	    			continue;
-	    		}
-	    	}
-			var chart = new google.visualization.Timeline(ch3);
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          //console.log('row',ret);
+	          var date = new Date(item.year, item.month, item.day)
+	          data.addRow([date, item.value]);
+	        };
+			console.log(data);
+	        
+			var chart = new google.visualization.AreaChart(ch3);
+	        var options = {
+	        	title:"Historical Energy Consumption"
+	          //width:800,
+	          //height:500,
+	          //annotations: {'*': {style: 'line'}}
+	        };
 	        $(ch3).show(0,function(){
-	        	chart.draw(dataTable);
+	        	chart.draw(data, options);
 	        	$(ch3).slideToggle(0).slideToggle(1000);	
 	        });
-
- 		}
-		</script>
+		  }
+		  </script>
 
       </div>
     </div>

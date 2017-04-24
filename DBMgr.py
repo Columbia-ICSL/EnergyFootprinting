@@ -340,7 +340,20 @@ class DBMgr(object):
 				result+=[item]
 		return self._encode(result,True)	
 
-
+	def historicalConsumption(self):
+		result = []
+		condition = {
+			"$or": [{"year":{"$gt":2017}},{"month":{"$gt":4}}, {"day":{"$gte":7}}]
+		}
+		iterator = self.historicalCumulativeEnergy.find(condition).sort([("year", pymongo.DESCENDING), ("month", pymongo.DESCENDING), ("day", pymongo.DESCENDING)])
+		for d in iterator:
+			item = {}
+			item["year"] = d["year"]
+			item["month"] = d["month"]
+			item["day"] = d["day"]
+			item["value"] = d["value"]
+			result += [item]
+		return self._encode(result,True)
 
 
 

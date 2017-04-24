@@ -7,7 +7,8 @@ import cloudserver
 urls = (
 	"/BuildingFootprint/", "BuildingFootprint",
 	"/BuildingFootprintDisaggregated/", "BuildingFootprintDisaggregated",
-	"/PersonalConsumption/", "PersonalConsumption")
+	"/PersonalConsumption/", "PersonalConsumption",
+	"/HistoricalConsumption/", "HistoricalConsumption")
 
 class BuildingFootprint:
 	def GET(self):
@@ -53,7 +54,9 @@ class PersonalConsumption:
 
 		return cloudserver.db.personalFootprint(user, start, end)
 
-
+class HistoricalConsumption:
+	def GET(self):
+		return cloudserver.db.historicalConsumption()
 
 dataExtraction = web.application(urls, locals())
 
