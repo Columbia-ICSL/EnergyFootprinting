@@ -451,7 +451,22 @@ class DBMgr(object):
 			return "404"
 		return "400"
 
-
+	def addDeviceToken(self, deviceID, deviceToken):
+		try:
+			user = self.registration_col1.find_one({"userID": deviceID})
+			if (user is not None):
+				if ("devices" not in user):
+					self.registration_col1.update({"userID":deviceID}, {"$set":{"devices":[deviceToken]}})
+					return "0"
+				else:
+					devices = user.get("devices")
+					devices.append(deviceToken)
+					self.registration_col1.update({"userID":deviceID}, {"$set":{"devices":devices}})
+					return "0"
+			return "1"
+		except pymongo.errors.DuplicateKeyError:
+			return "404"
+		return "400"
 
 
 
