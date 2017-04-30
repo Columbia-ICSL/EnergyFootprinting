@@ -43,7 +43,8 @@ with open('userSnapshots.csv', 'wb') as csvfile:
 	for person in users:
 		personID = person["name"]
 		writeArray.append(personID)
-
+	spanwriter.writerow(writeArray)
+	
 	for shot in shots:
 		userList = shot["data"]
 		writeArray = []
