@@ -50,8 +50,8 @@ with open('userSnapshots.csv', 'wb') as csvfile:
 		for person in users:
 			userFound = False
 			personID = person["userID"]
-			if user in userList:
-				writeArray.append(userList[user]["value"])
+			if personID in userList:
+				writeArray.append(userList[personID]["value"])
 				userFound = True
 				continue
 			if (not userFound):
