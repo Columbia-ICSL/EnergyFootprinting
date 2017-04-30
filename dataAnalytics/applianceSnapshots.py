@@ -46,6 +46,7 @@ with open('applianceUsers.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	writeArray = []
+	writeArray += ["year", "month", "day", "hour", "minute", "second"]
 	for appliance in applianceList:
 		writeArray.append(appliance)
 	spamwriter.writerow(writeArray)
