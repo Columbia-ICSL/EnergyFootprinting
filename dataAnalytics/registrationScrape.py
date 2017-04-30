@@ -2,7 +2,11 @@ import DBScrape
 import csv
 import os
 
-os.remove('registration_col1.csv')
+try:
+	os.remove('registration_col1.csv')
+except OSError:
+    pass
+    
 db=DBScrape.DBScrape()
 
 regList = db.registration_col1()

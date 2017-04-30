@@ -26,13 +26,17 @@ if (args.offset):
 	end += 60*60*args.offset
 
 
-os.remove('registration_col1.csv')
+try:
+    os.remove('roomSnapshots.csv')
+except OSError:
+    pass
+
 db=DBScrape.DBScrape()
 
 users = db.registration_col1()
 shots = db.snapshots_col_rooms(start, end)
 
-with open('registration_col1.csv', 'wb') as csvfile:
+with open('roomSnapshots.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	for shot in shots:
