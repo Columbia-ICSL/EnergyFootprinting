@@ -63,7 +63,7 @@ with open('applianceUsers.csv', 'wb') as csvfile:
 		for appliance in applianceList:
 			applianceFound = False
 			if appliance in shotAppliances:
-				writeArray.append(shotAppliances[appliances]["total_users"])
+				writeArray.append(shotAppliances[appliance]["total_users"])
 				applianceFound = True
 				continue
 			if (not applianceFound):
