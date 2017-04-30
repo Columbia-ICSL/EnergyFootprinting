@@ -48,7 +48,7 @@ with open('userSnapshots.csv', 'wb') as csvfile:
 	spamwriter.writerow(writeArray)
 
 	for shot in shots:
-		D = dateutil.parser.parse(shot["timestamp"])
+		D = shot["timestamp"]
 		userList = shot["data"]
 		writeArray = []
 		writeArray.append(D.year)
