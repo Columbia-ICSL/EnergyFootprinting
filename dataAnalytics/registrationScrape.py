@@ -1,6 +1,8 @@
 import DBScrape
 import csv
+import os
 
+os.remove('registration_col1.csv')
 db=DBScrape.DBScrape()
 
 regList = db.registration_col1()
@@ -10,7 +12,6 @@ with open('registration_col1.csv', 'wb') as csvfile:
 	for person in regList:
 		writeArray = []
 		writeArray.append(person['control'])
-		writeArray.append(person['_id'])
 		writeArray.append(person['name'])
 		writeArray.append(person['userID'])
 		writeArray.append(person['loggedIn'])
