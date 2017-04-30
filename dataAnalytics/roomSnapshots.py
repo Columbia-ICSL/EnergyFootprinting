@@ -3,6 +3,7 @@ import csv
 import os
 import argparse
 import calendar
+import datetime
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--start", help="how many days back to start scrape", type=int)
 parser.add_argument("-e", "--end", help="how many days back to end scrape", type=int)
