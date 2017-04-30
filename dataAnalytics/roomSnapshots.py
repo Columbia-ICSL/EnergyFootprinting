@@ -39,9 +39,24 @@ shots = db.snapshots_col_rooms(start, end)
 with open('roomSnapshots.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+	writeArray = []
+	writeArray += ["year", "month", "day", "hour", "minute", "second"]
+
+	for person in users:
+		personID = person["name"]
+		writeArray.append(personID)
+	spamwriter.writerow(writeArray)
+
 	for shot in shots:
+		D = shot["timestamp"]
 		roomList = shot["data"]
 		writeArray = []
+		writeArray.append(D.year)
+		writeArray.append(D.month)
+		writeArray.append(D.day)
+		writeArray.append(D.hour)
+		writeArray.append(D.minute)
+		writeArray.append(D.second)
 		for person in users:
 			spaceFound = False
 			personID = person["userID"]

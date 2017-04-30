@@ -4,7 +4,6 @@ import os
 import argparse
 import calendar
 import datetime
-import dateutil.parser
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--start", help="how many days back to start scrape", type=int)
@@ -42,6 +41,8 @@ with open('userSnapshots.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	writeArray = []
+	writeArray += ["year", "month", "day", "hour", "minute", "second"]
+
 	for person in users:
 		personID = person["name"]
 		writeArray.append(personID)
