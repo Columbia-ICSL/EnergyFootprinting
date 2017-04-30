@@ -19,7 +19,7 @@ if (args.start):
 	start = calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60*args.start
 if (args.end):
 	end = calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60*args.end
-assert(start > end)
+assert(start < end)
 
 if (args.offset):
 	start += 60*60*args.offset
