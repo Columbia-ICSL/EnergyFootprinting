@@ -27,31 +27,35 @@ if (args.offset):
 
 
 try:
-    os.remove('roomSnapshots.csv')
+    os.remove('userSnapshots.csv')
 except OSError:
     pass
 
 db=DBScrape.DBScrape()
 
 users = db.registration_col1()
-shots = db.snapshots_col_rooms(start, end)
+shots = db.snapshots_col_users(start, end)
 
-with open('roomSnapshots.csv', 'wb') as csvfile:
+with open('userSnapshots.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+	writeArray = []
+	for person in users:
+		personID = person["name"]
+		writeArray.append(personID)
+
 	for shot in shots:
-		roomList = shot["data"]
+		userList = shot["data"]
 		writeArray = []
 		for person in users:
-			spaceFound = False
+			userFound = False
 			personID = person["userID"]
-			for room in roomList:
-				if personID in roomList[room]["users"]:
-					writeArray.append(roomList[room]["name"])
-					spaceFound = True
-					break
-			if (not spaceFound):
-				writeArray.append("None")
+			if user in userList:
+				writeArray.append(userList[user]["value"])
+				userFound = True
+				continue
+			if (not userFound):
+				writeArray.append(0)
 
 		spamwriter.writerow(writeArray)
 

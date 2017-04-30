@@ -132,11 +132,11 @@ class DBInit(object):
         
 	addAppliance("nwc1003g_a_plug1", "Power outlet 1 in 1003G", "Electrical", "nwc1003g_a", ACTIONABLE, DUTY_CYCLE)
 	addAppliance("nwc1003g_a_plug2", "Power outlet 2 in 1003G", "Electrical", "nwc1003g_a", ACTIONABLE, DUTY_CYCLE)
-        addAppliance("nwc1003g_plug1", "Plugmeter in 1003G (Printer&Computer)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
-        addAppliance("nwc1003g_plug2", "Plugmeter in 1003G (Soldering Station)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
-        addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "nwc1003g", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1003g_plug1", "Plugmeter in 1003G (Printer&Computer)", "Electrical", "^nwc1003g$", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1003g_plug2", "Plugmeter in 1003G (Soldering Station)", "Electrical", "^nwc1003g$", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc1003g_plug3", "Plugmeter in 1003G (Projector&XBox)", "Electrical", "^nwc1003g$", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1003b_light", "Lights in 1003B Lab", "Light", "nwc1003b.*", ACTIONABLE, NO_DUTY_CYCLE)
-        addAppliance("nwc1003g_light", "Lights in 1003G Lab", "Light", "nwc1003g", ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc1003g_light", "Lights in 1003G Lab", "Light", "^nwc1003g$", ACTIONABLE, NO_DUTY_CYCLE)
 
         addAppliance("nwc1003gA_vav", "Heating Unit in 1003G_A", "HVAC", "nwc1003g_a", ACTIONABLE, DUTY_CYCLE) #BIOMED LAB 1
         addAppliance("nwc1003gB_vav", "Heating Unit in 1003G_B", "HVAC", "nwc1003g_b", ACTIONABLE, DUTY_CYCLE) #TEHERANI LAB
@@ -145,9 +145,9 @@ class DBInit(object):
         addAppliance("nwc1003B_vav", "Heating Unit in 1003B", "HVAC", "nwc1003b", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc1001L_vav", "Heating Unit in 1001L", "HVAC", "nwc1001L", ACTIONABLE, DUTY_CYCLE)
         addAppliance("nwc10T1_vav", "Heating Unit in Danino Wetlab Space", "HVAC", "nwc1003b_danino", ACTIONABLE, DUTY_CYCLE)
-        addAppliance("nwc10F_vav", "Heating Unit at 10F Elevators", "HVAC", "nwc10", ACTIONABLE, DUTY_CYCLE)
-        addAppliance("nwc8F_vav", "Heating Unit at 8F Elevators", "HVAC", "nwc8", ACTIONABLE, DUTY_CYCLE)
-        addAppliance("nwc7F_vav", "Heating Unit at 7F Elevators", "HVAC", "nwc7", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc10F_vav", "Heating Unit at 10F Elevators", "HVAC", "^nwc10$", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc8F_vav", "Heating Unit at 8F Elevators", "HVAC", "^nwc8$", ACTIONABLE, DUTY_CYCLE)
+        addAppliance("nwc7F_vav", "Heating Unit at 7F Elevators", "HVAC", "^nwc7$", ACTIONABLE, DUTY_CYCLE)
 
         for a in range(1,9,1):#1..8
             for p in range(1,3,1):#1..2
@@ -161,9 +161,9 @@ class DBInit(object):
 
         addAppliance("nwc1000m_light", "Shared Lighting in Mezzaine Level", "Light", "nwc1000m_.*", NOT_ACTIONABLE, NO_DUTY_CYCLE)
         addAppliance("nwc10hallway_light", "Hallway Lights", "Light", "nwc10_hallway", NOT_ACTIONABLE, NO_DUTY_CYCLE)
-        addAppliance("nwc10elevator_light", "Common Area Lights", "Light", "nwc10", NOT_ACTIONABLE, NO_DUTY_CYCLE)
-        addAppliance("nwc8_light", "8F Common Area Lights", "Light", "nwc8", NOT_ACTIONABLE, NO_DUTY_CYCLE)
-        addAppliance("nwc7_light", "7F Common Area Lights", "Light", "nwc7", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc10elevator_light", "Common Area Lights", "Light", "^nwc10$", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc8_light", "8F Common Area Lights", "Light", "^nwc8$", NOT_ACTIONABLE, NO_DUTY_CYCLE)
+        addAppliance("nwc7_light", "7F Common Area Lights", "Light", "^nwc7$", NOT_ACTIONABLE, NO_DUTY_CYCLE)
 
 
         self._SetConfigValue("APPLIANCE_DEFINITION",self.APPLIANCE_DEFINITION)
