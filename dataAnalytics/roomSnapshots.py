@@ -46,8 +46,8 @@ with open('roomSnapshots.csv', 'wb') as csvfile:
 			spaceFound = False
 			personID = person["userID"]
 			for room in roomList:
-				if personID in room["users"]:
-					writeArray.append(room["name"])
+				if personID in roomList[room]["users"]:
+					writeArray.append(roomList[room]["name"])
 					spaceFound = True
 					break
 			if (not spaceFound):
