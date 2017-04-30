@@ -1,4 +1,5 @@
 import pymongo
+import datetime
 
 class DBScrape():
 	def __init__(self):
