@@ -61,12 +61,12 @@ with open('timeSnapshots.csv', 'wb') as csvfile:
 		D = shot["timestamp"]
 		userList = shot["data"]
 		writeArray = []
-		#writeArray.append(D.year)
-		#writeArray.append(D.month)
-		#writeArray.append(D.day)
-		#writeArray.append(D.hour)
-		#writeArray.append(D.minute)
-		#writeArray.append(D.second)	
+		writeArray.append(D.year)
+		writeArray.append(D.month)
+		writeArray.append(D.day)
+		writeArray.append(D.hour)
+		writeArray.append(D.minute)
+		writeArray.append(D.second)	
 		A = {"nwc1007_plug1":0, "nwc1007_plug2":0, "nwc1008_plug1":0, "nwc1008_smartvent1":0, "nwc1008_light":0, "nwc1003b_a_plug":0,
 			"nwc1003b_b_plug":0, "nwc1003b_c_plug":0, "nwc1003g1_vav":0, "nwc1003t2_vav":0, "nwc1003o1_vav":0, "nwc1008_fcu":0, "nwcM2_fcu":0,
 			"nwcM3_fcu":0, "nwcM1_fcu":0, "nwcM4_fcu":0, "nwc1003g_a_plug1":0, "nwc1003g_a_plug2":0, "nwc1003g_plug1":0, "nwc1003g_plug2":0, "nwc1003g_plug3":0,
