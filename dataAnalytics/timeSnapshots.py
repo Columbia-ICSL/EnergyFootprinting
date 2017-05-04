@@ -32,7 +32,7 @@ print(datetime.datetime.fromtimestamp(end))
 
 
 try:
-    os.remove('userSnapshots.csv')
+    os.remove('timeSnapshots.csv')
 except OSError:
     pass
 
@@ -41,7 +41,7 @@ db=DBScrape.DBScrape()
 users = db.registration_col1()
 shots = db.snapshots_col_users(start, end)
 
-with open('userSnapshots.csv', 'wb') as csvfile:
+with open('timeSnapshots.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	writeArray = []
