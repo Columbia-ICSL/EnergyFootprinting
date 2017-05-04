@@ -5,6 +5,7 @@ import argparse
 import calendar
 import datetime
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--start", help="how many days back to start scrape", type=int)
 parser.add_argument("-e", "--end", help="how many days back to end scrape", type=int)
@@ -26,6 +27,9 @@ assert(start < end)
 if (args.offset):
 	start += 60*60*args.offset
 	end += 60*60*args.offset
+
+print(datetime.datetime.fromtimestamp(start))
+print(datetime.datetime.fromtimestamp(end))
 
 userID = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D"
 if (args.userID):
