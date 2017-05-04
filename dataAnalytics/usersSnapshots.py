@@ -63,9 +63,12 @@ with open('userSnapshots.csv', 'wb') as csvfile:
 		writeArray.append(D.second)	
 		A = {"HVAC":0, "Light":0, "Electrical":0}
 		if userID in userList:
+			writeArray.append(userList[userID]["location"])
 			consumptions = userList[userID]["consumptions"]
 			for device in consumptions:
 				A[device["type"]] += device["share"]
+		else:
+			writeArray.append("Out of Lab")
 		writeArray.append(A["HVAC"])
 		writeArray.append(A["Light"])
 		writeArray.append(A["Electrical"])
