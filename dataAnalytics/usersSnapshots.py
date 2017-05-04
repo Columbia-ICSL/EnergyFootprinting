@@ -65,7 +65,7 @@ with open('userSnapshots.csv', 'wb') as csvfile:
 		if userID in userList:
 			consumptions = userList[userID]["consumptions"]
 			for device in consumptions:
-				A[consumptions[device]["type"]] += consumptions[device]["share"]
+				A[device["type"]] += device["share"]
 		writeArray.append(A["HVAC"])
 		writeArray.append(A["Light"])
 		writeArray.append(A["Electrical"])
