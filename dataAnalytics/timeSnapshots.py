@@ -45,8 +45,7 @@ with open('timeSnapshots.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	writeArray = []
-	writeArray += ["year", "month", "day", "hour", "minute", "second", "HVAC", "Light", "Electric"]
-	spamwriter.writerow(writeArray)
+	writeArray += ["year", "month", "day", "hour", "minute", "second"]
 	deviceList = ["nwc1007_plug1", "nwc1007_plug2", "nwc1008_plug1", "nwc1008_smartvent1", "nwc1008_light", "nwc1003b_a_plug",
 			"nwc1003b_b_plug", "nwc1003b_c_plug", "nwc1003g1_vav", "nwc1003t2_vav", "nwc1003o1_vav", "nwc1008_fcu", "nwcM2_fcu",
 			"nwcM3_fcu", "nwcM1_fcu", "nwcM4_fcu", "nwc1003g_a_plug1", "nwc1003g_a_plug2", "nwc1003g_plug1", "nwc1003g_plug2", "nwc1003g_plug3",
@@ -57,6 +56,7 @@ with open('timeSnapshots.csv', 'wb') as csvfile:
 			"nwc1000m_a7_plug2", "nwc1000m_a8_plug1", "nwc1000m_a8_plug2", "nwc1000m_a6_plug3", "nwc1000m_a6_plug4", "nwc1000m_a1_plug3",
 			"nwc1000m_light", "nwc10hallway_light", "nwc10elevator_light", "nwc8_light", "nwc7_light"]
 	writeArray = writeArray + deviceList
+	spamwriter.writerow(writeArray)
 	for shot in shots:
 		D = shot["timestamp"]
 		userList = shot["data"]
