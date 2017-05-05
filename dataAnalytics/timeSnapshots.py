@@ -77,6 +77,9 @@ with open('timeSnapshots.csv', 'wb') as csvfile:
 			"nwc1000m_a7_plug2":0, "nwc1000m_a8_plug1":0, "nwc1000m_a8_plug2":0, "nwc1000m_a6_plug3":0, "nwc1000m_a6_plug4":0, "nwc1000m_a1_plug3":0,
 			"nwc1000m_light":0, "nwc10hallway_light":0, "nwc10elevator_light":0, "nwc8_light":0, "nwc7_light":0}
 		for userID in userList:
+			banList = ["7e6363bfacec4abc", "36cd923d8be79f40","a57e4a606555bf63"]
+			if userID in banList:
+				continue
 			#writeArray.append(userList[userID]["location"])
 			consumptions = userList[userID]["consumptions"]
 			for device in consumptions:
