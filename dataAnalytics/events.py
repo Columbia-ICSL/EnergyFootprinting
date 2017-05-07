@@ -69,6 +69,7 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 	newLocation = "outOfLab"
 	oldOccupancy = 0
 	newOccupancy = 0
+	print(len(user_shots))
 	for shot in user_shots:
 		D = shot["timestamp"]
 		userList = shot["data"]
@@ -79,9 +80,9 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 			newLocation = userList[userID]["location"]
 			oldValue = newValue
 			newValue = userList[userID]["value"]
+			print((oldLocation, newLocation))
 			if ((oldLocation == "outOfLab") or (newLocation == "outOfLab")):
 				continue
-
 			occupancy = 0
 			for userID in userList:
 				if (userList[userID]["location"] == newLocation):
@@ -89,7 +90,6 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 			assert(occupancy != 0)
 			oldOccupancy = newOccupancy
 			newOccupancy = occupancy
-			print((oldLocation, newLocation, oldOccupancy, newOccupancy))
 			if ((oldLocation != newLocation) or (oldOccupancy != newOccupancy)):
 				if (oldOccupancy == 0):
 					continue
