@@ -87,6 +87,9 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 			newOccupancy = occupancy
 
 			if ((oldLocation != newLocation) or (oldOccupancy != newOccupancy)):
+				if (oldOccupancy == 0):
+					continue
+				assert(newOccupancy != 0)
 				writeArray.append(D.year)
 				writeArray.append(D.month)
 				writeArray.append(D.day)
