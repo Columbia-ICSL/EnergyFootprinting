@@ -33,7 +33,7 @@ if (args.userID):
 
 try:
     os.remove('locationChangeEvents.csv')
-    os.remove('occupancyChangeEvents.csv')
+#    os.remove('occupancyChangeEvents.csv')
 except OSError:
     pass
 
@@ -51,14 +51,14 @@ user_shots = db.snapshots_col_users(start, end)
 with open('locationChangeEvents.csv', 'wb') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
-with open('occupancyChangeEvents.csv', 'wb') as csvfileO:
-	occupancyWriter = csv.writer(csvfileO, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+#with open('occupancyChangeEvents.csv', 'wb') as csvfileO:
+#	occupancyWriter = csv.writer(csvfileO, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	writeArray = []
-	occupancyArray = []
-	writeArray += ["year", "month", "day", "hour", "minute", "second", "oldLocation", "location", "oldValue", "value"]
+#	occupancyArray = []
+	writeArray += ["year", "month", "day", "hour", "minute", "second", "oldLocation", "location", "oldOccupancy", "occupancy", "oldValue", "value"]
 	spamwriter.writerow(writeArray)
-	occupancyArray += ["year", "month", "day", "hour", "minute", "second", "oldOccupancy", "occupancy", "oldValue", "value"]
-	occuapncyWriter.writerow(occupancyArray)
+#	occupancyArray += ["year", "month", "day", "hour", "minute", "second", "oldOccupancy", "occupancy", "oldValue", "value"]
+#	occupancyWriter.writerow(occupancyArray)
 	oldValue = 0
 	newValue = 0
 	oldLocation = "outOfLab"
@@ -77,7 +77,16 @@ with open('occupancyChangeEvents.csv', 'wb') as csvfileO:
 			newValue = userList[userID]["value"]
 			if ((oldLocation == "outOfLab") or (newLocation == "outOfLab")):
 				continue
-			if (oldLocation != newLocation):
+
+			occupancy = 0
+			for userID in userList:
+				if (userList[userID]["location"] == newLocation):
+					occupancy += 1
+			assert(occupancy != 0)
+			oldOccupancy = newOccupancy
+			newOccupancy = occupancy
+
+			if ((oldLocation != newLocation) or (oldOccupancy != newOccupancy)):
 				writeArray.append(D.year)
 				writeArray.append(D.month)
 				writeArray.append(D.day)
@@ -86,30 +95,12 @@ with open('occupancyChangeEvents.csv', 'wb') as csvfileO:
 				writeArray.append(D.second)
 				writeArray.append(oldLocation)
 				writeArray.append(newLocation)
+				writeArray.append(oldOccupancy)
+				writeArray.append(occupancy)
 				writeArray.append(oldValue)
 				writeArray.append(newValue)
 				spamwriter.writerow(writeArray)
-			if (oldLocation == newLocation):
-				occupancy = 0
-				for userID in userList:
-					if (userList[userID]["location"] == newLocation):
-						occupancy += 1
-				assert(occupancy != 0)
-				oldOccupancy = newOccupancy
-				newOccupancy = occupancy
-				if (oldOccupancy != newOccupancy):
-					writeArray.append(D.year)
-					writeArray.append(D.month)
-					writeArray.append(D.day)
-					writeArray.append(D.hour)
-					writeArray.append(D.minute)
-					writeArray.append(D.second)
-					writeArray.append(oldOccupancy)
-					writeArray.append(occupancy)
-					writeArray.append(oldValue)
-					writeArray.append(newValue)
-					occupancyWriter.writerow(occupancyArray)
-					continue
+
 
 			
 
