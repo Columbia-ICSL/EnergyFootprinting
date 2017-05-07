@@ -80,8 +80,6 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 			newLocation = userList[userID]["location"]
 			oldValue = newValue
 			newValue = userList[userID]["value"]
-			if (newLocation != "outOfLab"):
-				print newLocation
 			if ((oldLocation == "outOfLab") or (newLocation == "outOfLab")):
 				continue
 			occupancy = 0
