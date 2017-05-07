@@ -37,6 +37,10 @@ try:
 except OSError:
     pass
 
+
+print(datetime.datetime.fromtimestamp(start))
+print(datetime.datetime.fromtimestamp(end))
+
 db=DBScrape.DBScrape()
 
 #shots = db.snapshots_col_appliances(start, end)
@@ -90,6 +94,7 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 				if (oldOccupancy == 0):
 					continue
 				assert(newOccupancy != 0)
+				print((oldLocation, newLocation, oldOccupancy, newOccupancy))
 				writeArray.append(D.year)
 				writeArray.append(D.month)
 				writeArray.append(D.day)
@@ -99,7 +104,7 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 				writeArray.append(oldLocation)
 				writeArray.append(newLocation)
 				writeArray.append(oldOccupancy)
-				writeArray.append(occupancy)
+				writeArray.append(newOccupancy)
 				writeArray.append(oldValue)
 				writeArray.append(newValue)
 				spamwriter.writerow(writeArray)
