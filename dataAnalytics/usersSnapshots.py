@@ -102,4 +102,4 @@ with open('userSnapshots.csv', 'wb') as csvfile:
 #				writeArray.append(0)
 
 #		spamwriter.writerow(writeArray)
-
+print "user snapshot data written to userSnapshots.csv"
