@@ -83,8 +83,8 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 			if ((oldLocation == "outOfLab") or (newLocation == "outOfLab")):
 				continue
 			occupancy = 0
-			for userID in userList:
-				if (userList[userID]["location"] == newLocation):
+			for ID in userList:
+				if (userList[ID]["location"] == newLocation):
 					occupancy += 1
 			assert(occupancy != 0)
 			oldOccupancy = newOccupancy
@@ -107,6 +107,6 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 				writeArray.append(newValue)
 				spamwriter.writerow(writeArray)
 
-
+print "event data written to locationChangeEvents.csv"
 			
 
