@@ -37,6 +37,10 @@ try:
 except OSError:
     pass
 
+try:
+	os.remove('applianceChangeEvents.csv')
+except OSError:
+	pass
 
 print(datetime.datetime.fromtimestamp(start))
 print(datetime.datetime.fromtimestamp(end))
@@ -58,8 +62,9 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 #with open('occupancyChangeEvents.csv', 'wb') as csvfileO:
 #	occupancyWriter = csv.writer(csvfileO, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	writeArray = []
+	applianceDictionary = {}
 #	occupancyArray = []
-	writeArray += ["year", "month", "day", "hour", "minute", "second", "oldLocation", "location", "oldOccupancy", "occupancy", "oldValue", "value"]
+	writeArray += ["year", "month", "day", "hour", "minute", "second", "oldLocation", "newLocation", "oldOccupancy", "newOccupancy", "appliance", "applianceChange", "oldValue", "value", "valDiff"]
 	spamwriter.writerow(writeArray)
 #	occupancyArray += ["year", "month", "day", "hour", "minute", "second", "oldOccupancy", "occupancy", "oldValue", "value"]
 #	occupancyWriter.writerow(occupancyArray)
@@ -78,9 +83,30 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 		if (userID in userList):
 			oldLocation = newLocation
 			newLocation = userList[userID]["location"]
+			consumptions = userList[userID]["consumptions"]
 			oldValue = newValue
 			newValue = userList[userID]["value"]
-			if ((oldLocation == "outOfLab") or (newLocation == "outOfLab")):
+			if ((oldLocation != "outOfLab") and (newLocation != "outOfLab") and (oldLocation != newLocation)):
+				writeArray.append(D.year)
+				writeArray.append(D.month)
+				writeArray.append(D.day)
+				writeArray.append(D.hour)
+				writeArray.append(D.minute)
+				writeArray.append(D.second)
+				writeArray.append(oldLocation)
+				writeArray.append(newLocation)
+				writeArray.append(0)
+				writeArray.append(0)
+				writeArray.append("null")
+				writeArray.append(0)
+				writeArray.append(oldValue)
+				writeArray.append(newValue)
+				writeArray.append(newValue-oldValue)
+				spamwriter.writerow(writeArray)
+				applianceDictionary = {} #clear the appliance dictionary because we have moved locations
+				for appliance in consumptions:
+					appID = appliance["id"]
+					applianceDictionary[appID] = appliance["value"]
 				continue
 			occupancy = 0
 			for ID in userList:
@@ -89,7 +115,7 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 			assert(occupancy != 0)
 			oldOccupancy = newOccupancy
 			newOccupancy = occupancy
-			if ((oldLocation != newLocation) or (oldOccupancy != newOccupancy)):
+			if (oldOccupancy != newOccupancy):
 				if (oldOccupancy == 0):
 					continue
 				assert(newOccupancy != 0)
@@ -99,14 +125,44 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 				writeArray.append(D.hour)
 				writeArray.append(D.minute)
 				writeArray.append(D.second)
-				writeArray.append(oldLocation)
-				writeArray.append(newLocation)
+				writeArray.append("null")
+				writeArray.append("null")
 				writeArray.append(oldOccupancy)
 				writeArray.append(newOccupancy)
+				writeArray.append("null")
+				writeArray.append(0)
 				writeArray.append(oldValue)
 				writeArray.append(newValue)
+				writeArray.append(newValue-oldValue)
 				spamwriter.writerow(writeArray)
+			for appliance in consumptions:
+				appID = appliance["id"]
+				newAppValue = appliance["value"]
+				if appID in applianceDictionary:
+					oldAppValue = applianceDictionary[appID]
+					applianceDictionary[appID] = newAppValue
+					if (oldAppValue != newAppValue):
+						writeArray.append(D.year)
+						writeArray.append(D.month)
+						writeArray.append(D.day)
+						writeArray.append(D.hour)
+						writeArray.append(D.minute)
+						writeArray.append(D.second)
+						writeArray.append("null")
+						writeArray.append("null")
+						writeArray.append(0)
+						writeArray.append(0)
+						writeArray.append(appID)
+						writeArray.append(newAppValue-oldAppValue)
+						writeArray.append(oldValue)
+						writeArray.append(newValue)
+						writeArray.append(newValue-oldValue)
+						spamwriter.writerow(writeArray)
+				else:
+					applianceDictionary[appID] = newAppValue
+
+
+				
 
 print "event data written to locationChangeEvents.csv"
-			
 
