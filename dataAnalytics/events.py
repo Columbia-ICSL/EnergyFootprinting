@@ -103,6 +103,7 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 				writeArray.append(newValue)
 				writeArray.append(newValue-oldValue)
 				spamwriter.writerow(writeArray)
+				writeArray = []
 				applianceDictionary = {} #clear the appliance dictionary because we have moved locations
 				for appliance in consumptions:
 					appID = appliance["id"]
@@ -135,6 +136,7 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 				writeArray.append(newValue)
 				writeArray.append(newValue-oldValue)
 				spamwriter.writerow(writeArray)
+				writeArray = []
 			for appliance in consumptions:
 				appID = appliance["id"]
 				newAppValue = appliance["value"]
@@ -158,6 +160,7 @@ with open('locationChangeEvents.csv', 'wb') as csvfile:
 						writeArray.append(newValue)
 						writeArray.append(newValue-oldValue)
 						spamwriter.writerow(writeArray)
+						writeArray = []
 				else:
 					applianceDictionary[appID] = newAppValue
 
