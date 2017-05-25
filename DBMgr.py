@@ -270,6 +270,8 @@ class DBMgr(object):
 				self.cumulativeEnergy=0.0
 				return
 		
+	def individualDevices(self):
+		individualDevices
 
 	def buildingFootprint(self, start, end):
 		### HERE ###
@@ -430,10 +432,25 @@ class DBMgr(object):
 			if (user.get("email") == email) and (user.get("password") == password):
 				self.registration_col1.update({"userID":deviceID}, {"$set":{"loggedIn":True}})
 				return "0"
-
 			else:
 				return "1"
-		return "404"
+		user = self.registration_col1.find_one({"email": email, "password":password})
+		if user is None:
+			return "404"
+		newInput = {}
+		newInput["userID"] = deviceID
+		newInput["control"] = user.get("control")
+		newInput["password"] = user.get("password")
+		newInput["name"] = user.get("name")
+		newInput["loggedIn"] = True
+		newInput["tempBalance"] = user.get("tempBalance")
+		newInput["balance"] = user.get("balance")
+		newInput["email"] = user.get("email")
+		self.registration_col1.insert(newInput)
+		return "0"
+
+
+
 
 	def changeEmailAndPassword(self, deviceID, email, password):
 		try:
