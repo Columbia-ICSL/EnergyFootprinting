@@ -31,7 +31,7 @@ import suggestionsEngine
 from trainingData import training
 import visualizationAPI
 urls = (
-    "/api/zones", zones.zonesTraining,
+    "/api/zoning", zones.zonesTraining,
     "/api/externalTraining", externalTraining.externalLocationTraining,
     "/api/EnergyReport",Energy.EnergyReport,
     "/api/EnergyHVAC", EnergyHVAC.EnergyReportBACNET,
