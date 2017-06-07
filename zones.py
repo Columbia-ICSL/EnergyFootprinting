@@ -12,7 +12,7 @@ class zones:
 		x = locs[0]
 		y = locs[1]
 		beaconData = locs[2:]
-		cloudsever.db.insertLocationTrainingData(x, y, beaconData)
+		cloudserver.db.insertLocationTrainingData(x, y, beaconData)
 		print("\n\nLocation Training Beacon Data:")
 		print(beaconData)
 		print("\n\n")
@@ -24,7 +24,7 @@ class testing:
 		locs = raw_data.split(',')
 		assert(locs[0] == "beacons")
 		beaconData = locs[1:]
-		cloudsever.db.insertLocationTrainingData(beaconData)
+		cloudserver.db.insertLocationTrainingData(beaconData)
 		return
 
 
