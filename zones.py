@@ -13,6 +13,9 @@ class zones:
 		y = locs[1]
 		beaconData = locs[2:]
 		cloudsever.db.insertLocationTrainingData(x, y, beaconData)
+		print("\n\nLocation Training Beacon Data:")
+		print(beaconData)
+		print("\n\n")
 		return
 
 class testing:
