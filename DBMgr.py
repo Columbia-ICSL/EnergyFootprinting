@@ -1677,11 +1677,11 @@ class DBMgr(object):
 #########################################
 	def insertLocationTrainingData(self, x, y, beaconData):
 		self.humanCentricZones.insert({"x":x,"y":y,
-										"beacons",beaconData})
+										"beacons":beaconData})
 		return
 
 	def insertLocationTestingData(self, beaconData):
-		self.humanCentricZonesTesting.insert({"beacons",beaconData})
+		self.humanCentricZonesTesting.insert({"beacons":beaconData})
 		return
 
 
