@@ -196,6 +196,8 @@ class DBMgr(object):
 		self.historicalCumulativeEnergy=self.dbc.db.historicalCumulativeEnergy
 		self.todayCumulativeEnergy=self.dbc.db.todayCumulativeEnergy
 
+		self.humanCentricZones=self.dbc.db.humanCentricZones
+		self.humanCentricZonesTesting=self.dbc.db.humanCentricZonesTesting
 		self._latestSuccessShot=0
 
 		self._ReadConfigs()
@@ -1670,6 +1672,24 @@ class DBMgr(object):
                     "names":usernames
             }
             return self._encode(ret, False)
+
+
+#########################################
+	def insertLocationTrainingData(self, x, y, beaconData):
+		self.humanCentricZones.insert({"x":x,"y":y,
+										"beacons",beaconData})
+		return
+
+	def insertLocationTestingData(self, beaconData):
+		self.humanCentricZonesTesting.insert({"beacons",beaconData})
+		return
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
 	dbm=DBMgr(False)
