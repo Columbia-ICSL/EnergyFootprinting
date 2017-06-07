@@ -24,7 +24,7 @@ class testing:
 		locs = raw_data.split(',')
 		assert(locs[0] == "beacons")
 		beaconData = locs[1:]
-		cloudserver.db.insertLocationTrainingData(beaconData)
+		cloudserver.db.insertLocationTestingData(beaconData)
 		return
 
 
