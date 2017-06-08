@@ -10,12 +10,12 @@ class getLocationTrainingTestingData():
 		self.humanCentricZones=self.dbc.db.humanCentricZones
 		trainingData = list(self.humanCentricZones.find())
 		try:
-    		os.remove('trainingData.csv')
+			os.remove('trainingData.csv')
 		except OSError:
-    		pass
-    	with open('trainingData.csv', 'wb') as csvfile:
+			pass
+		with open('trainingData.csv', 'wb') as csvfile:
 			spamwriter = csv.writer(csvfile, delimiter=' ',
-                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+						quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			writeArray = []
 			writeArray += ["x", "y"]
 			for i in range(41):
@@ -38,10 +38,10 @@ class getLocationTrainingTestingData():
 		self.humanCentricZonesTesting=self.dbc.db.humanCentricZonesTesting
 		testingData = list(self.humanCentricZonesTesting.find())
 		try:
-    		os.remove('testingData.csv')
+			os.remove('testingData.csv')
 		except OSError:
-    		pass
-    	with open('trainingData.csv', 'wb') as csvfile:
+			pass
+		with open('trainingData.csv', 'wb') as csvfile:
 			spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			writeArray = []
