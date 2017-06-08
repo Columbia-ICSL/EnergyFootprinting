@@ -31,7 +31,7 @@ class getLocationTrainingTestingData():
 				writeArray = []
 				writeArray += [x, y]
 				assert(len(beacons) == 41)
-				for j in len(beacons):
+				for j in range(len(beacons)):
 					writeArray.append(beacons[j])
 				spamwriter.writerow(writeArray)
 
@@ -55,7 +55,7 @@ class getLocationTrainingTestingData():
 				beacons = data["beacons"]
 				writeArray = []
 				assert(len(beacons) == 41)
-				for j in len(beacons):
+				for j in range(len(beacons)):
 					writeArray.append(beacons[j])
 				spamwriter.writerow(writeArray)
 
