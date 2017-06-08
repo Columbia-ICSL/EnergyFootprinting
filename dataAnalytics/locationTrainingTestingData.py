@@ -43,7 +43,7 @@ class getLocationTrainingTestingData():
 			os.remove('testingData.csv')
 		except OSError:
 			pass
-		with open('trainingData.csv', 'wb') as csvfile:
+		with open('testingData.csv', 'wb') as csvfile:
 			spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			writeArray = []
