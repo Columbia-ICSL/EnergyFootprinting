@@ -51,7 +51,7 @@ class getLocationTrainingTestingData():
 				writeArray.append("b" + str(i))
 			spamwriter.writerow(writeArray)
 
-			for data in trainingData:
+			for data in testingData:
 				beacons = data["beacons"]
 				writeArray = []
 				assert(len(beacons) == 41)
