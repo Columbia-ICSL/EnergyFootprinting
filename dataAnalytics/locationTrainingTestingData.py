@@ -1,6 +1,7 @@
 import pymongo
 import datetime
 import os
+import csv
 
 class getLocationTrainingTestingData():
 	def __init__(self):
