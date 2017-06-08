@@ -1,5 +1,6 @@
 import pymongo
 import datetime
+import os
 
 class getLocationTrainingTestingData():
 	def __init__(self):
