@@ -464,7 +464,7 @@ body {
 			var chart = new google.visualization.AreaChart(ch4);
 			var titleString = 'Total Deployment Footprint By Resource Type';
 	        var options = {
-	        	legend:{textStyle: {fontSize: 15, color:'#FFFFFF'}},
+	        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
 	        	chartArea:{left:200,top:200,width:845,height:210},
 	        	height: 600,
 	        	width: 1700,
@@ -473,16 +473,22 @@ body {
 	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
 	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
 	        	hAxis: {
+	        		gridlines: {
+	        			color:'#0B0B0B'
+	        		},
           			textStyle: {
-          				fontSize:15,
+          				fontSize:12,
           				color:'#FFFFFF'
           			}
           		},
 	        	vAxis: {
+	        		gridlines: {
+	        			color:'#0B0B0B'
+	        		},
           			//title: 'Deployment Energy Footprint (W)',
               		//titleFontSize:25,
           			textStyle: {
-          				fontSize:15,
+          				fontSize:12,
           				color:'#FFFFFF'
           			}
           		},
