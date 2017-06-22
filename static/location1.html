@@ -87,11 +87,12 @@ body {
 		  <button type="button" class="btn btn-default">Query</button>
 		</form>
 		<div id="chart1" class="panel-body" style="height:500px;display:none;"></div>
+		<a href='#' onclick='downloadCSV({ filename: "buildingConsumption.csv" });'>Download CSV</a>
 		<script>
 		var ch1=document.getElementById('chart1');
 		var frm1=document.getElementById('form1');
 		//ch1 is the chart, frm1 is the form
-
+		var energyData = [];
  		$(frm1).children('button').on('click', function () {
 		    var $btn = $(this).button('loading');
 		    $.get("/api/dataExtraction/BuildingFootprint/",{
@@ -123,7 +124,7 @@ body {
 	          data.addRow([date, item.data]);
 	        };
 			console.log(data);
-	        
+	        energyData = data;
 
 			var chart = new google.visualization.AreaChart(ch1);
 	        var options = {
@@ -136,6 +137,58 @@ body {
 	        	$(ch1).slideToggle(0).slideToggle(1000);	
 	        });
 		  }
+			
+			  function convertArrayOfObjectsToCSV(args) {
+        		var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+
+        		data = args.data || null;
+        		if (data == null || !data.length) {
+            		return null;
+        		}
+
+        		columnDelimiter = args.columnDelimiter || ',';
+        		lineDelimiter = args.lineDelimiter || '\n';
+
+        		keys = Object.keys(data[0]);
+
+        		result = '';
+        		result += keys.join(columnDelimiter);
+        		result += lineDelimiter;
+
+        		data.forEach(function(item) {
+            		ctr = 0;
+            		keys.forEach(function(key) {
+                		if (ctr > 0) result += columnDelimiter;
+
+                		result += item[key];
+            		    ctr++;
+            		});
+            		result += lineDelimiter;
+        		});
+
+        		return result;
+    		}
+
+		  	function downloadCSV(args) {
+        		var data, filename, link;
+
+        		var csv = convertArrayOfObjectsToCSV({
+            		data: energyData
+        		});
+        		if (csv == null) return;
+
+        		filename = args.filename || 'export.csv';
+
+        		if (!csv.match(/^data:text\/csv/i)) {
+            		csv = 'data:text/csv;charset=utf-8,' + csv;
+        		}
+        		data = encodeURI(csv);
+
+        		link = document.createElement('a');
+        		link.setAttribute('href', data);
+        		link.setAttribute('download', filename);
+        		link.click();
+    		}
 		  </script>
 
       </div>
@@ -213,14 +266,17 @@ body {
 
 	        var data = new google.visualization.DataTable();
 	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-	        data.addColumn('number', 'WATTS')
+	        //data.addColumn('number', 'WATTS');
+	        data.addColumn('number', 'Electric (W)');
+	        data.addColumn('number', 'Lighting (W)');
+	        data.addColumn('number', 'HVAC (W)');
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
 	          var item=input[i];
 	          //console.log('row',ret);
 	          var date = new Date(item.timestamp*1000)
-	          data.addRow([date, item.value]);
+	          data.addRow([date, item.HVAC, item.Light, item.Electrical]);//item.value
 	        };
 			console.log(data);
 	        
