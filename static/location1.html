@@ -464,11 +464,13 @@ body {
 			var titleString = 'Total Deployment Footprint By Resource Type';
 	        var options = {
 	        	title:titleString,
+	        	isStacked:true,
 	        	tooltip: { isHtml: true},
 	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
 	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
 	        	hAxis: {
-          			title: 'Time of Day'
+          			title: 'Time of Day',
+          			minimum: 32000,
           		},
 	        	vAxis: {
           			title: 'Deployment Energy Footprint (W)'
