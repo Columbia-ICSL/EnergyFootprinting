@@ -470,10 +470,12 @@ body {
 	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
 	        	hAxis: {
           			title: 'Time of Day',
-          			minimum: 32000,
           		},
 	        	vAxis: {
-          			title: 'Deployment Energy Footprint (W)'
+          			title: 'Deployment Energy Footprint (W)',
+          			viewWindow:{
+                min:32000
+              }
         		}
 	          //width:800,
 	          //height:500,
