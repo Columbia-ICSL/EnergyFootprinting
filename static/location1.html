@@ -271,7 +271,7 @@ body {
 	        data.addColumn({type:'string', role:'tooltip'});
 	        data.addColumn('number', 'Lighting (W)');
 	        data.addColumn('number', 'Electrical (W)');
-	        data.addColumn({type:'string', role:'tooltip'});
+
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
@@ -279,7 +279,7 @@ body {
 	          //console.log('row',ret);
 	          var date = new Date(item.timestamp*1000)
 	          var electricTemp = item.Electrical + 90;
-	          data.addRow([date, item.HVAC, item.location, item.Light, electricTemp, item.location]);//item.value
+	          data.addRow([date, item.HVAC, date.getHours() + ":" + date.getMinutes() + "\nlocation: " + item.location + "\n" + item.HVAC, item.location, item.Light, electricTemp]);//item.value
 	        };
 			console.log(data);
 	        
