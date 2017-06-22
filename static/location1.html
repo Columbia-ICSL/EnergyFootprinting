@@ -438,22 +438,34 @@ body {
 
 	        var data = new google.visualization.DataTable();
 	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-			data.addColumn('number', 'Electric (W)');
+			data.addColumn('number', 'HVAC (W)');
 	        data.addColumn('number', 'Lighting (W)');
-	        data.addColumn('number', 'HVAC (W)');
+	        data.addColumn('number', 'Electric (W)');
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
 	          var item=input[i];
 	          //console.log('row',ret);
 	          var date = new Date(item.timestamp*1000)
-	          data.addRow([date, item.Electrical, item.Light, item.HVAC]);
+	          data.addRow([date, item.HVAC, item.Light, item.Electric]);
 	        };
 			console.log(data);
 	        
 
 			var chart = new google.visualization.AreaChart(ch4);
+			var titleString = 'Total Deployment Footprint By Resource Type';
 	        var options = {
+	        	title:titleString,
+	        	isStacked:true,
+	        	tooltip: { isHtml: true},
+	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+	        	hAxis: {
+          			title: 'Time of Day'
+          		},
+	        	vAxis: {
+          			title: 'Deployment Energy Footprint (W)'
+        		}
 	          //width:800,
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
