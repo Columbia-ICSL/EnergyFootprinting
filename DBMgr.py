@@ -338,11 +338,14 @@ class DBMgr(object):
 		print("Personal Footprint for: " + user + ", looking for " + person)
 		iterator = self.snapshots_col_users.find(condition).sort([("timestamp", pymongo.DESCENDING)])
 		for shot in iterator:
-			if user in shot["data"]:
-				item={}
+			userList = shot["data"]
+			if user in userList:
+				item={"HVAC":0, "Light":0, "Electrical":0}
+				consumptions = userList[user]["consumptions"]
+				for device in consumptions:
+					item[device["type"]] += device["share"]
 				item["value"]=shot["data"][user]["value"]
 				item["timestamp"]=shot["timestamp"]
-				item["user"]=person
 				result+=[item]
 		return self._encode(result,True)	
 
