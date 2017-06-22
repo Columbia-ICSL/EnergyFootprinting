@@ -278,7 +278,7 @@ body {
 	          //console.log('row',ret);
 	          var date = new Date(item.timestamp*1000)
 	          var electricTemp = item.Electrical + 90;
-	          data.addRow([date, item.HVAC, item.Light, electricTemp, item.location]);//item.value
+	          data.addRow([date, item.HVAC, item.Light, electricTemp, date + '\n' + item.location + '\n' + item.HVAC + item.Light + electricTemp]);//item.value
 	        };
 			console.log(data);
 	        
@@ -289,7 +289,13 @@ body {
 	        	isStacked:true,
 	        	tooltip: { isHtml: true},
 	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
-	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF']
+	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+	        	hAxis: {
+          			title: 'Time of Day'
+          		}
+	        	vAxis: {
+          			title: 'Rating (scale of 1-10)'
+        		}
 	          //width:800,
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
