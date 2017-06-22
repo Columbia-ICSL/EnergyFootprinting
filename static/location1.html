@@ -286,16 +286,18 @@ body {
 			var titleString = 'Personal Footprint For: Occupant A';
 			var chart = new google.visualization.AreaChart(ch2);
 	        var options = {
-	        	title:titleString,
+	        	legend:{position:'top'},
 	        	isStacked:true,
 	        	tooltip: { isHtml: true},
 	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
 	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
 	        	hAxis: {
-          			title: 'Time of Day'
+          			title: 'Time of Day',
+          			fontSize:20
           		},
 	        	vAxis: {
-          			title: 'Personal Energy Footprint (W)'
+          			title: 'Personal Energy Footprint (W)',
+          			fontSize:20
         		}
 	          //width:800,
 	          //height:500,
