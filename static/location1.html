@@ -286,7 +286,10 @@ body {
 			var chart = new google.visualization.AreaChart(ch2);
 	        var options = {
 	        	title:titleString,
-	        	isStacked:true
+	        	isStacked:true,
+	        	tooltip: { isHtml: true},
+	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF']
 	          //width:800,
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
