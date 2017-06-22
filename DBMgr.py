@@ -346,6 +346,7 @@ class DBMgr(object):
 					item[device["type"]] += device["share"]
 				item["value"]=shot["data"][user]["value"]
 				item["timestamp"]=shot["timestamp"]
+				item["location"] = userList[user]["location"]
 				result+=[item]
 		return self._encode(result,True)	
 

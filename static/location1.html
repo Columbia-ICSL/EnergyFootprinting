@@ -270,6 +270,7 @@ body {
 	        data.addColumn('number', 'HVAC (W)');
 	        data.addColumn('number', 'Lighting (W)');
 	        data.addColumn('number', 'Electrical (W)');
+	        data.addColumn({type:'string', role:'annotationText'})
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
@@ -277,11 +278,11 @@ body {
 	          //console.log('row',ret);
 	          var date = new Date(item.timestamp*1000)
 	          var electricTemp = item.Electrical + 90;
-	          data.addRow([date, item.HVAC, item.Light, electricTemp]);//item.value
+	          data.addRow([date, item.HVAC, item.Light, electricTemp, item.location]);//item.value
 	        };
 			console.log(data);
 	        
-			var titleString = 'Personal Footprint For: ';
+			var titleString = 'Personal Footprint For: Occupant A';
 			titleString = titleString.concat(item.user);
 			var chart = new google.visualization.AreaChart(ch2);
 	        var options = {
