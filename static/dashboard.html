@@ -36,7 +36,7 @@
 	</div><div class="halfBlock">
 		<div class="mediumBlockTop">
 			<div class="content">
-				<div id="chart2" class="panel-body" style="height:500px;display:none;"></div>
+				<div id="chart2" class="panel-body" style="width:100%;display:none;"></div>
 				<script>
 					Date.prototype.toInputValue = (function() {
 					    var local = new Date(this);
@@ -96,9 +96,9 @@
 						var chart = new google.visualization.AreaChart(ch2);
 				        var options = {
 				        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
-				        	chartArea:{left:200,top:200,width:868,height:140},
-				        	height: 600,
-				        	width: 1700,
+//				        	chartArea:{left:200,top:200,width:868,height:140},
+//				        	height: 600,
+//				        	width: 1700,
 				        	isStacked:true,
 				        	tooltip: { isHtml: true},
 				        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
