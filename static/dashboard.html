@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="dashboard/style.css">
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script> google.load("visualization", "1", {packages:["corechart","timeline"]});</script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<title>ePrints Dashboard</title>
+</head>
+<body>
+
+<div class="banner">
+	<img src="dashboard/Banner.png">
+</div>
+
+<div class="fullBlock">
+	<div class="halfBlock">
+		<div class="smallBlock">
+			<div class="content">
+				<img src="dashboard/flash.png">
+			</div>
+		</div><div class="smallBlock">
+			<div class="content">
+				<img src="dashboard/flash.png">
+			</div>
+		</div><div class="mediumBlockBottom">
+			<div class="content">
+				<img src="dashboard/flash.png">
+			</div>
+		</div><div class="mediumBlockBottom">
+			<div class="content">
+				<img src="dashboard/flash.png">
+			</div>
+		</div>
+	</div><div class="halfBlock">
+		<div class="mediumBlockTop">
+			<div class="content">
+				<div id="chart2" class="panel-body" style="height:500px;display:none;"></div>
+				<script>
+					Date.prototype.toInputValue = (function() {
+					    var local = new Date(this);
+					    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+					    return local.toJSON().slice(0,16);
+					});
+					function getUTCSeconds(LocalDateStr){
+						var utcDate=new Date(LocalDateStr);
+						utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
+						return Math.floor(+utcDate/1000);
+					}
+					var ch2=document.getElementById('chart2');
+					var people;
+					var midnightBefore=new Date();
+					midnightBefore.setSeconds(0);
+					midnightBefore.setHours(0);
+					midnightBefore.setMinutes(0);
+					midnightBefore.toInputValue();
+					var rightNow = new Date();
+
+				    $.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:"",
+				    		start:getUTCSeconds(midnightBefore),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	render2(data);
+				    	},'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					});
+
+					  
+					function render2(input){
+					  	input=input.reverse();
+
+				        var data = new google.visualization.DataTable();
+				        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+				        //data.addColumn('number', 'WATTS');
+				        data.addColumn('number', 'HVAC (W)');
+				        data.addColumn({type:'string', role:'tooltip'});
+				        data.addColumn('number', 'Lighting (W)');
+				        data.addColumn('number', 'Electrical (W)');
+
+
+				        var lastR=false;
+				        for(var i=0;i<input.length;i++){
+				        	var item=input[i];
+				        	//console.log('row',ret);
+				        	var date = new Date(item.timestamp*1000)
+				        	var electricTemp = item.Electrical + 90;
+				        	data.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+				        };
+						console.log(data);
+				        
+						var titleString = 'Personal Footprint For: Occupant A';
+						var chart = new google.visualization.AreaChart(ch2);
+				        var options = {
+				        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+				        	chartArea:{left:200,top:200,width:868,height:140},
+				        	height: 600,
+				        	width: 1700,
+				        	isStacked:true,
+				        	tooltip: { isHtml: true},
+				        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+				        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+				        	hAxis: {
+				        		//titleFontSize:25,
+			          			//title: 'Time of Day',
+			          			textStyle: {
+			          				fontSize:12,
+			          				color:'#FFFFFF'
+			          			},
+			          			gridlines: {
+				        			color:'#0B0B0B'
+				        		},
+			          		},
+				        	vAxis: {
+				        		//titleFontSize:25,
+			          			//title: 'Personal Energy Footprint (W)',
+			          			textStyle: {
+			          				fontSize:12,
+			          				color:'#FFFFFF'
+			          			},
+			          			gridlines: {
+				        			color:'#0B0B0B'
+				        		},
+			        		},
+			          		backgroundColor: '#303030'
+				          //width:800,
+				          //height:500,
+				          //annotations: {'*': {style: 'line'}}
+				        };
+				        $(ch2).show(0,function(){
+				        	chart.draw(data, options);
+				        	$(ch2).slideToggle(0).slideToggle(1000);	
+				        });
+					}
+				</script>
+			</div>
+		</div><div class="largeBlock">
+			<div class="content">
+				<img src="dashboard/flash.png">
+			</div>
+		</div>
+	</div></div>
+
+
+
+<script type="text/javascript">
+
+
+</script>
+
+</body>
+</html>
