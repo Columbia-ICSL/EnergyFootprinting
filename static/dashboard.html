@@ -36,7 +36,7 @@
 	</div><div class="halfBlock">
 		<div class="mediumBlockTop">
 			<div class="content">
-				<div id="chart4" class="panel-body" style="width:100%;height:100%;display:none;"></div>
+				<div id="chart4" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/3);display:none;"></div>
 				<script>
 				Date.prototype.toInputValue = (function() {
 				    var local = new Date(this);
@@ -53,7 +53,8 @@
 				//ch1 is the chart, frm1 is the form
 				var people;
 				var rightNow = new Date();
-				var hourAgo = new Date(rightNow.getTime()-(1000*60*60));
+				var hourAgo = new Date();
+				hourAgo.setHours(hourAgo.getHours() - 2);
 
 			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
@@ -136,7 +137,7 @@
 			</div>
 		</div><div class="largeBlock">
 			<div class="content">
-				<div id="chart2" class="panel-body" style="width:100%;height:100%;display:none;"></div>
+				<div id="chart2" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/3);display:none;"></div>
 				<script>
 					Date.prototype.toInputValue = (function() {
 					    var local = new Date(this);
@@ -151,7 +152,8 @@
 					var ch2=document.getElementById('chart2');
 					var people;
 					var rightNow = new Date();
-					var hourAgo = new Date(rightNow.getTime()-(1000*60*60));
+					var hourAgo = new Date();
+					hourAgo.setHours(hourAgo.getHours() - 2);
 
 				    $.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:"",
