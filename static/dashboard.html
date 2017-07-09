@@ -54,7 +54,9 @@
 				var people;
 				var rightNow = new Date();
 				var hourAgo = new Date();
-				hourAgo.setHours(hourAgo.getHours() - 2);
+				hourAgo.setHours(0);
+				hourAgo.setMinutes(0);
+				hourAgo.setSeconds(0);
 				hourAgo.toInputValue();
 
 			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
@@ -154,7 +156,9 @@
 					var people;
 					var rightNow = new Date();
 					var hourAgo = new Date();
-					hourAgo.setHours(hourAgo.getHours() - 2);
+					hourAgo.setHours(0);
+					hourAgo.setMinutes(0);
+					hourAgo.setSeconds(0);
 					hourAgo.toInputValue();
 
 				    $.get("/api/dataExtraction/PersonalConsumption/",{
