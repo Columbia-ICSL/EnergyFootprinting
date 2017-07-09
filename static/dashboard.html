@@ -36,6 +36,98 @@
 	</div><div class="halfBlock">
 		<div class="mediumBlockTop">
 			<div class="content">
+				<div id="chart4" class="panel-body" style="height:500px;display:none;"></div>
+				<script>
+				var ch4=document.getElementById('chart4');
+				var frm4=document.getElementById('form4');
+				//ch1 is the chart, frm1 is the form
+
+		 		$(frm4).children('button').on('click', function () {
+				    var $btn = $(this).button('loading');
+				    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
+				    		start:getUTCSeconds(frm4.startDate4.value),
+				    		end:getUTCSeconds(frm4.endDate4.value),
+			    		},
+				    	function(data,status){
+				    	console.log(data,status);
+				    	$btn.button('reset');
+				    	render4(data);
+				    },'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					    $btn.button('reset');
+					});
+				  });
+				  
+				  function render4(input){
+				  	input=input.reverse();
+
+			        var data = new google.visualization.DataTable();
+			        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+					data.addColumn('number', 'HVAC (W)');
+			        data.addColumn('number', 'Lighting (W)');
+			        data.addColumn('number', 'Electric (W)');
+
+			        var lastR=false;
+			        for(var i=0;i<input.length;i++){
+			          var item=input[i];
+			          //console.log('row',ret);
+			          var date = new Date(item.timestamp*1000)
+			          data.addRow([date, item.HVAC, item.Light, item.Electrical]);
+			        };
+					console.log(data);
+			        
+
+					var chart = new google.visualization.AreaChart(ch4);
+					var titleString = 'Total Deployment Footprint By Resource Type';
+			        var options = {
+			        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+			        	//chartArea:{left:200,top:200,width:845,height:210},
+			        	//height: 600,
+			        	//width: 1700,
+			        	isStacked:true,
+			        	tooltip: { isHtml: true},
+			        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+			        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+			        	hAxis: {
+			        		gridlines: {
+			        			color:'#0B0B0B'
+			        		},
+		          			textStyle: {
+		          				fontSize:12,
+		          				color:'#FFFFFF'
+		          			}
+		          		},
+			        	vAxis: {
+			        		gridlines: {
+			        			color:'#0B0B0B'
+			        		},
+		          			//title: 'Deployment Energy Footprint (W)',
+		              		//titleFontSize:25,
+		          			textStyle: {
+		          				fontSize:12,
+		          				color:'#FFFFFF'
+		          			},
+		          			viewWindow: {
+		          				min:21000
+		          			},
+		          		},
+
+		          		backgroundColor: '#303030'
+
+		        		
+			          //width:800,
+			          //height:500,
+			          //annotations: {'*': {style: 'line'}}
+			        };
+			        $(ch4).show(0,function(){
+			        	chart.draw(data, options);
+			        	$(ch4).slideToggle(0).slideToggle(1000);	
+			        });
+				  }
+				  </script>
+			</div>
+		</div><div class="largeBlock">
+			<div class="content">
 				<div id="chart2" class="panel-body" style="width:100%;display:none;"></div>
 				<script>
 					Date.prototype.toInputValue = (function() {
@@ -137,9 +229,6 @@
 					}
 				</script>
 			</div>
-		</div><div class="largeBlock">
-			<div class="content">
-				<img src="dashboard/flash.png">
 			</div>
 		</div>
 	</div></div>
