@@ -55,17 +55,15 @@
 				var rightNow = new Date();
 				var hourAgo = new Date(rightNow.getTime()-(1000*60*60));
 
-		 		$(frm4).children('button').on('click', function () {
-				    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
-				    		start:getUTCSeconds(hourAgo),
-				    		end:getUTCSeconds(rightNow),
-			    		},
-				    	function(data,status){
-				    	console.log(data,status);
-				    	render4(data);
-				    },'json').fail(function() {
-					    alert('Error!'); // or whatever			    
-					});
+			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
+			    		start:getUTCSeconds(hourAgo),
+			    		end:getUTCSeconds(rightNow),
+		    		},
+			    	function(data,status){
+			    	console.log(data,status);
+			    	render4(data);
+			    },'json').fail(function() {
+				    alert('Error!'); // or whatever			    
 				});
 				  
 				function render4(input){
