@@ -58,7 +58,8 @@
 				hourAgo.setMinutes(0);
 				hourAgo.setSeconds(0);
 				hourAgo.toInputValue();
-
+				console.log(hourAgo);
+				console.log(rightNow);
 			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
 			    		end:getUTCSeconds(rightNow),
@@ -160,7 +161,8 @@
 					hourAgo.setMinutes(0);
 					hourAgo.setSeconds(0);
 					hourAgo.toInputValue();
-
+					console.log(hourAgo);
+					console.log(rightNow);
 				    $.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:"",
 				    		start:getUTCSeconds(hourAgo),
