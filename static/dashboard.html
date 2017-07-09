@@ -138,6 +138,16 @@
 			        	chart.draw(data, options);
 			        	$(ch4).slideToggle(0).slideToggle(1000);	
 			        });
+			        function drawChart() {
+						google.visualization.events.addListener(chart, 'ready',
+							function() {
+
+							});
+						chart.draw(data, options);
+					}
+					setInterval(function () {
+						console.log("Hello World");
+					}, 5000);
 				}
 				</script>
 			</div>
