@@ -57,6 +57,8 @@
 				hourAgo.setHours(0);
 				hourAgo.setMinutes(0);
 				hourAgo.setSeconds(0);
+				hourAgo.setDate(hourAgo.getDate() - 1)
+
 				hourAgo.toInputValue();
 				console.log(hourAgo);
 				console.log(rightNow);
@@ -160,6 +162,7 @@
 					hourAgo.setHours(0);
 					hourAgo.setMinutes(0);
 					hourAgo.setSeconds(0);
+					hourAgo.setDate(hourAgo.getDate() - 1)
 					hourAgo.toInputValue();
 					console.log(hourAgo);
 					console.log(rightNow);
