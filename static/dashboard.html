@@ -55,6 +55,7 @@
 				var rightNow = new Date();
 				var hourAgo = new Date();
 				hourAgo.setHours(hourAgo.getHours() - 2);
+				hourAgo.toInputValue();
 
 			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
@@ -154,6 +155,7 @@
 					var rightNow = new Date();
 					var hourAgo = new Date();
 					hourAgo.setHours(hourAgo.getHours() - 2);
+					hourAgo.toInputValue();
 
 				    $.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:"",
