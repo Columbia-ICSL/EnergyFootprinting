@@ -59,8 +59,8 @@
 
 				function renderInput(input) {
 					if (chartData == null) {
-						chartData = new google.visualization.arrayToDataTable([
-			    		['Type', 'Watts'],
+						chartData = new google.visualization.DataTable();
+						chartData.addRows([
 			    		['HVAC', input.HVAC],
 			    		['Lights', input.Light],
 			    		['Plugs', input.Electrical]]);
@@ -70,7 +70,7 @@
 						chartData.removeRow(0);
 						chartData.addRows([['HVAC', input.HVAC],
 			    		['Lights', input.Light],
-			    		['Plugs', input.Electrical]])
+			    		['Plugs', input.Electrical]]);
 						// chartData.setCell(0, 1, input.HVAC);
 						// chartData.setCell(1, 1, input.Light);
 						// chartData.setCell(2, 1, input.Electrical);
@@ -146,8 +146,8 @@
 					
 				function renderCol(input) {
 					if (colChartData == null) {
-						colChartData = new google.visualization.arrayToDataTable([
-							['Date', 'value', {role: 'style'}],
+						colChartData = new google.visualization.DataTable();
+						colChartData.addRows([
 							[input.historyStrings[0], input.history[0], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
 							[input.historyStrings[1], input.history[1], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
 							[input.historyStrings[2], input.history[2], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
