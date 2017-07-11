@@ -24,7 +24,7 @@
 			<div class="content">
 				<div id="piechart" style="height:calc((100vh - 100vw/30 - 32px)/3)"></div>
 				<script>
-				$.get("/api/appSupport/buildingFootprint",{},
+				$.get("/api/appSupport/buildingFootprint/",{},
 			    	function(data,status){
 			    	console.log(data,status);
 			    	renderPie(data);
@@ -57,7 +57,7 @@
 			<div class="content">
 				<div id="columnChart" style="width:calc(100% - 16px)"></div>
 				<script>
-				$.get("/api/appSupport/buildingFootprint", {},
+				$.get("/api/appSupport/buildingFootprint/", {},
 					function(data,status){
 			    	console.log(data,status);
 			    	renderCol(data);
