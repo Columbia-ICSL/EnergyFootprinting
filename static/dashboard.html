@@ -22,7 +22,7 @@
 			</div>
 		</div><div class="smallBlock">
 			<div class="content">
-				<div id="piechart" style="height:calc((100vh - 100vw/30 - 32px)/3)"></div>
+				<div id="piechart"></div>
 				<script>
 				$.get("/api/appSupport/buildingFootprint/",{},
 			    	function(data,status){
@@ -55,7 +55,7 @@
 			</div>
 		</div><div class="mediumBlockBottom">
 			<div class="content">
-				<div id="columnChart" style="width:calc(100% - 16px)"></div>
+				<div id="columnChart"></div>
 				<script>
 				$.get("/api/appSupport/buildingFootprint/", {},
 					function(data,status){
