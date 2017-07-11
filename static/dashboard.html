@@ -43,8 +43,9 @@
 				function drawChart() {
 					if (chart == null) {
 						chart = new google.visualization.PieChart(document.getElementById('piechart'));
+					} else {
+						chart.draw(chartData, options);
 					}
-					chart.draw(chartData, options);
 				}
 
 				function updateData() {
@@ -128,8 +129,9 @@
 				function drawColChart() {
 					if (colChart == null) {
 						colChart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
+					} else {
+						colChart.draw(colChartData, colOptions);
 					}
-					colChart.draw(colChartData, colOptions);
 				}
 
 				function updateColData() {
