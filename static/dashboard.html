@@ -40,13 +40,6 @@
 			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
 			    		pieSliceText: 'value'};
 
-				function drawChart() {
-					if (chart == null) {
-						chart = new google.visualization.PieChart(document.getElementById('piechart'));
-					} else {
-						chart.draw(chartData, options);
-					}
-				}
 
 				function updateData() {
 					$.get("/api/appSupport/buildingFootprint/",{},
@@ -68,13 +61,18 @@
 			    		['Lights', input.Light],
 			    		['Plugs', input.Electrical]]);
 					} else {
-						chartData.setValue(0, 1, input.HVAC);
-						chartData.setValue(1, 1, input.Light);
-						chartData.setValue(2, 1, input.Electrical);
+						chartData.setCell(0, 1, input.HVAC);
+						chartData.setCell(1, 1, input.Light);
+						chartData.setCell(2, 1, input.Electrical);
 
 						// chartData.setCell(0, 1, input.HVAC);
 						// chartData.setCell(1, 1, input.Light);
 						// chartData.setCell(2, 1, input.Electrical);
+					}
+					if (chart == null) {
+						chart = new google.visualization.PieChart(document.getElementById('piechart'));
+					} else {
+						chart.draw(chartData, options);
 					}
 				}
 
@@ -85,11 +83,9 @@
 				// renderPie(data1);
 			    function renderPie() {
 			    	updateData();
-			    	drawChart();
 			    	console.log("called Pie");
 			    	setInterval(function() {
 			    		updateData();
-			    		drawChart();
 			    	}, 6000);
 			    }
 
@@ -126,14 +122,6 @@
 					}, legend: {position: 'none'}
 				};
 
-				function drawColChart() {
-					if (colChart == null) {
-						colChart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
-					} else {
-						colChart.draw(colChartData, colOptions);
-					}
-				}
-
 				function updateColData() {
 					$.get("/api/appSupport/buildingFootprint/", {},
 						function(data,status){
@@ -161,13 +149,17 @@
 							[input.historyStrings[5], input.history[5], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
 							[input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']]);
 					} else {
-						colChartData.setValue(6, 1, input.energy);
+						colChartData.setCell(6, 1, input.energy);
+					}
+					if (colChart == null) {
+						colChart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
+					} else {
+						colChart.draw(colChartData, colOptions);
 					}
 				}
 
 				function renderCol() {
 			    	updateColData();
-			    	drawColChart();
 			    	console.log("called col");
 			    	// setInterval(function() {
 			    	// 	updateColData();
