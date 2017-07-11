@@ -22,11 +22,63 @@
 			</div>
 		</div><div class="smallBlock">
 			<div class="content">
-				<img src="dashboard/flash.png">
+				<div id="piechart" style="height:calc((100vh - 100vw/30 - 32px)/3)"></div>
+				<script>
+				$.get("/api/appSupport/buildingFootprint",{},
+			    	function(data,status){
+			    	console.log(data,status);
+			    	renderPie(data);
+			    },'json').fail(function() {
+				    alert('Error!'); // or whatever			    
+				});
+				// var data1 = {};
+				// data1.HVAC = 1;
+				// data1.Light = 1;
+				// data1.Electrical = 1;
+				// renderPie(data1);
+			    function renderPie(input) {
+			    	var data = new google.visualization.arrayToDataTable([
+			    		['Type', 'Watts'],
+			    		['HVAC', input.HVAC],
+			    		['Lights', input.Light],
+			    		['Plugs', input.Electrical]]);
+			    	var options = {
+			    		pieHole: 0.3,
+			    		backgroundColor: 'transparent',
+			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
+			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
+			    		pieSliceText: 'value'};
+			    	var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+			    	chart.draw(data, options);
+			    }
+				</script>
 			</div>
 		</div><div class="mediumBlockBottom">
 			<div class="content">
-				<img src="dashboard/flash.png">
+				<div id="columnChart" style="width:calc(100% - 16px)"></div>
+				<script>
+				$.get("/api/appSupport/buildingFootprint", {},
+					function(data,status){
+			    	console.log(data,status);
+			    	renderCol(data);
+			    },'json').fail(function() {
+				    alert('Error!'); // or whatever			    
+				});
+				function renderCol(input) {
+					var data = new google.visualization.arrayToDataTable([
+						['Date', 'value'],
+						[input.historyStrings[0], input.history[0]],
+						[input.historyStrings[1], input.history[1]],
+						[input.historyStrings[2], input.history[2]],
+						[input.historyStrings[3], input.history[3]],
+						[input.historyStrings[4], input.history[4]],
+						[input.historyStrings[5], input.history[5]],
+						[input.historyStrings[6], input.energy]]);
+					var options = {};
+					var chart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
+					chart.draw(data, options);
+				}
+				</script>
 			</div>
 		</div><div class="mediumBlockBottom">
 			<div class="content">
