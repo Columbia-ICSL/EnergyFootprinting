@@ -27,6 +27,13 @@
 				
 				var chart = null;
 				var chartData = null;
+				var options = {
+			    		pieHole: 0.3,
+			    		backgroundColor: 'transparent',
+			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
+			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
+			    		pieSliceText: 'value'};
+			    		
 				function drawChart() {
 					if (chart == null) {
 						chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -64,12 +71,6 @@
 				// data1.Electrical = 1;
 				// renderPie(data1);
 			    function renderPie() {
-			    	var options = {
-			    		pieHole: 0.3,
-			    		backgroundColor: 'transparent',
-			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
-			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
-			    		pieSliceText: 'value'};
 			    	updateData();
 			    	drawChart();
 			    	setInterval(function() {
