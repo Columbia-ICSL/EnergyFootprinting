@@ -33,7 +33,7 @@
 			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
 			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
 			    		pieSliceText: 'value'};
-			    		
+
 				function drawChart() {
 					if (chart == null) {
 						chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -59,9 +59,15 @@
 			    		['Lights', input.Light],
 			    		['Plugs', input.Electrical]]);
 					} else {
-						chartData.setCell(0, 1, input.HVAC);
-						chartData.setCell(1, 1, input.Light);
-						chartData.setCell(2, 1, input.Electrical);
+						chartData.removeRow(0);
+						chartData.removeRow(0);
+						chartData.removeRow(0);
+						chartData.addRows([['HVAC', input.HVAC],
+			    		['Lights', input.Light],
+			    		['Plugs', input.Electrical]])
+						// chartData.setCell(0, 1, input.HVAC);
+						// chartData.setCell(1, 1, input.Light);
+						// chartData.setCell(2, 1, input.Electrical);
 					}
 				}
 
