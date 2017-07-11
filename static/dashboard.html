@@ -24,32 +24,59 @@
 			<div class="content">
 				<div id="piechart"></div>
 				<script>
-				$.get("/api/appSupport/buildingFootprint/",{},
-			    	function(data,status){
-			    	console.log(data,status);
-			    	renderPie(data);
-			    },'json').fail(function() {
-				    alert('Error!'); // or whatever			    
-				});
+				
+				var chart = null;
+				var chartData = null;
+				function drawChart() {
+					if (chart == null) {
+						chart = new google.visualization.PieChart(document.getElementById('piechart'));
+					}
+					chart.draw(chartData, options);
+				}
+
+				function updateData() {
+					$.get("/api/appSupport/buildingFootprint/",{},
+				    	function(data,status){
+				    	console.log(data,status);
+				    	renderInput(data);
+				    },'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					});
+				}
+
+				function renderInput(input) {
+					if (chartData == null) {
+						chartData = new google.visualization.arrayToDataTable([
+			    		['Type', 'Watts'],
+			    		['HVAC', input.HVAC],
+			    		['Lights', input.Light],
+			    		['Plugs', input.Electrical]]);
+					} else {
+						chartData.setCell(0, 1, input.HVAC);
+						chartData.setCell(1, 1, input.Light);
+						chartData.setCell(2, 1, input.Electrical);
+					}
+				}
+
 				// var data1 = {};
 				// data1.HVAC = 1;
 				// data1.Light = 1;
 				// data1.Electrical = 1;
 				// renderPie(data1);
+
 			    function renderPie(input) {
-			    	var data = new google.visualization.arrayToDataTable([
-			    		['Type', 'Watts'],
-			    		['HVAC', input.HVAC],
-			    		['Lights', input.Light],
-			    		['Plugs', input.Electrical]]);
 			    	var options = {
 			    		pieHole: 0.3,
 			    		backgroundColor: 'transparent',
 			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
 			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
 			    		pieSliceText: 'value'};
-			    	var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-			    	chart.draw(data, options);
+			    	updateData();
+			    	drawChart();
+			    	setInterval(function() {
+			    		updateData();
+			    		drawChart();
+			    	}, 1000);
 			    }
 				</script>
 			</div>
