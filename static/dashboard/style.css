@@ -101,3 +101,11 @@ div.content img {
 	margin: 0 auto;
 	vertical-align: bottom;
 }
+
+div.columnChart {
+	margin: 0 auto;
+}
+
+div.piechart {
+	margin: 0 auto;
+}
