@@ -31,8 +31,9 @@
 						animation: {
 							duration: 1000,
 							easing: 'out',
-							startup:true
+							startup:true,
 						},
+						chartArea: {height: '80%'},
 			    		pieHole: 0.3,
 			    		backgroundColor: 'transparent',
 			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
@@ -98,43 +99,77 @@
 			<div class="content">
 				<div id="columnChart"></div>
 				<script>
-				$.get("/api/appSupport/buildingFootprint/", {},
-					function(data,status){
-			    	console.log(data,status);
-			    	renderCol(data);
-			    },'json').fail(function() {
-				    alert('Error!'); // or whatever			    
-				});
-				function renderCol(input) {
-					var data = new google.visualization.arrayToDataTable([
-						['Date', 'value', {role: 'style'}],
-						[input.historyStrings[0], input.history[0], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
-						[input.historyStrings[1], input.history[1], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
-						[input.historyStrings[2], input.history[2], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
-						[input.historyStrings[3], input.history[3], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
-						[input.historyStrings[4], input.history[4], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
-						[input.historyStrings[5], input.history[5], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
-						[input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']]);
-					var options = {
-						backgroundColor: 'transparent',
-						hAxis: {
-							title: 'Date',
-							titleTextStyle: {
-								color: 'white'
-							},
-							textStyle: {color: 'white'}
+				var chart = null;
+				var chartData = null;
+				var options = {
+					animation: {
+						duration: 1000,
+						easing: 'out',
+						startup: true,
+					},
+					backgroundColor: 'transparent',
+					hAxis: {
+						title: 'Date',
+						titleTextStyle: {
+							color: 'white'
 						},
-						vAxis: {
-							title: 'Daily Power Usage (Watt-Hours)',
-							titleTextStyle: {
-								color: 'white'
-							},
-							textStyle: {color: 'white'}
-						}, legend: {position: 'none'}
-					};
-					var chart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
-					chart.draw(data, options);
+						textStyle: {color: 'white'}
+					},
+					vAxis: {
+						title: 'Daily Power Usage (Watt-Hours)',
+						titleTextStyle: {
+							color: 'white'
+						},
+						textStyle: {color: 'white'}
+					}, legend: {position: 'none'}
+				};
+
+				function drawChart() {
+					if (chart == null) {
+						chart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
+					}
+					chart.draw(chartData, options);
 				}
+
+				function updateData() {
+					$.get("/api/appSupport/buildingFootprint/", {},
+						function(data,status){
+				    	console.log(data,status);
+				    	renderCol(data);
+				    },'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					});
+				}
+
+
+					
+				function renderCol(input) {
+					if (chartData == null) {
+						chartData = new google.visualization.arrayToDataTable([
+							['Date', 'value', {role: 'style'}],
+							[input.historyStrings[0], input.history[0], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[1], input.history[1], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[2], input.history[2], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[3], input.history[3], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[4], input.history[4], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[5], input.history[5], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']]);
+					} else {
+						chartData.removeRow(6);
+						chartData.addRow([input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']);
+					}
+				}
+
+				function renderCol() {
+			    	updateData();
+			    	drawChart();
+			    	setInterval(function() {
+			    		updateData();
+			    		drawChart();
+			    	}, 3000);
+			    }
+			    renderCol();
+
 				</script>
 			</div>
 		</div><div class="mediumBlockBottom">
