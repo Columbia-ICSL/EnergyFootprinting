@@ -66,12 +66,10 @@
 			    		['Lights', input.Light],
 			    		['Plugs', input.Electrical]]);
 					} else {
-						chartData.removeRow(0);
-						chartData.removeRow(0);
-						chartData.removeRow(0);
-						chartData.addRows([['HVAC', input.HVAC],
-			    		['Lights', input.Light],
-			    		['Plugs', input.Electrical]]);
+						chartData.setValue(0, 1, input.HVAC);
+						chartData.setValue(1, 1, input.Light);
+						chartData.setValue(2, 1, input.Electrical);
+
 						// chartData.setCell(0, 1, input.HVAC);
 						// chartData.setCell(1, 1, input.Light);
 						// chartData.setCell(2, 1, input.Electrical);
