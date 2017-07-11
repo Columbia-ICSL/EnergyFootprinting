@@ -28,6 +28,11 @@
 				var chart = null;
 				var chartData = null;
 				var options = {
+						animation: {
+							duration: 1000,
+							easing: 'out',
+							startup:true
+						},
 			    		pieHole: 0.3,
 			    		backgroundColor: 'transparent',
 			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
@@ -82,7 +87,7 @@
 			    	setInterval(function() {
 			    		updateData();
 			    		drawChart();
-			    	}, 1000);
+			    	}, 3000);
 			    }
 
 
