@@ -347,6 +347,8 @@
 					
 					var people;
 					var rightNow = new Date();
+					rightNow.setHours(rightNow.getHours()-4);
+					rightNow.toInputValue();
 					var hourAgo = new Date();
 					hourAgo.setHours(hourAgo.getHours()-4);
 					hourAgo.setMinutes(hourAgo.getMinutes()-10);
@@ -452,6 +454,8 @@
 					    	personalData2.removeRow(0);
 					    	personalData3.removeRow(0);
 					    	var currentTime = new Date();
+					    	currentTime.setHours(currentTime.getHours()-4);
+							currentTime.toInputValue();
 					    	console.log(currentTime);
 					    	personalData1.addRow([currentTime, data.HVAC1, data.Light1, data.Electrical1]);
 					    	personalData2.addRow([currentTime, data.HVAC2, data.Light2, data.Electrical2]);
