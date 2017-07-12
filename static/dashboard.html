@@ -19,19 +19,6 @@
 		<div class="smallBlock">
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
 			<span id="countup">$0.00</span>
-<!-- 			<script>
-			
-			// function updateData() {
-			// 	$.get("/api/appSupport/buildingFootprint/",{},
-			//     	function(data,status){
-			    		
-			//     },'json').fail(function() {
-			// 	    alert('Error!'); // or whatever			    
-			// 	});
-			// }
-
-		    // window.setInterval(updateData, 5000);
-			</script> -->
 			</div>
 		</div><div class="smallBlock">
 			<div class="content">
@@ -162,19 +149,6 @@
 		</div><div class="mediumBlockBottom">
 			<div class="content">
 				<div id="columnChart"></div>
-<!-- 				<script>
-				
-
-				function updateColData() {
-					$.get("/api/appSupport/buildingFootprint/", {},
-						function(data,status){
-				    	renderCol(data);
-				    },'json').fail(function() {
-					    alert('Error!'); // or whatever			    
-					});
-				}
-
-				</script> -->
 			</div>
 		</div><div class="mediumBlockBottom">
 			<div class="content">
@@ -186,7 +160,7 @@
 			<div class="content">
 				<div id="chart4" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/3);display:none;"></div>
 				<script>
-				var options = {
+				var totalOptions = {
 		        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
 		        	//chartArea:{left:200,top:200,width:845,height:210},
 		        	//height: 600,
@@ -220,6 +194,8 @@
 	          		},
 	          		backgroundColor: '#303030'
 		        };
+
+		        var totalData;
 				Date.prototype.toInputValue = (function() {
 				    var local = new Date(this);
 				    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
@@ -232,27 +208,34 @@
 				}
 
 				var ch4=document.getElementById('chart4');
+				var chart = new google.visualization.AreaChart(ch4);
 				//ch1 is the chart, frm1 is the form
 				var people;
 				var rightNow = new Date();
 				var hourAgo = new Date();
-				hourAgo.setHours(0);
-				hourAgo.setMinutes(0);
-				hourAgo.setSeconds(0);
-				hourAgo.setDate(hourAgo.getDate() - 1)
+				hourAgo.setHours(hourAgo.getHours()-1);
 
 				hourAgo.toInputValue();
 				console.log(hourAgo);
 				console.log(rightNow);
 
-
+				function updateData() {
+					$.get("/api/appSupport/buildingFootprint/",{},
+				    	function(data,status){
+				    	totalData.removeRow(0);
+				    	var currentTime = new Date();
+				    	totalData.addRow([currentTime, data.HVAC, data.Light, data.Electrical]);
+				    	chart.draw(totalData, totalOptions);
+				    },'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					});
+				}
 
 			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
 			    		end:getUTCSeconds(rightNow),
 		    		},
 			    	function(data,status){
-			    	console.log(data,status);
 			    	render4(data);
 			    },'json').fail(function() {
 				    alert('Error!'); // or whatever			    
@@ -261,38 +244,29 @@
 				function render4(input){
 				  	input=input.reverse();
 
-			        var data = new google.visualization.DataTable();
-			        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-					data.addColumn('number', 'HVAC (W)');
-			        data.addColumn('number', 'Lighting (W)');
-			        data.addColumn('number', 'Electric (W)');
+			        totalData = new google.visualization.DataTable();
+			        totalData.addColumn('datetime', 'TIME'); // Implicit domain label col.
+					totalData.addColumn('number', 'HVAC (W)');
+			        totalData.addColumn('number', 'Lighting (W)');
+			        totalData.addColumn('number', 'Electric (W)');
 
 			        var lastR=false;
 			        for(var i=0;i<input.length;i++){
 			          var item=input[i];
 			          //console.log('row',ret);
 			          var date = new Date(item.timestamp*1000)
-			          data.addRow([date, item.HVAC, item.Light, item.Electrical]);
-			        };
-					console.log(data);
-			        
+			          totalData.addRow([date, item.HVAC, item.Light, item.Electrical]);
+			        };			        
 
-					var chart = new google.visualization.AreaChart(ch4);
 					var titleString = 'Total Deployment Footprint By Resource Type';
 			        
 			        $(ch4).show(0,function(){
-			        	chart.draw(data, options);
+			        	chart.draw(totalData, totalOptions);
 			        	$(ch4).slideToggle(0).slideToggle(1000);	
 			        });
-			        function drawChart() {
-						google.visualization.events.addListener(chart, 'ready',
-							function() {
 
-							});
-						chart.draw(data, options);
-					}
 					setInterval(function () {
-						console.log("Hello World");
+						updateData();
 					}, 5000);
 				}
 
