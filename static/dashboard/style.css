@@ -122,6 +122,20 @@ div.counter {
 	text-align: center;
 }
 
+div.countHeader {
+	font-size: 16vw;
+	color: white;
+}
+
+div.BuildingHeader {
+	font-size: 16vw;
+	color: white;
+}
+
+div.personalHeader {
+	font-size: 16vw;
+	color: white;
+}
 
 div.columnChart {
 	width:100%;
