@@ -693,7 +693,7 @@ class DBMgr(object):
 	def updateApplianceValue(self, applianceID, value):
 		self.list_of_appliances[applianceID]["value"]=int(value)
 
-	def calculateEnergyFootprint(self, roomID):
+	def calculateEnergyFootprint(self, roomID, encoded=True):
 		
 		ret={
 			"value":0,
@@ -719,7 +719,9 @@ class DBMgr(object):
 			if (app["type"] == "Light"):
 				ret["Light"] += appValue
 		ret["value"]=total_con
-		return self._encode(ret, False)
+		if (encoded):
+			return self._encode(ret, False)
+		return ret
 
 	def buildingEnergyFootprint(self):
 		ret={
