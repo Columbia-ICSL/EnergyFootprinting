@@ -60,7 +60,7 @@ div.mediumBlockTop {
 	padding: 0px 0px 0px 0px;
 	background-color: #222222;
 	width: calc(100% - 16px);
-	height: calc((100vh - 100vw/30 - 32px)/3 - 3vh);
+	height: calc((100vh - 100vw/30 - 32px)/3);
 	vertical-align: top;
 }
 
