@@ -353,17 +353,6 @@
 					hourAgo.toInputValue();
 					console.log(hourAgo);
 					console.log(rightNow);
-				    $.get("/api/dataExtraction/PersonalConsumption/",{
-				    		user:user1,
-				    		start:getUTCSeconds(hourAgo),
-				    		end:getUTCSeconds(rightNow),
-			    		},
-				    	function(data,status){
-					    	console.log(data,status);
-					    	renderPersonal1(data);
-				    	},'json').fail(function() {
-					    alert('Error!'); // or whatever			    
-					});
 					function renderPersonal1(input){
 					  	input=input.reverse();
 
@@ -393,18 +382,6 @@
 				        });
 					}
 
-
-					$.get("/api/dataExtraction/PersonalConsumption/",{
-				    		user:user2,
-				    		start:getUTCSeconds(hourAgo),
-				    		end:getUTCSeconds(rightNow),
-			    		},
-				    	function(data,status){
-					    	console.log(data,status);
-					    	renderPersonal2(data);
-				    	},'json').fail(function() {
-					    alert('Error!'); // or whatever			    
-					});
 					function renderPersonal2(input){
 					  	input=input.reverse();
 
@@ -434,18 +411,6 @@
 				        });
 					}
 
-
-					$.get("/api/dataExtraction/PersonalConsumption/",{
-				    		user:user3,
-				    		start:getUTCSeconds(hourAgo),
-				    		end:getUTCSeconds(rightNow),
-			    		},
-				    	function(data,status){
-					    	console.log(data,status);
-					    	renderPersonal1(data);
-				    	},'json').fail(function() {
-					    alert('Error!'); // or whatever			    
-					});
 					function renderPersonal3(input){
 					  	input=input.reverse();
 
@@ -498,9 +463,48 @@
 						});
 					}
 
-					setInterval(function () {
-						updatePersonalData();
-					}, 1000);
+
+					function setupGraphs() {
+						$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user1,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal1(data);
+				    	},'json').fail(function() {
+					    	alert('Error!'); // or whatever			    
+						});
+						$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user2,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal2(data);
+				    	},'json').fail(function() {
+					    	alert('Error!'); // or whatever			    
+						});
+						$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user3,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal1(data);
+				    	},'json').fail(function() {
+					    	alert('Error!'); // or whatever			    
+						});
+						setInterval(function () {
+							updatePersonalData();
+						}, 1000);
+					}
+
+					setupGraphs();
+					
 				</script>
 			</div>
 		</div>
