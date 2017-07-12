@@ -60,7 +60,7 @@ div.mediumBlockTop {
 	padding: 0px 0px 0px 0px;
 	background-color: #222222;
 	width: calc(100% - 16px);
-	height: calc((100vh - 100vw/30 - 32px)/3);
+	height: calc((100vh - 100vw/30 - 32px)/3 - 3vh);
 	vertical-align: top;
 }
 
@@ -126,17 +126,17 @@ div.counter {
 }
 
 div.countHeader {
-	font-size: 6vh;
+	font-size: 3vh;
 	color: white;
 }
 
 div.BuildingHeader {
-	font-size: 6vh;
+	font-size: 3vh;
 	color: white;
 }
 
 div.personalHeader {
-	font-size: 6vh;
+	font-size: 3vh;
 	color: white;
 }
 
