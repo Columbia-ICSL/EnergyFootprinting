@@ -19,6 +19,8 @@
 		<div class="smallBlock">
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
 			<div class="countHeader">Energy Bill for Today</div>
+			<br>
+			<br>
 			<div class="counter" id="countup"><strong>$0.00</strong></div>
 			<div class="lastUpdate" id="billUpdate">Hello</div>
 			</div>
@@ -48,8 +50,7 @@
 			    		pieHole: 0.3,
 			    		backgroundColor: 'transparent',
 			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
-			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
-			    		pieSliceText: 'value'};
+			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'}};
 
 
 				function updateSpecData() {
@@ -170,7 +171,7 @@
 			</div>
 		</div><div class="mediumBlockBottom">
 			<div class="content" style="background-image:url(dashboard/advert.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
-				<img src="dashboard/advert.png">
+<!-- 				<img src="dashboard/advert.png"> -->
 			</div>
 		</div>
 	</div><div class="halfBlock">
@@ -180,7 +181,7 @@
 				<div id="chart4" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/3-3vh);display:none;"></div>
 				<script>
 				var totalOptions = {
-		        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+		        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}, position:'bottom'},
 		        	//chartArea:{left:200,top:200,width:845,height:210},
 		        	//height: 600,
 		        	//width: 1700,
@@ -313,7 +314,7 @@
 					var user2 = "eac6547d7ee7b9f";
 					var user3 = "fe718a90e1e1c821";
 					var personalOptions = {
-			        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+			        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}, position:'bottom'},
 //				        	chartArea:{left:200,top:200,width:868,height:140},
 //				        	height: 600,
 //				        	width: 1700,
