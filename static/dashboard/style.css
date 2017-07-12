@@ -104,9 +104,9 @@ div.content {
 
 div.content img {
 	/*padding: 10px 10px 10px 10px;*/
-	height: 90%;
+	width: 90%;
 	display: block;
-	margin: 0 auto;
+	margin: auto;
 }
 
 div.content span {
