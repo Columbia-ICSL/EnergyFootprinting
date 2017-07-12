@@ -45,17 +45,17 @@ class multipleUsers:
 			"Electrical3":0
 		}
 		location1 = cloudserver.db.getUserLocation(data.user1)
-		ret1 = cloudserver.db.calculateEnergyFootprint(location1)
+		ret1 = cloudserver.db.calculateEnergyFootprint(location1, False)
 		ret["HVAC1"] = ret1["HVAC"]
 		ret["Light1"] = ret1["Light"]
 		ret["Electrical1"] = ret1["Electrical"]
 		location2 = cloudserver.db.getUserLocation(data.user2)
-		ret2 = cloudserver.db.calculateEnergyFootprint(location2)
+		ret2 = cloudserver.db.calculateEnergyFootprint(location2, False)
 		ret["HVAC2"] = ret2["HVAC"]
 		ret["Light2"] = ret2["Light"]
 		ret["Electrical2"] = ret2["Electrical"]
 		location3 = cloudserver.db.getUserLocation(data.user3)
-		ret3 = cloudserver.db.calculateEnergyFootprint(location3)
+		ret3 = cloudserver.db.calculateEnergyFootprint(location3, False)
 		ret["HVAC3"] = ret3["HVAC"]
 		ret["Light3"] = ret3["Light"]
 		ret["Electrical3"] = ret3["Electrical"]
