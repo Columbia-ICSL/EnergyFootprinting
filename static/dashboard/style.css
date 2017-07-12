@@ -98,6 +98,7 @@ div.content {
 	display: block;
 	vertical-align: top;
 	background-color: #303030;
+	text-align: center;
 }
 
 div.content img {
@@ -117,6 +118,9 @@ div.content span {
 	align-items: center;
 }
 
+div.counter {
+	text-align: center;
+}
 
 
 div.columnChart {
