@@ -482,9 +482,9 @@
 							user3:user3,
 						},
 					    	function(data,status){
-					    	personalData1.removeRow(0)
-					    	personalData2.removeRow(0)
-					    	personalData3.removeRow(0)
+					    	personalData1.removeRow(0);
+					    	personalData2.removeRow(0);
+					    	personalData3.removeRow(0);
 					    	var currentTime = new Date();
 					    	personalData1.addRow([currentTime, data.HVAC1, data.Light1, data.Electrical1]);
 					    	personalData2.addRow([currentTime, data.HVAC2, data.Light2, data.Electrical2]);
