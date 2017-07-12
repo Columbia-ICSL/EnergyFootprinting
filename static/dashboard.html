@@ -19,7 +19,7 @@
 		<div class="smallBlock">
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
 			<div class="countHeader">Energy Bill for Today</div>
-			<div class="counter" id="countup">$0.00</div>
+			<div class="counter" id="countup"><strong>$0.00</strong></div>
 			</div>
 		</div><div class="smallBlock">
 			<div class="content">
@@ -51,7 +51,8 @@
 				    	renderCol(data);
 				    	var num = data.energy/1000.0*.202;
 				    	var with2Decimals = num.toFixed(2);
-			    		count.textContent=with2Decimals;
+				    	var str1 = "$";
+			    		count.textContent=str1.concat(with2Decimals);
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});

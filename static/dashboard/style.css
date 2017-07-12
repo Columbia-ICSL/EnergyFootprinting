@@ -119,24 +119,24 @@ div.content span {
 }
 
 div.counter {
-	font-size: 7vw;
+	font-size: 6vh;
 	font-family: 'Arial Bold';
 	font-weight: 500;
 	color: #FDAB52;
 }
 
 div.countHeader {
-	font-size: 1vw;
+	font-size: 2vh;
 	color: white;
 }
 
 div.BuildingHeader {
-	font-size: 1vw;
+	font-size: 2vh;
 	color: white;
 }
 
 div.personalHeader {
-	font-size: 1vw;
+	font-size: 2vw;
 	color: white;
 }
 
