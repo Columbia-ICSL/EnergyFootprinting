@@ -130,7 +130,9 @@ div.content .lastUpdate {
 	position:absolute;
 	bottom: 5px;
 	color:white;
+	width:100%;
 	text-align:center;
+	font-size:1vh;
 }
 
 div.countHeader {
