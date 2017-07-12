@@ -128,8 +128,9 @@ div.counter {
 
 div.content .lastUpdate {
 	position:absolute;
-	bottom: 0px;
+	bottom: 5px;
 	color:white;
+	text-align:center;
 }
 
 div.countHeader {

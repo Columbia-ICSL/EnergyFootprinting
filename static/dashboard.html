@@ -20,14 +20,14 @@
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
 			<div class="countHeader">Energy Bill for Today</div>
 			<div class="counter" id="countup"><strong>$0.00</strong></div>
-			<div class="lastUpdate">Hello</div>
+			<div class="lastUpdate" id="billUpdate">Hello</div>
 			</div>
 		</div><div class="smallBlock">
 			<div class="content">
 				<div class="piechart" id="piechart"></div>
 				<script>
 				var count = document.getElementById("countup");
-
+				var billUpdate = document.getElementById("billUpdate");
 				var pieChart = null;
 				var chartData = null;
 				var options = {
@@ -54,6 +54,12 @@
 				    	var with2Decimals = num.toFixed(2);
 				    	var str1 = "$";
 			    		count.textContent=str1.concat(with2Decimals);
+			    		var str2 = "Last Updated: ";
+			    		var today = new Date();
+			    		var h = today.getHours();
+			    		var m = today.getMinutes();
+			    		var str3 = h + ":" + m;
+			    		billUpdate.textContent=str2.concat(str3);
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});
