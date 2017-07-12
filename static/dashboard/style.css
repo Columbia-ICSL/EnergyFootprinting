@@ -120,7 +120,8 @@ div.content span {
 
 div.counter {
 	font-size: 7vw;
-	font-family: Verdana, Geneva, sans-serif;
+	font-family: 'Arial Bold';
+	font-weight: 500;
 	color: #FDAB52;
 }
 
