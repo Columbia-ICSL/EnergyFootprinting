@@ -25,9 +25,12 @@
 		</div><div class="smallBlock">
 			<div class="content">
 				<div class="piechart" id="piechart"></div>
+				<div class="lastUpdate" id="pieUpdate">Hello</div>
 				<script>
 				var count = document.getElementById("countup");
 				var billUpdate = document.getElementById("billUpdate");
+				var pieUpdate = document.getElementById("pieUpdate");
+				var columnUpdate = document.getElementById("columnUpdate");
 				var pieChart = null;
 				var chartData = null;
 				var options = {
@@ -60,6 +63,8 @@
 			    		var m = today.getMinutes();
 			    		var str3 = h + ":" + m;
 			    		billUpdate.textContent=str2.concat(str3);
+			    		pieUpdate.textContent=str2.concat(str3);
+			    		columnUpdate.textContent=str2.concat(str3);
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});
@@ -156,6 +161,7 @@
 		</div><div class="mediumBlockBottom">
 			<div class="content">
 				<div class="columnChart" id="columnChart"></div>
+				<div class="lastUpdate" id="columnUpdate">Hello</div>
 			</div>
 		</div><div class="mediumBlockBottom">
 			<div class="content">
