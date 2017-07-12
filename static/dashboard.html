@@ -50,7 +50,8 @@
 			    		pieHole: 0.3,
 			    		backgroundColor: 'transparent',
 			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
-			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'}};
+			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
+			    		pieSliceText: "none"};
 
 
 				function updateSpecData() {
@@ -125,7 +126,6 @@
 						startup: true,
 					},
 					backgroundColor: 'transparent',
-					chartArea:{right:10},
 					hAxis: {
 						title: 'Date',
 						titleTextStyle: {
@@ -183,8 +183,6 @@
 				<script>
 				var totalOptions = {
 		        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}, position:'bottom'},
-		        	'chartArea':{right:10},
-		        	
 		        	//chartArea:{left:200,top:200,width:845,height:210},
 		        	//height: 600,
 		        	//width: 1700,
@@ -318,7 +316,6 @@
 					var user3 = "fe718a90e1e1c821";
 					var personalOptions = {
 			        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}, position:'bottom'},
-			        	chartArea:{right:10},
 //				        	chartArea:{left:200,top:200,width:868,height:140},
 //				        	height: 600,
 //				        	width: 1700,
