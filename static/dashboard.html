@@ -44,7 +44,6 @@
 				function updateData() {
 					$.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
-				    	console.log(data,status);
 				    	renderInput(data);
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
@@ -80,7 +79,6 @@
 				// renderPie(data1);
 			    function renderPie() {
 			    	updateData();
-			    	console.log("called Pie");
 			    	setInterval(function() {
 			    		updateData();
 			    	}, 6000);
@@ -96,6 +94,7 @@
 				<script>
 				var colChart = null;
 				var colChartData = null;
+				var ex = 100000;
 				var colOptions = {
 					animation: {
 						duration: 1000,
@@ -111,7 +110,7 @@
 						textStyle: {color: 'white'}
 					},
 					vAxis: {
-						title: 'Daily Power Usage (Watt-Hours)',
+						title: 'Daily Power Usage\n(Watt-Hours)',
 						titleTextStyle: {
 							color: 'white'
 						},
@@ -122,7 +121,6 @@
 				function updateColData() {
 					$.get("/api/appSupport/buildingFootprint/", {},
 						function(data,status){
-				    	console.log(data,status);
 				    	renderCol(data);
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
@@ -133,7 +131,6 @@
 					
 				function renderCol(input) {
 					if (colChartData == null) {
-						console.log("null case");
 						colChartData = new google.visualization.arrayToDataTable([['Date', 'Watts', {role: 'style'}],
 							[input.historyStrings[0], input.history[0], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
 							[input.historyStrings[1], input.history[1], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
@@ -143,15 +140,13 @@
 							[input.historyStrings[5], input.history[5], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
 							[input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']], false);
 					} else {
-						console.log(colChartData.getNumberOfRows());
-						console.log("found case");
 						colChartData.setCell(0, 1, input.history[0]);
 						colChartData.setCell(1, 1, input.history[1]);
 						colChartData.setCell(2, 1, input.history[2]);
 						colChartData.setCell(3, 1, input.history[3]);
 						colChartData.setCell(4, 1, input.history[4]);
 						colChartData.setCell(5, 1, input.history[5]);
-						colChartData.setCell(6, 1, input.energy);
+						colChartData.setCell(6, 1, input.energy + ex);
 					}
 					if (colChart == null) {
 						colChart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
@@ -163,6 +158,7 @@
 				function renderColData() {
 			    	updateColData();
 			    	setInterval(function() {
+			    		ex = ex + 100000;
 			    		updateColData();
 			    	}, 12000);
 			    }
