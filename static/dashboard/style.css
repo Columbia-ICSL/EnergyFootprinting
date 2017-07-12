@@ -48,6 +48,7 @@ div.smallBlock {
 	background-color: #222222;
 	width: calc(50% - 8px);
 	height: calc((100vh - 100vw/30 - 32px)/3);
+	vertical-align: top;
 }
 
 div.mediumBlockTop {
@@ -60,6 +61,7 @@ div.mediumBlockTop {
 	background-color: #222222;
 	width: calc(100% - 16px);
 	height: calc((100vh - 100vw/30 - 32px)/3);
+	vertical-align: top;
 }
 
 div.mediumBlockBottom {
@@ -67,11 +69,12 @@ div.mediumBlockBottom {
 	margin: 8px 8px 0px 1px;
 	margin-left: 8px;
 	margin-right: -4px;
-	margin-top: 4px;
+	margin-top: 8px;
 	padding: 0px 0px 0px 0px;
 	background-color: #222222;
 	width: calc(100% - 8px);
 	height: calc((100vh - 100vw/30 - 32px)/3);
+	vertical-align: top;
 }
 
 div.largeBlock {
@@ -79,18 +82,21 @@ div.largeBlock {
 	margin: 8px 8px 0px 1px;
 	margin-left: 8px;
 	margin-right: -4px;
-	margin-top: 4px;
+	margin-top: 8px;
 	padding: 0px 0px 0px 0px;
 	background-color: #222222;
 	width: calc(100% - 16px);
 	height: calc((100vh - 100vw/30 - 32px)/3*2 + 8px);
+	vertical-align: top;
 }
 
 div.content {
 	border-radius: 5px;
-	margin: 0px 0px 0px 0px;
+	margin: 0 auto;
 	padding: 0px 0px 0px 0px;
 	height:100%;
+	display: block;
+	vertical-align: top;
 	background-color: #303030;
 }
 
@@ -99,8 +105,17 @@ div.content img {
 	height: 70%;
 	display: block;
 	margin: 0 auto;
-	vertical-align: bottom;
+	vertical-align: top;
 }
+
+div.content p {
+	vertical-align: top;
+	margin: 0 auto;
+	padding: 0 auto;
+	overflow: hidden;
+}
+
+
 
 div.columnChart {
 	margin: 0 auto;
