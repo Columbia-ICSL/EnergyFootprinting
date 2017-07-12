@@ -268,7 +268,7 @@
 
 					setInterval(function () {
 						updateData();
-					}, 1000);
+					}, 10000);
 				}
 
 
@@ -371,7 +371,7 @@
 				        personalData1.addColumn('datetime', 'TIME'); // Implicit domain label col.
 				        //data.addColumn('number', 'WATTS');
 				        personalData1.addColumn('number', 'HVAC (W)');
-				        personalData1.addColumn({type:'string', role:'tooltip'});
+				        //personalData1.addColumn({type:'string', role:'tooltip'});
 				        personalData1.addColumn('number', 'Lighting (W)');
 				        personalData1.addColumn('number', 'Electrical (W)');
 
@@ -382,7 +382,7 @@
 				        	//console.log('row',ret);
 				        	var date = new Date(item.timestamp*1000)
 				        	var electricTemp = item.Electrical + 90;
-				        	personalData1.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+				        	personalData1.addRow([date, item.HVAC, /*"location: " + item.location, */item.Light, electricTemp]);//item.value
 				        };
 				        
 						var titleString = 'Personal Footprint For: Occupant A';
@@ -412,7 +412,7 @@
 				        personalData2.addColumn('datetime', 'TIME'); // Implicit domain label col.
 				        //data.addColumn('number', 'WATTS');
 				        personalData2.addColumn('number', 'HVAC (W)');
-				        personalData2.addColumn({type:'string', role:'tooltip'});
+				        //personalData2.addColumn({type:'string', role:'tooltip'});
 				        personalData2.addColumn('number', 'Lighting (W)');
 				        personalData2.addColumn('number', 'Electrical (W)');
 
@@ -423,7 +423,7 @@
 				        	//console.log('row',ret);
 				        	var date = new Date(item.timestamp*1000)
 				        	var electricTemp = item.Electrical + 90;
-				        	personalData2.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+				        	personalData2.addRow([date, item.HVAC, /*"location: " + item.location, */item.Light, electricTemp]);//item.value
 				        };
 				        
 						var titleString = 'Personal Footprint For: Occupant A';
@@ -453,7 +453,7 @@
 				        personalData3.addColumn('datetime', 'TIME'); // Implicit domain label col.
 				        //data.addColumn('number', 'WATTS');
 				        personalData3.addColumn('number', 'HVAC (W)');
-				        personalData3.addColumn({type:'string', role:'tooltip'});
+				        //personalData3.addColumn({type:'string', role:'tooltip'});
 				        personalData3.addColumn('number', 'Lighting (W)');
 				        personalData3.addColumn('number', 'Electrical (W)');
 
@@ -464,7 +464,7 @@
 				        	//console.log('row',ret);
 				        	var date = new Date(item.timestamp*1000)
 				        	var electricTemp = item.Electrical + 90;
-				        	personalData3.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+				        	personalData3.addRow([date, item.HVAC, /*"location: " + item.location, */item.Light, electricTemp]);//item.value
 				        };
 				        
 						var titleString = 'Personal Footprint For: Occupant A';
@@ -481,7 +481,8 @@
 							user2:user2,
 							user3:user3,
 						},
-					    	function(data,status){
+					    function(data,status){
+					    	console.log(data);
 					    	personalData1.removeRow(0);
 					    	personalData2.removeRow(0);
 					    	personalData3.removeRow(0);
