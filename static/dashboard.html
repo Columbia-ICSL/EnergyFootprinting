@@ -18,7 +18,7 @@
 	<div class="halfBlock">
 		<div class="smallBlock">
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
-			<span id="countup">$0.00</span>
+			<div id="countup">$0.00</div>
 			</div>
 		</div><div class="smallBlock">
 			<div class="content">
@@ -49,7 +49,9 @@
 				    	renderInput(data);
 				    	renderCol(data);
 				    	var num = data.energy/1000.0*.202;
-			    		count.textContent=num;
+				    	var with2Decimals = num.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0];
+				    	var rounded = (Math.floor(value * 100) / 100).toFixed(2);
+			    		count.textContent=rounded;
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});
