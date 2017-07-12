@@ -49,9 +49,8 @@
 				    	renderInput(data);
 				    	renderCol(data);
 				    	var num = data.energy/1000.0*.202;
-				    	var with2Decimals = num.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0];
-				    	var rounded = (Math.floor(value * 100) / 100).toFixed(2);
-			    		count.textContent=rounded;
+				    	var with2Decimals = num.toFixed(2);
+			    		count.textContent=with2Decimals;
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});
