@@ -450,14 +450,14 @@
 					    	console.log(data);
 					    	personalData1.removeRow(0);
 					    	personalData2.removeRow(0);
-					    	personalData3.removeRow(0);
+					    	//personalData3.removeRow(0);
 					    	var currentTime = new Date();
 					    	personalData1.addRow([currentTime, data.HVAC1, data.Light1, data.Electrical1]);
 					    	personalData2.addRow([currentTime, data.HVAC2, data.Light2, data.Electrical2]);
-					    	personalData3.addRow([currentTime, data.HVAC3, data.Light3, data.Electrical3]);
+					    	//personalData3.addRow([currentTime, data.HVAC3, data.Light3, data.Electrical3]);
 					    	chartPersonal1.draw(personalData1, personalOptions);
 					    	chartPersonal2.draw(personalData2, personalOptions);
-					    	chartPersonal3.draw(personalData3, personalOptions);
+					    	//chartPersonal3.draw(personalData3, personalOptions);
 					    },'json').fail(function() {
 						    alert('Error!'); // or whatever			    
 						});
