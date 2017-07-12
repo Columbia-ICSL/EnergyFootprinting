@@ -45,6 +45,7 @@
 				function updateData() {
 					$.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
+				    		console.log("Hello World");
 				    	renderInput(data);
 				    	renderCol(data);
 				    	var num = data.energy/1000.0*.202;
@@ -212,6 +213,7 @@
 				//ch1 is the chart, frm1 is the form
 				var people;
 				var rightNow = new Date();
+				rightNow.setHours(rightNow.getHours()-4);
 				var hourAgo = new Date();
 				hourAgo.setHours(hourAgo.getHours()-4);
 				hourAgo.setMinutes(hourAgo.getMinutes()-30);
