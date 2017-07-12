@@ -99,6 +99,7 @@ div.content {
 	vertical-align: top;
 	background-color: #303030;
 	text-align: center;
+	position:relative;
 }
 
 div.content img {
@@ -123,6 +124,12 @@ div.counter {
 	font-family: 'Arial Bold';
 	font-weight: 500;
 	color: #FDAB52;
+}
+
+div.content .lastUpdate {
+	position:absolute;
+	bottom: 0px;
+	color:white;
 }
 
 div.countHeader {
