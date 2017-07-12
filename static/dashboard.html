@@ -213,7 +213,8 @@
 				var people;
 				var rightNow = new Date();
 				var hourAgo = new Date();
-				hourAgo.setHours(hourAgo.getHours()-6);
+				hourAgo.setHours(hourAgo.getHours()-4);
+				hourAgo.setMinutes(hourAgo.getMinutes()-30);
 
 				hourAgo.toInputValue();
 				console.log(hourAgo);
@@ -267,7 +268,7 @@
 
 					setInterval(function () {
 						updateData();
-					}, 5000);
+					}, 1000);
 				}
 
 
@@ -282,8 +283,57 @@
 			</div>
 		</div><div class="largeBlock">
 			<div class="content">
-				<div id="chart2" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/3);display:none;"></div>
+				<div id="personalChart1" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/5);display:none;"></div>
+				<div id="personalChart2" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/5);display:none;"></div>
+				<div id="personalChart3" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/5);display:none;"></div>
+
 				<script>
+					var user1 = "";
+					var user2 = "";
+					var user3 = "";
+					var personalOptions = {
+			        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+//				        	chartArea:{left:200,top:200,width:868,height:140},
+//				        	height: 600,
+//				        	width: 1700,
+			        	isStacked:true,
+			        	tooltip: { isHtml: true},
+			        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+			        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+			        	hAxis: {
+			        		//titleFontSize:25,
+		          			//title: 'Time of Day',
+		          			textStyle: {
+		          				fontSize:12,
+		          				color:'#FFFFFF'
+		          			},
+		          			gridlines: {
+			        			color:'#0B0B0B'
+			        		},
+		          		},
+			        	vAxis: {
+			        		//titleFontSize:25,
+		          			//title: 'Personal Energy Footprint (W)',
+		          			textStyle: {
+		          				fontSize:12,
+		          				color:'#FFFFFF'
+		          			},
+		          			gridlines: {
+			        			color:'#0B0B0B'
+			        		},
+		        		},
+		          		backgroundColor: '#303030'
+			        };
+					var pc1=document.getElementById('personalChart1');
+			        var chartPersonal1 = new google.visualization.AreaChart(pc1);
+			        var pc2=document.getElementById('personalChart2');
+			        var chartPersonal2 = new google.visualization.AreaChart(pc2);
+			        var pc3=document.getElementById('personalChart3');
+			        var chartPersonal3 = new google.visualization.AreaChart(pc3);
+
+			        var personalData1;
+			        var personalData2;
+			        var personalData3;
 					Date.prototype.toInputValue = (function() {
 					    var local = new Date(this);
 					    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
@@ -294,40 +344,36 @@
 						utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
 						return Math.floor(+utcDate/1000);
 					}
-					var ch2=document.getElementById('chart2');
+					
 					var people;
 					var rightNow = new Date();
 					var hourAgo = new Date();
-					hourAgo.setHours(0);
-					hourAgo.setMinutes(0);
-					hourAgo.setSeconds(0);
-					hourAgo.setDate(hourAgo.getDate() - 1)
+					hourAgo.setHours(hourAgo.getHours()-4);
+					hourAgo.setMinutes(hourAgo.getMinutes()-30);
 					hourAgo.toInputValue();
 					console.log(hourAgo);
 					console.log(rightNow);
 				    $.get("/api/dataExtraction/PersonalConsumption/",{
-				    		user:"",
+				    		user:user1,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
 			    		},
 				    	function(data,status){
 					    	console.log(data,status);
-					    	render2(data);
+					    	renderPersonal1(data);
 				    	},'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});
-
-					  
-					function render2(input){
+					function renderPersonal1(input){
 					  	input=input.reverse();
 
-				        var data = new google.visualization.DataTable();
-				        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+				        personalData1 = new google.visualization.DataTable();
+				        personalData1.addColumn('datetime', 'TIME'); // Implicit domain label col.
 				        //data.addColumn('number', 'WATTS');
-				        data.addColumn('number', 'HVAC (W)');
-				        data.addColumn({type:'string', role:'tooltip'});
-				        data.addColumn('number', 'Lighting (W)');
-				        data.addColumn('number', 'Electrical (W)');
+				        personalData1.addColumn('number', 'HVAC (W)');
+				        personalData1.addColumn({type:'string', role:'tooltip'});
+				        personalData1.addColumn('number', 'Lighting (W)');
+				        personalData1.addColumn('number', 'Electrical (W)');
 
 
 				        var lastR=false;
@@ -336,53 +382,125 @@
 				        	//console.log('row',ret);
 				        	var date = new Date(item.timestamp*1000)
 				        	var electricTemp = item.Electrical + 90;
-				        	data.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+				        	personalData1.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
 				        };
-						console.log(data);
+				        
+						var titleString = 'Personal Footprint For: Occupant A';
+				        
+				        $(pc1).show(0,function(){
+				        	chartPersonal1.draw(personalData1, personalOptions);
+				        	$(pc1).slideToggle(0).slideToggle(1000);	
+				        });
+					}
+
+
+					$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user2,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal2(data);
+				    	},'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					});
+					function renderPersonal2(input){
+					  	input=input.reverse();
+
+				        personalData2 = new google.visualization.DataTable();
+				        personalData2.addColumn('datetime', 'TIME'); // Implicit domain label col.
+				        //data.addColumn('number', 'WATTS');
+				        personalData2.addColumn('number', 'HVAC (W)');
+				        personalData2.addColumn({type:'string', role:'tooltip'});
+				        personalData2.addColumn('number', 'Lighting (W)');
+				        personalData2.addColumn('number', 'Electrical (W)');
+
+
+				        var lastR=false;
+				        for(var i=0;i<input.length;i++){
+				        	var item=input[i];
+				        	//console.log('row',ret);
+				        	var date = new Date(item.timestamp*1000)
+				        	var electricTemp = item.Electrical + 90;
+				        	personalData2.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+				        };
 				        
 						var titleString = 'Personal Footprint For: Occupant A';
 						var chart = new google.visualization.AreaChart(ch2);
-				        var options = {
-				        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
-//				        	chartArea:{left:200,top:200,width:868,height:140},
-//				        	height: 600,
-//				        	width: 1700,
-				        	isStacked:true,
-				        	tooltip: { isHtml: true},
-				        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
-				        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
-				        	hAxis: {
-				        		//titleFontSize:25,
-			          			//title: 'Time of Day',
-			          			textStyle: {
-			          				fontSize:12,
-			          				color:'#FFFFFF'
-			          			},
-			          			gridlines: {
-				        			color:'#0B0B0B'
-				        		},
-			          		},
-				        	vAxis: {
-				        		//titleFontSize:25,
-			          			//title: 'Personal Energy Footprint (W)',
-			          			textStyle: {
-			          				fontSize:12,
-			          				color:'#FFFFFF'
-			          			},
-			          			gridlines: {
-				        			color:'#0B0B0B'
-				        		},
-			        		},
-			          		backgroundColor: '#303030'
-				          //width:800,
-				          //height:500,
-				          //annotations: {'*': {style: 'line'}}
-				        };
-				        $(ch2).show(0,function(){
-				        	chart.draw(data, options);
-				        	$(ch2).slideToggle(0).slideToggle(1000);	
+				        
+				        $(pc2).show(0,function(){
+				        	chartPersonal2.draw(personalData2, personalOptions);
+				        	$(pc2).slideToggle(0).slideToggle(1000);	
 				        });
 					}
+
+
+					$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user3,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal1(data);
+				    	},'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					});
+					function renderPersonal3(input){
+					  	input=input.reverse();
+
+				        personalData3 = new google.visualization.DataTable();
+				        personalData3.addColumn('datetime', 'TIME'); // Implicit domain label col.
+				        //data.addColumn('number', 'WATTS');
+				        personalData3.addColumn('number', 'HVAC (W)');
+				        personalData3.addColumn({type:'string', role:'tooltip'});
+				        personalData3.addColumn('number', 'Lighting (W)');
+				        personalData3.addColumn('number', 'Electrical (W)');
+
+
+				        var lastR=false;
+				        for(var i=0;i<input.length;i++){
+				        	var item=input[i];
+				        	//console.log('row',ret);
+				        	var date = new Date(item.timestamp*1000)
+				        	var electricTemp = item.Electrical + 90;
+				        	personalData3.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+				        };
+				        
+						var titleString = 'Personal Footprint For: Occupant A';
+				        
+				        $(pc3).show(0,function(){
+				        	chartPersonal3.draw(personalData3, personalOptions);
+				        	$(pc3).slideToggle(0).slideToggle(1000);	
+				        });
+					}
+
+					function updatePersonalData() {
+						$.get("/api/appSupport/multipleUsers/",{
+							user1:user1,
+							user2:user2,
+							user3:user3,
+						},
+					    	function(data,status){
+					    	personalData1.removeRow(0)
+					    	personalData2.removeRow(0)
+					    	personalData3.removeRow(0)
+					    	var currentTime = new Date();
+					    	personalData1.addRow([currentTime, data.HVAC1, data.Light1, data.Electrical1]);
+					    	personalData2.addRow([currentTime, data.HVAC2, data.Light2, data.Electrical2]);
+					    	personalData3.addRow([currentTime, data.HVAC3, data.Light3, data.Electrical3]);
+					    	chartPersonal1.draw(personalData1, personalOptions);
+					    	chartPersonal2.draw(personalData2, personalOptions);
+					    	chartPersonal3.draw(personalData3, personalOptions);
+					    },'json').fail(function() {
+						    alert('Error!'); // or whatever			    
+						});
+					}
+
+					setInterval(function () {
+						updatePersonalData();
+					}, 1000);
 				</script>
 			</div>
 		</div>
