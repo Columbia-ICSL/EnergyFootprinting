@@ -104,10 +104,9 @@ div.content {
 
 div.content img {
 	/*padding: 10px 10px 10px 10px;*/
-	height: 70%;
+	height: 90%;
 	display: block;
 	margin: 0 auto;
-	vertical-align: top;
 }
 
 div.content span {
@@ -152,7 +151,7 @@ div.personalHeader {
 
 div.columnChart {
 	width:100%;
-	height:calc((100vh - 100vw/30 - 32px)/3-2vh);
+	height:calc((100vh - 100vw/30 - 32px)/3-1vh);
 }
 
 div.piechart {
