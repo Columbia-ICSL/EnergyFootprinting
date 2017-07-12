@@ -42,7 +42,7 @@
 			    		pieSliceText: 'value'};
 
 
-				function updateData() {
+				function updateSpecData() {
 					$.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    		console.log("Hello World");
@@ -83,9 +83,9 @@
 				// data1.Electrical = 1;
 				// renderPie(data1);
 			    function render() {
-			    	updateData();
+			    	updateSpecData();
 			    	setInterval(function() {
-			    		updateData();
+			    		updateSpecData();
 			    	}, 6000);
 			    }
 
@@ -218,7 +218,7 @@
 				console.log(hourAgo);
 				console.log(rightNow);
 
-				function updateData() {
+				function updateBuildingData() {
 					$.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    	totalData.removeRow(0);
@@ -265,7 +265,7 @@
 			        });
 
 					setInterval(function () {
-						updateData();
+						updateBuildingData();
 					}, 10000);
 				}
 
