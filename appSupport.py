@@ -4,7 +4,8 @@ import cloudserver
 urls = ("/", "appSupport",
 "/localization/", "userLocalizationAPI", 
 "/userNames/", "userNames",
-"/buildingFootprint/", "buildingFootprint")
+"/buildingFootprint/", "buildingFootprint",
+"/multipleUsers/", "multipleUsers")
 
 class userNames:
         def GET(self):
@@ -28,6 +29,39 @@ class appSupport:
 			ret = cloudserver.db.calculateEnergyFootprint(location)
 			return ret
 		return "How did you get here"
+
+class multipleUsers:
+	def GET(self):
+		data = web.input()
+		ret={
+			"HVAC1":0,
+			"Light1":0,
+			"Electrical1":0,
+			"HVAC2":0,
+			"Light2":0,
+			"Electrical2":0,
+			"HVAC3":0,
+			"Light3":0,
+			"Electrical3":0
+		}
+		location1 = cloudserver.db.getUserLocation(data.user1)
+		ret1 = cloudserver.db.calculateEnergyFootprint(location1)
+		ret["HVAC1"] = ret1["HVAC"]
+		ret["Light1"] = ret1["Light"]
+		ret["Electrical1"] = ret1["Electrical"]
+		location2 = cloudserver.db.getUserLocation(data.user2)
+		ret2 = cloudserver.db.calculateEnergyFootprint(location2)
+		ret["HVAC2"] = ret2["HVAC"]
+		ret["Light2"] = ret2["Light"]
+		ret["Electrical2"] = ret2["Electrical"]
+		location3 = cloudserver.db.getUserLocation(data.user3)
+		ret3 = cloudserver.db.calculateEnergyFootprint(location3)
+		ret["HVAC3"] = ret3["HVAC"]
+		ret["Light3"] = ret3["Light"]
+		ret["Electrical3"] = ret3["Electrical"]
+		return cloudserver.db._encode(ret, False)
+
+
 
 class buildingFootprint:
 	def GET(self):
