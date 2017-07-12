@@ -120,14 +120,12 @@ div.content span {
 
 
 div.columnChart {
-	margin: 0 auto;
 	width:100%;
 	height:calc((100vh - 100vw/30 - 32px)/3);
 	display:none;
 }
 
 div.piechart {
-	margin: 0 auto;
 	width:100%;
 	height:calc((100vh - 100vw/30 - 32px)/3);
 	display:none;
