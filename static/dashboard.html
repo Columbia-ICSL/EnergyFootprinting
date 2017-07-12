@@ -56,7 +56,7 @@
 						chartData = new google.visualization.arrayToDataTable([['Resource Type', 'Watts'],
 			    		['HVAC', input.HVAC],
 			    		['Lights', input.Light],
-			    		['Plugs', input.Electrical]]);
+			    		['Plugs', input.Electrical]], false);
 					} else {
 						chartData.setCell(0, 1, input.HVAC);
 						chartData.setCell(1, 1, input.Light);
@@ -141,7 +141,7 @@
 							[input.historyStrings[3], input.history[3], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
 							[input.historyStrings[4], input.history[4], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
 							[input.historyStrings[5], input.history[5], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
-							[input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']]);
+							[input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']], false);
 					} else {
 						console.log("found case");
 						colChartData.setCell(0, 1, input.history[0]);
