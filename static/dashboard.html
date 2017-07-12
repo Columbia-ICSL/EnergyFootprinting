@@ -18,26 +18,20 @@
 	<div class="halfBlock">
 		<div class="smallBlock">
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
-			<p id="p1">$0.00</p>
+			<span id="countup">$0.00</span>
 			<script>
-
+			var count = document.getElementById("countup");
 			function updateData() {
 				$.get("/api/appSupport/buildingFootprint/",{},
 			    	function(data,status){
 			    		var num = data.energy/1000.0*.202;
-			    	document.getElementById("p1").innerHTML=num.toString();
+			    	count.textContent=num;
 			    },'json').fail(function() {
 				    alert('Error!'); // or whatever			    
 				});
 			}
 
-			function computePrice() {
-		    	updateData();
-		    	setInterval(function() {
-		    		updateData();
-		    	}, 6000);
-		    }
-		    computePrice();
+		    window.setInterval(updateData, 5000);
 			</script>
 			</div>
 		</div><div class="smallBlock">
