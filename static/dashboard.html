@@ -19,26 +19,26 @@
 		<div class="smallBlock">
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
 			<span id="countup">$0.00</span>
-			<script>
-			var count = document.getElementById("countup");
-			function updateData() {
-				$.get("/api/appSupport/buildingFootprint/",{},
-			    	function(data,status){
-			    		var num = data.energy/1000.0*.202;
-			    	count.textContent=num;
-			    },'json').fail(function() {
-				    alert('Error!'); // or whatever			    
-				});
-			}
+<!-- 			<script>
+			
+			// function updateData() {
+			// 	$.get("/api/appSupport/buildingFootprint/",{},
+			//     	function(data,status){
+			    		
+			//     },'json').fail(function() {
+			// 	    alert('Error!'); // or whatever			    
+			// 	});
+			// }
 
-		    window.setInterval(updateData, 5000);
-			</script>
+		    // window.setInterval(updateData, 5000);
+			</script> -->
 			</div>
 		</div><div class="smallBlock">
 			<div class="content">
 				<div id="piechart"></div>
 				<script>
-				
+				var count = document.getElementById("countup");
+
 				var chart = null;
 				var chartData = null;
 				var options = {
@@ -59,6 +59,9 @@
 					$.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    	renderInput(data);
+				    	renderCol(data);
+				    	var num = data.energy/1000.0*.202;
+			    		count.textContent=num;
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});
@@ -91,21 +94,13 @@
 				// data1.Light = 1;
 				// data1.Electrical = 1;
 				// renderPie(data1);
-			    function renderPie() {
+			    function render() {
 			    	updateData();
 			    	setInterval(function() {
 			    		updateData();
 			    	}, 6000);
 			    }
 
-
-			    renderPie();
-				</script>
-			</div>
-		</div><div class="mediumBlockBottom">
-			<div class="content">
-				<div id="columnChart"></div>
-				<script>
 				var colChart = null;
 				var colChartData = null;
 				var ex = 100000;
@@ -131,18 +126,6 @@
 						textStyle: {color: 'white'}
 					}, legend: {position: 'none'}
 				};
-
-				function updateColData() {
-					$.get("/api/appSupport/buildingFootprint/", {},
-						function(data,status){
-				    	renderCol(data);
-				    },'json').fail(function() {
-					    alert('Error!'); // or whatever			    
-					});
-				}
-
-
-					
 				function renderCol(input) {
 					if (colChartData == null) {
 						colChartData = new google.visualization.arrayToDataTable([['Date', 'Watts', {role: 'style'}],
@@ -169,16 +152,29 @@
 					}
 				}
 
-				function renderColData() {
-			    	updateColData();
-			    	setInterval(function() {
-			    		ex = ex + 100000;
-			    		updateColData();
-			    	}, 12000);
-			    }
-			    renderColData();
 
+
+
+
+			    render();
 				</script>
+			</div>
+		</div><div class="mediumBlockBottom">
+			<div class="content">
+				<div id="columnChart"></div>
+<!-- 				<script>
+				
+
+				function updateColData() {
+					$.get("/api/appSupport/buildingFootprint/", {},
+						function(data,status){
+				    	renderCol(data);
+				    },'json').fail(function() {
+					    alert('Error!'); // or whatever			    
+					});
+				}
+
+				</script> -->
 			</div>
 		</div><div class="mediumBlockBottom">
 			<div class="content">
@@ -190,6 +186,40 @@
 			<div class="content">
 				<div id="chart4" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/3);display:none;"></div>
 				<script>
+				var options = {
+		        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+		        	//chartArea:{left:200,top:200,width:845,height:210},
+		        	//height: 600,
+		        	//width: 1700,
+		        	isStacked:true,
+		        	tooltip: { isHtml: true},
+		        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+		        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+		        	hAxis: {
+		        		gridlines: {
+		        			color:'#0B0B0B'
+		        		},
+	          			textStyle: {
+	          				fontSize:12,
+	          				color:'#FFFFFF'
+	          			}
+	          		},
+		        	vAxis: {
+		        		gridlines: {
+		        			color:'#0B0B0B'
+		        		},
+	          			//title: 'Deployment Energy Footprint (W)',
+	              		//titleFontSize:25,
+	          			textStyle: {
+	          				fontSize:12,
+	          				color:'#FFFFFF'
+	          			},
+	          			viewWindow: {
+	          				min:21000
+	          			},
+	          		},
+	          		backgroundColor: '#303030'
+		        };
 				Date.prototype.toInputValue = (function() {
 				    var local = new Date(this);
 				    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
@@ -214,6 +244,9 @@
 				hourAgo.toInputValue();
 				console.log(hourAgo);
 				console.log(rightNow);
+
+
+
 			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
 			    		end:getUTCSeconds(rightNow),
@@ -246,46 +279,7 @@
 
 					var chart = new google.visualization.AreaChart(ch4);
 					var titleString = 'Total Deployment Footprint By Resource Type';
-			        var options = {
-			        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
-			        	//chartArea:{left:200,top:200,width:845,height:210},
-			        	//height: 600,
-			        	//width: 1700,
-			        	isStacked:true,
-			        	tooltip: { isHtml: true},
-			        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
-			        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
-			        	hAxis: {
-			        		gridlines: {
-			        			color:'#0B0B0B'
-			        		},
-		          			textStyle: {
-		          				fontSize:12,
-		          				color:'#FFFFFF'
-		          			}
-		          		},
-			        	vAxis: {
-			        		gridlines: {
-			        			color:'#0B0B0B'
-			        		},
-		          			//title: 'Deployment Energy Footprint (W)',
-		              		//titleFontSize:25,
-		          			textStyle: {
-		          				fontSize:12,
-		          				color:'#FFFFFF'
-		          			},
-		          			viewWindow: {
-		          				min:21000
-		          			},
-		          		},
-
-		          		backgroundColor: '#303030'
-
-		        		
-			          //width:800,
-			          //height:500,
-			          //annotations: {'*': {style: 'line'}}
-			        };
+			        
 			        $(ch4).show(0,function(){
 			        	chart.draw(data, options);
 			        	$(ch4).slideToggle(0).slideToggle(1000);	
@@ -301,6 +295,15 @@
 						console.log("Hello World");
 					}, 5000);
 				}
+
+
+
+
+
+
+
+
+
 				</script>
 			</div>
 		</div><div class="largeBlock">
