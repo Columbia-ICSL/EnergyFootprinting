@@ -26,7 +26,7 @@
 				<script>
 				var count = document.getElementById("countup");
 
-				var chart = null;
+				var pieChart = null;
 				var chartData = null;
 				var options = {
 						animation: {
@@ -70,10 +70,10 @@
 						// chartData.setCell(1, 1, input.Light);
 						// chartData.setCell(2, 1, input.Electrical);
 					}
-					if (chart == null) {
-						chart = new google.visualization.PieChart(document.getElementById('piechart'));
+					if (pieChart == null) {
+						pieChart = new google.visualization.PieChart(document.getElementById('piechart'));
 					} else {
-						chart.draw(chartData, options);
+						pieChart.draw(chartData, options);
 					}
 				}
 
@@ -205,7 +205,7 @@
 				}
 
 				var ch4=document.getElementById('chart4');
-				var chart = new google.visualization.AreaChart(ch4);
+				var buildingChart = new google.visualization.AreaChart(ch4);
 				//ch1 is the chart, frm1 is the form
 				var people;
 				var rightNow = new Date();
@@ -224,7 +224,7 @@
 				    	totalData.removeRow(0);
 				    	var currentTime = new Date();
 				    	totalData.addRow([currentTime, data.HVAC, data.Light, data.Electrical]);
-				    	chart.draw(totalData, totalOptions);
+				    	buildingChart.draw(totalData, totalOptions);
 				    },'json').fail(function() {
 					    alert('Error!'); // or whatever			    
 					});
@@ -260,7 +260,7 @@
 					var titleString = 'Total Deployment Footprint By Resource Type';
 			        
 			        $(ch4).show(0,function(){
-			        	chart.draw(totalData, totalOptions);
+			        	buildingChart.draw(totalData, totalOptions);
 			        	$(ch4).slideToggle(0).slideToggle(1000);	
 			        });
 
