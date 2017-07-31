@@ -32,14 +32,14 @@ class DBScrape():
 
 	def snapshots_col_users(self, start, end):
 		print("got to db scrape")
-		self.snapshots_col_users=self.dbc.db.snapshots_col_users
+		self.snapshots=self.dbc.db.snapshots_col_users
 		condition = {
 			"timestamp":{
 				"$gte":datetime.datetime.utcfromtimestamp(start),
 				"$lt":datetime.datetime.utcfromtimestamp(end)
 			}
 		}
-		return list(self.snapshots_col_users.find(condition))
+		return list(self.snapshots.find(condition))
 
 	def todayCumulativeEnergy(self):
 		self.todayCumulativeEnergy=self.dbc.db.todayCumulativeEnergy
