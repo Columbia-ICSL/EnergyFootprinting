@@ -17,7 +17,7 @@ class moveSuggestionGenerator:
 		databaseScrape=DBScrape()
 		U = databaseScrape.registration_col1()
 		for person in U:
-			self.D[person[userID]] = person[name]
+			self.D[person["userID"]] = person["name"]
 		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
 		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
 		for i in range(0, 60):
