@@ -83,7 +83,7 @@ class moveSuggestionGenerator:
 	def getStatistics(self):
 		for action in self.TE:
 			listLen = len(self.TE[action])
-			if (listLen < 1000):
+			if (listLen < 100):
 				continue
 			avg = sum(self.TE[action])/float(listLen)
 			if (avg > 0):
