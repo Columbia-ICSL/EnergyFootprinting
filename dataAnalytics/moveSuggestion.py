@@ -1,4 +1,4 @@
-import DBScrape
+from DBScrape import DBScrape
 import calendar
 import datetime
 import time
@@ -14,6 +14,7 @@ class moveSuggestionGenerator:
 		for i in range(0, 60):
 			start = beginTime + i*24*60*60
 			end = beginTime + (i+1)*24*60*60
+			print(str(i+1) + "iteration")
 			shots = databaseScrape.snapshots_col_users(start, end)
 
 			currentEnergy = 0

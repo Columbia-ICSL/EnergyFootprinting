@@ -31,6 +31,7 @@ class DBScrape():
 		return list(self.snapshots_col_rooms.find(condition))
 
 	def snapshots_col_users(self, start, end):
+		print("got to db scrape")
 		self.snapshots_col_users=self.dbc.db.snapshots_col_users
 		condition = {
 			"timestamp":{
