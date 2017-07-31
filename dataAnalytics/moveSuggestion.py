@@ -108,6 +108,7 @@ class moveSuggestionGenerator:
 			locations = self.ISP[user]
 			print displayName,
 			sortedLocations = sorted(locations.items(), key=operator.itemgetter(1))
+			sortedLocations = sortedLocations.reverse()
 			print sortedLocations[0:3]
 
 
