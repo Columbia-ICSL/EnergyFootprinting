@@ -8,13 +8,13 @@ class moveSuggestionGenerator:
 	ISP = {} #Individual Space Preference
 
 	def scrapeData(self):
-		db=DBScrape.DBScrape()
+		databaseScrape=DBScrape.DBScrape()
 		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
 		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
 		for i in range(0, 60):
 			start = beginTime + i*24*60*60
 			end = beginTime + (i+1)*24*60*60
-			shots = db.snapshots_col_users(start, end)
+			shots = databaseScrape.snapshots_col_users(start, end)
 
 			currentEnergy = 0
 			newEnergy = 0
