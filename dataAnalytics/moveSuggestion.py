@@ -1,4 +1,4 @@
-from .. import DBScrape
+import DBScrape
 import calendar
 import datetime
 import time
