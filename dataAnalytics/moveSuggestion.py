@@ -8,12 +8,16 @@ class moveSuggestionGenerator:
 	IE = {} #Individual Events
 	TE = {} #Total Events
 	ISP = {} #Individual Space Preference
+	D = {}
 
 	def backspace(self):
 		print '\r',
 
 	def scrapeData(self):
 		databaseScrape=DBScrape()
+		U = databaseScrape.registration_col1()
+		for person in U:
+			self.D[person[userID]] = person[name]
 		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
 		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
 		for i in range(0, 60):
@@ -77,10 +81,6 @@ class moveSuggestionGenerator:
 						self.ISP[user][location] += 1
 
 	def getStatistics(self):
-		U = databaseScrape.registration_col1()
-		D = {}
-		for person in U:
-			D[person[userID]] = person[name]
 		for action in self.TE:
 			listLen = len(self.TE[action])
 			if (listLen < 1000):
@@ -103,8 +103,8 @@ class moveSuggestionGenerator:
 
 		for user in self.ISP:
 			displayName = user
-			if user in D:
-				displayName = D[user]
+			if user in self.D:
+				displayName = self.D[user]
 			locations = self.ISP[user]
 			print displayName,
 			sortedLocations = sorted(locations.items(), key=operator.itemgetter(1))
