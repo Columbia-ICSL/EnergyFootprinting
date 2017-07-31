@@ -14,7 +14,6 @@ class moveSuggestionGenerator:
 		for i in range(0, 60):
 			start = beginTime + i*24*60*60
 			end = beginTime + (i+1)*24*60*60
-			print(str(i+1) + "iteration")
 			shots = databaseScrape.snapshots_col_users(start, end)
 
 			currentEnergy = 0
@@ -34,7 +33,7 @@ class moveSuggestionGenerator:
 					currentSpace = newSpace
 					newSpace = location #shift new location
 
-					if (currentSpace == "Out of Lab" or newSpace == "Out of Lab"):
+					if (currentSpace == "Out of Lab" or newSpace == "Out of Lab" or currentSpace == "outOfLab" or newSpace == "outOfLab"):
 						continue
 					if (currentSpace == newSpace):
 						continue
@@ -70,6 +69,8 @@ class moveSuggestionGenerator:
 	def getStatistics(self):
 		for action in self.TE:
 			listLen = len(self.TE[action])
+			if (listLen < 1000):
+				continue
 			sList = sorted(self.TE[action])
 			print action[0],
 			print " to ",
