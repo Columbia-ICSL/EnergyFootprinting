@@ -8,7 +8,7 @@ class moveSuggestionGenerator:
 	TE = {} #Total Events
 	ISP = {} #Individual Space Preference
 
-	def backspace():
+	def backspace(self):
 		print '\r',
 
 	def scrapeData(self):
