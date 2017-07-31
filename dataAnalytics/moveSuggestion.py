@@ -3,6 +3,7 @@ import calendar
 import datetime
 import time
 import sys
+import operator
 class moveSuggestionGenerator:
 	IE = {} #Individual Events
 	TE = {} #Total Events
@@ -16,7 +17,7 @@ class moveSuggestionGenerator:
 		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
 		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
 		for i in range(0, 60):
-			s = str(round(float(i)/100.0,2)) + '%'
+			s = str(round(float(i)/60.0*100.0,2)) + '%'
 			print s,
 			sys.stdout.flush()
 			self.backspace()
@@ -80,6 +81,9 @@ class moveSuggestionGenerator:
 			listLen = len(self.TE[action])
 			if (listLen < 1000):
 				continue
+			avg = sum(self.TE[action])/float(listLen)
+			if (avg > 0):
+				continue
 			sList = sorted(self.TE[action])
 			print action[0],
 			print " to ",
@@ -87,9 +91,17 @@ class moveSuggestionGenerator:
 			print ", total: ",
 			print listLen,
 			print ", average: ",
-			print sum(self.TE[action])/float(listLen),
+			print avg,
 			print ", median: ",
 			print sList[listLen/2]
+
+		print "\n\n===================================\nIndividual Space Preferences\n"
+
+		for user in self.ISP:
+			locations = self.ISP[user]
+			print user,
+			sortedLocations = sorted(locations.items(), key=operator.itemgetter(1))
+			print sorted[0:3]
 
 
 M = moveSuggestionGenerator()
