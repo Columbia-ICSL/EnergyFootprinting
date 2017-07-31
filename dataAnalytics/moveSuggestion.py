@@ -40,43 +40,43 @@ class moveSuggestionGenerator:
 					locationTuple = (currentSpace, newSpace)
 					energyDiff = newEnergy - currentEnergy
 
-					if (user not in IE): #instantiate individual events if needed
-						IE[user] = {}
-					if (locationTuple not in IE[user]):
-						IE[user][locationTuple] = [energyDiff]
+					if (user not in self.IE): #instantiate individual events if needed
+						self.IE[user] = {}
+					if (locationTuple not in self.IE[user]):
+						self.IE[user][locationTuple] = [energyDiff]
 					else:
-						IE[user][locationTuple].append(energyDiff)
+						self.IE[user][locationTuple].append(energyDiff)
 
 
 
 
 
-					if (locationTuple not in TE): #instantiate total events if needed
-						TE[locationTuple] = [energyDiff]
+					if (locationTuple not in self.TE): #instantiate total events if needed
+						self.TE[locationTuple] = [energyDiff]
 					else:
-						TE[locationTuple].append(energyDiff)
+						self.TE[locationTuple].append(energyDiff)
 
 
 
 
-					if (user not in ISP): #instantiate individual space preferences if needed
-						ISP[user] = {}
-					if (location not in ISP[user]):
-						ISP[user][location] = 1
+					if (user not in self.ISP): #instantiate individual space preferences if needed
+						self.ISP[user] = {}
+					if (location not in self.ISP[user]):
+						self.ISP[user][location] = 1
 					else:
-						ISP[user][location] += 1
+						self.ISP[user][location] += 1
 
 	def getStatistics(self):
-		for action in TE:
-			listLen = len(TE[action])
-			sList = sorted(TE[action])
+		for action in self.TE:
+			listLen = len(self.TE[action])
+			sList = sorted(self.TE[action])
 			print action[0],
 			print " to ",
 			print action[1],
 			print ", total: ",
 			print listLen,
 			print ", average: ",
-			print sum(TE[action])/float(listLen),
+			print sum(self.TE[action])/float(listLen),
 			print ", median: ",
 			print sList[listLen/2]
 
