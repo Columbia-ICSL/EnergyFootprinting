@@ -68,15 +68,17 @@ class moveSuggestionGenerator:
 
 	def getStatistics(self):
 		for action in TE:
-			print(action[0], end="")
-			print(" to ", end="")
-			print(action[1], end="")
-			print(", total: ", end="")
-			listSum = len(TE[action])
-			print(listSum, end="")
-			print(", average: ", end="")
-			print(sum(TE[action])/float(listSum), end="")
-			print(", median: ",)
+			listLen = len(TE[action])
+			sList = sorted(TE[action])
+			print action[0],
+			print " to ",
+			print action[1],
+			print ", total: ",
+			print listLen,
+			print ", average: ",
+			print sum(TE[action])/float(listLen),
+			print ", median: ",
+			print sList[listLen/2]
 
 
 M = moveSuggestionGenerator()
