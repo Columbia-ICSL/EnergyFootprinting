@@ -19,7 +19,7 @@ class moveSuggestionGenerator:
 			s = str(round(float(i)/100.0,2)) + '%'
 			print s,
 			sys.stdout.flush()
-			backspace()
+			self.backspace()
 
 			start = beginTime + i*24*60*60
 			end = beginTime + (i+1)*24*60*60
