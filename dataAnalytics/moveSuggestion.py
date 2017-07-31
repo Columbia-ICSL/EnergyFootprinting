@@ -77,6 +77,10 @@ class moveSuggestionGenerator:
 						self.ISP[user][location] += 1
 
 	def getStatistics(self):
+		U = databaseScrape.registration_col1()
+		D = {}
+		for person in U:
+			D[person[userID]] = person[name]
 		for action in self.TE:
 			listLen = len(self.TE[action])
 			if (listLen < 1000):
@@ -98,8 +102,11 @@ class moveSuggestionGenerator:
 		print "\n\n===================================\nIndividual Space Preferences\n"
 
 		for user in self.ISP:
+			displayName = user
+			if user in D:
+				displayName = D[user]
 			locations = self.ISP[user]
-			print user,
+			print displayName,
 			sortedLocations = sorted(locations.items(), key=operator.itemgetter(1))
 			print sortedLocations[0:3]
 
