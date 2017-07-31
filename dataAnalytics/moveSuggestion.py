@@ -2,16 +2,25 @@ from DBScrape import DBScrape
 import calendar
 import datetime
 import time
+import sys
 class moveSuggestionGenerator:
 	IE = {} #Individual Events
 	TE = {} #Total Events
 	ISP = {} #Individual Space Preference
+
+	def backspace():
+		print '\r',
 
 	def scrapeData(self):
 		databaseScrape=DBScrape()
 		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
 		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
 		for i in range(0, 60):
+			s = str(round(float(i)/100.0,2)) + '%'
+			print s,
+			sys.stdout.flush()
+			backspace()
+
 			start = beginTime + i*24*60*60
 			end = beginTime + (i+1)*24*60*60
 			shots = databaseScrape.snapshots_col_users(start, end)
