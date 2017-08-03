@@ -109,7 +109,13 @@ class moveSuggestionGenerator:
 			print displayName,
 			sortedLocations = sorted(locations.items(), key=operator.itemgetter(1))
 			sortedLocations.reverse()
-			print sortedLocations[0:3]
+			timeSum = 0
+			for loc in sortedLocations:
+				timeSum += loc[1]
+			m = min(len(sortedLocations), 3)
+			for i in range(0, m):
+				print (sortedLocations[i][0],float(sortedLocations[i][1])/float(timeSum)),
+			print ""
 
 
 M = moveSuggestionGenerator()
