@@ -114,7 +114,8 @@ class moveSuggestionGenerator:
 				timeSum += loc[1]
 			m = min(len(sortedLocations), 3)
 			for i in range(0, m):
-				print (sortedLocations[i][0],float(sortedLocations[i][1])/float(timeSum)),
+				percent = float(sortedLocations[i][1])/float(timeSum)
+				print (sortedLocations[i][0],round(percent*100.0, 2)),
 			print ""
 
 
