@@ -17,7 +17,7 @@ class roomAnalytics:
 
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
-				timestamp = calendar.timegm(timestamp.timetuple())
+				timestamp = calendar.timegm(timestamp.utctimetuple())
 				print(timestamp-start)
 				return
 				data = snapshot["data"]
