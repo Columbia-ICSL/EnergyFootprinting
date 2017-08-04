@@ -9,7 +9,7 @@ class roomAnalytics:
 	def roomData(self):
 		databaseScrape = DBScrape.DBScrape()
 		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
-		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
+		beginTime = calendar.timegm(datetime.datetime.fromtimestamp(time.mktime(t)).timetuple())
 		for i in range(0, 60):
 			start = beginTime + i*24*60*60
 			end = beginTime + (i+1)*24*60*60
@@ -17,7 +17,7 @@ class roomAnalytics:
 
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
-				timestamp = time.mktime(timestamp.utctimetuple())
+				timestamp = time.mktime(timestamp.timetuple())
 				print(timestamp-start)
 				return
 				data = snapshot["data"]
