@@ -17,6 +17,7 @@ class roomAnalytics:
 
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
+				timestamp = time.mktime(timestamp.timetuple())
 				print(timestamp-start)
 				return
 				data = snapshot["data"]
