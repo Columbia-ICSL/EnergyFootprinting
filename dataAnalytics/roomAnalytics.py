@@ -26,3 +26,5 @@ class roomAnalytics:
 						if room not in self.energyDictionary:
 							self.energyDictionary[room] = [[0]*96 for index in range(60)]
 
+R = roomAnalytics()
+R.roomData()
