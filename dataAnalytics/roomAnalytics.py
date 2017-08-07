@@ -3,6 +3,7 @@ import calendar
 import datetime
 import time
 import csv
+import sys
 import os
 
 days = 30
