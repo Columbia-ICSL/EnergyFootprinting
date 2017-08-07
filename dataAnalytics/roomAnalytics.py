@@ -5,9 +5,9 @@ import time
 import csv
 import os
 
+days = 30
 class roomAnalytics:
 	energyDictionary = {}
-	days = 30
 	def backspace(self):
 		print '\r',
 
