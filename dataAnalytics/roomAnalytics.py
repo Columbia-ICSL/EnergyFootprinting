@@ -62,7 +62,9 @@ class roomAnalytics:
 					continue
 				print("Found Room")
 				arr = self.energyDictionary[room]
-				spamwriter.writerow(arr[days/2])
+				for i in range(96):
+					writeArray[i] = arr[15][i]
+				spamwriter.writerow(writeArray)
 				savedArray = [0]*96
 
 				for i in range(96):
