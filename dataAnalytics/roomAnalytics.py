@@ -48,7 +48,8 @@ class roomAnalytics:
 							print((binNumber, day))
 							continue
 						self.energyDictionary[room][day][binNumber] += energy/l
-						self.energyCounts[room][day][binNumber] += 1
+				for room in self.energyDictionary:
+					self.energyCounts[room][day][binNumber] += 1
 
 
 	def saveData(self):
