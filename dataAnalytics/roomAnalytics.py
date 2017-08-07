@@ -9,6 +9,7 @@ import os
 days = 30
 class roomAnalytics:
 	energyDictionary = {}
+	energyCounts = {}
 	def backspace(self):
 		print '\r',
 
@@ -42,10 +43,12 @@ class roomAnalytics:
 					for room in rooms:
 						if room not in self.energyDictionary:
 							self.energyDictionary[room] = [[0]*96 for index in range(days)]
+							self.energyCounts[room] = [[0]*96 for index in range(days)]
 						if (day >= days or binNumber >= 96):
 							print((binNumber, day))
 							continue
 						self.energyDictionary[room][day][binNumber] += energy/l
+						self.energyCounts[room] += 1
 
 
 	def saveData(self):
@@ -61,13 +64,17 @@ class roomAnalytics:
 #					continue
 #				print("Found Room")
 				arr = self.energyDictionary[room]
+				arrCount = self.energyCounts[room]
 				savedArray = [0]*96
 
 				for i in range(96):
 					for j in range(days):
-						savedArray[i] += arr[j][i]
+						if (arrCount[j][i] > 1):
+							savedArray[i] += arr[j][i]/arrCount[j][i]
+						else:
+							savedArray[i] += arr[j][i]
 				for k in range(96):
-					savedArray[k] = savedArray[k]/96
+					savedArray[k] = savedArray[k]/days
 				spamwriter.writerow(savedArray)
 
 
