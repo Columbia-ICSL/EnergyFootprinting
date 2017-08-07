@@ -71,7 +71,7 @@ class roomAnalytics:
 				for i in range(96):
 					for j in range(days):
 						if (arrCount[j][i] > 1):
-							savedArray[i] += arr[j][i]/arrCount[j][i]
+							savedArray[i] += arr[j][i]#/arrCount[j][i]
 						else:
 							savedArray[i] += arr[j][i]
 				for k in range(96):
