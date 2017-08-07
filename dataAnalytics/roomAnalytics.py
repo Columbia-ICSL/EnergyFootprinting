@@ -57,10 +57,11 @@ class roomAnalytics:
 			spamwriter = csv.writer(csvfile, delimiter=' ',
 									quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			writeArray = []
-			for room in energyDictionary:
+			for room in self.energyDictionary:
 				if (room != "nwc1003b_a"):
 					continue
-				arr = energyDictionary[room]
+				print("Found Room")
+				arr = self.energyDictionary[room]
 				spamwriter.writerow(arr[days/2])
 				savedArray = [0]*96
 
