@@ -25,6 +25,7 @@ class roomAnalytics:
 				data = snapshot["data"]
 				for appliance in data:
 					params = data[appliance]
+					print((params, appliance))
 					energy = params["value"]
 					rooms = params["rooms"]
 					l = len(rooms)
