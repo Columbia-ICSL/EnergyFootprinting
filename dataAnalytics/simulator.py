@@ -21,6 +21,7 @@ class simulator:
 		self.spaces = {}
 		self.loadParameters() #load the occupant parameters
 		self.initializeState() #initialize the building configuration
+		self.printBestState(self.state)
 		#print(self.state)
 		self.instantiateGraphics()
 
@@ -130,7 +131,6 @@ class simulator:
 
 	def simulatedAnnealing(self, kmax):
 		for k in range(kmax):
-
 			s = str(round(float(k)/float(kmax)*100.0)) + '%'
 			print s,
 			sys.stdout.flush()
@@ -141,6 +141,7 @@ class simulator:
 			self.chooseNextState(self.nextState)
 			if self.P(self.state, self.nextState, T):
 				self.state = self.nextState
+		self.printBestState(self.bestState)
 		return self.bestState
 
 	def instantiateGraphics(self):
@@ -149,6 +150,14 @@ class simulator:
 	def updateGraphics(self):
 		return
 
+	def printBestState(self, printState):
+		for room in printState:
+			print("\n")
+			print(room)
+			print("-------------------")
+			for person in printState[room]:
+				print(person)
+
 
 
 
@@ -156,7 +165,7 @@ class simulator:
 	def loadFromCode(self):
 		self.parameters['Peter'] = {"SpacePref": {"nwc1003b_a":54.36, "nwc1003b_b":15.25, "nwc1000m_a6":21.2, "nwc10": 1.05},
 									"SetpointPref":72, "AlonePref": True}
-		self.parameters['Stephen'] = {"SpacePref": {"nwc1003b_b":10.0, "nwc1000m_a6":75.0, "nwc10": 1.0}, "SetpointPref":72,
+		self.parameters['Stephen'] = {"SpacePref": {"nwc1003b_b":10.0, "nwc1003b_a":30.0, "nwc1000m_a6":55.0, "nwc10": 1.0}, "SetpointPref":72,
 									"AlonePref":False}
 		self.parameters['Laixi'] = {"SpacePref": {"nwc1003b_a":1.0, "nwc1000m_a6":85.0, "nwc10": 1.0}, "SetpointPref":72,
 									"AlonePref":False}
@@ -168,6 +177,7 @@ class simulator:
 									"AlonePref":False}
 		self.parameters['LeiLei'] = {"SpacePref":{"nwc1000m_a2":89.0, "nwc1000m_a1":7.4}, "SetpointPref":72,
 									"AlonePref":False}
+		self.parameters['Fred'] = {"SpacePref":{"nwc1008":90.0, "nwc10":10.0}, "SetpointPref":72, "AlonePref":False}
 
 		self.spaces["nwc1003b_a"] = {"MaxOccupancy":2, "PermanentSpace":True, "AverageConsumption":10000}
 		self.spaces["nwc1003b_b"] = {"MaxOccupancy":2, "PermanentSpace":True, "AverageConsumption":9000}
@@ -175,10 +185,12 @@ class simulator:
 		self.spaces["nwc1000m_a2"] = {"MaxOccupancy":4, "PermanentSpace":True, "AverageConsumption":4000}
 		self.spaces["nwc1000m_a6"] = {"MaxOccupancy":4, "PermanentSpace":True, "AverageConsumption":5000}
 		self.spaces["nwc10"] = {"MaxOccupancy":1000, "PermanentSpace":False, "AverageConsumption":300}
+		self.spaces["nwc1008"] = {"MaxOccupancy":2, "PermanentSpace":True, "AverageConsumption":700}
 
 
 S = simulator()
-print(S.simulatedAnnealing(100000))
+S.simulatedAnnealing(100000)
+
 
 
 
