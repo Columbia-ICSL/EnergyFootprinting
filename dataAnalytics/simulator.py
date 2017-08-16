@@ -53,9 +53,28 @@ class simulator:
 
 	def Dscore(self, inputState):
 		#normalize to 1 - 1.5
+		score = 1.00
 		for room in inputState:
 			for person in inputState[room]:
 				setpointPref = self.parameters[person]["SetpointPref"]
+			# if temp differ by 5 degress or more return the max value for now
+			if abs(setpointPref - self.spaces[room]["AverageTemp"]) > 5:
+				score = 1.5
+
+			# computes parabola?
+			else:
+				score = 0.1 * math.sqrt(setpointPref - self.spaces[room]["AverageTemp"]) + 1
+				#print score
+				#sys.stdout.flush()
+				#if abs(setpointPref - self.spaces[room]["AverageTemp"]) < 2:
+				#	score = 1.1
+				#elif abs(setpointPref - self.spaces[room]["AverageTemp"]) < 3:
+				#	score = 1.2
+				#elif abs(setpointPref - self.spaces[room]["AverageTemp"]) < 4:
+				#	score = 1.3
+				#elif abs(setpointPref - self.spaces[room]["AverageTemp"]) < 5:
+				#	score = 1.4
+			return score
 
 				#find the discomfort score along the parabola and then normalize to 1-1.5
 
@@ -201,18 +220,3 @@ class simulator:
 
 S = simulator()
 S.simulatedAnnealing(100000)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
