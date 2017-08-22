@@ -47,9 +47,10 @@ class roomAnalytics:
 						if (day >= days or binNumber >= 96):
 							print((binNumber, day))
 							continue
-						self.energyDictionary[room][day][binNumber] += energy/l
-				for room in self.energyDictionary:
-					self.energyCounts[room][day][binNumber] += 1
+						self.energyDictionary[room][day][binNumber] += energy
+						self.energyCounts[room][day][binNumber] += 1
+				#for room in self.energyDictionary:
+					
 
 
 	def saveData(self):
@@ -71,7 +72,7 @@ class roomAnalytics:
 				for i in range(96):
 					for j in range(days):
 						if (arrCount[j][i] > 1):
-							savedArray[i] += arr[j][i]#/arrCount[j][i]
+							savedArray[i] += arr[j][i]/arrCount[j][i]
 						else:
 							savedArray[i] += arr[j][i]
 				for k in range(96):
