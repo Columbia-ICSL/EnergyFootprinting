@@ -77,6 +77,7 @@ class roomAnalytics:
 							savedArray[i] += arr[j][i]
 				for k in range(96):
 					savedArray[k] = savedArray[k]/days
+				spamwriter.writerow(room)
 				spamwriter.writerow(savedArray)
 
 
