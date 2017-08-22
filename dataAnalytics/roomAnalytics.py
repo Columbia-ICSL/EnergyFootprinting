@@ -15,7 +15,7 @@ class roomAnalytics:
 
 	def roomData(self):
 		databaseScrape = DBScrape.DBScrape()
-		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
+		t = (2017, 5, 1, 0, 0, 0, 0, 0, 0)
 		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
 		for i in range(0, days):
 			s = str(round(float(i)/days*100.0)) + '%'
@@ -48,8 +48,8 @@ class roomAnalytics:
 							print((binNumber, day))
 							continue
 						self.energyDictionary[room][day][binNumber] += energy
-						self.energyCounts[room][day][binNumber] += 1
-				#for room in self.energyDictionary:
+				for room in self.energyDictionary:
+					self.energyCounts[room][day][binNumber] += 1
 					
 
 
