@@ -18,7 +18,7 @@ class roomModelLearning:
 
 	def roomEnergyLearning(self):
 		databaseScrape = DBScrape.DBScrape()
-		t = (2017, 3, 15, 0, 0, 0, 0, 0, 0)
+		t = (2017, 4, 1, 0, 0, 0, 0, 0, 0)
 		beginTime = calendar.timegm(datetime.datetime.utcfromtimestamp(time.mktime(t)).utctimetuple())
 		for i in range(0, days):
 			s = str(round(float(i)/days*100.0)) + '%'
@@ -127,7 +127,7 @@ class roomModelLearning:
 				for i in range(days):
 					for j in range(96):
 						if (arrCount[i][j] > 1):
-							savedArray[i*96 + j] += arr[i][j]/arrCount[i][j]
+							savedArray[i*96 + j] += float(arr[i][j])/float(arrCount[i][j])
 						else:
 							savedArray[i*96 + j] += arr[i][j]
 				spamwriter.writerow(room)
