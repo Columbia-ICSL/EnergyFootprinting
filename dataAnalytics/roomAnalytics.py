@@ -29,7 +29,7 @@ class roomAnalytics:
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
 				timestamp = calendar.timegm(timestamp.utctimetuple())
-				b = int(timestamp-start)/900
+				b = int(timestamp-beginTime)/900
 				day = b/96
 				binNumber = b%96
 				data = snapshot["data"]

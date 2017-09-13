@@ -32,7 +32,7 @@ class roomModelLearning:
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
 				timestamp = calendar.timegm(timestamp.utctimetuple())
-				b = int(timestamp-start)/900
+				b = int(timestamp-beginTime)/900
 				day = b/96
 				binNumber = b%96
 				data = snapshot["data"]
@@ -70,7 +70,7 @@ class roomModelLearning:
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
 				timestamp = calendar.timegm(timestamp.utctimetuple())
-				b = int(timestamp-start)/900
+				b = int(timestamp-beginTime)/900
 				day = b/96
 				binNumber = b%96
 				data = snapshot["data"]
@@ -86,8 +86,8 @@ class roomModelLearning:
 						print((binNumber, day))
 						continue
 					self.occupancyDictionary[room][day][binNumber] += occupancy
-				for room in self.energyDictionary:
-					self.energyCounts[room][day][binNumber] += 1
+				for room in self.occupancyDictionary:
+					self.occupancyCounts[room][day][binNumber] += 1
 
 	def saveEnergyData(self):
 		try:
