@@ -184,6 +184,7 @@ class DBMgr(object):
 		self.events_col=self.dbc.db.events_col
 		#any events
 
+		self.snapshots_parameters=self.dbc.db.snapshots_parameters
 		self.snapshots_col_rooms=self.dbc.db.snapshots_col_rooms
 		self.snapshots_col_appliances=self.dbc.db.snapshots_col_appliances
 		self.snapshots_col_users=self.dbc.db.snapshots_col_users
@@ -1000,6 +1001,12 @@ class DBMgr(object):
 				add_log("fail to trace person's consumption; id:",user_id)
 
 		return personal_consumption
+
+	def SaveParameters(self, parameters):
+		self.snapshots_parameters.insert({
+			"timestamp":datetime.datetime.utcnow(),
+			"data":parameters
+			})
 
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
