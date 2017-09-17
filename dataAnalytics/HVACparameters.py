@@ -39,7 +39,7 @@ class getHVACparameters():
 									quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			spamwriter.writerow(self.parameters)
 			for T in range(len(self.values)):
-				spanwriter.writerow(self.values[T])
+				spamwriter.writerow(self.values[T])
 
 	def saveTimestamps(self):
 		try:
