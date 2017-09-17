@@ -45,6 +45,14 @@ class DBScrape():
 		}
 		return list(snapshots.find(condition))
 
+	def snapshots_parameters(self):
+		snapshots = self.dbc.db.snapshots_parameters
+		condition = {
+
+		}
+		return list(snapshots.find(condition))
+		
+
 	def todayCumulativeEnergy(self):
 		self.todayCumulativeEnergy=self.dbc.db.todayCumulativeEnergy
 
