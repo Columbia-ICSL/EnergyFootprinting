@@ -17,7 +17,7 @@ class getHVACparameters():
 		valueTime = 0
 		for snapshot in shots:
 			timestamp = snapshot["timestamp"]
-			timestamp = timestamp.utctimetuple()
+			timestamp = time.localtime(calendar.timegm(timestamp.utctimetuple()))
 			timestamp = timestamp.strftime("%d-%b-%Y %H:%M:%S")
 			self.timestamps.append(timestamp)
 			self.values.append([0] * len(self.parameters))
