@@ -47,7 +47,7 @@ class getHVACparameters():
 		except OSError:
 			pass
 		with open("HVACparamsTimestamps.csv", 'wb') as csvfile:
-			spamwriter = csv.writer(csvfile, delimiter=' ',
+			spamwriter = csv.writer(csvfile, delimiter=',',
 									quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			spamwriter.writerow(self.timestamps)
 
