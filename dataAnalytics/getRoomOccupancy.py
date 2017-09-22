@@ -28,7 +28,7 @@ class getRoomOccupancy:
 			self.backspace()
 			start = beginTime + i*24*60*60
 			end = beginTime + (i+1)*24*60*60
-			shots = self.databaseScrape.snapshots_col_appliances(start, end)
+			shots = self.databaseScrape.snapshots_col_rooms(start, end)
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
 				timestampFormatted = time.strftime("%d-%b-%Y %H:%M:%S", timestamp.utctimetuple())
