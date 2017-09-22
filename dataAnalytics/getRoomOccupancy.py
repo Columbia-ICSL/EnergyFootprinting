@@ -6,10 +6,6 @@ import csv
 import sys
 import os
 
-G = getRoomOccupancy()
-G.getOccupancy(2017, 9, 1, 30)
-G.saveData()
-G.saveTimestamps()
 
 
 class getRoomOccupancy:
@@ -80,3 +76,11 @@ class getRoomOccupancy:
 			spamwriter = csv.writer(csvfile, delimiter = ',',
 									quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			spamwriter.writerow(self.timestamps)
+
+
+
+G = getRoomOccupancy()
+G.getOccupancy(2017, 9, 1, 30)
+G.saveData()
+G.saveTimestamps()
+
