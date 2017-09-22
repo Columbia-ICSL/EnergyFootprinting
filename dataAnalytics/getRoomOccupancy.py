@@ -43,7 +43,6 @@ class getRoomOccupancy:
 					occupancy = len(params["users"])
 					if room not in self.occupancyDictionary:
 						self.occupancyDictionary[room] = []
-						self.occupancyCounts[room] = []
 
 					self.occupancyDictionary[room].append(occupancy)
 
