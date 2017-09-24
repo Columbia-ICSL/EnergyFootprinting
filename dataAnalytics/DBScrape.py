@@ -45,10 +45,13 @@ class DBScrape():
 		}
 		return list(snapshots.find(condition))
 
-	def snapshots_parameters(self):
+	def snapshots_parameters(self, start, end):
 		snapshots = self.dbc.db.snapshots_parameters
 		condition = {
-
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
 		}
 		return list(snapshots.find(condition))
 		
