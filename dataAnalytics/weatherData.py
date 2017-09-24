@@ -81,7 +81,7 @@ def getTemp2(beginDay, endDay, month, year):
 	print(temperatures)
 
 
-getTemp2(14, 18, 9, 2017)
+getTemp2(14, 22, 9, 2017)
 
 
 
