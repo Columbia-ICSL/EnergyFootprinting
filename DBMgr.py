@@ -1008,6 +1008,11 @@ class DBMgr(object):
 			"data":parameters
 			})
 
+	def GetParameters(self):
+		iterator = self.snapshots_parameters.find().sort([("timestamp", pymongo.DESCENDING)]).limit(1)
+		for shot in iterator:
+			return shot["data"]
+
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
 		self.accumulate()

@@ -6,7 +6,8 @@ import cloudserver
 
 urls = (
 	"/SaveBACNET","SaveBACNET",
-	"/SaveParameters", "SaveParameters"
+	"/SaveParameters", "SaveParameters",
+	"/GetParameters", "GetParameters"
 )
 
 
@@ -25,6 +26,10 @@ class SaveParameters:
 		raw_data=web.data()
 		data=json.loads(raw_data)
 		cloudserver.db.SaveParameters(data)
+
+class GetParameters:
+	def GET(self):
+		return cloudserver.db.GetParameters()
 
 
 EnergyReportBACNET = web.application(urls, locals())
