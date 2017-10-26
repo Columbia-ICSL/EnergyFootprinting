@@ -29,6 +29,7 @@ class SaveParameters:
 
 class GetParameters:
 	def GET(self):
+		print("Getting bacnet data")
 		return cloudserver.db.GetParameters()
 
 
