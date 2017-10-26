@@ -1012,7 +1012,7 @@ class DBMgr(object):
 		iterator = self.snapshots_parameters.find().sort([("timestamp", pymongo.DESCENDING)]).limit(1)
 		for shot in iterator:
 			print shot["data"]
-			return shot["data"]
+			return self._encode(shot["data"], True)
 
 	def SaveShot(self, any_additional_data=None):
 		#save into database, with: timestamp, additional data
