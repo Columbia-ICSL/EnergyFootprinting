@@ -15,7 +15,7 @@ $(function(){
 			//if(!payload.appliances){alert('error!');}
 			var data=[];
 
-			for(var id in payload){
+			Object.keys(payload).sort().map(function(id){
 				data.push({
 					name:id,
 					value:payload[id]
