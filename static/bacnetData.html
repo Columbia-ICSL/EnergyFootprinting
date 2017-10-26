@@ -12,25 +12,36 @@ $(function(){
 		{},
 		function(payload){
 			console.log('Received data',payload);
-			if(!payload.appliances){alert('error!');}
+			//if(!payload.appliances){alert('error!');}
 			var data=[];
 
-			//for(var id in payload.appliances){}
-			Object.keys(payload.appliances).sort().map(function(id){
+			for(var id in payload){
+				data.push({
+					name:id,
+					value:payload[id]
+				});
+			};
+
+			/*Object.keys(payload.appliances).sort().map(function(id){
 				data.push({
 					id:id,
 					name:payload.appliances[id].name,
 					value:payload.appliances[id].value
 				});
-			});
-			
+			});*/
 			var html=data.map(function(item){
+				return '<li> <b>%name</b> <br> %value Watts </li>'
+					.replace('%name',item.name)
+					.replace('%value', item.value);
+			}).join('');
+			$('#list').html(html);
+			/*var html=data.map(function(item){
 				return '<li> <b>%name</b> <i>%id</i><br> %value Watts </li>'
 					.replace('%name',item.name)
 					.replace('%value',item.value)	
 					.replace('%id',item.id);
 			}).join('');
-			$('#list').html(html);
+			$('#list').html(html);*/
 		},
 		'json');
 	}).click();
