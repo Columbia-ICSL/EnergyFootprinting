@@ -12,7 +12,9 @@ class getHVACparameters():
 	values = []
 	def params(self):
 		databaseScrape = DBScrape.DBScrape()
-		shots = databaseScrape.snapshots_parameters()
+		end = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
+		start = calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60*5 #5 days
+		shots = databaseScrape.snapshots_parameters(start, end)
 
 		valueTime = 0
 		for snapshot in shots:
