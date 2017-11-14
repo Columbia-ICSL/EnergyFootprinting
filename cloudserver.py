@@ -20,6 +20,7 @@ import suggestionDecisions
 import userManagement
 import Query
 import Manage
+import mingooServer
 import newDataAnalytics
 import externalTraining
 import zones
@@ -55,7 +56,8 @@ urls = (
     "/api/visualization", visualizationAPI.visualization,
     "/debug","Debug",
     "/recent","Recent",
-    "/","index"
+    "/","index",
+    "/api/OSData", mingooServer.reportData,
 )
 
 from DBMgr import MongoJsonEncoder

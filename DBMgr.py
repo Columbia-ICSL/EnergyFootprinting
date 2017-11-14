@@ -201,6 +201,10 @@ class DBMgr(object):
 		self.humanCentricZonesTesting=self.dbc.db.humanCentricZonesTesting
 		self._latestSuccessShot=0
 
+
+
+		self.OSreport = self.dbc.db.OSreport
+
 		self._ReadConfigs()
 		## Data Structure Init: bipartite graph between rooms and appls
 		## TODO: Add a web interface to update config in db, and pull new config into memory.
@@ -784,6 +788,13 @@ class DBMgr(object):
 	def LogRawData(self,obj):
 		obj["_log_timestamp"]=datetime.datetime.utcnow()
 		self.raw_data.insert(obj)
+
+	def ReportOSData(self, data):
+		#"reporting occupancy sensing data"
+		self.OSreport.insert({
+			"timestamp":datetime.datetime.utcnow(),
+			"data":data
+			})
 
 
 	def ReportEnergyValue(self, applianceID, value, raw_data=None):
