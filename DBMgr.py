@@ -692,7 +692,7 @@ class DBMgr(object):
 					self.list_of_appliances[applianceID]["total_users"]-=1
 		
 	def updateApplianceValue(self, applianceID, value):
-		self.list_of_appliances[applianceID]["value"]=int(float(value))
+		self.list_of_appliances[applianceID]["value"]=int(float(value)
 
 	def calculateEnergyFootprint(self, roomID, encoded=True):
 		
