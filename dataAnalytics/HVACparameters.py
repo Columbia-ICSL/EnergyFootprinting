@@ -1,3 +1,4 @@
+import sys
 import DBScrape
 import calendar
 import datetime
@@ -6,7 +7,11 @@ import csv
 import sys
 import os
 
-class getHVACparameters():
+args = list(sys.argv)[1:]
+if len(args) != 2:
+	raise Exception("Need 2 arguments: how many days back, how long")
+
+class getHVACparameters(daysBack, duration):
 	timestamps = []
 	parameters = ["hfr10T1", "energy1003GA", "energy1003GC", "energy1003GB", "energy10T1", "hfr1003o1", "energy8F", "energy1003G", "energy1003B", "energy1003A", "exhaust10T1", "exhaust10M1", "exhaust10M3", "exhaust10M2", "hfr7F", "energy1001L", "energy7F", "hfr1003GA", "hfr1003GB", "hfr1003GC", "exhaust1001L", "hfr10F", "hfr8F", "energy1003t2", "T2temp", "hfr1003t2", "exhaust1003GB", "exhaust1003G", "hfr1003g", "exhaust1003GA", "T1temp", "energy10F", "hfr1003A", "hfr1003B", "exhaust1003GC", "energy1003o1", "exhaust10S5", "exhaust10S4", "hfr1001L", "1003airTemp", "1003airFlow", "10T1airTemp", "10T1airFlow", "T2setpoint", "T1setpoint", "1003GairFlow", "1003GairTemp", "1003GAairFlow", "1003GAairTemp", "1003GBairFlow", "1003GBairTemp", "1003GCairFlow", "1003GCairTemp"]
 	values = []
@@ -42,8 +47,8 @@ class getHVACparameters():
 
 	def params(self):
 		databaseScrape = DBScrape.DBScrape()
-		end = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
-		start = calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60*5 #5 days
+		end = calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60*(daysBack-duration)
+		start = calendar.timegm(datetime.datetime.utcnow().utctimetuple())-24*60*60*daysBack #5 days
 		shots = databaseScrape.snapshots_parameters(start, end)
 
 		valueTime = 0
@@ -104,7 +109,7 @@ class getHVACparameters():
 									quotechar='|', quoting=csv.QUOTE_MINIMAL)
 			spamwriter.writerow(self.timestamps)
 
-H = getHVACparameters()
+H = getHVACparameters(args[0], args[1])
 H.getAllParams()
 #H.getSingleParam("10T1airTemp", 15)
 

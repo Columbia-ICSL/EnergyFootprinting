@@ -1,3 +1,4 @@
+import sys
 import urllib2
 import json
 import os
@@ -5,6 +6,10 @@ import csv
 import datetime
 import time
 
+
+args = list(sys.argv)[1:]
+if len(args) != 4:
+	raise Exception("Need 4 arguments: start day, end day, month, and year")
 
 apiURL = 'http://api.wunderground.com/api/41e9482d39e03f1e/history_'
 #year = '2017'
@@ -81,7 +86,7 @@ def getTemp2(beginDay, endDay, month, year):
 	print(temperatures)
 
 
-getTemp2(14, 22, 9, 2017)
+getTemp2(int(args[0]), int(args[1]), int(args[2]), int(args[3]))
 
 
 
