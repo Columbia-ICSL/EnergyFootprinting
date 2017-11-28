@@ -30,12 +30,13 @@ class SaveHVAC:
     def POST(self,room):
         raw_data=web.data()
         data=json.loads(raw_data)
-        description=data['description']
+        name=data['name']
         temperature=data['temperature']
-        presure=data['pressure']
-        cloudserver.db.SaveHVAC(room,description,temperature,presure)
-        
+        windSpeed=data['windSpeed']
+        cloudserver.db.SaveHVAC(name, temperature, windSpeed)
         return "200 OK"
+
+
     def GET(self,room):
         return "{0}".format(room)
 

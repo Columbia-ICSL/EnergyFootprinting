@@ -184,6 +184,9 @@ class DBMgr(object):
 		self.events_col=self.dbc.db.events_col
 		#any events
 
+		self.fintubeMonitor=self.dbc.db.fintubeMonitor
+		#save fin tube radiator data, for building modeling
+
 		self.snapshots_parameters=self.dbc.db.snapshots_parameters
 		self.snapshots_col_rooms=self.dbc.db.snapshots_col_rooms
 		self.snapshots_col_appliances=self.dbc.db.snapshots_col_appliances
@@ -239,6 +242,18 @@ class DBMgr(object):
 			"data":data,
 			"timestamp":datetime.datetime.utcnow()
 			})
+
+####################################################################
+
+	def SaveHVAC(self, name, temperature, windSpeed):
+		self.fintubeMonitor.insert({
+			"name":name,
+			"temperature":temperature,
+			"windSpeed":windSpeed,
+			"timestamp":datetime.datetime.utcnow()
+			})
+
+####################################################################
 
 ####################################################################
 ## Data Visualization ##############################################
