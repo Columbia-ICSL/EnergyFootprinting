@@ -33,6 +33,15 @@ endURL = '/q/NY/New_York.json'
 
 def getTemp2(beginDay, endDay, month, year):
 	temperatures = []
+	dewpoints = []
+	humidity = []
+	windspeed = []
+	windgust = []
+	visibility = []
+	pressure = []
+	windchill = []
+	heatindex = []
+	precipitation = []
 	timestamps = []
 	try:
 		os.remove('weatherData.csv')
@@ -66,6 +75,17 @@ def getTemp2(beginDay, endDay, month, year):
 				houri = int(timei["date"]["hour"])
 				minutei = int(timei["date"]["min"])
 				temperature = float(timei["tempi"])
+
+				dewpoints.append(float(timei["dewpti"]))
+				humidity.append(float(timei["hum"]))
+				windspeed.append(float(timei["wspdi"]))
+				windgust.append(float(timei["wgusti"]))
+				visibility.append(float(timei["visi"]))
+				pressure.append(float(timei["pressurei"]))
+				windchill.append(float(timei["windchilli"]))
+				heatindex.append(float(timei["heatindexi"]))
+				precipitation.append(float(timei["precipi"]))
+
 				D = datetime.datetime(yeari, monthi, dayi, houri, minutei, 0)
 				timestamp = time.strftime("%d-%b-%Y %H:%M:%S", D.utctimetuple())
 				temperatures.append(temperature)
@@ -75,6 +95,15 @@ def getTemp2(beginDay, endDay, month, year):
 				#print((hour, minute, temperature))
 			f.close()
 		spamwriter.writerow(temperatures)
+		spamwriter.writerow(dewpoints)
+		spamwriter.writerow(humidity)
+		spamwriter.writerow(windspeed)
+		spamwriter.writerow(windgust)
+		spamwriter.writerow(visibility)
+		spamwriter.writerow(pressure)
+		spamwriter.writerow(windchill)
+		spamwriter.writerow(heatindex)
+		spamwriter.writerow(precipitation)
 	try:
 		os.remove('weatherDataTimestamps.csv')
 	except OSError:
