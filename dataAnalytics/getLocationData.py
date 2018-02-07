@@ -15,7 +15,7 @@ class getLocationData:
 		dayTime = begin
 		dayTomorrow = dayTime + datetime.timedelta(days=1)
 		while dayTime < dayTime.now():
-			shots = self.databaseScrape.snapshots_col_users(dayTime, dayTomorrow)
+			shots = self.databaseScrape.snapshots_col_users_location(dayTime, dayTomorrow)
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
 				data = snapshots["data"]

@@ -45,6 +45,16 @@ class DBScrape():
 		}
 		return list(snapshots.find(condition))
 
+	def snapshots_col_users_location(self, start, end):
+		snapshots=self.dbc.db.snapshots_col_users
+		condition = {
+			"timestamp":{
+				"$gte":start,
+				"$lt":end
+			}
+		}
+		return list(snapshots.find(condition))
+
 	def snapshots_parameters(self, start, end):
 		snapshots = self.dbc.db.snapshots_parameters
 		condition = {
