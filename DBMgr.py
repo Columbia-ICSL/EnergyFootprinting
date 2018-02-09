@@ -475,6 +475,12 @@ class DBMgr(object):
 		self.registration_col1.insert(newInput)
 		return "0"
 
+	def loginWeb(self, email, password):
+		user = self.registration_col1.find_one({"email": email, "password":password})
+		if user is not None:
+			return "0"
+		else:
+			return "1"
 
 
 
