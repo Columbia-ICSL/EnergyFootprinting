@@ -1,0 +1,2 @@
+sudo /home/icsl/python_app reload
+sudo nohup /home/icsl/python_app reload > /dev/null
