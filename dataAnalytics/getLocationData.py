@@ -15,6 +15,7 @@ class getLocationData:
 		dayTime = begin
 		dayTomorrow = dayTime + datetime.timedelta(days=1)
 		totalLocations = 0
+		os.environ['TZ'] = 'UTC'
 		while dayTime < dayTime.now():
 			shots = self.databaseScrape.snapshots_col_users_location(dayTime, dayTomorrow)
 			print "Number of found users: " + str(len(self.locationDict))
@@ -22,6 +23,8 @@ class getLocationData:
 			print "Number of cumulative locations: " + str(totalLocations)
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
+				pattern = '%Y-%m-%d %H:%M:%S'
+				epoch = int(time.mktime(time.strptime(date_time, pattern)))
 				data = snapshot["data"]
 				totalLocations += len(data)
 				for user in data:
@@ -29,7 +32,7 @@ class getLocationData:
 					location = data[user]["location"]
 					if (person not in self.locationDict):
 						self.locationDict[person] = []
-					self.locationDict[person].append((timestamp, location))
+					self.locationDict[person].append((epoch, location))
 			dayTime = dayTime + datetime.timedelta(days=1)
 			dayTomorrow = dayTime + datetime.timedelta(days=1)
 			time.sleep(5)
@@ -59,7 +62,29 @@ class getLocationData:
 				spamwriter.writerow(timestamps)
 				spamwriter.writerow(locations)
 
+	def saveData2(self):
+		if not os.path.exists('locationDataFiles'):
+			os.makedirs('locationDataFiles')
+		try:
+			os.remove('locationDataFiles/locationData.csv')
+		except OSError:
+			pass
+		for person in self.locationDict:
+			timestamps = []
+			locations = []
+			for tup in self.locationDict[person]:
+				timestamps.append(tup[0])
+				locations.append(tup[1])
+			with open('locationDataFiles/' + person + '_timestamps.csv', 'wb') as csvfile:
+				locwriter = csv.writer(csvfile, delimiter=' ',
+									quotechar='|', quoting=csv.QUOTE_MINIMAL)
+				locwriter.writerow(timestamps)
+			with open('locationDataFiles/' + person + '_locs.csv', 'wb') as csvfile:
+				locwriter = csv.writer(csvfile, delimiter=' ',
+									quotechar='|', quoting=csv.QUOTE_MINIMAL)
+				locwriter.writerow(locations)
+
 
 G = getLocationData()
 G.getSnapshots()
-G.saveData()
+G.saveData2()
