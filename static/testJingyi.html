@@ -1,25 +1,48 @@
-<!DOCTYPE html>
+<!doctype>
+<html>
 <head>
-	<title>HTML and CSS "Hello World"</title>
-	<style>
-		body {
-			background-color: #2D2D2D;
-		}
-		
-		h1 {
-			color: #C26356;
-			font-size: 30px;
-			font-family: Menlo, Monaco, fixed-width;
-		}
-		
-		p {
-			color: white;
-			font-family: "Source Code Pro", Menlo, Monaco, fixed-width;
-		}
-	</style>
+<title> The Energy Footprint System Login Page </title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
+ <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+ <script> google.load("visualization", "1", {packages:["corechart"]});</script>
+<style>
+
+ body{
+  margin-left:auto;
+  margin-right:auto;
+  margin-TOP:100PX;
+  width:20em;
+  }
+
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+        .box {border:1px solid grey;background-color:#d3d3d3;}
+        .large {font-size:3000%;color:red;}
+        #div1 {background-color:blue;}
+        #div2 {background-color:red;}
+        #div3 {background-color:green;}
+        .contentDiv {height:800px;}
+
+</style>
 </head>
+
 <body>
-	<h1>Hello World Example</h1>
-	<p>This is a very basic "Hello World" example made up in HTML and CSS. See if you can change the size of the header text above.</p>
+	<h1 style="font-size:80PX;">Energy Footprint System</h1>
+	<br>
+	
+	<div class="input-group">
+ 
+	<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
+	<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
+	<br>
+	<input type="submit" value = "Login" style="width:320px">
+
+</div>
 </body>
+
 </html>
