@@ -35,6 +35,7 @@
 	<h1 style="font-size:80PX;">Energy Footprint System</h1>
 	<br>
 	
+	<form id="acount" onsubmit="return false;"  class="form-inline">
 	<div class="input-group">
  
 	<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
@@ -43,12 +44,15 @@
 	<input type="submit" value = "Login" style="width:320px">
 	</div>
 	<button> Test_Button</button>
+	</form>
 
 	<script>
 	$(document).ready(function(){
+	var a = document.getElementById('acount')
+
 	$("button").click(function(){
-		$.get("/api/userManagement/loginWeb/",function(data,status){
-			alert(data);
+		$.get("/api/userManagement/loginWeb/",[a.username.value,a.password.value],function(data,status){
+			alert(data)
 		});
 	});
 });
