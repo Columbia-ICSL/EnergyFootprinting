@@ -7,7 +7,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
- <script> google.load("visualization", "1", {packages:["corechart"]});</script>
 <style>
 
  body{
@@ -36,36 +35,36 @@
 	<br>
 	
 	<form id="acount" onsubmit="return false;"  class="form-inline">
-		<div class="input-group">
+	<div class="input-group">
  
-			<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
-			<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
-			<br>
-			<button style="width:320px"> Login</button>
-		</div>
-		
+	<input type="text" id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
+	<input type="text" id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
+	<br>
+	<button style="width:320px"> Test_Button</button>
+	</div>
 	</form>
 
 	<script>
 	$(document).ready(function(){
+		alert("hello");
 		$("button").click(function(){
 			var a = document.getElementById('acount');
 			if(a.userName.value == ""||a.passWord.value == ""){
-				alert("Username and password can not be empty!");
+				alert("Username and Password can not be empty!");
 			}
 			else{
 				$.post("/api/userManagement/loginWeb/",
 				a.userName.value+","+a.passWord.value,
 				function(data){
-					if(data == '1'){
-						alert("Wrong usename/password!")
+					if(data == "1"){
+						alert("Wrong usename/password!");
 					}
 					else{
-						alert("Login!")
+						alert("Login!");
 					}
 				});
-			});
-		}
+			}
+		});
 	});
 	</script>
 </body>
