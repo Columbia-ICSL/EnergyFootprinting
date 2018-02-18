@@ -37,16 +37,15 @@
 	<form id="acount" onsubmit="return false;"  class="form-inline">
 	<div class="input-group">
  
-	<input type="text" id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
-	<input type="text" id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
+	<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
+	<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
 	<br>
-	<button style="width:320px"> Test_Button</button>
+	<button style="width:320px">Login</button>
 	</div>
 	</form>
 
 	<script>
 	$(document).ready(function(){
-		alert("hello");
 		$("button").click(function(){
 			var a = document.getElementById('acount');
 			if(a.userName.value == ""||a.passWord.value == ""){
@@ -60,7 +59,7 @@
 						alert("Wrong usename/password!");
 					}
 					else{
-						alert("Login!");
+						self.location="index.html";
 					}
 				});
 			}
