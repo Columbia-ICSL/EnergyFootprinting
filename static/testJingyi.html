@@ -41,22 +41,31 @@
 			<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
 			<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
 			<br>
-			<input type="submit" value = "Login" style="width:320px">
+			<button style="width:320px"> Login</button>
 		</div>
-		<button> Test_Button</button>
+		
 	</form>
 
 	<script>
 	$(document).ready(function(){
-
-	$("button").click(function(){
-		var a = document.getElementById('acount');
-		$.post("/api/userManagement/loginWeb/",
+		$("button").click(function(){
+			var a = document.getElementById('acount');
+			if(a.userName.value == ""||a.passWord.value == ""){
+				alert("Username and password can not be empty!");
+			}
+			else{
+				$.post("/api/userManagement/loginWeb/",
 				a.userName.value+","+a.passWord.value,
-				function(data,status){
-					alert("data:"+data+"/n"+"status:"+status);
+				function(data){
+					if(data == '1'){
+						alert("Wrong usename/password!")
+					}
+					else{
+						alert("Login!")
+					}
 				});
-		});
+			});
+		}
 	});
 	</script>
 </body>
