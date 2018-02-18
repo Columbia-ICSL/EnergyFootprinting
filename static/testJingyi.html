@@ -36,14 +36,14 @@
 	<br>
 	
 	<form id="acount" onsubmit="return false;"  class="form-inline">
-	<div class="input-group">
+		<div class="input-group">
  
-	<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
-	<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
-	<br>
-	<input type="submit" value = "Login" style="width:320px">
-	</div>
-	<button> Test_Button</button>
+			<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
+			<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
+			<br>
+			<input type="submit" value = "Login" style="width:320px">
+		</div>
+		<button> Test_Button</button>
 	</form>
 
 	<script>
@@ -51,11 +51,13 @@
 	var a = document.getElementById('acount');
 
 	$("button").click(function(){
-		$.post("/api/userManagement/loginWeb/",[a.username.value,a.password.value],function(data,status){
-			alert("data:"+data+"/n"+"status:"+status);
+		$.post("/api/userManagement/loginWeb/",
+				a.username.value+","+a.password.value,
+				function(data,status){
+					alert("data:"+data+"/n"+"status:"+status);
+				});
 		});
 	});
-});
 	</script>
 </body>
 
