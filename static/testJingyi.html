@@ -48,11 +48,11 @@
 
 	<script>
 	$(document).ready(function(){
-	var a = document.getElementById('acount');
 
 	$("button").click(function(){
+		var a = document.getElementById('acount');
 		$.post("/api/userManagement/loginWeb/",
-				a.username.value+","+a.password.value,
+				a.userName.value+","+a.passWord.value,
 				function(data,status){
 					alert("data:"+data+"/n"+"status:"+status);
 				});
