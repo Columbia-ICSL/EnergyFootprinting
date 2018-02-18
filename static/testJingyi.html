@@ -48,11 +48,11 @@
 
 	<script>
 	$(document).ready(function(){
-	var a = document.getElementById('acount')
+	var a = document.getElementById('acount');
 
 	$("button").click(function(){
-		$.get("/api/userManagement/loginWeb/",[a.username.value,a.password.value],function(data,status){
-			alert(data)
+		$.post("/api/userManagement/loginWeb/",[a.username.value,a.password.value],function(data,status){
+			alert("data:"+data+"/n"+"status:"+status);
 		});
 	});
 });
