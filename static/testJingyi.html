@@ -41,8 +41,18 @@
 	<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
 	<br>
 	<input type="submit" value = "Login" style="width:320px">
+	</div>
+	<button> Test_Button</button>
 
-</div>
+	<script>
+	$(document).ready(function(){
+	$("button").click(function(){
+		$.get("/api/userManagement/loginWeb/",function(data,status){
+			document.write(data);
+		});
+	});
+});
+	</script>
 </body>
 
 </html>
