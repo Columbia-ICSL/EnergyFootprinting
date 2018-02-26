@@ -63,7 +63,12 @@
 				$.post("/api/userManagement/newUser/",
 				a.device.value+","+a.userName.value+","+a.email.value+","+a.passWord.value,
 				function(data){
-					alert(data);
+					if(data == "0"){
+						alert("Register Successed!");
+					}
+					else{
+						alert("User Exsits, please try again!");
+					}
 				});
 			}
 		});
