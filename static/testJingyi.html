@@ -40,13 +40,14 @@
 	<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
 	<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
 	<br>
-	<button style="width:320px">Login</button>
+	<button id = "login" style="width:320px">Log In</button>
+	<button id = "signup" style="width:320px">Sign Up</button>
 	</div>
 	</form>
 
 	<script>
 	$(document).ready(function(){
-		$("button").click(function(){
+		$("login").click(function(){
 			var a = document.getElementById('acount');
 			if(a.userName.value == ""||a.passWord.value == ""){
 				alert("Username and Password can not be empty!");
@@ -64,6 +65,11 @@
 				});
 			}
 		});
+		
+		$("button").click(function(){
+			self.location="SignUp.html";
+		});
+
 	});
 	</script>
 </body>
