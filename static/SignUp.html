@@ -43,12 +43,13 @@
 	<br>
 	<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
 	<br>
-	<button style="width:320px">Sign Up</button>
+	<button id = "signup" style="width:320px">Sign Up</button>
+	<button id = "login" style="width:320px">Log In</button>
 	</div>
 	</form>
 	<script>
 	$(document).ready(function(){
-		$("button").click(function(){
+		$("signup").click(function(){
 			var a = document.getElementById('sigup');
 			if(a.userName.value == ""){
 				alert("Username can not be empty!");
@@ -71,6 +72,10 @@
 					}
 				});
 			}
+		});
+
+		$("login").click(function(){
+			self.location="testJingyi.html";
 		});
 	});
 	</script>
