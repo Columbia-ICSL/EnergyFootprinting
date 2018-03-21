@@ -3,6 +3,7 @@ import datetime
 import os
 import calendar
 import time
+import csv
 
 #change to the path containing DBScrape.py.
 import DBScrape
@@ -50,7 +51,7 @@ class getFootprints:
 			except ValueError:
 				epoch = int(time.mktime(time.strptime(str(timestamp), pattern2)))
 
-				
+
 			self.timestamps.append(epoch)
 			for room in self.spaces:
 				self.footprints[room].append(0)
