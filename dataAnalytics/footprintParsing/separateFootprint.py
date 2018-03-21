@@ -1,6 +1,7 @@
 import sys
 import datetime
 import os
+import calendar
 
 #change to the path containing DBScrape.py.
 import DBScrape
@@ -31,8 +32,9 @@ class getFootprints:
 			self.footprints[room] = []
 
 	def getSnapshots(self, beginYear, beginMonth, beginDay, endYear, endMonth, endDay):
-		begin = datetime.datetime(beginYear, beginMonth, beginDay)
-		end = datetime.datetime(endYear, endMonth, endDay)
+		begin = calendar.timegm(datetime.datetime(beginYear, beginMonth, beginDay))
+		end = calendar.timegm(datetime.datetime(endYear, endMonth, endDay))
+
 		shots = self.databaseScrape.snapshots_col_appliances(begin, end)
 		printC("Found " + str(len(shots)) + " snapshots")
 		for shot in shots:
