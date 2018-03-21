@@ -10,8 +10,7 @@ print "This is the name of the script: ", sys.argv[0]
 print "Number of arguments: ", len(sys.argv)
 if len(sys.argv) != 7:
 	print "Supply arguments to this script. Example: python separateFootprint.py {beginYear} {beginMonth} {beginDay} {endYear} {endMonth} {endDay}"
-	return
-
+	assert(len(sys.argv) == 7)
 verbose = True
 def printC(text):
 	if verbose:
