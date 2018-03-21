@@ -42,7 +42,7 @@ class getFootprints:
 		printC("Found " + str(len(shots)) + " snapshots")
 		for shot in shots:
 			timestamp = shot["timestamp"]
-			pattern = '%Y-%m-%d %H:%M:%S'
+			pattern = '%Y-%m-%d %H:%M:%S.%f'
 			print(timestamp)
 			epoch = int(time.mktime(time.strptime(str(timestamp), pattern)))
 			self.timestamps.append(epoch)
