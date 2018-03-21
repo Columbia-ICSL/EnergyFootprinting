@@ -44,7 +44,7 @@ class getFootprints:
 			timestamp = shot["timestamp"]
 			pattern = '%Y-%m-%d %H:%M:%S'
 			print(timestamp)
-			epoch = int(time.mktime(time.strptime(timestamp, pattern)))
+			epoch = int(time.mktime(time.strptime(str(timestamp), pattern)))
 			self.timestamps.append(epoch)
 			for room in self.spaces:
 				self.spaces[room].append(0)
