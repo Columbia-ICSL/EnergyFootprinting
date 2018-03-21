@@ -57,7 +57,7 @@ class getFootprints:
 					if room not in self.footprints:
 						print "room " + room + " not in space database"
 						continue
-					self.spaces[room][-1] = self.spaces[room][-1] + appliance["value"]/numRooms
+					self.footprints[room][-1] = self.footprints[room][-1] + appliance["value"]/numRooms
 
 	def saveTimeSeries(self):
 		try:
