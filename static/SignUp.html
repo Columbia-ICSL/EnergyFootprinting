@@ -1,7 +1,7 @@
 <!doctype>
 <html>
 <head>
-<title> The Energy Footprint System Login Page </title>
+<title> The Energy Footprint System Sign Up Page </title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -13,7 +13,7 @@
   margin-left:auto;
   margin-right:auto;
   margin-TOP:100PX;
-  width:20em;
+  width:24em;
   }
 
 .starter-template {
@@ -31,45 +31,53 @@
 </head>
 
 <body>
-	<h1 style="font-size:80PX;">Energy Footprint System</h1>
-	<br>
-	
-	<form id="acount" onsubmit="return false;"  class="form-inline">
+	<h1 style="font-size:75PX; padding-left:15px;">Sign Up</h1>
+	<form id="sigup" onsubmit="return false;"  class="form-inline">
 	<div class="input-group">
- 
+
+	<input hidden id="device" name = "device" style="width:320px" type="text"  placeholder="Device ID" value="Default" aria-describedby="basic-addon1">
+	<br>
 	<input id="userName" name = "userName" style="width:320px" type="text"  placeholder="Username" aria-describedby="basic-addon1">
+	<br>
+	<input id="email" name = "email" style="width:320px" type="email"  placeholder="E-mail" aria-describedby="basic-addon1">
+	<br>
 	<input id="passWord" name = "passWord" style="width:320px" type="password"  placeholder="Password" aria-describedby="basic-addon1">
 	<br>
-	<button id = "login" style="width:320px">Log In</button>
 	<button id = "signup" style="width:320px">Sign Up</button>
+	<button id = "login" style="width:320px">Log In</button>
 	</div>
 	</form>
-
 	<script>
 	$(document).ready(function(){
-		$("#login").click(function(){
-			var a = document.getElementById('acount');
-			if(a.userName.value == ""||a.passWord.value == ""){
-				alert("Username and Password can not be empty!");
+		$("#signup").click(function(){
+			var a = document.getElementById('sigup');
+			if(a.userName.value == ""){
+				alert("Username can not be empty!");
+			}
+			else if(a.email.value == ""){
+				alert("E-mail can not be empty!");
+			}
+			else if(a.passWord.value == ""){
+				alert("Password can not be empty!");
 			}
 			else{
-				$.post("/api/userManagement/loginWeb/",
-				a.userName.value+","+a.passWord.value,
+				$.post("/api/userManagement/newUser/",
+				a.device.value+","+a.userName.value+","+a.email.value+","+a.passWord.value,
 				function(data){
-					if(data == "1"){
-						alert("Wrong usename/password!");
+					if(data == "0"){
+						alert("Register Successed!");
+						self.location="testJingyi.html";
 					}
 					else{
-						self.location="index.html";
+						alert("User Exsits, please try again!");
 					}
 				});
 			}
 		});
-		
-		$("#signup").click(function(){
-			self.location="SignUp.html";
-		});
 
+		$("#login").click(function(){
+			self.location="testJingyi.html";
+		});
 	});
 	</script>
 </body>
