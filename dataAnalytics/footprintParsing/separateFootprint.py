@@ -42,9 +42,15 @@ class getFootprints:
 		printC("Found " + str(len(shots)) + " snapshots")
 		for shot in shots:
 			timestamp = shot["timestamp"]
-			pattern = '%Y-%m-%d %H:%M:%S.%f'
+			pattern1 = '%Y-%m-%d %H:%M:%S.%f'
+			pattern2 = '%Y-%m-%d %H:%M:%S'
 			print(timestamp)
-			epoch = int(time.mktime(time.strptime(str(timestamp), pattern)))
+			try:
+				epoch = int(time.mktime(time.strptime(str(timestamp), pattern1)))
+			except ValueError:
+				epoch = int(time.mktime(time.strptime(str(timestamp), pattern2)))
+
+				
 			self.timestamps.append(epoch)
 			for room in self.spaces:
 				self.footprints[room].append(0)
