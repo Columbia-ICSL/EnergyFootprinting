@@ -1,7 +1,7 @@
 import sys
 import datetime
 import os
-sys.path.append('/Users/peterwei/Desktop/python_webservice/dataAnalytics')
+
 #change to the path containing DBScrape.py.
 import DBScrape
 from spaceNames import S
@@ -17,6 +17,8 @@ def printC(text):
 		print text
 
 parameters = sys.argv[1:]
+for i in range(len(parameters)):
+	parameters[i] = int(parameters[i])
 
 class getFootprints:
 	def __init__(self):
