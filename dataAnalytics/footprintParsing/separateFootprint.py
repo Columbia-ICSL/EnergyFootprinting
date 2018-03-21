@@ -47,7 +47,7 @@ class getFootprints:
 			epoch = int(time.mktime(time.strptime(str(timestamp), pattern)))
 			self.timestamps.append(epoch)
 			for room in self.spaces:
-				self.spaces[room].append(0)
+				self.footprints[room].append(0)
 
 			for applianceName in shot["data"]:
 				appliance = shot["data"][applianceName]
