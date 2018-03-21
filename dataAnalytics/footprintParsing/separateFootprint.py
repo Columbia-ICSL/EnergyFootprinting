@@ -32,8 +32,10 @@ class getFootprints:
 			self.footprints[room] = []
 
 	def getSnapshots(self, beginYear, beginMonth, beginDay, endYear, endMonth, endDay):
-		begin = calendar.timegm(datetime.datetime(beginYear, beginMonth, beginDay))
-		end = calendar.timegm(datetime.datetime(endYear, endMonth, endDay))
+		begin = datetime.datetime(beginYear, beginMonth, beginDay)
+		end = datetime.datetime(endYear, endMonth, endDay)
+		begin = calendar.timegm(begin.utctimetuple())
+		end = calendar.timegm(end.utctimetuple())
 
 		shots = self.databaseScrape.snapshots_col_appliances(begin, end)
 		printC("Found " + str(len(shots)) + " snapshots")
