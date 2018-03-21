@@ -2,6 +2,7 @@ import sys
 import datetime
 import os
 import calendar
+import time
 
 #change to the path containing DBScrape.py.
 import DBScrape
