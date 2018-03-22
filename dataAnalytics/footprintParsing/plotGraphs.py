@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-
+import matplotlib
+matplotlib.use('GTK')
 class footprintPlots:
 	def __init__(self):
 		print "Hello World!"
