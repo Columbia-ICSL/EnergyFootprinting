@@ -19,3 +19,4 @@ class footprintPlots:
 		plt.ylabel('Energy Consumption')
 		plt.legend(handles=handlerArray)
 		plt.show(1)
+		print "Finish!"
