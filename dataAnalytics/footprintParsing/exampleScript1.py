@@ -1,5 +1,6 @@
 from separateFootprint import getFootprints
 import plotGraphs
+import matplotlib.dates as mdates
 import sys
 
 from spaceNames import S
