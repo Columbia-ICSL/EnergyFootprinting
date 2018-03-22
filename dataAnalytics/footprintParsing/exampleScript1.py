@@ -1,6 +1,6 @@
 from separateFootprint import getFootprints
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('	T4Agg')
 from plotGraphs import footprintPlots
 
 import sys
