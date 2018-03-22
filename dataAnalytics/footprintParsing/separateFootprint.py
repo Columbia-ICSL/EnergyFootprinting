@@ -20,7 +20,7 @@ class getFootprints:
 		for room in self.spaces:
 			self.footprints[room] = []
 
-	def printC(text):
+	def printC(self, text):
 		if verbose:
 			print text
 	
