@@ -1,4 +1,4 @@
-import separateFootprint
+from separateFootprint import getFootprints
 import plotGraphs
 import sys
 
