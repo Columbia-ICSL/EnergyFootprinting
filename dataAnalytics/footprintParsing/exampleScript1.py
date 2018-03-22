@@ -1,6 +1,6 @@
 from separateFootprint import getFootprints
 import matplotlib
-matplotlib.use('	T4Agg')
+matplotlib.use('QT4Agg')
 from plotGraphs import footprintPlots
 
 import sys
