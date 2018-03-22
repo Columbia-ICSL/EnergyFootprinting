@@ -1,5 +1,6 @@
 import separateFootprint
 import plotGraphs
+import sys
 
 from spaceNames import S
 #contains the spaces
