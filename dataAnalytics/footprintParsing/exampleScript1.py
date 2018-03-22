@@ -16,5 +16,20 @@ for i in range(len(parameters)):
 	parameters[i] = int(parameters[i])
 
 GF = getFootprints(S, True)
-GF.getSnapshots(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5])
+footprints = GF.getSnapshots(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5])
+timestamps = GF.getTimestamps()
 GF.saveTimeSeries()
+
+myFmt = mdates.DateFormatter('%H:%M')
+
+plt.figure(1)
+handlerArray = []
+for room in footprints:
+	a, = plt.plot(timestamps, footprints[room], label=room)
+	handlerArray.append(a)
+plt.gcf().autofmt_xdate()
+plt.gca().xaxis.set_major_formatter(myFmt)
+plt.xlabel('Time of Day')
+plt.ylabel('Energy Consumption')
+plt.legend(handles=handlerArray)
+plt.show()

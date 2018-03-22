@@ -3,7 +3,6 @@ import os
 import calendar
 import time
 import csv
-
 #change to the path containing DBScrape.py.
 import DBScrape
 
@@ -43,7 +42,7 @@ class getFootprints:
 				epoch = int(time.mktime(time.strptime(str(timestamp), pattern2)))
 
 
-			self.timestamps.append(epoch)
+			self.timestamps.append(timestamp)
 			for room in self.spaces:
 				self.footprints[room].append(0)
 
@@ -56,6 +55,16 @@ class getFootprints:
 						print "room " + room + " not in space database"
 						continue
 					self.footprints[room][-1] = self.footprints[room][-1] + appliance["value"]/numRooms
+		return self.footprints
+
+	def getTimestamps(self):
+		return self.timestamps
+
+	def getRoomFootprint(self, room):
+		if room not in self.footprints:
+			return None
+		else:
+			return self.footprints[room]
 
 	def saveTimeSeries(self):
 		try:
