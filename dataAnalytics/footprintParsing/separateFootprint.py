@@ -21,7 +21,7 @@ class getFootprints:
 			self.footprints[room] = []
 
 	def printC(self, text):
-		if verbose:
+		if self.verbose:
 			print text
 	
 	def getSnapshots(self, beginYear, beginMonth, beginDay, endYear, endMonth, endDay):
