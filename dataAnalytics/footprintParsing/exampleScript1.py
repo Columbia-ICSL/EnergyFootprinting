@@ -1,6 +1,6 @@
 from separateFootprint import getFootprints
 import matplotlib
-matplotlib.use('GTK')
+matplotlib.use('Agg')
 from plotGraphs import footprintPlots
 
 import sys
