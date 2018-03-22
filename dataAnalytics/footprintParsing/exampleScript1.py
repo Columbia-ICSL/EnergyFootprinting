@@ -1,6 +1,6 @@
 from separateFootprint import getFootprints
-import plotGraphs
-import matplotlib.dates as mdates
+from plotGraphs import footprintPlots
+
 import sys
 
 from spaceNames import S
@@ -21,16 +21,5 @@ footprints = GF.getSnapshots(parameters[0], parameters[1], parameters[2], parame
 timestamps = GF.getTimestamps()
 GF.saveTimeSeries()
 
-myFmt = mdates.DateFormatter('%H:%M')
-
-plt.figure(1)
-handlerArray = []
-for room in footprints:
-	a, = plt.plot(timestamps, footprints[room], label=room)
-	handlerArray.append(a)
-plt.gcf().autofmt_xdate()
-plt.gca().xaxis.set_major_formatter(myFmt)
-plt.xlabel('Time of Day')
-plt.ylabel('Energy Consumption')
-plt.legend(handles=handlerArray)
-plt.show()
+FP = footprintPlots()
+FP.plotFootprints(footprints, timestamps)
