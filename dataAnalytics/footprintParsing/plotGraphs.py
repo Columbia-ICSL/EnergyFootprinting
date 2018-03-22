@@ -1,12 +1,13 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-
+plt.switch_backend('agg')
 class footprintPlots:
 	def __init__(self):
 		print "Hello World!"
 
 	def plotFootprints(self, footprints, timestamps):
 		myFmt = mdates.DateFormatter('%H:%M')
+		print "Showing plot..."
 		plt.figure(1)
 		handlerArray = []
 		for room in footprints:
@@ -17,4 +18,4 @@ class footprintPlots:
 		plt.xlabel('Time of Day')
 		plt.ylabel('Energy Consumption')
 		plt.legend(handles=handlerArray)
-		plt.show()
+		plt.show(1)
