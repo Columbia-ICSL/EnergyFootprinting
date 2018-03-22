@@ -8,8 +8,10 @@ import csv
 import DBScrape
 
 
+
 class getFootprints:
-	def __init__(self, S):
+	def __init__(self, S, verbose):
+		self.verbose = verbose
 		self.databaseScrape = DBScrape.DBScrape()
 		self.timestamps = []
 		self.footprints = {}
@@ -18,6 +20,10 @@ class getFootprints:
 		for room in self.spaces:
 			self.footprints[room] = []
 
+	def printC(text):
+		if verbose:
+			print text
+	
 	def getSnapshots(self, beginYear, beginMonth, beginDay, endYear, endMonth, endDay):
 		begin = datetime.datetime(beginYear, beginMonth, beginDay)
 		end = datetime.datetime(endYear, endMonth, endDay)
@@ -25,12 +31,12 @@ class getFootprints:
 		end = calendar.timegm(end.utctimetuple())
 
 		shots = self.databaseScrape.snapshots_col_appliances(begin, end)
-		printC("Found " + str(len(shots)) + " snapshots")
+		self.printC("Found " + str(len(shots)) + " snapshots")
 		for shot in shots:
 			timestamp = shot["timestamp"]
 			pattern1 = '%Y-%m-%d %H:%M:%S.%f'
 			pattern2 = '%Y-%m-%d %H:%M:%S'
-			print(timestamp)
+			self.printC(timestamp)
 			try:
 				epoch = int(time.mktime(time.strptime(str(timestamp), pattern1)))
 			except ValueError:
