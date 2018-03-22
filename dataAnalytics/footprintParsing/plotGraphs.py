@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-plt.switch_backend('tkagg')
+plt.switch_backend('agg')
 class footprintPlots:
 	def __init__(self):
 		print "Hello World!"
