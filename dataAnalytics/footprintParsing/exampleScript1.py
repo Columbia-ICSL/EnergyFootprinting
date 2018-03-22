@@ -18,6 +18,6 @@ parameters = sys.argv[1:]
 for i in range(len(parameters)):
 	parameters[i] = int(parameters[i])
 
-GF = getFootprints()
+GF = getFootprints(S)
 GF.getSnapshots(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5])
 GF.saveTimeSeries()

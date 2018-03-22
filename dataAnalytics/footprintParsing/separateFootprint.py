@@ -9,7 +9,7 @@ import DBScrape
 
 
 class getFootprints:
-	def __init__(self):
+	def __init__(self, S):
 		self.databaseScrape = DBScrape.DBScrape()
 		self.timestamps = []
 		self.footprints = {}
