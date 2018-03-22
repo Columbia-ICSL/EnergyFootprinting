@@ -1,7 +1,8 @@
 from separateFootprint import getFootprints
-from plotGraphs import footprintPlots
 import matplotlib
 matplotlib.use('GTK')
+from plotGraphs import footprintPlots
+
 import sys
 
 from spaceNames import S
