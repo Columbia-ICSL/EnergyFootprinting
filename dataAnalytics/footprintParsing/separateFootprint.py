@@ -122,7 +122,7 @@ class getParameters:
 		except OSError:
 			pass
 		with open(filename, 'wb') as csvfile:
-			footprintWriter = csv.writer(csvfile, delimiter=' ',
+			footprintWriter = csv.writer(csvfile, delimiter=',',
 				quotechar=' ', quoting=csv.QUOTE_MINIMAL)
 			footprintWriter.writerow(["timestamps"] + self.timestamps)
 			footprintWriter.writerow([p] + self.parameter)
