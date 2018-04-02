@@ -124,5 +124,5 @@ class getParameters:
 		with open(filename, 'wb') as csvfile:
 			footprintWriter = csv.writer(csvfile, delimiter=',',
 				quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-			footprintWriter.writerow(["timestamps"] + self.timestamps)
-			footprintWriter.writerow([p] + self.parameter)
+			footprintWriter.writerow(self.timestamps)
+			footprintWriter.writerow(self.parameter)
