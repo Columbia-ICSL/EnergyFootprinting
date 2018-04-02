@@ -13,5 +13,5 @@ for i in range(len(parameters)):
 
 p = sys.argv[1]
 
-GP = getParameters()
+GP = getParameters(True)
 GP.getParameter(p, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5])
