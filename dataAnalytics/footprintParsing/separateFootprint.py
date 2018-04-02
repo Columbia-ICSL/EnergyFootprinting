@@ -80,4 +80,49 @@ class getFootprints:
 
 
 
+class getParameters:
+	def __init__(self, verbose):
+		self.databaseScrape = DBScrape.DBScrape()
+		self.verbose = verbose
+		self.timestamps = []
+		self.parameter = []
 
+	def printC(self, text):
+		if self.verbose:
+			print text
+
+	def getParameter(self, p, beginYear, beginMonth, beginDay, endYear, endMonth, endDay):
+		self.parameter = []
+		begin = datetime.datetime(beginYear, beginMonth, beginDay)
+		end = datetime.datetime(endYear, endMonth, endDay)
+		begin = calendar.timegm(begin.utctimetuple())
+		end = calendar.timegm(end.utctimetuple())
+
+		shots = self.databaseScrape.snapshots_parameters(begin, end)
+		self.printC("Found " + str(len(shots)) + " snapshots")
+		for shot in shots:
+			timestamp = shot["timestamp"]
+			pattern1 = '%Y-%m-%d %H:%M:%S.%f'
+			pattern2 = '%Y-%m-%d %H:%M:%S'
+			self.printC(timestamp)
+			try:
+				epoch = int(time.mktime(time.strptime(str(timestamp), pattern1)))
+			except ValueError:
+				epoch = int(time.mktime(time.strptime(str(timestamp), pattern2)))
+			self.timestamps.append(timestamp)
+			if p in shot["data"]:
+				self.parameter.append(shot["data"][p])
+		self.saveTimeSeries(p)
+		return self.parameter
+
+	def saveTimeSeries(self, p):
+		filename = p + '.csv'
+		try:
+			os.remove(filename)
+		except OSError:
+			pass
+		with open(filename, 'wb') as csvfile:
+			footprintWriter = csv.writer(csvfile, delimiter=' ',
+				quotechar=' ', quoting=csv.QUOTE_MINIMAL)
+			footprintWriter.writerow(["timestamps"] + self.timestamps)
+			footprintWriter.writerow([p] + self.parameter)
