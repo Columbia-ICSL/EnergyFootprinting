@@ -1,0 +1,624 @@
+$def with (name)
+<!doctype>
+<html>
+<head>
+<title> The Energy Footprint System query interface </title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
+ <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+ <script> google.load("visualization", "1", {packages:["corechart","timeline"]});</script>
+ <script src="http://code.highcharts.com/highcharts.js"></script>
+<style>
+body {
+  padding-top: 50px;
+  position: relative;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+        .box {border:1px solid grey;background-color:#d3d3d3;}
+        .large {font-size:3000%;color:red;}
+        #div1 {background-color:blue;}
+        #div2 {background-color:red;}
+        #div3 {background-color:green;}
+        .contentDiv {height:800px;}
+
+</style>
+</head>
+<body >
+   <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header"> <a href="" class="navbar-brand">My Website $name</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Index</a></li>
+                    <li class="active"><a href="person.html">Personal Query</a></li>
+                    <li><a href="space.html">Spatial Query</a></li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Realtime <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li class="dropdown-header">Realtime Data Visualization</li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="realtime-person.html">Personal Footprint</a></li>
+                        <li><a href="realtime-space.html">Spatial Footprint</a></li>
+                      </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="container">
+      <div class="starter-template">
+        <h1>Personal Footprint Query</h1>	
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Query for single person
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+		<form id="form1" onsubmit="return false;"  class="form-inline">
+		  <div class="form-group">
+		    <label for="personID1">UserID</label>
+		    <input type="text" class="form-control" id="personID1" placeholder="UNI" value="fengyi">
+		  </div>
+		  <hr/>
+		  <div class="form-group">
+		    <label for="startDate1">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate1" data-date-prefill="one-day-before">
+		  </div>
+		  <div class="form-group">
+		    <label for="endDate1">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate1" data-date-prefill="now">
+		  </div>
+		  <!--<div class="checkbox">
+		    <label>
+		      <input type="checkbox"> Check me out
+		    </label>
+		  </div>-->
+		  <button type="button" class="btn btn-default">Query</button>
+		</form>
+		<div id="chart1" class="panel-body" style="height:500px;display:none;"></div>
+		<script>
+		var ch1=document.getElementById('chart1');
+		var frm1=document.getElementById('form1');
+ 		$(frm1).children('button').on('click', function () {
+		    var $btn = $(this).button('loading');
+		    var personID=frm1.personID1.value;
+		    if(personID.length<2){
+		    	$(frm1.personID1).parent().addClass('has-error');
+		    	$btn.button('reset');
+		    	return;
+		    }
+		    $(frm1.personID1).removeClass('has-error');
+		    $.get("/api/Query/QueryPerson/"+personID,{
+		    		start:getUTCSeconds(frm1.startDate1.value),
+		    		end:getUTCSeconds(frm1.endDate1.value),
+		    		client:"AJAX debug frontend"
+	    		},
+		    	function(data,status){
+		    	console.log(data,status);
+		    	$btn.button('reset');
+		    	render1(data);
+		    },'json').fail(function() {
+			    alert('Error!'); // or whatever			    
+			    $btn.button('reset');
+			});
+		  });
+		  
+		  function render1(input){
+		  	input=input.reverse();
+			function distinct_types(input){
+	          var types={};
+	          input.map(function(s){
+	            if(s.type_aggregate)
+	              for(var t in s.type_aggregate)
+	                types[t]=true;
+	          });
+	          var ret=[];
+	          for(var t in types)
+	            ret.push(t);
+	          return ret;
+	        }
+	        var types=distinct_types(input);
+	        var type_indices={};for(var i in types)type_indices[types[i]]=1*i;
+	        console.log(types,type_indices);
+	        var data = new google.visualization.DataTable();
+	        var dlen=0;
+	        dlen++;data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        types.forEach(function(t){data.addColumn('number', t);dlen++;});
+
+	        dlen++;data.addColumn({type:'string', role:'annotation'}); // annotation role col.
+	        dlen++;data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
+	        console.log('dlen',dlen);
+
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          var ret=new Array(dlen);
+	          for(var j=1;j<dlen-2;j++)ret[j]=0;
+	          for(var t in item.type_aggregate){
+	            ret[ type_indices[t]+1 ]=item.type_aggregate[t].value;
+	          }
+	          if(item.roomID!=lastR){
+	            lastR=''+item.roomID;
+	            ret[dlen-2]=lastR;
+	            ret[dlen-1]="Entered "+lastR;
+	            console.log("enter room",lastR,item.timestamp);
+	          }
+
+	          if(!item.timestamp)return;
+	          if(ret[0]!=undefined)alert('index access violation');
+	          ret[0]=new Date(item.timestamp*1000);
+	          //console.log('row',ret);
+	          data.addRow(ret);
+	        };
+
+	        
+
+			var chart = new google.visualization.AreaChart(ch1);
+	        var options = {
+	          displayAnnotations: 1,
+	          isStacked: 1,
+	          //width:800,
+	          //height:500,
+	          //annotations: {'*': {style: 'line'}}
+	        };
+	        $(ch1).show(0,function(){
+	        	chart.draw(data, options);
+	        	$(ch1).slideToggle(0).slideToggle(1000);	
+	        });
+		  }
+		  </script>
+
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+           Combine Multiple Persons
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        
+        <form id="form2" onsubmit="return false;"  class="form-inline">
+		  <div class="form-group">
+		    <label for="personID2">UserIDs, comma separated</label>
+		    <input type="text" class="form-control" id="personID2" placeholder="UNI" value="xc2340,fengyi">
+		  </div>
+		  <hr/>
+		  <div class="form-group">
+		    <label for="startDate2">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate2"  data-date-prefill="one-day-before">
+		  </div>
+		  <div class="form-group">
+		    <label for="endDate2">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate2"  data-date-prefill="now">
+		  </div>
+		  <div class="checkbox">
+		    <label>
+		      <input type="checkbox" id="chk2"> Stack
+		    </label>
+		  </div>
+		  <button type="button" class="btn btn-default">Query</button>
+		</form>		
+		<div id="chart2" class="panel-body" style="height:500px;display:none;"></div>
+		<script>
+		var ch2=document.getElementById('chart2');
+		var frm2=document.getElementById('form2');
+		var people;
+ 		$(frm2).children('button').on('click', function () {
+		    var $btn = $(this).button('loading');
+		    var personIDs=frm2.personID2.value;
+		    people=personIDs.split(",");
+		    if(people.length<2){
+		    	$(frm2.personID2).parent().addClass('has-error');
+		    	$btn.button('reset');
+		    	return;
+		    }
+		    $(frm2.personID2).removeClass('has-error');
+		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    		start:getUTCSeconds(frm2.startDate2.value),
+		    		end:getUTCSeconds(frm2.endDate2.value),
+		    		client:"AJAX debug frontend"
+	    		},
+		    	function(data,status){
+		    	console.log(data,status);
+		    	$btn.button('reset');
+		    	render2(data,people);
+		    },'json').fail(function() {
+			    alert('Error!'); // or whatever			    
+			    $btn.button('reset');
+			});
+		  });
+ 		
+
+ 		function render2(input, people){
+			var N=input.length;
+		  	input=input.reverse();
+		  	var people_indices={};
+		  	
+	        var data = new google.visualization.DataTable();
+	        var dlen=0;
+	        
+	        dlen++;data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        people.forEach(function(t){
+	        	data.addColumn('number', t);
+	        	people_indices[t]=dlen;
+				data.addColumn({type:'string', role:'annotation'}); // annotation role col.
+        		data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
+        		dlen+=3;
+	        });
+
+	        console.log('dlen',dlen);
+
+	        //sanitation!
+	        for(var i=0;i<N;i++){
+	        	for(var ID in people_indices)
+	        		if(typeof input[i].data[ID]!='object')input[i].data[ID]={roomID:undefined}
+	        }
+
+	        for(var i=0;i<N;i++){
+	        	var flag=false;
+	        	var item=input[i];
+	        	var ret=new Array(dlen);
+	        	ret[0]=new Date(item.timestamp*1000);
+	        	for(var personID in item.data){
+	        		var idx=people_indices[personID];
+	        		ret[idx]=item.data[personID]["value"];
+	        		if(i==0 || (item.data[personID]["roomID"] != input[i-1].data[personID]["roomID"] ))
+	        		{
+	        			var room=item.data[personID]["roomID"];
+	        			if(!room || room=="unknown"){
+	        				room="unknown";
+	        				ret[idx]=0;
+	        			}
+	        			ret[idx+1]=room;
+	        			ret[idx+2]=personID+" entered "+room;
+	        			console.log("enter room",item.data[personID]["roomID"],personID,item.timestamp);
+	        		}
+	        	}
+	          data.addRow(ret);
+	        }
+
+	        var isStacked=frm2.chk2.checked;
+
+			var chart = new google.visualization.AreaChart(ch2);
+	        var options = {
+	          displayAnnotations: 1,
+	          isStacked: isStacked,
+	          //width:800,
+	          //height:500,
+	          //annotations: {'*': {style: 'line'}}
+	        };
+	        $(ch2).show(0,function(){
+	        	chart.draw(data, options);
+	        	$(ch2).slideToggle(0).slideToggle(1000);	
+	        });
+		  }
+		</script>
+
+      </div>
+    </div>
+  </div>
+
+
+  
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+           Location History of persons
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+        
+        <form id="form3" onsubmit="return false;"  class="form-inline">
+		  <div class="form-group">
+		    <label for="personID3">UserIDs, comma separated</label>
+		    <input type="text" class="form-control" id="personID3" placeholder="UNI" value="fengyi,xc2340">
+		  </div>
+		  <hr/>
+		  <div class="form-group">
+		    <label for="startDate3">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate3"  data-date-prefill="one-day-before">
+		  </div>
+		  <div class="form-group">
+		    <label for="endDate3">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate3"  data-date-prefill="now">
+		  </div>
+		  <!--<div class="checkbox">
+		    <label>
+		      <input type="checkbox"> Check me out
+		    </label>
+		  </div>-->
+		  <button type="button" class="btn btn-default">Query</button>
+		</form>
+		<div id="chart3" class="panel-body" style="height:500px;display:none;"></div>
+		<script>
+		var ch3=document.getElementById('chart3');
+		var frm3=document.getElementById('form3');
+		var people;
+ 		$(frm3).children('button').on('click', function () {
+		    var $btn = $(this).button('loading');
+		    var personIDs=frm3.personID3.value;
+		    people=personIDs.split(",");
+		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    		start:getUTCSeconds(frm3.startDate3.value),
+		    		end:getUTCSeconds(frm3.endDate3.value),
+		    		client:"AJAX debug frontend"
+	    		},
+		    	function(data,status){
+		    	console.log(data,status);
+		    	$btn.button('reset');
+		    	render3(data,people);
+		    },'json').fail(function() {
+			    alert('Error!'); // or whatever			    
+			    $btn.button('reset');
+			});
+		  });
+ 		
+
+ 		function render3(input, people){
+			var N=input.length;
+		  	input=input.reverse();
+
+		  	var time_slice=10*1000;//10 second is the minimum reporting interval of monitor app?
+		  	var people_indices={};
+		  	people.forEach(function(ID){people_indices[ID]=true;});
+	        //sanitation!
+	        for(var i=0;i<N;i++){
+	        	for(var ID in people_indices)
+	        		if(typeof input[i].data[ID]!='object')input[i].data[ID]={roomID:undefined}
+	        }
+
+ 			var dataTable = new google.visualization.DataTable();
+			dataTable.addColumn({ type: 'string', id: 'Person ID' });
+			dataTable.addColumn({ type: 'string', id: 'Room' });
+			dataTable.addColumn({ type: 'datetime', id: 'Start' });
+			dataTable.addColumn({ type: 'datetime', id: 'End' });
+
+	    	//generate by each person
+	    	for(var ID in people_indices){
+	    		console.log("id",ID);
+	    		for(var i=0;i<N;i++){
+	    			var startR=input[i].data[ID].roomID;
+	    			var ptr=i;
+	    			while(ptr<N-1 && input[ptr+1].data[ID].roomID==startR)ptr++;
+	    			console.log('range',i,ptr);
+	    			var startTS=new Date(input[i].timestamp*1000);
+	    			var endTS=new Date(input[ptr].timestamp*1000+(i==ptr?time_slice:0));
+	    			if(startR && startR!="undefined")
+	    			{
+		    			dataTable.addRow([ ID, startR, startTS, endTS ]);
+		    			console.log([ ID, ""+startR, startTS, endTS ]);
+	    			}
+	    			//var ts=input[i].timestamp;
+	    			i=ptr;
+	    			continue;
+	    		}
+	    	}
+			var chart = new google.visualization.Timeline(ch3);
+	        $(ch3).show(0,function(){
+	        	chart.draw(dataTable);
+	        	$(ch3).slideToggle(0).slideToggle(1000);	
+	        });
+
+ 		}
+		</script>
+
+      </div>
+    </div>
+  </div>
+
+
+  
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingFour">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          Comparison Between Person
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+      <div class="panel-body">
+       	 <form id="form4" onsubmit="return false;"  class="form-inline">
+		  <div class="form-group">
+		    <label for="personID4">UserIDs, comma separated</label>
+		    <input type="text" class="form-control" id="personID4" placeholder="UNI" value="xc2340,fengyi">
+		  </div>
+		  <hr/>
+		  <div class="form-group">
+		    <label for="startDate4">startDate</label>
+		    <input type="datetime-local" class="form-control" id="startDate4"  data-date-prefill="midnight-before">
+		  </div>
+		  <div class="form-group">
+		    <label for="endDate4">endDate</label>
+		    <input type="datetime-local" class="form-control" id="endDate4"  data-date-prefill="now">
+		  </div>
+		  <button type="button" class="btn btn-default">Query</button>
+		</form>		
+		<div id="chart4" class="panel-body" style="height:500px;display:none;"></div>
+		<script>
+		var ch4=document.getElementById('chart4');
+		var frm4=document.getElementById('form4');
+		var people;
+ 		$(frm4).children('button').on('click', function () {
+		    var $btn = $(this).button('loading');
+		    var personIDs=frm4.personID4.value;
+		    people=personIDs.split(",");
+		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    		start:getUTCSeconds(frm4.startDate4.value),
+		    		end:getUTCSeconds(frm4.endDate4.value),
+		    		client:"AJAX debug frontend"
+	    		},
+		    	function(data,status){
+		    	console.log(data,status);
+		    	$btn.button('reset');
+		    	render4(data,people);
+		    },'json').fail(function() {
+			    alert('Error!'); // or whatever			    
+			    $btn.button('reset');
+			});
+		  });
+ 		
+
+ 		function render4(input, people){
+ 			d=input;
+ 			var
+ 				totalCon={}, roomCon={};
+ 			people.forEach(function(p){
+ 				totalCon[p]=0;roomCon[p]={};
+ 			});
+ 			for(var i=0;i<input.length;i++)
+ 				try{
+ 					var tdiff=60;
+ 					if(input[i+1] && input[i+1].timestap) tdiff=input[i+1].timestamp-input[i].timestamp;
+ 					var item=input[i].data;
+ 					people.forEach(function(p){
+ 						if(item[p]){
+ 							var thisV=item[p].value*tdiff;//unit: W * s
+ 							thisV=thisV/1000/3600;//unit: kW * h
+ 							totalCon[p]+=thisV;
+ 							var r=item[p].roomID;
+ 							roomCon[p][r] = roomCon[p][r] || 0;
+ 							roomCon[p][r]+=thisV;
+ 						}
+ 					});
+ 				}
+ 				catch(e){
+ 					console.log("error parsing input at",i,input[i]);
+	 			}
+
+ 			var formattedTotalCon=[], formattedRoomCon=[];
+ 			var colors = Highcharts.getOptions().colors;
+ 			people.forEach(function(p,i){
+ 				formattedTotalCon.push({
+		            name: p,
+		            y: totalCon[p],
+		            color: colors[i]
+		        });
+		        var j=0;
+		        for(var r in roomCon[p]){
+		        	j++;
+		        	formattedRoomCon.push({
+		            	name: p + " at " +r,
+		            	y: roomCon[p][r],
+		            	color: colors[i],
+		            	brightness: j%2?0.2:0
+		        	});
+		        }
+		        
+ 			});
+
+			$('#chart4').show().highcharts({
+		        chart: {
+		            type: 'pie'
+		        },
+		        title: {
+		            text: 'Drilldown of footprint by person ~ room'
+		        },
+		        yAxis: {
+		            title: {
+		                text: 'Total percent market share'
+		            }
+		        },
+		        plotOptions: {
+		            pie: {
+		                shadow: true,
+		                center: ['50%', '50%']
+		            }
+		        },
+		        tooltip: {
+		            valueSuffix: 'kWh'
+		        },
+		        series: [{
+		            name: 'Consumption',
+		            data: formattedTotalCon,
+		            size: '55%',
+		            dataLabels: {
+		                formatter: function () {
+		                    // display only if larger than 1
+		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
+		                },
+		              distance:-50
+		            }
+		        }, {
+		            name: 'Consumption by room',
+		            data: formattedRoomCon,
+		            size: '80%',
+		            innerSize: '90%',
+		            dataLabels: {
+		                formatter: function () {
+		                    // display only if larger than 1
+		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
+		                }
+		            }
+		        }]
+		    });
+ 		}
+
+		</script>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </div><!-- /.container -->
+
+
+<script>
+//TODO: typeahead on username!
+Date.prototype.toInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,16);
+});
+var oneDayBefore=new Date();oneDayBefore.setSeconds((new Date()).getSeconds()-86400);
+var midnightBefore=new Date();
+midnightBefore.setSeconds(0);
+midnightBefore.setHours(0);
+midnightBefore.setMinutes(0);
+midnightBefore.toInputValue();
+//document.getElementById('startDate1').value = oneDayBefore.toInputValue();
+//document.getElementById('endDate1').value = new Date().toInputValue();
+$("[data-date-prefill=now]").val(new Date().toInputValue());
+$("[data-date-prefill=midnight-before]").val(midnightBefore.toInputValue());
+$("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
+
+function getUTCSeconds(LocalDateStr){
+	var utcDate=new Date(LocalDateStr);
+	utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
+	return Math.floor(+utcDate/1000);
+}
+</script>
+
+
+</body>
+</html>

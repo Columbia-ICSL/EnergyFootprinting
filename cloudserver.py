@@ -56,8 +56,10 @@ urls = (
     "/api/visualization", visualizationAPI.visualization,
     "/debug","Debug",
     "/recent","Recent",
-    "/","index",
     "/api/OSData", mingooServer.reportData,
+    '/person/(.*)', 'person',
+    '/login', 'login',
+    '/(.*)', 'index'
 )
 
 from DBMgr import MongoJsonEncoder
@@ -82,13 +84,40 @@ class Realtime:
         return db.ShowRealtime(person)
 
 class index:
-    def GET(self):
+    def GET(self,name):
 
-        return web.seeother('/static/')
+        if name == "":
+            raise web.seeother("/login")
+
+
+        return render.index(name)
+   # def GET(self):
+
+        #return web.seeother('/static/')
 
 
 
         #return "Hello {0}".format(name)
+class person:
+
+    def GET(self,name):
+
+        return render.person(name);
+
+class login:
+    def GET(self):
+        return render.login()
+
+    def POST(self):
+        raw_data = web.input()
+        username = raw_data.userName
+        password = raw_data.passWord
+        test = db.loginWeb(username,password)
+        if test == "0":
+            raise web.seeother('/'+username,username)
+        else:
+            return "Wrong Username/Password"
+
 class frontend:
     def GET(self,person):
         print(person)
