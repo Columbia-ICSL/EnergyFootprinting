@@ -97,27 +97,27 @@ body {
 		<script>
 		var ch1=document.getElementById('chart1');
 		var frm1=document.getElementById('form1');
- 		$(frm1).children('button').on('click', function () {
-		    var $btn = $(this).button('loading');
+ 		jQuery(frm1).children('button').on('click', function (){
+		    var _btn = jQuery(this).button('loading');
 		    var personID=frm1.personID1.value;
 		    if(personID.length<2){
-		    	$(frm1.personID1).parent().addClass('has-error');
-		    	$btn.button('reset');
+		    	jQuery(frm1.personID1).parent().addClass('has-error');
+		    	_btn.button('reset');
 		    	return;
 		    }
-		    $(frm1.personID1).removeClass('has-error');
-		    $.get("/api/Query/QueryPerson/"+personID,{
+		    jQuery(frm1.personID1).removeClass('has-error');
+		    jQuery.get("/api/Query/QueryPerson/"+personID,{
 		    		start:getUTCSeconds(frm1.startDate1.value),
 		    		end:getUTCSeconds(frm1.endDate1.value),
 		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	$btn.button('reset');
+		    	_btn.button('reset');
 		    	render1(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    $btn.button('reset');
+			    _btn.button('reset');
 			});
 		  });
 		  
@@ -179,9 +179,9 @@ body {
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
 	        };
-	        $(ch1).show(0,function(){
+	        jQuery(ch1).show(0,function(){
 	        	chart.draw(data, options);
-	        	$(ch1).slideToggle(0).slideToggle(1000);	
+	        	jQuery(ch1).slideToggle(0).slideToggle(1000);
 	        });
 		  }
 		  </script>
@@ -228,28 +228,28 @@ body {
 		var ch2=document.getElementById('chart2');
 		var frm2=document.getElementById('form2');
 		var people;
- 		$(frm2).children('button').on('click', function () {
-		    var $btn = $(this).button('loading');
+ 		jQuery(frm2).children('button').on('click', function () {
+		    var _btn = jQuery(this).button('loading');
 		    var personIDs=frm2.personID2.value;
 		    people=personIDs.split(",");
 		    if(people.length<2){
-		    	$(frm2.personID2).parent().addClass('has-error');
-		    	$btn.button('reset');
+		    	jQuery(frm2.personID2).parent().addClass('has-error');
+		    	_btn.button('reset');
 		    	return;
 		    }
-		    $(frm2.personID2).removeClass('has-error');
-		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    jQuery(frm2.personID2).removeClass('has-error');
+		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
 		    		start:getUTCSeconds(frm2.startDate2.value),
 		    		end:getUTCSeconds(frm2.endDate2.value),
 		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	$btn.button('reset');
+		    	_btn.button('reset');
 		    	render2(data,people);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    $btn.button('reset');
+			    _btn.button('reset');
 			});
 		  });
  		
@@ -312,9 +312,9 @@ body {
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
 	        };
-	        $(ch2).show(0,function(){
+	        jQuery(ch2).show(0,function(){
 	        	chart.draw(data, options);
-	        	$(ch2).slideToggle(0).slideToggle(1000);	
+	        	jQuery(ch2).slideToggle(0).slideToggle(1000);
 	        });
 		  }
 		</script>
@@ -362,22 +362,22 @@ body {
 		var ch3=document.getElementById('chart3');
 		var frm3=document.getElementById('form3');
 		var people;
- 		$(frm3).children('button').on('click', function () {
-		    var $btn = $(this).button('loading');
+ 		jQuery(frm3).children('button').on('click', function () {
+		    var _btn = jQuery(this).button('loading');
 		    var personIDs=frm3.personID3.value;
 		    people=personIDs.split(",");
-		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
 		    		start:getUTCSeconds(frm3.startDate3.value),
 		    		end:getUTCSeconds(frm3.endDate3.value),
 		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	$btn.button('reset');
+		    	_btn.button('reset');
 		    	render3(data,people);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    $btn.button('reset');
+			    _btn.button('reset');
 			});
 		  });
  		
@@ -422,9 +422,9 @@ body {
 	    		}
 	    	}
 			var chart = new google.visualization.Timeline(ch3);
-	        $(ch3).show(0,function(){
+	        jQuery(ch3).show(0,function(){
 	        	chart.draw(dataTable);
-	        	$(ch3).slideToggle(0).slideToggle(1000);	
+	        	jQuery(ch3).slideToggle(0).slideToggle(1000);
 	        });
 
  		}
@@ -468,22 +468,22 @@ body {
 		var ch4=document.getElementById('chart4');
 		var frm4=document.getElementById('form4');
 		var people;
- 		$(frm4).children('button').on('click', function () {
-		    var $btn = $(this).button('loading');
+ 		jQuery(frm4).children('button').on('click', function () {
+		    var _btn = jQuery(this).button('loading');
 		    var personIDs=frm4.personID4.value;
 		    people=personIDs.split(",");
-		    $.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
 		    		start:getUTCSeconds(frm4.startDate4.value),
 		    		end:getUTCSeconds(frm4.endDate4.value),
 		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	$btn.button('reset');
+		    	_btn.button('reset');
 		    	render4(data,people);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    $btn.button('reset');
+			    _btn.button('reset');
 			});
 		  });
  		
@@ -536,7 +536,7 @@ body {
 		        
  			});
 
-			$('#chart4').show().highcharts({
+			jQuery('#chart4').show().highcharts({
 		        chart: {
 		            type: 'pie'
 		        },
