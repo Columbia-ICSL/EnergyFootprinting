@@ -87,7 +87,7 @@ class index:
     def GET(self,name):
 
         if name == "":
-            raise web.seeother("/login")
+            raise web.seeother("/login/")
 
 
         return render.index(name)
