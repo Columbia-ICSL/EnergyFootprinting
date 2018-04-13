@@ -1,3 +1,4 @@
+$def with (signal)
 <!doctype>
 <html>
 <head>
@@ -19,6 +20,12 @@ function validateForm() {
         return false;
     }
 }
+
+jQuery(document).ready(function(){
+	if($signal == 1){
+		alert("Wrong username/password!");
+	}
+});
 </script>
 
 <style>

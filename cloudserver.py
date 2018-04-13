@@ -58,7 +58,7 @@ urls = (
     "/recent","Recent",
     "/api/OSData", mingooServer.reportData,
     '/person/(.*)', 'person',
-    '/login', 'login',
+    '/login/(.*)', 'login',
     '/(.*)', 'index'
 )
 
@@ -82,7 +82,7 @@ class Realtime:
         if "personal" in web.input():
             return db.ShowRealtimePersonalSummary()
         return db.ShowRealtime(person)
-
+#Controller------------------------------------------------
 class index:
     def GET(self,name):
 
@@ -116,8 +116,8 @@ class login:
         if test == "0":
             raise web.seeother('/'+username,username)
         else:
-            return "Wrong Username/Password"
-
+            raise web.seeother("/login/1")
+############-----------------------------------------------------------
 class frontend:
     def GET(self,person):
         print(person)
