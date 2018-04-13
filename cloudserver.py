@@ -105,10 +105,10 @@ class person:
         return render.person(name);
 
 class login:
-    def GET(self):
-        return render.login()
+    def GET(self,signal):
+        return render.login(signal)
 
-    def POST(self):
+    def POST(self,default):
         raw_data = web.input()
         username = raw_data.userName
         password = raw_data.passWord
