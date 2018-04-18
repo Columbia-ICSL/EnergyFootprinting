@@ -9,7 +9,7 @@ $def with (name)
 <script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
  <script> google.load("visualization", "1", {packages:["corechart","timeline"]});</script>
- <script src="http://code.highcharts.com/highcharts.js"></script>
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <style>
 body {
   padding-top: 50px;
@@ -41,9 +41,8 @@ body {
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li><a href="index/$name">Index</a></li>
-                    <li class="active"><a href="person/$name">Personal Query</a></li>
-                    <li><a href="space/$name">Spatial Query</a></li>
-                    <li><a href="location1/$name">New Data Visualizations</a></li>
+                    <li><a href="person/$name">Personal Query</a></li>
+                    <li class="active"><a href="space/$name">Spatial Query</a></li>
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Realtime <span class="caret"></span></a>
                       <ul class="dropdown-menu">
@@ -61,13 +60,13 @@ body {
 
     <div class="container">
       <div class="starter-template">
-        <h1>Personal Footprint Query</h1>	
+        <h1>Room Space Consumption Query</h1>	
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Query for single person
+          Query for single space
         </a>
       </h4>
     </div>
@@ -75,8 +74,8 @@ body {
       <div class="panel-body">
 		<form id="form1" onsubmit="return false;"  class="form-inline">
 		  <div class="form-group">
-		    <label for="personID1">UserID</label>
-		    <input type="text" class="form-control" id="personID1" placeholder="UNI" value="fengyi">
+		    <label for="spaceID1">Space ID</label>
+		    <input type="text" class="form-control" id="spaceID1" placeholder="UNI" value="nwc1008">
 		  </div>
 		  <hr/>
 		  <div class="form-group">
@@ -98,16 +97,16 @@ body {
 		<script>
 		var ch1=document.getElementById('chart1');
 		var frm1=document.getElementById('form1');
- 		jQuery(frm1).children('button').on('click', function (){
+ 		jQuery(frm1).children('button').on('click', function () {
 		    var _btn = jQuery(this).button('loading');
-		    var personID=frm1.personID1.value;
-		    if(personID.length<2){
-		    	jQuery(frm1.personID1).parent().addClass('has-error');
+		    var spaceID=frm1.spaceID1.value;
+		    if(spaceID.length<2){
+		    	jQuery(frm1.spaceID1).parent().addClass('has-error');
 		    	_btn.button('reset');
 		    	return;
 		    }
-		    jQuery(frm1.personID1).removeClass('has-error');
-		    jQuery.get("/api/Query/QueryPerson/"+personID,{
+		    jQuery(frm1.spaceID1).removeClass('has-error');
+		    jQuery.get("/api/Query/QueryRoom/"+spaceID,{
 		    		start:getUTCSeconds(frm1.startDate1.value),
 		    		end:getUTCSeconds(frm1.endDate1.value),
 		    		client:"AJAX debug frontend"
@@ -123,6 +122,8 @@ body {
 		  });
 		  
 		  function render1(input){
+		  	d=input;
+		  	/*
 		  	input=input.reverse();
 			function distinct_types(input){
 	          var types={};
@@ -168,7 +169,8 @@ body {
 	          ret[0]=new Date(item.timestamp*1000);
 	          //console.log('row',ret);
 	          data.addRow(ret);
-	        };
+	          
+	        };*/
 
 	        
 
@@ -196,7 +198,7 @@ body {
     <div class="panel-heading" role="tab" id="headingTwo">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-           Combine Multiple Persons
+           Aggregated Space and its Descendant
         </a>
       </h4>
     </div>
@@ -205,8 +207,8 @@ body {
         
         <form id="form2" onsubmit="return false;"  class="form-inline">
 		  <div class="form-group">
-		    <label for="personID2">UserIDs, comma separated</label>
-		    <input type="text" class="form-control" id="personID2" placeholder="UNI" value="xc2340,fengyi">
+		    <label for="roomID2">Space ID</label>
+		    <input type="text" class="form-control" id="roomID2" placeholder="UNI" value="nwc10">
 		  </div>
 		  <hr/>
 		  <div class="form-group">
@@ -226,7 +228,7 @@ body {
 		</form>		
 		<div id="chart2" class="panel-body" style="height:500px;display:none;"></div>
 		<script>
-		var ch2=document.getElementById('chart2');
+		/*var ch2=document.getElementById('chart2');
 		var frm2=document.getElementById('form2');
 		var people;
  		jQuery(frm2).children('button').on('click', function () {
@@ -317,7 +319,7 @@ body {
 	        	chart.draw(data, options);
 	        	jQuery(ch2).slideToggle(0).slideToggle(1000);
 	        });
-		  }
+		  }*/
 		</script>
 
       </div>
@@ -325,270 +327,83 @@ body {
   </div>
 
 
-  
-  <div class="panel panel-default">
+    <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-           Location History of persons
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" onclick="drawTree();">
+           Space and Consumptions as a tree
         </a>
       </h4>
     </div>
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-      <div class="panel-body">
-        
-        <form id="form3" onsubmit="return false;"  class="form-inline">
-		  <div class="form-group">
-		    <label for="personID3">UserIDs, comma separated</label>
-		    <input type="text" class="form-control" id="personID3" placeholder="UNI" value="fengyi,xc2340">
-		  </div>
-		  <hr/>
-		  <div class="form-group">
-		    <label for="startDate3">startDate</label>
-		    <input type="datetime-local" class="form-control" id="startDate3"  data-date-prefill="one-day-before">
-		  </div>
-		  <div class="form-group">
-		    <label for="endDate3">endDate</label>
-		    <input type="datetime-local" class="form-control" id="endDate3"  data-date-prefill="now">
-		  </div>
-		  <!--<div class="checkbox">
-		    <label>
-		      <input type="checkbox"> Check me out
-		    </label>
-		  </div>-->
-		  <button type="button" class="btn btn-default">Query</button>
-		</form>
-		<div id="chart3" class="panel-body" style="height:500px;display:none;"></div>
+      <div class="panel-body">	
+		<div id="chart3" class="panel-body" style="height:500px;"></div>
 		<script>
-		var ch3=document.getElementById('chart3');
-		var frm3=document.getElementById('form3');
-		var people;
- 		jQuery(frm3).children('button').on('click', function () {
-		    var _btn = jQuery(this).button('loading');
-		    var personIDs=frm3.personID3.value;
-		    people=personIDs.split(",");
-		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
-		    		start:getUTCSeconds(frm3.startDate3.value),
-		    		end:getUTCSeconds(frm3.endDate3.value),
-		    		client:"AJAX debug frontend"
-	    		},
-		    	function(data,status){
-		    	console.log(data,status);
-		    	_btn.button('reset');
-		    	render3(data,people);
-		    },'json').fail(function() {
-			    alert('Error!'); // or whatever			    
-			    _btn.button('reset');
-			});
-		  });
- 		
+		google.charts.load('current', {packages:['wordtree']});
+		google.charts.setOnLoadCallback(drawTree);
+      	function drawTree() {
+			jQuery.ajax({
+		        url: '/realtime/?full=true',
+		        success: render3,
+		        dataType:"json",
+		        cache: false
+	  		});
+		}
+		function render3(data){
+			//_saved_tree_data=data;
+			var treeNodes=data.tree;
+			var nodeIDs=[];
+			var rows=[['id', 'childLabel', 'parent', 'Energy Consumption', { role: 'style' }]];
+			for(var id in treeNodes){
+				nodeIDs.push(id);
+			}
+			for(var id in treeNodes){
+				var node=treeNodes[id];
+				var row=[
+					nodeIDs.indexOf(id),
+					id,//node.name.split('/').reverse()[0].replace(/\s/g,'_'),
+					nodeIDs.indexOf(node.father),
+					1,//+node._sum_consumption,//(node._sum_consumption_including_children || node._sum_consumption)+0.00001,
+					'black'
+				];
+				rows.push(row);
+			}
+			//rows.sort(function(a,b){return a[2]-b[2]});
 
- 		function render3(input, people){
-			var N=input.length;
-		  	input=input.reverse();
+			for(var id in treeNodes){
+				var node=treeNodes[id];
+				for(var cid in node.consumption){
+					var row=[
+						rows.length,
+						cid,//actual name in metadata...
+						nodeIDs.indexOf(id),
+						1e-10+node.consumption[cid].value,
+						'rgb(127,0,0)' //TODO: customize based on value
+					];
+					rows.push(row);
+				}
+			}
 
-		  	var time_slice=10*1000;//10 second is the minimum reporting interval of monitor app?
-		  	var people_indices={};
-		  	people.forEach(function(ID){people_indices[ID]=true;});
-	        //sanitation!
-	        for(var i=0;i<N;i++){
-	        	for(var ID in people_indices)
-	        		if(typeof input[i].data[ID]!='object')input[i].data[ID]={roomID:undefined}
-	        }
 
- 			var dataTable = new google.visualization.DataTable();
-			dataTable.addColumn({ type: 'string', id: 'Person ID' });
-			dataTable.addColumn({ type: 'string', id: 'Room' });
-			dataTable.addColumn({ type: 'datetime', id: 'Start' });
-			dataTable.addColumn({ type: 'datetime', id: 'End' });
+			var nodeListData = new google.visualization.arrayToDataTable(rows);
 
-	    	//generate by each person
-	    	for(var ID in people_indices){
-	    		console.log("id",ID);
-	    		for(var i=0;i<N;i++){
-	    			var startR=input[i].data[ID].roomID;
-	    			var ptr=i;
-	    			while(ptr<N-1 && input[ptr+1].data[ID].roomID==startR)ptr++;
-	    			console.log('range',i,ptr);
-	    			var startTS=new Date(input[i].timestamp*1000);
-	    			var endTS=new Date(input[ptr].timestamp*1000+(i==ptr?time_slice:0));
-	    			if(startR && startR!="undefined")
-	    			{
-		    			dataTable.addRow([ ID, startR, startTS, endTS ]);
-		    			console.log([ ID, ""+startR, startTS, endTS ]);
-	    			}
-	    			//var ts=input[i].timestamp;
-	    			i=ptr;
-	    			continue;
-	    		}
-	    	}
-			var chart = new google.visualization.Timeline(ch3);
-	        jQuery(ch3).show(0,function(){
-	        	chart.draw(dataTable);
-	        	jQuery(ch3).slideToggle(0).slideToggle(1000);
-	        });
-
- 		}
+	        var options = {
+	        	maxFontSize: 26,
+				colors: ['black', 'red', 'green'],
+				wordtree: {
+					format: 'explicit',
+					type: 'suffix'
+				}
+	        };
+	        var wordtree = new google.visualization.WordTree(document.getElementById('chart3'));
+	        wordtree.draw(nodeListData, options);
+		}
 		</script>
 
       </div>
     </div>
   </div>
 
-
-  
-
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingFour">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-          Comparison Between Person
-        </a>
-      </h4>
-    </div>
-    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-      <div class="panel-body">
-       	 <form id="form4" onsubmit="return false;"  class="form-inline">
-		  <div class="form-group">
-		    <label for="personID4">UserIDs, comma separated</label>
-		    <input type="text" class="form-control" id="personID4" placeholder="UNI" value="xc2340,fengyi">
-		  </div>
-		  <hr/>
-		  <div class="form-group">
-		    <label for="startDate4">startDate</label>
-		    <input type="datetime-local" class="form-control" id="startDate4"  data-date-prefill="midnight-before">
-		  </div>
-		  <div class="form-group">
-		    <label for="endDate4">endDate</label>
-		    <input type="datetime-local" class="form-control" id="endDate4"  data-date-prefill="now">
-		  </div>
-		  <button type="button" class="btn btn-default">Query</button>
-		</form>		
-		<div id="chart4" class="panel-body" style="height:500px;display:none;"></div>
-		<script>
-		var ch4=document.getElementById('chart4');
-		var frm4=document.getElementById('form4');
-		var people;
- 		jQuery(frm4).children('button').on('click', function () {
-		    var _btn = jQuery(this).button('loading');
-		    var personIDs=frm4.personID4.value;
-		    people=personIDs.split(",");
-		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
-		    		start:getUTCSeconds(frm4.startDate4.value),
-		    		end:getUTCSeconds(frm4.endDate4.value),
-		    		client:"AJAX debug frontend"
-	    		},
-		    	function(data,status){
-		    	console.log(data,status);
-		    	_btn.button('reset');
-		    	render4(data,people);
-		    },'json').fail(function() {
-			    alert('Error!'); // or whatever			    
-			    _btn.button('reset');
-			});
-		  });
- 		
-
- 		function render4(input, people){
- 			d=input;
- 			var
- 				totalCon={}, roomCon={};
- 			people.forEach(function(p){
- 				totalCon[p]=0;roomCon[p]={};
- 			});
- 			for(var i=0;i<input.length;i++)
- 				try{
- 					var tdiff=60;
- 					if(input[i+1] && input[i+1].timestap) tdiff=input[i+1].timestamp-input[i].timestamp;
- 					var item=input[i].data;
- 					people.forEach(function(p){
- 						if(item[p]){
- 							var thisV=item[p].value*tdiff;//unit: W * s
- 							thisV=thisV/1000/3600;//unit: kW * h
- 							totalCon[p]+=thisV;
- 							var r=item[p].roomID;
- 							roomCon[p][r] = roomCon[p][r] || 0;
- 							roomCon[p][r]+=thisV;
- 						}
- 					});
- 				}
- 				catch(e){
- 					console.log("error parsing input at",i,input[i]);
-	 			}
-
- 			var formattedTotalCon=[], formattedRoomCon=[];
- 			var colors = Highcharts.getOptions().colors;
- 			people.forEach(function(p,i){
- 				formattedTotalCon.push({
-		            name: p,
-		            y: totalCon[p],
-		            color: colors[i]
-		        });
-		        var j=0;
-		        for(var r in roomCon[p]){
-		        	j++;
-		        	formattedRoomCon.push({
-		            	name: p + " at " +r,
-		            	y: roomCon[p][r],
-		            	color: colors[i],
-		            	brightness: j%2?0.2:0
-		        	});
-		        }
-		        
- 			});
-
-			jQuery('#chart4').show().highcharts({
-		        chart: {
-		            type: 'pie'
-		        },
-		        title: {
-		            text: 'Drilldown of footprint by person ~ room'
-		        },
-		        yAxis: {
-		            title: {
-		                text: 'Total percent market share'
-		            }
-		        },
-		        plotOptions: {
-		            pie: {
-		                shadow: true,
-		                center: ['50%', '50%']
-		            }
-		        },
-		        tooltip: {
-		            valueSuffix: 'kWh'
-		        },
-		        series: [{
-		            name: 'Consumption',
-		            data: formattedTotalCon,
-		            size: '55%',
-		            dataLabels: {
-		                formatter: function () {
-		                    // display only if larger than 1
-		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
-		                },
-		              distance:-50
-		            }
-		        }, {
-		            name: 'Consumption by room',
-		            data: formattedRoomCon,
-		            size: '80%',
-		            innerSize: '90%',
-		            dataLabels: {
-		                formatter: function () {
-		                    // display only if larger than 1
-		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
-		                }
-		            }
-		        }]
-		    });
- 		}
-
-		</script>
-      </div>
-    </div>
-  </div>
-</div>
 
       </div>
     </div><!-- /.container -->
@@ -602,15 +417,9 @@ Date.prototype.toInputValue = (function() {
     return local.toJSON().slice(0,16);
 });
 var oneDayBefore=new Date();oneDayBefore.setSeconds((new Date()).getSeconds()-86400);
-var midnightBefore=new Date();
-midnightBefore.setSeconds(0);
-midnightBefore.setHours(0);
-midnightBefore.setMinutes(0);
-midnightBefore.toInputValue();
 //document.getElementById('startDate1').value = oneDayBefore.toInputValue();
 //document.getElementById('endDate1').value = new Date().toInputValue();
 $("[data-date-prefill=now]").val(new Date().toInputValue());
-$("[data-date-prefill=midnight-before]").val(midnightBefore.toInputValue());
 $("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
 
 function getUTCSeconds(LocalDateStr){

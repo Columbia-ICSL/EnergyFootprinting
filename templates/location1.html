@@ -41,9 +41,9 @@ body {
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li><a href="index/$name">Index</a></li>
-                    <li class="active"><a href="person/$name">Personal Query</a></li>
+                    <li><a href="person/$name">Personal Query</a></li>
                     <li><a href="space/$name">Spatial Query</a></li>
-                    <li><a href="location1/$name">New Data Visualizations</a></li>
+                    <li class="active"><a href="">New Data Visualizations</a></li>
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Realtime <span class="caret"></span></a>
                       <ul class="dropdown-menu">
@@ -61,24 +61,22 @@ body {
 
     <div class="container">
       <div class="starter-template">
-        <h1>Personal Footprint Query</h1>	
+        <h1>New Data Visualizations</h1>	
+
+
+
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Query for single person
+          Total Building Energy Consumption
         </a>
       </h4>
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
 		<form id="form1" onsubmit="return false;"  class="form-inline">
-		  <div class="form-group">
-		    <label for="personID1">UserID</label>
-		    <input type="text" class="form-control" id="personID1" placeholder="UNI" value="fengyi">
-		  </div>
-		  <hr/>
 		  <div class="form-group">
 		    <label for="startDate1">startDate</label>
 		    <input type="datetime-local" class="form-control" id="startDate1" data-date-prefill="one-day-before">
@@ -87,30 +85,20 @@ body {
 		    <label for="endDate1">endDate</label>
 		    <input type="datetime-local" class="form-control" id="endDate1" data-date-prefill="now">
 		  </div>
-		  <!--<div class="checkbox">
-		    <label>
-		      <input type="checkbox"> Check me out
-		    </label>
-		  </div>-->
 		  <button type="button" class="btn btn-default">Query</button>
 		</form>
 		<div id="chart1" class="panel-body" style="height:500px;display:none;"></div>
+		<a href='#' onclick='downloadCSV({ filename: "buildingConsumption.csv" });'>Download CSV</a>
 		<script>
 		var ch1=document.getElementById('chart1');
 		var frm1=document.getElementById('form1');
- 		jQuery(frm1).children('button').on('click', function (){
+		//ch1 is the chart, frm1 is the form
+		var energyData = [];
+ 		jQuery(frm1).children('button').on('click', function () {
 		    var _btn = jQuery(this).button('loading');
-		    var personID=frm1.personID1.value;
-		    if(personID.length<2){
-		    	jQuery(frm1.personID1).parent().addClass('has-error');
-		    	_btn.button('reset');
-		    	return;
-		    }
-		    jQuery(frm1.personID1).removeClass('has-error');
-		    jQuery.get("/api/Query/QueryPerson/"+personID,{
+		    jQuery.get("/api/dataExtraction/BuildingFootprint/",{
 		    		start:getUTCSeconds(frm1.startDate1.value),
 		    		end:getUTCSeconds(frm1.endDate1.value),
-		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
@@ -124,58 +112,23 @@ body {
 		  
 		  function render1(input){
 		  	input=input.reverse();
-			function distinct_types(input){
-	          var types={};
-	          input.map(function(s){
-	            if(s.type_aggregate)
-	              for(var t in s.type_aggregate)
-	                types[t]=true;
-	          });
-	          var ret=[];
-	          for(var t in types)
-	            ret.push(t);
-	          return ret;
-	        }
-	        var types=distinct_types(input);
-	        var type_indices={};for(var i in types)type_indices[types[i]]=1*i;
-	        console.log(types,type_indices);
-	        var data = new google.visualization.DataTable();
-	        var dlen=0;
-	        dlen++;data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-	        types.forEach(function(t){data.addColumn('number', t);dlen++;});
 
-	        dlen++;data.addColumn({type:'string', role:'annotation'}); // annotation role col.
-	        dlen++;data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
-	        console.log('dlen',dlen);
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        data.addColumn('number', 'WATTS')
 
 	        var lastR=false;
 	        for(var i=0;i<input.length;i++){
 	          var item=input[i];
-	          var ret=new Array(dlen);
-	          for(var j=1;j<dlen-2;j++)ret[j]=0;
-	          for(var t in item.type_aggregate){
-	            ret[ type_indices[t]+1 ]=item.type_aggregate[t].value;
-	          }
-	          if(item.roomID!=lastR){
-	            lastR=''+item.roomID;
-	            ret[dlen-2]=lastR;
-	            ret[dlen-1]="Entered "+lastR;
-	            console.log("enter room",lastR,item.timestamp);
-	          }
-
-	          if(!item.timestamp)return;
-	          if(ret[0]!=undefined)alert('index access violation');
-	          ret[0]=new Date(item.timestamp*1000);
 	          //console.log('row',ret);
-	          data.addRow(ret);
+	          var date = new Date(item.timestamp*1000)
+	          data.addRow([date, item.data]);
 	        };
-
-	        
+			console.log(data);
+	        energyData = data;
 
 			var chart = new google.visualization.AreaChart(ch1);
 	        var options = {
-	          displayAnnotations: 1,
-	          isStacked: 1,
 	          //width:800,
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
@@ -185,6 +138,58 @@ body {
 	        	jQuery(ch1).slideToggle(0).slideToggle(1000);
 	        });
 		  }
+			
+			  function convertArrayOfObjectsToCSV(args) {
+        		var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+
+        		data = args.data || null;
+        		if (data == null || !data.length) {
+            		return null;
+        		}
+
+        		columnDelimiter = args.columnDelimiter || ',';
+        		lineDelimiter = args.lineDelimiter || '\n';
+
+        		keys = Object.keys(data[0]);
+
+        		result = '';
+        		result += keys.join(columnDelimiter);
+        		result += lineDelimiter;
+
+        		data.forEach(function(item) {
+            		ctr = 0;
+            		keys.forEach(function(key) {
+                		if (ctr > 0) result += columnDelimiter;
+
+                		result += item[key];
+            		    ctr++;
+            		});
+            		result += lineDelimiter;
+        		});
+
+        		return result;
+    		}
+
+		  	function downloadCSV(args) {
+        		var data, filename, link;
+
+        		var csv = convertArrayOfObjectsToCSV({
+            		data: energyData
+        		});
+        		if (csv == null) return;
+
+        		filename = args.filename || 'export.csv';
+
+        		if (!csv.match(/^data:text\/csv/i)) {
+            		csv = 'data:text/csv;charset=utf-8,' + csv;
+        		}
+        		data = encodeURI(csv);
+
+        		link = document.createElement('a');
+        		link.setAttribute('href', data);
+        		link.setAttribute('download', filename);
+        		link.click();
+    		}
 		  </script>
 
       </div>
@@ -192,11 +197,26 @@ body {
   </div>
 
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingTwo">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-           Combine Multiple Persons
+           Personal Energy Consumption
         </a>
       </h4>
     </div>
@@ -205,8 +225,8 @@ body {
         
         <form id="form2" onsubmit="return false;"  class="form-inline">
 		  <div class="form-group">
-		    <label for="personID2">UserIDs, comma separated</label>
-		    <input type="text" class="form-control" id="personID2" placeholder="UNI" value="xc2340,fengyi">
+		    <label for="personID2">Login Name</label>
+		    <input type="text" class="form-control" id="personID2" placeholder="Name" value="">
 		  </div>
 		  <hr/>
 		  <div class="form-group">
@@ -217,11 +237,6 @@ body {
 		    <label for="endDate2">endDate</label>
 		    <input type="datetime-local" class="form-control" id="endDate2"  data-date-prefill="now">
 		  </div>
-		  <div class="checkbox">
-		    <label>
-		      <input type="checkbox" id="chk2"> Stack
-		    </label>
-		  </div>
 		  <button type="button" class="btn btn-default">Query</button>
 		</form>		
 		<div id="chart2" class="panel-body" style="height:500px;display:none;"></div>
@@ -229,86 +244,80 @@ body {
 		var ch2=document.getElementById('chart2');
 		var frm2=document.getElementById('form2');
 		var people;
+
  		jQuery(frm2).children('button').on('click', function () {
-		    var _btn = jQuery(this).button('loading');
-		    var personIDs=frm2.personID2.value;
-		    people=personIDs.split(",");
-		    if(people.length<2){
-		    	jQuery(frm2.personID2).parent().addClass('has-error');
-		    	_btn.button('reset');
-		    	return;
-		    }
-		    jQuery(frm2.personID2).removeClass('has-error');
-		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    var _btn2 = jQuery(this).button('loading');
+		    jQuery.get("/api/dataExtraction/PersonalConsumption/",{
+		    		user:frm2.personID2.value,
 		    		start:getUTCSeconds(frm2.startDate2.value),
 		    		end:getUTCSeconds(frm2.endDate2.value),
-		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	_btn.button('reset');
-		    	render2(data,people);
+		    	_btn2.button('reset');
+		    	render2(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    _btn.button('reset');
+			    _btn2.button('reset');
 			});
 		  });
- 		
-
- 		function render2(input, people){
-			var N=input.length;
+		  
+		  function render2(input){
 		  	input=input.reverse();
-		  	var people_indices={};
-		  	
+
 	        var data = new google.visualization.DataTable();
-	        var dlen=0;
+	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+	        //data.addColumn('number', 'WATTS');
+	        data.addColumn('number', 'HVAC (W)');
+	        data.addColumn({type:'string', role:'tooltip'});
+	        data.addColumn('number', 'Lighting (W)');
+	        data.addColumn('number', 'Electrical (W)');
+
+
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          //console.log('row',ret);
+	          var date = new Date(item.timestamp*1000)
+	          var electricTemp = item.Electrical + 90;
+	          data.addRow([date, item.HVAC, "location: " + item.location, item.Light, electricTemp]);//item.value
+	        };
+			console.log(data);
 	        
-	        dlen++;data.addColumn('datetime', 'TIME'); // Implicit domain label col.
-	        people.forEach(function(t){
-	        	data.addColumn('number', t);
-	        	people_indices[t]=dlen;
-				data.addColumn({type:'string', role:'annotation'}); // annotation role col.
-        		data.addColumn({type:'string', role:'annotationText'}); // annotationText col.
-        		dlen+=3;
-	        });
-
-	        console.log('dlen',dlen);
-
-	        //sanitation!
-	        for(var i=0;i<N;i++){
-	        	for(var ID in people_indices)
-	        		if(typeof input[i].data[ID]!='object')input[i].data[ID]={roomID:undefined}
-	        }
-
-	        for(var i=0;i<N;i++){
-	        	var flag=false;
-	        	var item=input[i];
-	        	var ret=new Array(dlen);
-	        	ret[0]=new Date(item.timestamp*1000);
-	        	for(var personID in item.data){
-	        		var idx=people_indices[personID];
-	        		ret[idx]=item.data[personID]["value"];
-	        		if(i==0 || (item.data[personID]["roomID"] != input[i-1].data[personID]["roomID"] ))
-	        		{
-	        			var room=item.data[personID]["roomID"];
-	        			if(!room || room=="unknown"){
-	        				room="unknown";
-	        				ret[idx]=0;
-	        			}
-	        			ret[idx+1]=room;
-	        			ret[idx+2]=personID+" entered "+room;
-	        			console.log("enter room",item.data[personID]["roomID"],personID,item.timestamp);
-	        		}
-	        	}
-	          data.addRow(ret);
-	        }
-
-	        var isStacked=frm2.chk2.checked;
-
+			var titleString = 'Personal Footprint For: Occupant A';
 			var chart = new google.visualization.AreaChart(ch2);
 	        var options = {
-	          displayAnnotations: 1,
-	          isStacked: isStacked,
+	        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+	        	chartArea:{left:200,top:200,width:868,height:140},
+	        	height: 600,
+	        	width: 1700,
+	        	isStacked:true,
+	        	tooltip: { isHtml: true},
+	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+	        	hAxis: {
+	        		//titleFontSize:25,
+          			//title: 'Time of Day',
+          			textStyle: {
+          				fontSize:12,
+          				color:'#FFFFFF'
+          			},
+          			gridlines: {
+	        			color:'#0B0B0B'
+	        		},
+          		},
+	        	vAxis: {
+	        		//titleFontSize:25,
+          			//title: 'Personal Energy Footprint (W)',
+          			textStyle: {
+          				fontSize:12,
+          				color:'#FFFFFF'
+          			},
+          			gridlines: {
+	        			color:'#0B0B0B'
+	        		},
+        		},
+          		backgroundColor: '#303030'
 	          //width:800,
 	          //height:500,
 	          //annotations: {'*': {style: 'line'}}
@@ -318,7 +327,7 @@ body {
 	        	jQuery(ch2).slideToggle(0).slideToggle(1000);
 	        });
 		  }
-		</script>
+		  </script>
 
       </div>
     </div>
@@ -330,7 +339,7 @@ body {
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-           Location History of persons
+           Historical Building Consumption
         </a>
       </h4>
     </div>
@@ -338,98 +347,62 @@ body {
       <div class="panel-body">
         
         <form id="form3" onsubmit="return false;"  class="form-inline">
-		  <div class="form-group">
-		    <label for="personID3">UserIDs, comma separated</label>
-		    <input type="text" class="form-control" id="personID3" placeholder="UNI" value="fengyi,xc2340">
-		  </div>
-		  <hr/>
-		  <div class="form-group">
-		    <label for="startDate3">startDate</label>
-		    <input type="datetime-local" class="form-control" id="startDate3"  data-date-prefill="one-day-before">
-		  </div>
-		  <div class="form-group">
-		    <label for="endDate3">endDate</label>
-		    <input type="datetime-local" class="form-control" id="endDate3"  data-date-prefill="now">
-		  </div>
 		  <!--<div class="checkbox">
 		    <label>
 		      <input type="checkbox"> Check me out
 		    </label>
 		  </div>-->
-		  <button type="button" class="btn btn-default">Query</button>
+		  <button type="button" class="btn btn-default">Get History</button>
 		</form>
 		<div id="chart3" class="panel-body" style="height:500px;display:none;"></div>
 		<script>
 		var ch3=document.getElementById('chart3');
 		var frm3=document.getElementById('form3');
 		var people;
+
  		jQuery(frm3).children('button').on('click', function () {
-		    var _btn = jQuery(this).button('loading');
-		    var personIDs=frm3.personID3.value;
-		    people=personIDs.split(",");
-		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
-		    		start:getUTCSeconds(frm3.startDate3.value),
-		    		end:getUTCSeconds(frm3.endDate3.value),
-		    		client:"AJAX debug frontend"
+		    var _btn3 = jQuery(this).button('loading');
+		    jQuery.get("/api/dataExtraction/HistoricalConsumption/",{
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
-		    	_btn.button('reset');
-		    	render3(data,people);
+		    	_btn3.button('reset');
+		    	render3(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
-			    _btn.button('reset');
+			    _btn3.button('reset');
 			});
 		  });
- 		
-
- 		function render3(input, people){
-			var N=input.length;
+		  
+		  function render3(input){
 		  	input=input.reverse();
 
-		  	var time_slice=10*1000;//10 second is the minimum reporting interval of monitor app?
-		  	var people_indices={};
-		  	people.forEach(function(ID){people_indices[ID]=true;});
-	        //sanitation!
-	        for(var i=0;i<N;i++){
-	        	for(var ID in people_indices)
-	        		if(typeof input[i].data[ID]!='object')input[i].data[ID]={roomID:undefined}
-	        }
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('date', 'DATE'); // Implicit domain label col.
+	        data.addColumn('number', 'WATTS')
 
- 			var dataTable = new google.visualization.DataTable();
-			dataTable.addColumn({ type: 'string', id: 'Person ID' });
-			dataTable.addColumn({ type: 'string', id: 'Room' });
-			dataTable.addColumn({ type: 'datetime', id: 'Start' });
-			dataTable.addColumn({ type: 'datetime', id: 'End' });
-
-	    	//generate by each person
-	    	for(var ID in people_indices){
-	    		console.log("id",ID);
-	    		for(var i=0;i<N;i++){
-	    			var startR=input[i].data[ID].roomID;
-	    			var ptr=i;
-	    			while(ptr<N-1 && input[ptr+1].data[ID].roomID==startR)ptr++;
-	    			console.log('range',i,ptr);
-	    			var startTS=new Date(input[i].timestamp*1000);
-	    			var endTS=new Date(input[ptr].timestamp*1000+(i==ptr?time_slice:0));
-	    			if(startR && startR!="undefined")
-	    			{
-		    			dataTable.addRow([ ID, startR, startTS, endTS ]);
-		    			console.log([ ID, ""+startR, startTS, endTS ]);
-	    			}
-	    			//var ts=input[i].timestamp;
-	    			i=ptr;
-	    			continue;
-	    		}
-	    	}
-			var chart = new google.visualization.Timeline(ch3);
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          //console.log('row',ret);
+	          var date = new Date(item.year, item.month, item.day)
+	          data.addRow([date, item.value]);
+	        };
+			console.log(data);
+	        
+			var chart = new google.visualization.AreaChart(ch3);
+	        var options = {
+	        	title:"Historical Energy Consumption"
+	          //width:800,
+	          //height:500,
+	          //annotations: {'*': {style: 'line'}}
+	        };
 	        jQuery(ch3).show(0,function(){
-	        	chart.draw(dataTable);
+	        	chart.draw(data, options);
 	        	jQuery(ch3).slideToggle(0).slideToggle(1000);
 	        });
-
- 		}
-		</script>
+		  }
+		  </script>
 
       </div>
     </div>
@@ -442,18 +415,13 @@ body {
     <div class="panel-heading" role="tab" id="headingFour">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-          Comparison Between Person
+          Building Footprint Disaggregated
         </a>
       </h4>
     </div>
     <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
       <div class="panel-body">
        	 <form id="form4" onsubmit="return false;"  class="form-inline">
-		  <div class="form-group">
-		    <label for="personID4">UserIDs, comma separated</label>
-		    <input type="text" class="form-control" id="personID4" placeholder="UNI" value="xc2340,fengyi">
-		  </div>
-		  <hr/>
 		  <div class="form-group">
 		    <label for="startDate4">startDate</label>
 		    <input type="datetime-local" class="form-control" id="startDate4"  data-date-prefill="midnight-before">
@@ -468,123 +436,91 @@ body {
 		<script>
 		var ch4=document.getElementById('chart4');
 		var frm4=document.getElementById('form4');
-		var people;
+		//ch1 is the chart, frm1 is the form
+
  		jQuery(frm4).children('button').on('click', function () {
 		    var _btn = jQuery(this).button('loading');
-		    var personIDs=frm4.personID4.value;
-		    people=personIDs.split(",");
-		    jQuery.get("/api/Query/QueryPersonMulti/"+personIDs,{
+		    jQuery.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 		    		start:getUTCSeconds(frm4.startDate4.value),
 		    		end:getUTCSeconds(frm4.endDate4.value),
-		    		client:"AJAX debug frontend"
 	    		},
 		    	function(data,status){
 		    	console.log(data,status);
 		    	_btn.button('reset');
-		    	render4(data,people);
+		    	render4(data);
 		    },'json').fail(function() {
 			    alert('Error!'); // or whatever			    
 			    _btn.button('reset');
 			});
 		  });
- 		
+		  
+		  function render4(input){
+		  	input=input.reverse();
 
- 		function render4(input, people){
- 			d=input;
- 			var
- 				totalCon={}, roomCon={};
- 			people.forEach(function(p){
- 				totalCon[p]=0;roomCon[p]={};
- 			});
- 			for(var i=0;i<input.length;i++)
- 				try{
- 					var tdiff=60;
- 					if(input[i+1] && input[i+1].timestap) tdiff=input[i+1].timestamp-input[i].timestamp;
- 					var item=input[i].data;
- 					people.forEach(function(p){
- 						if(item[p]){
- 							var thisV=item[p].value*tdiff;//unit: W * s
- 							thisV=thisV/1000/3600;//unit: kW * h
- 							totalCon[p]+=thisV;
- 							var r=item[p].roomID;
- 							roomCon[p][r] = roomCon[p][r] || 0;
- 							roomCon[p][r]+=thisV;
- 						}
- 					});
- 				}
- 				catch(e){
- 					console.log("error parsing input at",i,input[i]);
-	 			}
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('datetime', 'TIME'); // Implicit domain label col.
+			data.addColumn('number', 'HVAC (W)');
+	        data.addColumn('number', 'Lighting (W)');
+	        data.addColumn('number', 'Electric (W)');
 
- 			var formattedTotalCon=[], formattedRoomCon=[];
- 			var colors = Highcharts.getOptions().colors;
- 			people.forEach(function(p,i){
- 				formattedTotalCon.push({
-		            name: p,
-		            y: totalCon[p],
-		            color: colors[i]
-		        });
-		        var j=0;
-		        for(var r in roomCon[p]){
-		        	j++;
-		        	formattedRoomCon.push({
-		            	name: p + " at " +r,
-		            	y: roomCon[p][r],
-		            	color: colors[i],
-		            	brightness: j%2?0.2:0
-		        	});
-		        }
-		        
- 			});
+	        var lastR=false;
+	        for(var i=0;i<input.length;i++){
+	          var item=input[i];
+	          //console.log('row',ret);
+	          var date = new Date(item.timestamp*1000)
+	          data.addRow([date, item.HVAC, item.Light, item.Electrical]);
+	        };
+			console.log(data);
+	        
 
-			jQuery('#chart4').show().highcharts({
-		        chart: {
-		            type: 'pie'
-		        },
-		        title: {
-		            text: 'Drilldown of footprint by person ~ room'
-		        },
-		        yAxis: {
-		            title: {
-		                text: 'Total percent market share'
-		            }
-		        },
-		        plotOptions: {
-		            pie: {
-		                shadow: true,
-		                center: ['50%', '50%']
-		            }
-		        },
-		        tooltip: {
-		            valueSuffix: 'kWh'
-		        },
-		        series: [{
-		            name: 'Consumption',
-		            data: formattedTotalCon,
-		            size: '55%',
-		            dataLabels: {
-		                formatter: function () {
-		                    // display only if larger than 1
-		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
-		                },
-		              distance:-50
-		            }
-		        }, {
-		            name: 'Consumption by room',
-		            data: formattedRoomCon,
-		            size: '80%',
-		            innerSize: '90%',
-		            dataLabels: {
-		                formatter: function () {
-		                    // display only if larger than 1
-		                    return this.y > 0 ? '<b>' + this.point.name + ':</b> ' + Math.round(this.y*100)/100 + 'kWh' : null;
-		                }
-		            }
-		        }]
-		    });
- 		}
+			var chart = new google.visualization.AreaChart(ch4);
+			var titleString = 'Total Deployment Footprint By Resource Type';
+	        var options = {
+	        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}},
+	        	chartArea:{left:200,top:200,width:845,height:210},
+	        	height: 600,
+	        	width: 1700,
+	        	isStacked:true,
+	        	tooltip: { isHtml: true},
+	        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+	        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+	        	hAxis: {
+	        		gridlines: {
+	        			color:'#0B0B0B'
+	        		},
+          			textStyle: {
+          				fontSize:12,
+          				color:'#FFFFFF'
+          			}
+          		},
+	        	vAxis: {
+	        		gridlines: {
+	        			color:'#0B0B0B'
+	        		},
+          			//title: 'Deployment Energy Footprint (W)',
+              		//titleFontSize:25,
+          			textStyle: {
+          				fontSize:12,
+          				color:'#FFFFFF'
+          			},
+          			viewWindow: {
+          				min:21000
+          			},
+          		},
 
-		</script>
+          		backgroundColor: '#303030'
+
+        		
+	          //width:800,
+	          //height:500,
+	          //annotations: {'*': {style: 'line'}}
+	        };
+	        jQuery(ch4).show(0,function(){
+	        	chart.draw(data, options);
+	        	jQuery(ch4).slideToggle(0).slideToggle(1000);
+	        });
+		  }
+		  </script>
       </div>
     </div>
   </div>

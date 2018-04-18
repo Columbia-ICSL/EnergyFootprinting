@@ -1,0 +1,174 @@
+$def with (name)
+<!doctype>
+<html>
+<head>
+<title> The Energy Footprint System query interface </title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript">
+
+var chart;
+var roomID;
+
+var types=[];
+var maxLen=(20*60/10);//20mins, every 10s
+var reqTime=3*1000; //TODO: add slider for update freq
+function requestData(){
+  jQuery.ajax({
+        url: '/realtime/',
+        success: render,
+        dataType:"json",
+        cache: false
+  });
+  function render(input){
+    console.log("input",d=input);
+    if(typeof input.tree[roomID] == 'undefined'){
+      jQuery('#myModal').modal({backdrop:'static', keyboard:0})
+      return;
+    }
+    var ts=input.timestamp*1000;
+    for(var t in input.tree[roomID].consumption){
+      if(types.indexOf(t)<0){
+        types.push(t);
+        chart.addSeries({name:t});
+      }
+      var idx=types.indexOf(t);
+      var val=input.tree[roomID].consumption[t].value;
+      var doshift=chart.series[idx].length > maxLen;
+      chart.series[idx].addPoint([ts,val],true, doshift);
+    }
+    setTimeout(requestData,reqTime);
+  }
+}
+
+jQuery(function(){
+    jQuery("form button").click(function() {
+        roomID=jQuery("#roomID").val();
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                defaultSeriesType: 'area',
+                events: {
+                    load: requestData
+                }
+            },
+            title: {
+                text: 'Live data'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150,
+                maxZoom: 20 * 1000
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Value',
+                    margin: 80
+                }
+            },
+            plotOptions: {
+                area: {
+                    stacking: 'normal',
+                    lineColor: '#666666',
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: '#666666'
+                    }
+                }
+            },
+            series: []
+        });        
+    });
+});
+</script>
+
+<style>
+body {
+  padding-top: 50px;
+  position: relative;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+        .box {border:1px solid grey;background-color:#d3d3d3;}
+        .large {font-size:3000%;color:red;}
+        #div1 {background-color:blue;}
+        #div2 {background-color:red;}
+        #div3 {background-color:green;}
+        .contentDiv {height:800px;}
+
+</style>
+</head>
+<body >
+   <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header"> <a href="" class="navbar-brand">My Website $name</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="index/$name">Index</a></li>
+                    <li><a href="person/$name">Personal Query</a></li>
+                    <li><a href="space/$name">Spatial Query</a></li>
+                    <li><a href="location1/$name">New Data Visualizations</a></li>
+                    <li class="dropdown active">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Realtime <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li class="dropdown-header">Realtime Data Visualization</li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="realtime-person/$name">Personal Footprint</a></li>
+                        <li class="active"><a href="realtime-space/$name">Spatial Footprint</a></li>
+                      </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Room ID not found</h4>
+          </div>
+          <div class="modal-body">
+            <p class="lead">
+            The ID you provided seems to be nonexistent&hellip;</p>
+            <p>This may either because there's a typo, or because the latest data haven't arrived into the database or the building metadata hasn't been updated accordingly. Please first check the database data stream and then refresh this page.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="location.reload()">Refresh</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <div class="container">
+      <div class="starter-template">
+        <h1>Realtime Spatial Energy Consumption</h1>
+          <div id="container" style="height: 440px;" class="panel-body">
+            <form id="form1" onsubmit="return false;"  class="form-inline">
+              <label for="roomID">RoomID</label>
+              <input type="text" class="form-control" id="roomID" placeholder="nwc1008" value="nwc1008">
+              <button type="button" class="btn btn-default">Start</button>
+            </form>
+        </div>
+
+</div>
+</div>
+</body>
+</html>
+

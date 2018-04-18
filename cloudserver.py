@@ -57,6 +57,10 @@ urls = (
     "/debug","Debug",
     "/recent","Recent",
     "/api/OSData", mingooServer.reportData,
+    '/realtime-space/(.*)','realtimespace',
+    '/realtime-person/(.*)','realtimeperson',
+    '/location1/(.*)','location1',
+    '/space/(.*)','space',
     '/person/(.*)', 'person',
     '/login/(.*)', 'login',
     '/(.*)', 'index'
@@ -98,6 +102,31 @@ class index:
 
 
         #return "Hello {0}".format(name)
+class realtimespace:
+
+    def GET(self,name):
+
+        return render.realtime-space(name);
+
+
+class realtimeperson:
+
+    def GET(self,name):
+
+        return render.realtime-person(name);
+
+class location1:
+
+    def GET(self,name):
+
+        return render.location1(name);
+
+class space:
+
+    def GET(self,name):
+
+        return render.space(name);
+
 class person:
 
     def GET(self,name):
