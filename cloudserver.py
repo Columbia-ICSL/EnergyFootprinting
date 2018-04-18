@@ -106,14 +106,14 @@ class realtimespace:
 
     def GET(self,name):
 
-        return render.realtime-space(name);
+        return render.realtimespace(name);
 
 
 class realtimeperson:
 
     def GET(self,name):
 
-        return render.realtime-person(name);
+        return render.realtimeperson(name);
 
 class location1:
 
