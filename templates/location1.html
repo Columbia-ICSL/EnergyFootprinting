@@ -545,9 +545,9 @@ midnightBefore.setMinutes(0);
 midnightBefore.toInputValue();
 //document.getElementById('startDate1').value = oneDayBefore.toInputValue();
 //document.getElementById('endDate1').value = new Date().toInputValue();
-$("[data-date-prefill=now]").val(new Date().toInputValue());
-$("[data-date-prefill=midnight-before]").val(midnightBefore.toInputValue());
-$("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
+jQuery("[data-date-prefill=now]").val(new Date().toInputValue());
+jQuery("[data-date-prefill=midnight-before]").val(midnightBefore.toInputValue());
+jQuery("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
 
 function getUTCSeconds(LocalDateStr){
 	var utcDate=new Date(LocalDateStr);
