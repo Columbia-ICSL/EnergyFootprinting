@@ -61,7 +61,7 @@ body {
     </div>
     <hr>
 
-  <div class="fullBlock">
+ <div class="fullBlock">
 	<div class="halfBlock">
 		<div class="smallBlock">
 			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
@@ -102,7 +102,7 @@ body {
 
 
 				function updateSpecData() {
-					jQuery.get("/api/appSupport/buildingFootprint/",{},
+					$.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    		console.log("Hello World");
 				    	renderInput(data);
@@ -113,7 +113,7 @@ body {
 			    		count.textContent=str1.concat(with2Decimals);
 			    		var str2 = "Last Updated: ";
 			    		var today = new Date();
-			    		var h = 22;
+			    		var h = today.getHours();
 			    		var m = today.getMinutes();
 			    		var str3;
 			    		if (m < 10) {
@@ -290,7 +290,7 @@ body {
 				console.log(rightNow);
 
 				function updateBuildingData() {
-					jQuery.get("/api/appSupport/buildingFootprint/",{},
+					$.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    	totalData.removeRow(0);
 				    	var currentTime = new Date();
@@ -301,7 +301,7 @@ body {
 					});
 				}
 
-			    jQuery.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
+			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
 			    		end:getUTCSeconds(rightNow),
 		    		},
@@ -330,9 +330,9 @@ body {
 
 					var titleString = 'Total Deployment Footprint By Resource Type';
 
-			        jQuery(ch4).show(0,function(){
+			        $(ch4).show(0,function(){
 			        	buildingChart.draw(totalData, totalOptions);
-			        	jQuery(ch4).slideToggle(0).slideToggle(1000);
+			        	$(ch4).slideToggle(0).slideToggle(1000);
 			        });
 
 					setInterval(function () {
@@ -448,9 +448,9 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        jQuery(pc1).show(0,function(){
+				        $(pc1).show(0,function(){
 				        	chartPersonal1.draw(personalData1, personalOptions);
-				        	jQuery(pc1).slideToggle(0).slideToggle(1000);
+				        	$(pc1).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
@@ -477,9 +477,9 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        jQuery(pc2).show(0,function(){
+				        $(pc2).show(0,function(){
 				        	chartPersonal2.draw(personalData2, personalOptions);
-				        	jQuery(pc2).slideToggle(0).slideToggle(1000);
+				        	$(pc2).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
@@ -506,14 +506,14 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        jQuery(pc3).show(0,function(){
+				        $(pc3).show(0,function(){
 				        	chartPersonal3.draw(personalData3, personalOptions);
-				        	jQuery(pc3).slideToggle(0).slideToggle(1000);
+				        	$(pc3).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
 					function updatePersonalData() {
-						jQuery.get("/api/appSupport/multipleUsers/",{
+						$.get("/api/appSupport/multipleUsers/",{
 							user1:user1,
 							user2:user2,
 							user3:user3,
@@ -538,7 +538,7 @@ body {
 
 
 					function setupGraphs() {
-						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
+						$.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user1,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
@@ -549,7 +549,7 @@ body {
 				    	},'json').fail(function() {
 					    	alert('Error!'); // or whatever
 						});
-						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
+						$.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user2,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
@@ -560,7 +560,7 @@ body {
 				    	},'json').fail(function() {
 					    	alert('Error!'); // or whatever
 						});
-						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
+						$.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user3,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
