@@ -109,7 +109,7 @@ body {
 				    	renderCol(data);
 				    	var num = data.energy/1000.0*.202;
 				    	var with2Decimals = num.toFixed(2);
-				    	var str1 = "*";
+				    	var str1 = "\$";
 			    		count.textContent=str1.concat(with2Decimals);
 			    		var str2 = "Last Updated: ";
 			    		var today = new Date();
@@ -290,7 +290,7 @@ body {
 				console.log(rightNow);
 
 				function updateBuildingData() {
-					$.get("/api/appSupport/buildingFootprint/",{},
+					jQuery.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    	totalData.removeRow(0);
 				    	var currentTime = new Date();
@@ -301,7 +301,7 @@ body {
 					});
 				}
 
-			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
+			    jQuery.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
 			    		end:getUTCSeconds(rightNow),
 		    		},
@@ -330,9 +330,9 @@ body {
 
 					var titleString = 'Total Deployment Footprint By Resource Type';
 
-			        $(ch4).show(0,function(){
+			        jQuery(ch4).show(0,function(){
 			        	buildingChart.draw(totalData, totalOptions);
-			        	$(ch4).slideToggle(0).slideToggle(1000);
+			        	jQuery(ch4).slideToggle(0).slideToggle(1000);
 			        });
 
 					setInterval(function () {
@@ -448,9 +448,9 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        $(pc1).show(0,function(){
+				        jQuery(pc1).show(0,function(){
 				        	chartPersonal1.draw(personalData1, personalOptions);
-				        	$(pc1).slideToggle(0).slideToggle(1000);
+				        	jQuery(pc1).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
@@ -477,9 +477,9 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        $(pc2).show(0,function(){
+				        jQuery(pc2).show(0,function(){
 				        	chartPersonal2.draw(personalData2, personalOptions);
-				        	$(pc2).slideToggle(0).slideToggle(1000);
+				        	jQuery(pc2).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
@@ -506,14 +506,14 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        $(pc3).show(0,function(){
+				        jQuery(pc3).show(0,function(){
 				        	chartPersonal3.draw(personalData3, personalOptions);
-				        	$(pc3).slideToggle(0).slideToggle(1000);
+				        	jQuery(pc3).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
 					function updatePersonalData() {
-						$.get("/api/appSupport/multipleUsers/",{
+						jQuery.get("/api/appSupport/multipleUsers/",{
 							user1:user1,
 							user2:user2,
 							user3:user3,
@@ -538,7 +538,7 @@ body {
 
 
 					function setupGraphs() {
-						$.get("/api/dataExtraction/PersonalConsumption/",{
+						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user1,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
@@ -549,7 +549,7 @@ body {
 				    	},'json').fail(function() {
 					    	alert('Error!'); // or whatever
 						});
-						$.get("/api/dataExtraction/PersonalConsumption/",{
+						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user2,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
@@ -560,7 +560,7 @@ body {
 				    	},'json').fail(function() {
 					    	alert('Error!'); // or whatever
 						});
-						$.get("/api/dataExtraction/PersonalConsumption/",{
+						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user3,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
