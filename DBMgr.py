@@ -206,6 +206,13 @@ class DBMgr(object):
 
 
 
+
+		#############################################
+		# recommendations parameters
+		self.testNumber = 0
+
+
+
 		self.OSreport = self.dbc.db.OSreport
 
 		self._ReadConfigs()
@@ -1736,6 +1743,13 @@ class DBMgr(object):
 		return
 
 
+
+#########################################
+
+
+	def recommendationsAPI(self):
+		self.testNumber = self.testNumber + 1
+		return self.testNumber
 
 
 
