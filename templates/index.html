@@ -102,7 +102,7 @@ body {
 
 
 				function updateSpecData() {
-					$.get("/api/appSupport/buildingFootprint/",{},
+					jQuery.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    		console.log("Hello World");
 				    	renderInput(data);
