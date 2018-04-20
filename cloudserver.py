@@ -24,6 +24,7 @@ import mingooServer
 import newDataAnalytics
 import externalTraining
 import zones
+import getRecs
 
 from bson import ObjectId
 from threading import Thread
@@ -32,6 +33,7 @@ import suggestionsEngine
 from trainingData import training
 import visualizationAPI
 urls = (
+    "/api/getRecs", getRecs.appURL,
     "/api/zoning", zones.zonesTraining,
     "/api/externalTraining", externalTraining.externalLocationTraining,
     "/api/EnergyReport",Energy.EnergyReport,
