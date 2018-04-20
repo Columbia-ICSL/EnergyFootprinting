@@ -104,7 +104,7 @@ body {
 				function updateSpecData() {
 					jQuery.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
-				    		console.log("Hello World");
+				    	console.log("Hello World");
 				    	renderInput(data);
 				    	renderCol(data);
 				    	var num = data.energy/1000.0*.202;
