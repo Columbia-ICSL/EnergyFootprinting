@@ -100,7 +100,7 @@ body {
 
 
 				function updateSpecData() {
-					$.get("/api/appSupport/buildingFootprint/",{},
+					jQuery.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    		console.log("Hello World");
 				    	renderInput(data);
@@ -288,7 +288,7 @@ body {
 				console.log(rightNow);
 
 				function updateBuildingData() {
-					$.get("/api/appSupport/buildingFootprint/",{},
+					jQuery.get("/api/appSupport/buildingFootprint/",{},
 				    	function(data,status){
 				    	totalData.removeRow(0);
 				    	var currentTime = new Date();
@@ -299,7 +299,7 @@ body {
 					});
 				}
 
-			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
+			    jQuery.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
 			    		start:getUTCSeconds(hourAgo),
 			    		end:getUTCSeconds(rightNow),
 		    		},
@@ -328,9 +328,9 @@ body {
 
 					var titleString = 'Total Deployment Footprint By Resource Type';
 
-			        $(ch4).show(0,function(){
+			        jQuery(ch4).show(0,function(){
 			        	buildingChart.draw(totalData, totalOptions);
-			        	$(ch4).slideToggle(0).slideToggle(1000);
+			        	jQuery(ch4).slideToggle(0).slideToggle(1000);
 			        });
 
 					setInterval(function () {
@@ -446,9 +446,9 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        $(pc1).show(0,function(){
+				        jQuery(pc1).show(0,function(){
 				        	chartPersonal1.draw(personalData1, personalOptions);
-				        	$(pc1).slideToggle(0).slideToggle(1000);
+				        	jQuery(pc1).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
@@ -475,9 +475,9 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        $(pc2).show(0,function(){
+				        jQuery(pc2).show(0,function(){
 				        	chartPersonal2.draw(personalData2, personalOptions);
-				        	$(pc2).slideToggle(0).slideToggle(1000);
+				        	jQuery(pc2).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
@@ -504,14 +504,14 @@ body {
 
 						var titleString = 'Personal Footprint For: Occupant A';
 
-				        $(pc3).show(0,function(){
+				        jQuery(pc3).show(0,function(){
 				        	chartPersonal3.draw(personalData3, personalOptions);
-				        	$(pc3).slideToggle(0).slideToggle(1000);
+				        	jQuery(pc3).slideToggle(0).slideToggle(1000);
 				        });
 					}
 
 					function updatePersonalData() {
-						$.get("/api/appSupport/multipleUsers/",{
+						jQuery.get("/api/appSupport/multipleUsers/",{
 							user1:user1,
 							user2:user2,
 							user3:user3,
@@ -536,7 +536,7 @@ body {
 
 
 					function setupGraphs() {
-						$.get("/api/dataExtraction/PersonalConsumption/",{
+						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user1,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
@@ -547,7 +547,7 @@ body {
 				    	},'json').fail(function() {
 					    	alert('Error!'); // or whatever
 						});
-						$.get("/api/dataExtraction/PersonalConsumption/",{
+						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user2,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
@@ -558,7 +558,7 @@ body {
 				    	},'json').fail(function() {
 					    	alert('Error!'); // or whatever
 						});
-						$.get("/api/dataExtraction/PersonalConsumption/",{
+						jQuery.get("/api/dataExtraction/PersonalConsumption/",{
 				    		user:user3,
 				    		start:getUTCSeconds(hourAgo),
 				    		end:getUTCSeconds(rightNow),
@@ -593,8 +593,8 @@ Date.prototype.toInputValue = (function() {
 var oneDayBefore=new Date();oneDayBefore.setSeconds((new Date()).getSeconds()-86400);
 //document.getElementById('startDate1').value = oneDayBefore.toInputValue();
 //document.getElementById('endDate1').value = new Date().toInputValue();
-$("[data-date-prefill=now]").val(new Date().toInputValue());
-$("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
+jQuery("[data-date-prefill=now]").val(new Date().toInputValue());
+jQuery("[data-date-prefill=one-day-before]").val(oneDayBefore.toInputValue());
 
 function getUTCSeconds(LocalDateStr){
 	var utcDate=new Date(LocalDateStr);
