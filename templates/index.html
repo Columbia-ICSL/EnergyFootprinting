@@ -29,6 +29,7 @@ body {
 </head>
 <body >
    <div class="navbar navbar-default navbar-fixed-top">
+	   	<img src="dashboard/Banner.png">
         <div class="container">
             <div class="navbar-header"> <a href="" class="navbar-brand">My Website $name</a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span>
@@ -58,14 +59,528 @@ body {
     </div>
     <hr>
 
-    <div class="container">
-      <div class="starter-template">
-        <h1>Energy Footprinting</h1>
-        <p class="lead">This interface is for debugging purpose only.</p>
-        <p> It can access arbitrary data (but not modify them); so no need to be careful! </p>
-        <p> Please choose one of the functionality fron the navigation bar. </p>
-      </div>
-    </div><!-- /.container -->
+  <div class="fullBlock">
+	<div class="halfBlock">
+		<div class="smallBlock">
+			<div class="content" style="background-image:url(dashboard/flash.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
+			<div class="countHeader">Energy Bill for Today</div>
+			<br>
+			<br>
+			<div class="counter" id="countup"><strong>$0.00</strong></div>
+			<div class="lastUpdate" id="billUpdate">Hello</div>
+			</div>
+		</div><div class="smallBlock">
+			<div class="content">
+				<div class="piechart" id="piechart"></div>
+				<div class="lastUpdate" id="pieUpdate">Hello</div>
+			</div>
+		</div><div class="mediumBlockBottom">
+			<div class="content">
+				<div class="columnChart" id="columnChart"></div>
+				<div class="lastUpdate" id="columnUpdate">Hello</div>
+				<script>
+				var count = document.getElementById("countup");
+				var billUpdate = document.getElementById("billUpdate");
+				var pieUpdate = document.getElementById("pieUpdate");
+				var columnUpdate = document.getElementById("columnUpdate");
+				var pieChart = null;
+				var chartData = null;
+				var options = {
+						animation: {
+							duration: 1000,
+							easing: 'out',
+							startup:true,
+						},
+						//chartArea: {height: '80%'},
+			    		pieHole: 0.3,
+			    		backgroundColor: 'transparent',
+			    		colors: ['#FF7A71', '#BDE882', '#7B7FFF'],
+			    		legend: {position: 'top', textStyle: {fontSize: 16, color: 'white'}, alignment: 'center'},
+			    		pieSliceText: "none"};
+
+
+				function updateSpecData() {
+					$.get("/api/appSupport/buildingFootprint/",{},
+				    	function(data,status){
+				    		console.log("Hello World");
+				    	renderInput(data);
+				    	renderCol(data);
+				    	var num = data.energy/1000.0*.202;
+				    	var with2Decimals = num.toFixed(2);
+				    	var str1 = "$";
+			    		count.textContent=str1.concat(with2Decimals);
+			    		var str2 = "Last Updated: ";
+			    		var today = new Date();
+			    		var h = today.getHours();
+			    		var m = today.getMinutes();
+			    		var str3;
+			    		if (m < 10) {
+			    			str3 = h + ":0" + m;
+			    		} else {
+			    			str3 = h + ":" + m;
+			    		}
+			    		billUpdate.textContent=str2.concat(str3);
+			    		pieUpdate.textContent=str2.concat(str3);
+			    		columnUpdate.textContent=str2.concat(str3);
+				    },'json').fail(function() {
+					    alert('Error!'); // or whatever
+					});
+				}
+
+				function renderInput(input) {
+					if (chartData == null) {
+						chartData = new google.visualization.arrayToDataTable([['Resource Type', 'Watts'],
+			    		['HVAC', input.HVAC],
+			    		['Lights', input.Light],
+			    		['Plugs', input.Electrical]], false);
+					} else {
+						chartData.setCell(0, 1, input.HVAC);
+						chartData.setCell(1, 1, input.Light);
+						chartData.setCell(2, 1, input.Electrical);
+
+						// chartData.setCell(0, 1, input.HVAC);
+						// chartData.setCell(1, 1, input.Light);
+						// chartData.setCell(2, 1, input.Electrical);
+					}
+					if (pieChart == null) {
+						pieChart = new google.visualization.PieChart(document.getElementById('piechart'));
+					} else {
+						pieChart.draw(chartData, options);
+					}
+				}
+
+				// var data1 = {};
+				// data1.HVAC = 1;
+				// data1.Light = 1;
+				// data1.Electrical = 1;
+				// renderPie(data1);
+			    function render() {
+			    	updateSpecData();
+			    	setInterval(function() {
+			    		updateSpecData();
+			    	}, 6000);
+			    }
+
+				var colChart = null;
+				var colChartData = null;
+				var ex = 100000;
+				var colOptions = {
+					animation: {
+						duration: 1000,
+						easing: 'out',
+						startup: true,
+					},
+					backgroundColor: 'transparent',
+					hAxis: {
+						title: 'Date',
+						titleTextStyle: {
+							color: 'white'
+						},
+						textStyle: {color: 'white'}
+					},
+					vAxis: {
+						title: 'Daily Power Usage\n(Watt-Hours)',
+						titleTextStyle: {
+							color: 'white'
+						},
+						textStyle: {color: 'white'}
+					}, legend: {position: 'none'}
+				};
+				function renderCol(input) {
+					if (colChartData == null) {
+						colChartData = new google.visualization.arrayToDataTable([['Date', 'Watts', {role: 'style'}],
+							[input.historyStrings[0], input.history[0], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[1], input.history[1], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[2], input.history[2], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[3], input.history[3], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[4], input.history[4], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[5], input.history[5], 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5'],
+							[input.historyStrings[6], input.energy, 'stroke-color:#FDAB52; stroke-width:2; fill-color:#FDAB52; fill-opacity:0.5']], false);
+					} else {
+						colChartData.setCell(0, 1, input.history[0]);
+						colChartData.setCell(1, 1, input.history[1]);
+						colChartData.setCell(2, 1, input.history[2]);
+						colChartData.setCell(3, 1, input.history[3]);
+						colChartData.setCell(4, 1, input.history[4]);
+						colChartData.setCell(5, 1, input.history[5]);
+						colChartData.setCell(6, 1, input.energy);
+					}
+					if (colChart == null) {
+						colChart = new google.visualization.ColumnChart(document.getElementById('columnChart'));
+					} else {
+						colChart.draw(colChartData, colOptions);
+					}
+				}
+
+			    render();
+				</script>
+			</div>
+		</div><div class="mediumBlockBottom">
+			<div class="content" style="background-image:url(dashboard/advert.png);background-repeat: no-repeat;background-position:top; background-size:auto calc((100vh - 100vw/30 - 32px)/3);">
+<!-- 				<img src="dashboard/advert.png"> -->
+			</div>
+		</div>
+	</div><div class="halfBlock">
+		<div class="mediumBlockTop">
+			<div class="content">
+				<div class="BuildingHeader">Realtime Power Consumption of 10 and 10M Floors</div>
+				<div id="chart4" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/3-3vh);display:none;"></div>
+				<script>
+				var totalOptions = {
+		        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}, position:'bottom'},
+		        	//chartArea:{left:200,top:200,width:845,height:210},
+		        	//height: 600,
+		        	//width: 1700,
+		        	isStacked:true,
+		        	tooltip: { isHtml: true},
+		        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+		        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+		        	hAxis: {
+		        		gridlines: {
+		        			color:'#0B0B0B'
+		        		},
+	          			textStyle: {
+	          				fontSize:12,
+	          				color:'#FFFFFF'
+	          			}
+	          		},
+		        	vAxis: {
+		        		gridlines: {
+		        			color:'#0B0B0B'
+		        		},
+	          			//title: 'Deployment Energy Footprint (W)',
+	              		//titleFontSize:25,
+	          			textStyle: {
+	          				fontSize:12,
+	          				color:'#FFFFFF'
+	          			},
+	          			viewWindow: {
+	          				min:21000
+	          			},
+	          		},
+	          		backgroundColor: '#303030'
+		        };
+
+		        var totalData;
+				Date.prototype.toInputValue = (function() {
+				    var local = new Date(this);
+				    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+				    return local.toJSON().slice(0,16);
+				});
+				function getUTCSeconds(LocalDateStr){
+					var utcDate=new Date(LocalDateStr);
+					utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
+					return Math.floor(+utcDate/1000);
+				}
+
+				var ch4=document.getElementById('chart4');
+				var buildingChart = new google.visualization.AreaChart(ch4);
+				//ch1 is the chart, frm1 is the form
+				var people;
+				var rightNow = new Date();
+				rightNow.setHours(rightNow.getHours()-4);
+				var hourAgo = new Date();
+				hourAgo.setHours(hourAgo.getHours()-4);
+				hourAgo.setMinutes(hourAgo.getMinutes()-30);
+
+				hourAgo.toInputValue();
+				console.log(hourAgo);
+				console.log(rightNow);
+
+				function updateBuildingData() {
+					$.get("/api/appSupport/buildingFootprint/",{},
+				    	function(data,status){
+				    	totalData.removeRow(0);
+				    	var currentTime = new Date();
+				    	totalData.addRow([currentTime, data.HVAC, data.Light, data.Electrical]);
+				    	buildingChart.draw(totalData, totalOptions);
+				    },'json').fail(function() {
+					    alert('Error!'); // or whatever
+					});
+				}
+
+			    $.get("/api/dataExtraction/BuildingFootprintDisaggregated/",{
+			    		start:getUTCSeconds(hourAgo),
+			    		end:getUTCSeconds(rightNow),
+		    		},
+			    	function(data,status){
+			    	render4(data);
+			    },'json').fail(function() {
+				    alert('Error!'); // or whatever
+				});
+
+				function render4(input){
+				  	input=input.reverse();
+
+			        totalData = new google.visualization.DataTable();
+			        totalData.addColumn('datetime', 'TIME'); // Implicit domain label col.
+					totalData.addColumn('number', 'HVAC (W)');
+			        totalData.addColumn('number', 'Lighting (W)');
+			        totalData.addColumn('number', 'Electric (W)');
+
+			        var lastR=false;
+			        for(var i=0;i<input.length;i++){
+			          var item=input[i];
+			          //console.log('row',ret);
+			          var date = new Date(item.timestamp*1000)
+			          totalData.addRow([date, item.HVAC, item.Light, item.Electrical]);
+			        };
+
+					var titleString = 'Total Deployment Footprint By Resource Type';
+
+			        $(ch4).show(0,function(){
+			        	buildingChart.draw(totalData, totalOptions);
+			        	$(ch4).slideToggle(0).slideToggle(1000);
+			        });
+
+					setInterval(function () {
+						updateBuildingData();
+					}, 10000);
+				}
+
+
+
+
+
+
+
+
+
+				</script>
+			</div>
+		</div><div class="largeBlock">
+			<div class="content">
+			<div class="personalHeader">Individual Footprints</div>
+				<div id="personalChart1" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/5);display:none;"></div>
+				<div id="personalChart2" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/5);display:none;"></div>
+				<div id="personalChart3" class="panel-body" style="width:100%;height:calc((100vh - 100vw/30 - 32px)/5);display:none;"></div>
+
+				<script>
+					var user1 = "9432F0A3-660D-4C35-AA63-C7CFDD6D0F4D";
+					var user2 = "eac6547d7ee7b9f";
+					var user3 = "fe718a90e1e1c821";
+					var personalOptions = {
+			        	legend:{textStyle: {fontSize: 12, color:'#FFFFFF'}, position:'bottom'},
+//				        	chartArea:{left:200,top:200,width:868,height:140},
+//				        	height: 600,
+//				        	width: 1700,
+			        	isStacked:true,
+			        	tooltip: { isHtml: true},
+			        	colors:['#FF7A71', '#BDE882', '#7B7FFF'],
+			        	lineColors: ['#DF5A51', '#9DC862', '#5B5FDF'],
+			        	hAxis: {
+			        		//titleFontSize:25,
+		          			//title: 'Time of Day',
+		          			textStyle: {
+		          				fontSize:12,
+		          				color:'#FFFFFF'
+		          			},
+		          			gridlines: {
+			        			color:'#0B0B0B'
+			        		},
+		          		},
+			        	vAxis: {
+			        		//titleFontSize:25,
+		          			//title: 'Personal Energy Footprint (W)',
+		          			textStyle: {
+		          				fontSize:12,
+		          				color:'#FFFFFF'
+		          			},
+		          			gridlines: {
+			        			color:'#0B0B0B'
+			        		},
+		        		},
+		          		backgroundColor: '#303030'
+			        };
+					var pc1=document.getElementById('personalChart1');
+			        var chartPersonal1 = new google.visualization.AreaChart(pc1);
+			        var pc2=document.getElementById('personalChart2');
+			        var chartPersonal2 = new google.visualization.AreaChart(pc2);
+			        var pc3=document.getElementById('personalChart3');
+			        var chartPersonal3 = new google.visualization.AreaChart(pc3);
+
+			        var personalData1;
+			        var personalData2;
+			        var personalData3;
+					Date.prototype.toInputValue = (function() {
+					    var local = new Date(this);
+					    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+					    return local.toJSON().slice(0,16);
+					});
+					function getUTCSeconds(LocalDateStr){
+						var utcDate=new Date(LocalDateStr);
+						utcDate.setMinutes(utcDate.getMinutes() + utcDate.getTimezoneOffset());
+						return Math.floor(+utcDate/1000);
+					}
+
+					var people;
+					var rightNow = new Date();
+					rightNow.setHours(rightNow.getHours()-4);
+					rightNow.toInputValue();
+					var hourAgo = new Date();
+					hourAgo.setHours(hourAgo.getHours()-4);
+					hourAgo.setMinutes(hourAgo.getMinutes()-30);
+					hourAgo.toInputValue();
+					console.log(hourAgo);
+					console.log(rightNow);
+					function renderPersonal1(input){
+					  	input=input.reverse();
+
+				        personalData1 = new google.visualization.DataTable();
+				        personalData1.addColumn('datetime', 'TIME'); // Implicit domain label col.
+				        //data.addColumn('number', 'WATTS');
+				        personalData1.addColumn('number', 'HVAC (W)');
+				        //personalData1.addColumn({type:'string', role:'tooltip'});
+				        personalData1.addColumn('number', 'Lighting (W)');
+				        personalData1.addColumn('number', 'Electrical (W)');
+
+
+				        var lastR=false;
+				        for(var i=0;i<input.length;i++){
+				        	var item=input[i];
+				        	//console.log('row',ret);
+				        	var date = new Date(item.timestamp*1000)
+				        	var electricTemp = item.Electrical + 90;
+				        	personalData1.addRow([date, item.HVAC, /*"location: " + item.location, */item.Light, electricTemp]);//item.value
+				        };
+
+						var titleString = 'Personal Footprint For: Occupant A';
+
+				        $(pc1).show(0,function(){
+				        	chartPersonal1.draw(personalData1, personalOptions);
+				        	$(pc1).slideToggle(0).slideToggle(1000);
+				        });
+					}
+
+					function renderPersonal2(input){
+					  	input=input.reverse();
+
+				        personalData2 = new google.visualization.DataTable();
+				        personalData2.addColumn('datetime', 'TIME'); // Implicit domain label col.
+				        //data.addColumn('number', 'WATTS');
+				        personalData2.addColumn('number', 'HVAC (W)');
+				        //personalData2.addColumn({type:'string', role:'tooltip'});
+				        personalData2.addColumn('number', 'Lighting (W)');
+				        personalData2.addColumn('number', 'Electrical (W)');
+
+
+				        var lastR=false;
+				        for(var i=0;i<input.length;i++){
+				        	var item=input[i];
+				        	//console.log('row',ret);
+				        	var date = new Date(item.timestamp*1000)
+				        	var electricTemp = item.Electrical + 90;
+				        	personalData2.addRow([date, item.HVAC, /*"location: " + item.location, */item.Light, electricTemp]);//item.value
+				        };
+
+						var titleString = 'Personal Footprint For: Occupant A';
+
+				        $(pc2).show(0,function(){
+				        	chartPersonal2.draw(personalData2, personalOptions);
+				        	$(pc2).slideToggle(0).slideToggle(1000);
+				        });
+					}
+
+					function renderPersonal3(input){
+					  	input=input.reverse();
+
+				        personalData3 = new google.visualization.DataTable();
+				        personalData3.addColumn('datetime', 'TIME'); // Implicit domain label col.
+				        //data.addColumn('number', 'WATTS');
+				        personalData3.addColumn('number', 'HVAC (W)');
+				        //personalData3.addColumn({type:'string', role:'tooltip'});
+				        personalData3.addColumn('number', 'Lighting (W)');
+				        personalData3.addColumn('number', 'Electrical (W)');
+
+
+				        var lastR=false;
+				        for(var i=0;i<input.length;i++){
+				        	var item=input[i];
+				        	//console.log('row',ret);
+				        	var date = new Date(item.timestamp*1000)
+				        	var electricTemp = item.Electrical + 90;
+				        	personalData3.addRow([date, item.HVAC, /*"location: " + item.location, */item.Light, electricTemp]);//item.value
+				        };
+
+						var titleString = 'Personal Footprint For: Occupant A';
+
+				        $(pc3).show(0,function(){
+				        	chartPersonal3.draw(personalData3, personalOptions);
+				        	$(pc3).slideToggle(0).slideToggle(1000);
+				        });
+					}
+
+					function updatePersonalData() {
+						$.get("/api/appSupport/multipleUsers/",{
+							user1:user1,
+							user2:user2,
+							user3:user3,
+						},
+					    function(data,status){
+					    	console.log(data);
+					    	personalData1.removeRow(0);
+					    	personalData2.removeRow(0);
+					    	personalData3.removeRow(0);
+					    	var currentTime = new Date();
+					    	console.log(currentTime);
+					    	personalData1.addRow([currentTime, data.HVAC1, data.Light1, data.Electrical1]);
+					    	personalData2.addRow([currentTime, data.HVAC2, data.Light2, data.Electrical2]);
+					    	personalData3.addRow([currentTime, data.HVAC3, data.Light3, data.Electrical3]);
+					    	chartPersonal1.draw(personalData1, personalOptions);
+					    	chartPersonal2.draw(personalData2, personalOptions);
+					    	chartPersonal3.draw(personalData3, personalOptions);
+					    },'json').fail(function() {
+						    alert('Error!'); // or whatever
+						});
+					}
+
+
+					function setupGraphs() {
+						$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user1,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal1(data);
+				    	},'json').fail(function() {
+					    	alert('Error!'); // or whatever
+						});
+						$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user2,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal2(data);
+				    	},'json').fail(function() {
+					    	alert('Error!'); // or whatever
+						});
+						$.get("/api/dataExtraction/PersonalConsumption/",{
+				    		user:user3,
+				    		start:getUTCSeconds(hourAgo),
+				    		end:getUTCSeconds(rightNow),
+			    		},
+				    	function(data,status){
+					    	console.log(data,status);
+					    	renderPersonal3(data);
+				    	},'json').fail(function() {
+					    	alert('Error!'); // or whatever
+						});
+						setInterval(function () {
+							updatePersonalData();
+						}, 10000);
+					}
+
+					setupGraphs();
+
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 <script>
