@@ -17,7 +17,7 @@ class recommenderSystem:
 	def getUsers(self):
 		#create a list of users from the database
 		self.users = cloudserver.db.dumpUsers()
-		print "Loaded " + len(self.users) + " users"
+		print "Loaded " + str(len(self.users)) + " users"
 
 
 
