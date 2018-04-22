@@ -1751,7 +1751,8 @@ class DBMgr(object):
 		self.testNumber = self.testNumber + 1
 		return self.testNumber
 
-
+	def dumpUsers(self):
+		return list(self.registration_col1.find())
 
 
 

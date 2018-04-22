@@ -3,6 +3,7 @@ import os
 import datetime
 import time
 import calendar
+import recommendationSystem
 
 import DBMgr
 db=DBMgr.DBMgr()
@@ -70,7 +71,8 @@ urls = (
 
 from DBMgr import MongoJsonEncoder
 
-SE = suggestionsEngine.suggestionsEngine()
+RS = recommendationSystem.recommenderSystem()
+#SE = suggestionsEngine.suggestionsEngine()
 #TD = generateTrainingData()
 
 render = web.template.render('templates/')
