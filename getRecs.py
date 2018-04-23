@@ -10,7 +10,8 @@ urls = ("/", "getRecs")
 class getRecs:
 	def GET(self):
 		data = web.input(id=None)
-		if cloudserver.db.userIDLookup(data.id) == None :
+		cloudserver.RS.getUserLocations(data.id)
+		if cloudserver.db.userIDLookup(data.id) == None:
 			return cloudserver.db._encode({"recs":-1}, False)
 		else:
 			testValue = cloudserver.db.recommendationsAPI()

@@ -44,10 +44,10 @@ class BeaconVals:
         l = locs[1:]
         ID = locs[0]
         locs = map(int, l)
-        print("\n\n")
-        print(ID)
-        print(locs)
-        print("\n\n")
+        #print("\n\n")
+        #print(ID)
+        #print(locs)
+        #print("\n\n")
 
         cloudserver.db.LogRawData({"ID":ID,"RSSI":locs})
 

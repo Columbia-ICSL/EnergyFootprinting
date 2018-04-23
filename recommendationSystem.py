@@ -31,7 +31,8 @@ class recommenderSystem:
 	def loadBuildingParams(self):
 		return
 
-	def getUserLocations(self):
+	def getUserLocations(self, userID):
+		print userID
 		print cloudserver.db.location_of_users
 		return
 
