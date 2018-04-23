@@ -20,7 +20,7 @@ class getRecs:
        		}
 			return cloudserver.db._encode(json_return)
 		else:
-			ret = cloudserver.db.returnRecs(data.id)
+			ret = cloudserver.RS.returnRecs(data.id)
 			return ret
 			#cloudserver.db._encode({"recs":testValue}, False)
 		return "How did you get here"
