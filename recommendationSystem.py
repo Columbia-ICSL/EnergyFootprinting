@@ -14,7 +14,7 @@ class recommenderSystem:
 		self.users = None
 		self.userRecommendations = {}
 		self.getUsers()
-		self.getUserLocations()
+		#self.getUserLocations()
 	
 
 	def getUsers(self):
