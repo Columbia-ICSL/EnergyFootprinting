@@ -13,9 +13,10 @@ class recommenderSystem:
 		self.checkInterval = 30
 		self.users = None
 		self.userRecommendations = {}
-		self.getUsers()
 		self.locations = {}
 		self.rewards = {}
+		self.getUsers()
+
 		#self.getUserLocations()
 	
 
