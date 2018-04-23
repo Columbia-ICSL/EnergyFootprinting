@@ -22,6 +22,8 @@ class recommenderSystem:
 		self.users = cloudserver.db.dumpUsers()
 		print "Loaded " + str(len(self.users)) + " users"
 		for user in self.users:
+			if "name" not in user or "userID" not in user:
+				continue
 			self.userRecommendations[user["userID"]] = user["name"]
 		print "Loaded user recommendations dictionary"
 		print self.userRecommendations
