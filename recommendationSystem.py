@@ -40,7 +40,7 @@ class recommenderSystem:
 		return
 
 	def make_suggestion_item(iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
-        Others.update({
+		Others.update({
             "type":iType,
             "title":iTitle,
             "body":iBodyText,
@@ -48,7 +48,7 @@ class recommenderSystem:
             "notification":inotification,
             "messageID":messageID
             })
-        return Others
+		return Others
 
 
 
