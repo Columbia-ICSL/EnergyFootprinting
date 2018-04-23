@@ -14,6 +14,8 @@ class recommenderSystem:
 		self.users = None
 		self.userRecommendations = {}
 		self.getUsers()
+		self.locations = {}
+		self.rewards = {}
 		#self.getUserLocations()
 	
 
@@ -25,19 +27,36 @@ class recommenderSystem:
 			if "name" not in user or "userID" not in user:
 				continue
 			self.userRecommendations[user["userID"]] = user["name"]
+			self.rewards[user["userID"]] = user["balance"]
 		print "Loaded user recommendations dictionary"
 		print self.userRecommendations
 
 	def loadBuildingParams(self):
 		return
 
-	def getUserLocations(self, userID):
-		print userID
-		print cloudserver.db.location_of_users
+	def getUserLocations(self):
+		self.locations = cloudserver.db.location_of_users
 		return
 
 	def returnRecs(self, user):
-		return
+		balance = 0
+		if user in self.rewards:
+			balance = self.rewards[user]
+		tempBalance = balance
+		json_return={
+            "location":"Location Name",
+            "location_id":"locationIDString",
+            "balance":balance,
+            "tempBalance": tempBalance,
+            "suggestions":[]
+        }
+        location = "outOfLab"
+        if user in self.locations:
+        	location = self.locations[user]
+        json_return["location_id"]=location
+        json_return["location"]=cloudserver.db.RoomIdToName(location)
+		ret = cloudserver.db._encode(json_return,False)
+        return ret
 
 	def bestRecommendations(self):
 		return
@@ -72,4 +91,5 @@ class recommenderSystem:
 	def _loopCheckDatabase(self):
 		while True:
 			time.sleep(self.checkInterval)
+			self.getUserLocations()
 			print "Interval"
