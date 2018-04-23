@@ -72,7 +72,7 @@ urls = (
 from DBMgr import MongoJsonEncoder
 
 RS = recommendationSystem.recommenderSystem()
-#SE = suggestionsEngine.suggestionsEngine()
+SE = suggestionsEngine.suggestionsEngine()
 #TD = generateTrainingData()
 
 render = web.template.render('templates/')

@@ -14,6 +14,7 @@ class recommenderSystem:
 		self.users = None
 		self.userRecommendations = {}
 		self.getUsers()
+		self.getUserLocations()
 	
 
 	def getUsers(self):
@@ -29,6 +30,7 @@ class recommenderSystem:
 		return
 
 	def getUserLocations(self):
+		print cloudserver.db.location_of_users
 		return
 
 	def returnRecs(self, user):
@@ -37,7 +39,16 @@ class recommenderSystem:
 	def bestRecommendations(self):
 		return
 
-
+	def make_suggestion_item(iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
+        Others.update({
+            "type":iType,
+            "title":iTitle,
+            "body":iBodyText,
+            "reward":iReward,
+            "notification":inotification,
+            "messageID":messageID
+            })
+        return Others
 
 
 
