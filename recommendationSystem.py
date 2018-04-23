@@ -49,14 +49,14 @@ class recommenderSystem:
             "balance":balance,
             "tempBalance": tempBalance,
             "suggestions":[]
-        }
-        location = "outOfLab"
-        if user in self.locations:
-        	location = self.locations[user]
-        json_return["location_id"]=location
-        json_return["location"]=cloudserver.db.RoomIdToName(location)
+		}
+		location = "outOfLab"
+		if user in self.locations:
+			location = self.locations[user]
+		json_return["location_id"]=location
+		json_return["location"]=cloudserver.db.RoomIdToName(location)
 		ret = cloudserver.db._encode(json_return,False)
-        return ret
+		return ret
 
 	def bestRecommendations(self):
 		return
