@@ -1,5 +1,6 @@
 import numpy as np
 import cvxopt
+from cvxopt import glpk
 
 c = cvxopt.matrix([10, 11, 19, 12], tc='d')
 G = cvxopt.matrix([[3], [3], [4], [3]], tc='d')
