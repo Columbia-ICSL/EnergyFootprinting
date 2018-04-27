@@ -2,6 +2,9 @@ import cloudserver
 from threading import Thread
 import time
 import datetime
+import numpy as np
+import cvxopt
+from cvxopt import glpk
 
 
 class recommenderSystem:
@@ -15,6 +18,9 @@ class recommenderSystem:
 		self.userRecommendations = {}
 		self.locations = {}
 		self.rewards = {}
+		self.HVAC = {}
+		self.Lights = {}
+		self.Electric = {}
 		self.getUsers()
 
 		#self.getUserLocations()
@@ -27,13 +33,38 @@ class recommenderSystem:
 		for user in self.users:
 			if "name" not in user or "userID" not in user:
 				continue
-			self.userRecommendations[user["userID"]] = user["name"]
+			self.userRecommendations[user["userID"]] = []
 			self.rewards[user["userID"]] = user["balance"]
 		print "Loaded user recommendations dictionary"
-		print self.userRecommendations
 
 	def loadBuildingParams(self):
-		return
+		appliances = cloudserver.db.list_of_appliances
+		self.HVAC = {}
+		self.Lights = {}
+		self.Electric = {}
+		print("Loading building parameters...")
+		for appliance in appliances:
+			rooms = appliance["rooms"]
+			value = appliance["value"]
+			t = appliance["type"]
+			n = len(rooms)
+			for room in rooms:
+				if t == "Electrical":
+					if room not in self.Electric:
+						self.Electric[room] = value/n
+					else:
+						self.Electric[room] += value/n
+				elif t == "Light":
+					if room not in self.Light:
+						self.Light[room] = value/n
+					else:
+						self.Light[room] += value/n
+				elif t == "HVAC":
+					if room not in self.HVAC:
+						self.HVAC[room] = value/n
+					else:
+						self.HVAC[room] += value/n
+		print("Finished loading building parameters.")
 
 	def getUserLocations(self):
 		self.locations = cloudserver.db.location_of_users
@@ -56,10 +87,14 @@ class recommenderSystem:
 			location = self.locations[user]
 		json_return["location_id"]=location
 		json_return["location"]=cloudserver.db.RoomIdToName(location)
+		if user in self.userRecommendations:	
+			for rec in self.userRecommendations[user]:
+				json_return["suggestions"].append(rec)
 		ret = cloudserver.db._encode(json_return,False)
 		return ret
 
 	def bestRecommendations(self):
+
 		return
 
 	def make_suggestion_item(iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
@@ -73,8 +108,23 @@ class recommenderSystem:
             })
 		return Others
 
+	def LPOptimization(self, spaces, a, b, z, x):
+		energySum = []
+		assert(len(a) == len(b))
+		for i in range(len(a)):
+			energySum.append(a[i] + b[i])
 
+		c = cvxopt.matrix(energySum, tc='d')
+		G = cvxopt.matrix(z, tc='d')
+		h = cvxopt.matrix([x], tc='d')
+		(status, x) = cvxopt.glpk.ilp(c,G.T,h,I=set(range(len(a))),B=set(range(len(a))))
+		print(status)
+		for i in range(len(a)):
+			if x[i] > 0.5:
+				print(spaces[i])
 
+	def formatInputs(self):
+		
 
 
 
@@ -93,4 +143,5 @@ class recommenderSystem:
 		while True:
 			time.sleep(self.checkInterval)
 			self.getUserLocations()
+			self.loadBuildingParams()
 			print "Interval"
