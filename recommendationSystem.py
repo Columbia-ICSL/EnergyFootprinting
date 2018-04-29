@@ -137,8 +137,9 @@ class recommenderSystem:
 		c = cvxopt.matrix(energySum, tc='d')
 		G = cvxopt.matrix(z, tc='d')
 		h = cvxopt.matrix([x], tc='d')
-		(status, x) = cvxopt.glpk.ilp(c,G,h,I=set(range(len(a))),B=set(range(len(a))))
+		(status, x) = cvxopt.glpk.ilp(c,G.T,h,I=set(range(len(a))),B=set(range(len(a))))
 		print(status)
+		print(x)
 		for i in range(len(a)):
 			if x[i] > 0.5:
 				print(spaces[i])
