@@ -129,6 +129,11 @@ class recommenderSystem:
 		return Others
 
 	def LPOptimization(self, spaces, a, b, z, x):
+		print(spaces)
+		print(a)
+		print(b)
+		print(z)
+		print(x)
 		energySum = []
 		assert(len(a) == len(b))
 		for i in range(len(a)):
