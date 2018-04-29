@@ -128,12 +128,12 @@ class recommenderSystem:
             })
 		return Others
 
-	def LPOptimization(self, spaces, a, b, z, x):
+	def LPOptimization(self, spaces, a, b, z, x1):
 		print(spaces)
 		print(a)
 		print(b)
 		print(z)
-		print(x)
+		print(x1)
 		energySum = []
 		assert(len(a) == len(b))
 		for i in range(len(a)):
@@ -141,7 +141,7 @@ class recommenderSystem:
 
 		c = cvxopt.matrix(energySum, tc='d')
 		G = cvxopt.matrix(z, tc='d')
-		h = cvxopt.matrix([x], tc='d')
+		h = cvxopt.matrix([x1], tc='d')
 		(status, x) = cvxopt.glpk.ilp(c,G.T,h,I=set(range(len(a))),B=set(range(len(a))))
 		print(status)
 		print(x)
