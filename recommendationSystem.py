@@ -57,7 +57,8 @@ class recommenderSystem:
 		self.Lights = {}
 		self.Electric = {}
 		print("Loading building parameters...")
-		for appliance in appliances:
+		for app in appliances:
+			appliance = appliances[app]
 			rooms = appliance["rooms"]
 			value = appliance["value"]
 			t = appliance["type"]
