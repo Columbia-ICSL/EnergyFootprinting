@@ -56,6 +56,11 @@ class recommenderSystem:
 		self.HVAC = {}
 		self.Lights = {}
 		self.Electric = {}
+		rooms = cloudserver.db.list_of_rooms
+		for room in rooms:
+			self.HVAC[room] = 0
+			self.Lights[room] = 0
+			self.Electric[room] = 0
 		print("Loading building parameters...")
 		for app in appliances:
 			appliance = appliances[app]
