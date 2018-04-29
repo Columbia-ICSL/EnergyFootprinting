@@ -21,10 +21,24 @@ class recommenderSystem:
 		self.HVAC = {}
 		self.Lights = {}
 		self.Electric = {}
+		self.SpaceParameters = {}
+		self.spaces = {}
+		self.spaceNames = []
+		self.a = [] #room HVAC variance
+		self.b = [] #room light variance
+		self.z = [] #room max occupancy
+		self.x = 0 #current occupancy
 		self.getUsers()
+		self.setSpaceParameters()
 
 		#self.getUserLocations()
 	
+	def setSpaceParameters(self, temp=72):
+		rooms = cloudserver.db.list_of_rooms
+		self.spaces = rooms
+		for room in rooms:
+			print("Loading room " + str(room) + "...")
+			self.SpaceParameters[room] = 0.2
 
 	def getUsers(self):
 		#create a list of users from the database
@@ -124,13 +138,28 @@ class recommenderSystem:
 				print(spaces[i])
 
 	def formatInputs(self):
-		
+		self.spaceNames = []
+		self.a = [] #room HVAC variance
+		self.b = [] #room light variance
+		self.z = [] #room max occupancy
+		self.x = 0 #current occupancy
+		for space in self.spaces:
+			if space["space"] == 1:
+				self.spaceNames.append(space)
+				self.z.append(space["maxOccupancy"])
+				HVAC = self.HVAC[space]*self.SpaceParameters[space]
+				self.a.append(HVAC)
+				Light = self.Light[space]
+				self.b.append(Light)
+		self.x = len(self.locations)
 
 
 
 
-
-
+	def runOptimization(self):
+		self.setSpaceParameters()
+		self.formatInputs()
+		self.LPOptimization(self.spaceNames, self.a, self.b, self.z, self.x)
 
 
 
@@ -144,4 +173,5 @@ class recommenderSystem:
 			time.sleep(self.checkInterval)
 			self.getUserLocations()
 			self.loadBuildingParams()
+			self.runOptimization()
 			print "Interval"
