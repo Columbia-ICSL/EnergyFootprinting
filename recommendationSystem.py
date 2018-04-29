@@ -144,13 +144,14 @@ class recommenderSystem:
 		self.b = [] #room light variance
 		self.z = [] #room max occupancy
 		self.x = 0 #current occupancy
-		for space in self.spaces:
+		for s in self.spaces:
+			space = self.spaces[s]
 			if space["space"] == 1:
-				self.spaceNames.append(space)
+				self.spaceNames.append(s)
 				self.z.append(space["maxOccupancy"])
-				HVAC = self.HVAC[space]*self.SpaceParameters[space]
+				HVAC = self.HVAC[s]*self.SpaceParameters[s]
 				self.a.append(HVAC)
-				Light = self.Lights[space]
+				Light = self.Lights[s]
 				self.b.append(Light)
 		self.x = len(self.locations)
 
