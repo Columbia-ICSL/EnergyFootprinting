@@ -13,7 +13,7 @@ class recommenderSystem:
 		self.startDaemon()
 
 	def setup(self):
-		self.checkInterval = 30
+		self.checkInterval = 10
 		self.users = None
 		self.userRecommendations = {}
 		self.locations = {}
@@ -70,10 +70,10 @@ class recommenderSystem:
 					else:
 						self.Electric[room] += value/n
 				elif t == "Light":
-					if room not in self.Light:
-						self.Light[room] = value/n
+					if room not in self.Lights:
+						self.Lights[room] = value/n
 					else:
-						self.Light[room] += value/n
+						self.Lights[room] += value/n
 				elif t == "HVAC":
 					if room not in self.HVAC:
 						self.HVAC[room] = value/n
@@ -150,7 +150,7 @@ class recommenderSystem:
 				self.z.append(space["maxOccupancy"])
 				HVAC = self.HVAC[space]*self.SpaceParameters[space]
 				self.a.append(HVAC)
-				Light = self.Light[space]
+				Light = self.Lights[space]
 				self.b.append(Light)
 		self.x = len(self.locations)
 
