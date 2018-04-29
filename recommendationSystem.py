@@ -141,7 +141,7 @@ class recommenderSystem:
 
 		c = cvxopt.matrix(energySum, tc='d')
 		G = cvxopt.matrix(z, tc='d')
-		h = cvxopt.matrix([x1], tc='d')
+		h = cvxopt.matrix([-1*x1], tc='d')
 		(status, x) = cvxopt.glpk.ilp(c,G.T,h,I=set(range(len(a))),B=set(range(len(a))))
 		print(status)
 		print(x)
@@ -159,7 +159,7 @@ class recommenderSystem:
 			space = self.spaces[s]
 			if space["space"] == 1:
 				self.spaceNames.append(s)
-				self.z.append(space["maxOccupancy"])
+				self.z.append(-1*space["maxOccupancy"])
 				HVAC = self.HVAC[s]*self.SpaceParameters[s]
 				self.a.append(HVAC)
 				Light = self.Lights[s]
