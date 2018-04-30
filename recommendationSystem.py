@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 import cvxopt
 from cvxopt import glpk
+import random
 
 
 class recommenderSystem:
@@ -113,8 +114,14 @@ class recommenderSystem:
 		ret = cloudserver.db._encode(json_return,False)
 		return ret
 
-	def bestRecommendations(self):
-
+	def bestRecommendations(self, solutions):
+		for user in self.userRecomendations:
+			self.userRecommendations[user] = []
+		for user in self.locations:
+			if (self.locations[user]) not in solutions:
+				r = random.choice(list(solutions))
+				suggestion = make_suggestion_item("move", "Move to " + r, "Move recommendation from " + self.locations[user] + " to " + r, 100, True, "Hello World")
+				self.userRecommendations[user].append(suggestion)
 		return
 
 	def make_suggestion_item(iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
@@ -129,12 +136,8 @@ class recommenderSystem:
 		return Others
 
 	def LPOptimization(self, spaces, a, b, z, x1):
-		print(spaces)
-		print(a)
-		print(b)
-		print(z)
-		print(x1)
 		energySum = []
+		solutions = {}
 		assert(len(a) == len(b))
 		for i in range(len(a)):
 			energySum.append(a[i] + b[i])
@@ -147,7 +150,8 @@ class recommenderSystem:
 		print(x)
 		for i in range(len(a)):
 			if x[i] > 0.5:
-				print(spaces[i])
+				solutions[spaces[i]]= -1*z[i]
+		return solutions
 
 	def formatInputs(self):
 		self.spaceNames = []
@@ -157,7 +161,7 @@ class recommenderSystem:
 		self.x = 0 #current occupancy
 		for s in self.spaces:
 			space = self.spaces[s]
-			if space["space"] == 1:
+			if space["space"] == 1 and space["lab"] == 3:
 				self.spaceNames.append(s)
 				self.z.append(-1*space["maxOccupancy"])
 				HVAC = self.HVAC[s]*self.SpaceParameters[s]
@@ -172,8 +176,8 @@ class recommenderSystem:
 	def runOptimization(self):
 		self.setSpaceParameters()
 		self.formatInputs()
-		self.LPOptimization(self.spaceNames, self.a, self.b, self.z, self.x)
-
+		solutions = self.LPOptimization(self.spaceNames, self.a, self.b, self.z, self.x)
+		self.bestRecommendations(solutions)
 
 
 	def startDaemon(self):
