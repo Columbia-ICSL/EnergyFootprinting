@@ -125,7 +125,7 @@ class recommenderSystem:
 			#print(self.locations[user])
 			if (self.locations[user]) not in solutions:
 				r = random.choice(list(solutions))
-				suggestion = self.make_suggestion_item("move", "Move to " + r, "Move recommendation from " + self.locations[user] + " to " + r, 100, True, "Hello World")
+				suggestion = self.make_suggestion_item("move", "Move to " + r, "Move recommendation from " + self.locations[user] + " to " + r, 100, "Hello World", 1)
 				self.userRecommendations[user].append(suggestion)
 		return
 
