@@ -115,7 +115,7 @@ class recommenderSystem:
 		return ret
 
 	def bestRecommendations(self, solutions):
-		for user in self.userRecomendations:
+		for user in self.userRecommendations:
 			self.userRecommendations[user] = []
 		for user in self.locations:
 			if (self.locations[user]) not in solutions:
