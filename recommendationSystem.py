@@ -120,11 +120,11 @@ class recommenderSystem:
 		for user in self.locations:
 			if (self.locations[user]) not in solutions:
 				r = random.choice(list(solutions))
-				suggestion = make_suggestion_item("move", "Move to " + r, "Move recommendation from " + self.locations[user] + " to " + r, 100, True, "Hello World")
+				suggestion = self.make_suggestion_item("move", "Move to " + r, "Move recommendation from " + self.locations[user] + " to " + r, 100, True, "Hello World")
 				self.userRecommendations[user].append(suggestion)
 		return
 
-	def make_suggestion_item(iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
+	def make_suggestion_item(self, iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
 		Others.update({
             "type":iType,
             "title":iTitle,
