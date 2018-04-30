@@ -117,7 +117,10 @@ class recommenderSystem:
 	def bestRecommendations(self, solutions):
 		for user in self.userRecommendations:
 			self.userRecommendations[user] = []
+		print("Getting best recommendations....")
+		print(solutions)
 		for user in self.locations:
+			print(self.locations[user])
 			if (self.locations[user]) not in solutions:
 				r = random.choice(list(solutions))
 				suggestion = self.make_suggestion_item("move", "Move to " + r, "Move recommendation from " + self.locations[user] + " to " + r, 100, True, "Hello World")
