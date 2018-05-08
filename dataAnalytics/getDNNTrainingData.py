@@ -142,6 +142,8 @@ class getTrainingData:
 
 		locations = [0] * len(self.spaceDef) #array of number of people in each space
 		for ID in shot["data"]:
+			if ID not in self.peopleDef:
+				continue
 			IDnum = self.peopleDef[ID] #person number
 			loc = shot["data"][ID]["location"]
 			locnum = self.spaceDef[loc] #location number
