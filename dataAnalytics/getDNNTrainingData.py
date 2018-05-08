@@ -3,6 +3,7 @@ import datetime
 import calendar
 import sys
 import time
+import csv
 from spaceNames import S
 from personal import P
 from IDs import peopleID
@@ -214,9 +215,11 @@ class getTrainingData:
 
 	def saveToFile(self, state, recs):
 		with open("x.csv", "a") as trainingFile:
-			trainingFile.write(state)
+			wr = csv.writer(trainingFile,delimiter=',')
+			wr.writerow(state)
 		with open("y.csv", "a") as labelFile:
-			labelFile.write(recs)
+			wr = csv.writer(labelFile,delimiter=',')
+			wr.writerow(recs)
 
 GF = getTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], True)
 GF.getSnapshots()
