@@ -241,7 +241,7 @@ class getTrainingData:
 				wr.writerow(state)
 			with open("y.csv", "a") as labelFile:
 				wr = csv.writer(labelFile,delimiter=',')
-				wr.writerow(recs[i])
+				wr.writerow([recs[i]])
 			with open("z.csv", "a") as nextFile:
 				wr = csv.writer(nextFile,delimiter=',')
 				wr.writerow(nextStates[i])
