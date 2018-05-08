@@ -114,7 +114,8 @@ class getTrainingData:
 				rooms = appliance["rooms"]
 				t = appliance["type"]
 				if t == "Electrical":
-					self.personal[applianceName][-1] = appliance["value"]
+					if applianceName in self.personal:
+						self.personal[applianceName][-1] = appliance["value"]
 					continue
 				numRooms = len(rooms)
 				for room in rooms:
