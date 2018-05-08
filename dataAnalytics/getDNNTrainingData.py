@@ -130,7 +130,6 @@ class getTrainingData:
 		print("\n\n\nDone getting snapshots\n\n\n")
 
 	def getState(self, shot):
-		shots = self.pshots
 		state = [0] * self.vecLen
 
 		timestamp = shot["timestamp"]
