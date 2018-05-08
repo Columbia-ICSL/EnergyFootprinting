@@ -152,7 +152,7 @@ class getTrainingData:
 
 		index = 0
 		for t in range(len(self.timestamps)-1):
-			if epoch > self.timestamps[t] and epoch <= self.timestamps[t+1]:
+			if timestamp > self.timestamps[t] and timestamp <= self.timestamps[t+1]:
 				index = t
 				break
 		for room in self.footprints:
