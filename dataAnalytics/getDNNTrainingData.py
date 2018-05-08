@@ -16,9 +16,7 @@ parameters = sys.argv[1:]
 for i in range(len(parameters)):
 	parameters[i] = int(parameters[i])
 
-GF = getTrainingData(S, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], True)
-GF.getSnapshots()
-GF.recommendations()
+
 
 class getTrainingData:
 	def __init__(self, startYear, startMonth, startDay, endYear, endMonth, endDay, verbose):
@@ -212,6 +210,9 @@ class getTrainingData:
 		with open("y.csv", "a") as labelFile:
 			labelFile.write(recs)
 
+GF = getTrainingData(S, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], True)
+GF.getSnapshots()
+GF.recommendations()
 
 
 
