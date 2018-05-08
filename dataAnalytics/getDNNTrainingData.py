@@ -19,7 +19,7 @@ for i in range(len(parameters)):
 
 
 class getTrainingData:
-	def __init__(self, startYear, startMonth, startDay, endYear, endMonth, endDay, verbose):
+	def __init__(self, spaces, personal, ids, startYear, startMonth, startDay, endYear, endMonth, endDay, verbose):
 		self.multiplier = 0.3
 
 		self.data = []
@@ -33,9 +33,9 @@ class getTrainingData:
 		self.timestamps = []
 
 		self.verbose = verbose
-		self.spaces = S
-		self.personalDevices = P
-		self.peopleID = peopleID
+		self.spaces = spaces
+		self.personalDevices = personal
+		self.peopleID = ids
 
 		print("Found " + str(len(self.spaces)) + " spaces")
 		self.spaceDef = {}
@@ -210,7 +210,7 @@ class getTrainingData:
 		with open("y.csv", "a") as labelFile:
 			labelFile.write(recs)
 
-GF = getTrainingData(S, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], True)
+GF = getTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], True)
 GF.getSnapshots()
 GF.recommendations()
 
