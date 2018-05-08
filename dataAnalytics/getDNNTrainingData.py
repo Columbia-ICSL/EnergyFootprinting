@@ -4,6 +4,7 @@ import calendar
 import sys
 import time
 import csv
+import copy
 from spaceNames import S
 from personal import P
 from IDs import peopleID
@@ -178,9 +179,29 @@ class getTrainingData:
 			print(str(i*1.0/len(shots)) + " percent done with recs")
 			state1 = self.getState(shots[i])
 			tempRecs = self.getRecommendations(state0, state1)
+			nextStates = self.getNextState(state0, tempRecs)
 			state0[-1] = 72
-			self.saveToFile(state0, tempRecs)
+			self.saveToFile(state0, tempRecs, nextStates)
 			state0 = state1
+
+	def getNextState(self, state0, tempRecs):
+		nextStates = []
+		for i in range(len(self.peopleDef)):
+			for j in range(len(self.spaceDef)):
+				#savings = tempRecs[i*len(self.spaceDef) + j]
+				newNextState = copy.copy(state0)
+				newNextState[i] = j
+				nextStates.append(newNextState)
+		for i in range(len(self.deviceDef)):
+			newNextState = copy.copy(state0)
+			newNextState[self.offsetVec2 + i] -= tempRecs[self.offset1 + i]
+			nextStates.append(newNextState)
+		for i in range(len(self.spaceDef)):
+			newNextState = copy.copy(state0)
+			newNextState[self.offsetVec1 + i] -= tempRecs[self.offset2 + i]
+			nextStates.append(newNextState)
+		return nextStates
+
 
 	def getRecommendations(self, state0, state1):
 		index0 = state0[-1]
@@ -213,13 +234,17 @@ class getTrainingData:
 				recs[k+self.offset2] = self.footprints[self.spaceDefInv[k]][index0]
 		return recs
 
-	def saveToFile(self, state, recs):
-		with open("x.csv", "a") as trainingFile:
-			wr = csv.writer(trainingFile,delimiter=',')
-			wr.writerow(state)
-		with open("y.csv", "a") as labelFile:
-			wr = csv.writer(labelFile,delimiter=',')
-			wr.writerow(recs)
+	def saveToFile(self, state, recs, nextStates):
+		for i in range(len(nextStates)):
+			with open("x.csv", "a") as trainingFile:
+				wr = csv.writer(trainingFile,delimiter=',')
+				wr.writerow(state)
+			with open("y.csv", "a") as labelFile:
+				wr = csv.writer(labelFile,delimiter=',')
+				wr.writerow(recs[i])
+			with open("z.csv", "a") as nextFile:
+				wr = csv.writer(nextFile,delimiter=',')
+				wr.writerow(nextStates[i])
 
 GF = getTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], True)
 GF.getSnapshots()
