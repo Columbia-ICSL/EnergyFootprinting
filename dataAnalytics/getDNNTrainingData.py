@@ -48,7 +48,7 @@ class getTrainingData:
 			self.spaceDef[room] = i
 			i += 1
 
-		spaceDefInv = {v: k for k, v in self.spaceDef.items()}
+		self.spaceDefInv = {v: k for k, v in self.spaceDef.items()}
 
 		self.peopleDef = {}
 		i = 0
