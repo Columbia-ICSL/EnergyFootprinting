@@ -2,6 +2,7 @@ import DBScrape
 import datetime
 import calendar
 import sys
+import time
 from spaceNames import S
 from personal import P
 from IDs import peopleID
@@ -79,7 +80,7 @@ class getTrainingData:
 		self.offset3 = self.offset2 + len(self.spaceDef)
 		self.offset4 = self.offset3 + len(self.peopleDef)
 		self.recLen = self.offset4 # len of recommendation vector
-
+		print("Done Init")
 
 		
 
@@ -91,11 +92,13 @@ class getTrainingData:
 	def getSnapshots(self):
 		shots = self.shots
 		self.printC("Found " + str(len(shots)) + " snapshots")
+		i = 0
 		for shot in shots:
+			print(str(i*1.0/len(shots)) + " percent complete")
 			timestamp = shot["timestamp"]
 			pattern1 = '%Y-%m-%d %H:%M:%S.%f'
 			pattern2 = '%Y-%m-%d %H:%M:%S'
-			self.printC(timestamp)
+			#self.printC(timestamp)
 			try:
 				epoch = int(time.mktime(time.strptime(str(timestamp), pattern1)))
 			except ValueError:
@@ -122,6 +125,8 @@ class getTrainingData:
 						self.footprints[room][-1] = self.footprints[room][-1] + appliance["value"]*self.multiplier/numRooms
 					elif t == "Light":
 						self.footprints[room][-1] = self.footprints[room][-1] + appliance["value"]/numRooms
+			i += 1
+		print("\n\n\nDone getting snapshots\n\n\n")
 
 	def getState(self, shot):
 		shots = self.pshots
@@ -167,6 +172,7 @@ class getTrainingData:
 		state0 = self.getState(shots[0])
 
 		for i in range(1,len(shots)):
+			print(str(i*1.0/len(shots)) + " percent done with recs")
 			state1 = self.getState(shots[i])
 			tempRecs = self.getRecommendations(state0, state1)
 			state0[-1] = 72
