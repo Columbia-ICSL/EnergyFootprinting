@@ -246,6 +246,7 @@ class getTrainingData:
 				wr.writerow([recs[i]])
 		with open("z.csv", "a") as nextFile:
 			for i in range(len(nextStates)):
+				nextStates[i][-1] = 72
 				wr = csv.writer(nextFile,delimiter=',')
 				wr.writerow(nextStates[i])
 
