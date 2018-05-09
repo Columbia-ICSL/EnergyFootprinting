@@ -183,6 +183,7 @@ class getTrainingData:
 			state0[-1] = 72
 			self.saveToFile(state0, tempRecs, nextStates)
 			state0 = state1
+		print((self.vecLen, self.recLen))
 
 	def getNextState(self, state0, tempRecs):
 		nextStates = []
