@@ -175,7 +175,7 @@ class getTrainingData:
 		shots = self.pShots
 		state0 = self.getState(shots[0])
 
-		for i in range(1,len(shots)):
+		for i in range(1,len(shots), 20):
 			print(str(i*1.0/len(shots)) + " percent done with recs")
 			state1 = self.getState(shots[i])
 			tempRecs = self.getRecommendations(state0, state1)
