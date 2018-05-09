@@ -6,8 +6,11 @@ import time
 import csv
 import copy
 from spaceNames import S
+from spaceNames import NS
 from personal import P
-from IDs import peopleID
+from IDs import Jgroup
+from IDs import Tgroup
+from IDs import Bgroup
 print "This is the name of the script: ", sys.argv[0]
 print "Number of arguments: ", len(sys.argv)
 if len(sys.argv) != 9:
@@ -250,6 +253,7 @@ class getTrainingData:
 				wr = csv.writer(nextFile,delimiter=',')
 				wr.writerow(nextStates[i])
 
+peopleID = Jgroup + Bgroup + Tgroup
 GF = getTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], True)
 GF.getSnapshots()
 GF.recommendations()
