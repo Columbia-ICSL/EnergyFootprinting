@@ -10,9 +10,9 @@ from personal import P
 from IDs import peopleID
 print "This is the name of the script: ", sys.argv[0]
 print "Number of arguments: ", len(sys.argv)
-if len(sys.argv) != 7:
+if len(sys.argv) != 9:
 	print "Supply arguments to this script. Example: python separateFootprint.py {beginYear} {beginMonth} {beginDay} {endYear} {endMonth} {endDay}"
-	assert(len(sys.argv) == 7)
+	assert(len(sys.argv) == 9)
 
 
 parameters = sys.argv[1:]
@@ -22,13 +22,13 @@ for i in range(len(parameters)):
 
 
 class getTrainingData:
-	def __init__(self, spaces, personal, ids, startYear, startMonth, startDay, endYear, endMonth, endDay, verbose):
+	def __init__(self, spaces, personal, ids, startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour, verbose):
 		self.multiplier = 0.3
 
 		self.data = []
 		self.databaseScrape = DBScrape.DBScrape()
-		begin = datetime.datetime(startYear, startMonth, startDay)
-		end = datetime.datetime(endYear, endMonth, endDay)
+		begin = datetime.datetime(startYear, startMonth, startDay, startHour)
+		end = datetime.datetime(endYear, endMonth, endDay, endHour)
 		begin = calendar.timegm(begin.utctimetuple())
 		end = calendar.timegm(end.utctimetuple())
 		self.footprints = {}
@@ -249,7 +249,7 @@ class getTrainingData:
 				wr = csv.writer(nextFile,delimiter=',')
 				wr.writerow(nextStates[i])
 
-GF = getTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], True)
+GF = getTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], True)
 GF.getSnapshots()
 GF.recommendations()
 
