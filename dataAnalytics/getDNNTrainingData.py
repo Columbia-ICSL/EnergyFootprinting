@@ -235,14 +235,16 @@ class getTrainingData:
 		return recs
 
 	def saveToFile(self, state, recs, nextStates):
-		for i in range(len(nextStates)):
-			with open("x.csv", "a") as trainingFile:
+		with open("x.csv", "a") as trainingFile:
+			for i in range(len(nextStates)):
 				wr = csv.writer(trainingFile,delimiter=',')
 				wr.writerow(state)
-			with open("y.csv", "a") as labelFile:
+		with open("y.csv", "a") as labelFile:
+			for i in range(len(nextStates)):
 				wr = csv.writer(labelFile,delimiter=',')
 				wr.writerow([recs[i]])
-			with open("z.csv", "a") as nextFile:
+		with open("z.csv", "a") as nextFile:
+			for i in range(len(nextStates)):
 				wr = csv.writer(nextFile,delimiter=',')
 				wr.writerow(nextStates[i])
 
