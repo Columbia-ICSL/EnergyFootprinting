@@ -249,11 +249,14 @@ class recommenderSystem:
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms#*self.multiplier/numRooms
 				elif t == "Light":
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms
+		print("finished getting appliance data")
 
 	def getState(self):
 		self.getSnapshot()
 		state = [0] * self.vecLen
 		shot = cloudserver.db.snapshots_col_users.find().skip(cloudserver.db.snapshots_col_users.count()-1)
+		shot = list(shot)
+		shot = shot[0]
 		locations = [0] * len(self.spaceDef) #array of number of people in each space
 		for ID in shot["data"]:
 			if ID not in self.peopleDef:
@@ -276,6 +279,7 @@ class recommenderSystem:
 			state[deviceIndex + offset] = energy
 		state += locations
 		state.append(72) #just to keep the time
+		print("Finished getting state")
 		return state
 
 	def deepLearning(self):
