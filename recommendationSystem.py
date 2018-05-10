@@ -23,7 +23,9 @@ class recommenderSystem:
 		self.footprints = {}
 		self.personal = {}
 		self.spaceDef = {}
+		self.nonSpaceDef = {}
 		self.spaces = S
+		self.nonSpaces = NS
 		print("Found " + str(len(self.spaces)) + " spaces")
 		self.personalDevices = P
 		self.peopleID = Jgroup+Bgroup+Tgroup
@@ -34,8 +36,12 @@ class recommenderSystem:
 			self.footprints[room] = []
 			self.spaceDef[room] = i
 			i += 1
-
 		self.spaceDefInv = {v: k for k, v in self.spaceDef.items()}
+
+		for room in self.nonSpaces:
+			self.nonSpaceDef[room] = i
+			i += 1
+		self.nonSpaceDefInv = {v: k for k, v in self.nonSpaceDef.items()}
 
 		self.peopleDef = {}
 		i = 0
@@ -263,16 +269,25 @@ class recommenderSystem:
 				continue
 			IDnum = self.peopleDef[ID] #person number
 			loc = shot["data"][ID]["location"]
-			locnum = self.spaceDef[loc] #location number
+			locnum = 0
+			if loc in self.spaceDef:
+				locnum = self.spaceDef[loc] #location number
+			elif loc in self.nonSpaceDef:
+				locnum = self.nonSpaceDef[loc]
 			locations[locnum] += 1
 			state[IDnum] = locnum #assign space to input vector
 
 		for room in self.footprints:
+			if room not in self.spaceDef:
+				continue
 			energy = self.footprints[room]
+
 			roomIndex = self.spaceDef[room]
 			offset = len(self.peopleDef)
 			state[roomIndex + offset] = energy
 		for device in self.personal:
+			if device not in self.deviceDef:
+				continue
 			energy = self.personal[device]
 			deviceIndex = self.deviceDef[device]
 			offset = len(self.peopleDef) + len(self.spaceDef)
