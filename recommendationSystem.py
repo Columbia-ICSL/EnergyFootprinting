@@ -177,9 +177,12 @@ class recommenderSystem:
 		ret = cloudserver.db._encode(json_return,False)
 		return ret
 
-	def bestRecommendations(self, solutions):
+	def clearRecommendations(self):
 		for user in self.userRecommendations:
 			self.userRecommendations[user] = []
+
+	def bestRecommendations(self, solutions):
+
 		#print("Getting best recommendations....")
 		#print(solutions)
 		for user in self.locations:
@@ -392,7 +395,8 @@ class recommenderSystem:
 			self.getUserLocations()
 			self.loadBuildingParams()
 
-			#self.deepLearning()
+			self.deepLearning()
+			self.clearRecommendations()
 			self.runOptimization()
 			self.randomRecommendations()
 			print "Interval"
