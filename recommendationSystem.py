@@ -14,19 +14,19 @@ from IDs import Tgroup
 from IDs import Bgroup
 
 class recommenderSystem:
-	def __init__(self,spaces,personal,ids):
-		self.initState(spaces, personal, ids)
+	def __init__(self):
+		self.initState()
 		self.setup()
 		self.startDaemon()
 
-	def initState(self, spaces, personal, ids):
+	def initState(self):
 		self.footprints = {}
 		self.personal = {}
 		print("Found " + str(len(self.spaces)) + " spaces")
 		self.spaceDef = {}
-		self.spaces = spaces
-		self.personalDevices = personal
-		self.peopleID = ids
+		self.spaces = S
+		self.personalDevices = P
+		self.peopleID = Jgroup+Bgroup+Tgroup
 		i = 0
 		for room in self.spaces:
 			if (i == 0):
