@@ -59,7 +59,7 @@ class recommenderSystem:
 			self.deviceDef[device] = i
 			i += 1
 		self.deviceDefInv = {v: k for k, v in self.deviceDef.items()}
-		
+
 		self.deviceOwnership = {}
 		for device in self.personalDevices:
 			self.deviceOwnership[device] = "Peter"
@@ -322,7 +322,7 @@ class recommenderSystem:
 			sess.run(tf.global_variables_initializer())
 			y_out = sess.run(y1, feed_dict = {x1:npState})
 
-		actionNum = numpy.argmax(y_out)
+		actionNum = np.argmax(y_out)
 		rec = self.interpretAction(actionNum, y_out[actionNum])
 		if rec is not None:
 			print("Got recommendation")
