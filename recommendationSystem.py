@@ -12,6 +12,8 @@ from personal import P
 from IDs import Jgroup
 from IDs import Tgroup
 from IDs import Bgroup
+import numpy as np
+import tensorflow as tf
 
 class recommenderSystem:
 	def __init__(self):
@@ -48,6 +50,7 @@ class recommenderSystem:
 		for person in self.peopleID:
 			self.peopleDef[person] = i
 			i += 1
+		self.peopleDefInv = {v: k for k, v in self.peopleDef.items()}
 
 		self.deviceDef = {}
 		i = 0
@@ -55,6 +58,11 @@ class recommenderSystem:
 			self.personal[device] = []
 			self.deviceDef[device] = i
 			i += 1
+
+		self.deviceOwnership = {}
+		for device in self.personalDevices:
+			self.deviceOwnership[device] = "Peter"
+		self.deviceDefInv = {v: k for k, v in self.deviceDefInv.items()}
 		self.offsetVec1 = len(self.peopleDef)
 		self.offsetVec2 = self.offsetVec1 + len(self.spaceDef)
 		self.offsetVec3 = self.offsetVec2 + len(self.deviceDef)
@@ -299,7 +307,53 @@ class recommenderSystem:
 
 	def deepLearning(self):
 		state = self.getState()
+		sess1 = tf.Session()
+		saver = tf.train.import_meta_graph('./model_5_10/model_5_10.meta')
+		saver.restore(sess1, tf.train.latest_checkpoint('./model_5_10'))
+
+		graph = tf.get_default_graph()
+		x1 = graph.get_tensor_by_name('s:0')
+		y1 = graph.get_tensor_by_name('output:0')
+
+		npState = np.array([state])
+
+		with tf.Session() as tf:
+			sess.run(tf.global_variables_initializer())
+			y_out = sess.run(y1, feed_dict = {x1:npState})
+
+		actionNum = numpy.argmax(y_out)
+		rec = self.interpretAction(actionNum, y_out[actionNum])
+		if rec is not None:
+			print("Got recommendation")
 		#import the neural network
+
+	def interpretAction(self, actionNum, reward):
+		body = ""
+		rec = None
+		if actionNum < self.offset1:
+			person = actionNum / len(self.spaceDef)
+			space = actionNum % len(self.spaceDef)
+			personName = self.peopleDefInv(person)
+			spaceName = self.spaceDefInv(space)
+			message = "{0}|{1}|{2}".format("move", personName, spaceName)
+			body = "Move to " + spaceName
+			rec = self.make_suggestion_item(1, "Move", body, reward, message, 0)
+		if actionNum >= self.offset1 and actionNum < self.offset2:
+			device = actionNum - self.offset1
+			deviceName = self.deviceDefInv(device)
+			deviceOwner = self.deviceOwnership[deviceName]
+			message = "{0}|{1}|{2}".format("reduce", deviceOwner, deviceName)
+			body = "Reduce Power of " + deviceName
+			rec = self.make_suggestion_item(1, "Reduce", body, reward, message, 0)
+		if actionNum >= self.offset2 and actionNum:
+			space = actionNum - self.offset2
+			spaceName = self.spaceDefInv(space)
+			message = "{0}|{1}|{2}".format("force", "BuildingManager", spaceName)
+			body = "Force People from " + spaceName
+			rec = self.make_suggestion_item(1, "Force", body, reward, message, 0)
+		print(body)
+		return rec
+
 
 
 
