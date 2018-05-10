@@ -306,6 +306,9 @@ class recommenderSystem:
 		print("Finished getting state")
 		return state
 
+	def randomRecommendations(self):
+		return
+
 	def deepLearning(self):
 		state = self.getState()
 		sess1 = tf.Session()
@@ -380,6 +383,6 @@ class recommenderSystem:
 			self.loadBuildingParams()
 
 
-			self.deepLearning()
+			#self.deepLearning()
 			self.runOptimization()
 			print "Interval"
