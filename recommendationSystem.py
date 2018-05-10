@@ -268,12 +268,12 @@ class recommenderSystem:
 			state[IDnum] = locnum #assign space to input vector
 
 		for room in self.footprints:
-			energy = self.footprints[room][index]
+			energy = self.footprints[room]
 			roomIndex = self.spaceDef[room]
 			offset = len(self.peopleDef)
 			state[roomIndex + offset] = energy
 		for device in self.personal:
-			energy = self.personal[device][index]
+			energy = self.personal[device]
 			deviceIndex = self.deviceDef[device]
 			offset = len(self.peopleDef) + len(self.spaceDef)
 			state[deviceIndex + offset] = energy
