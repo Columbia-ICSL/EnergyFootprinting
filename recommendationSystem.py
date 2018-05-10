@@ -6,12 +6,60 @@ import numpy as np
 import cvxopt
 from cvxopt import glpk
 import random
-
+from spaceNames import S
+from spaceNames import NS
+from personal import P
+from IDs import Jgroup
+from IDs import Tgroup
+from IDs import Bgroup
 
 class recommenderSystem:
-	def __init__(self):
+	def __init__(self,spaces,personal,ids):
+		self.initState(spaces, personal, ids)
 		self.setup()
 		self.startDaemon()
+
+	def initState(self, spaces, personal, ids):
+		self.footprints = {}
+		self.personal = {}
+		print("Found " + str(len(self.spaces)) + " spaces")
+		self.spaceDef = {}
+		self.spaces = spaces
+		self.personalDevices = personal
+		self.peopleID = ids
+		i = 0
+		for room in self.spaces:
+			if (i == 0):
+				assert(room == "outOfLab") #first room must be out of lab
+			self.footprints[room] = []
+			self.spaceDef[room] = i
+			i += 1
+
+		self.spaceDefInv = {v: k for k, v in self.spaceDef.items()}
+
+		self.peopleDef = {}
+		i = 0
+		for person in self.peopleID:
+			self.peopleDef[person] = i
+			i += 1
+
+		self.deviceDef = {}
+		i = 0
+		for device in self.personalDevices:
+			self.personal[device] = []
+			self.deviceDef[device] = i
+			i += 1
+		self.offsetVec1 = len(self.peopleDef)
+		self.offsetVec2 = self.offsetVec1 + len(self.spaceDef)
+		self.offsetVec3 = self.offsetVec2 + len(self.deviceDef)
+		self.vecLen = len(self.peopleDef) + len(self.spaceDef) + len(self.deviceDef)
+		
+		self.offset1 = len(self.peopleDef) * len(self.spaceDef)
+		self.offset2 = self.offset1 + len(self.deviceDef)
+		self.offset3 = self.offset2 + len(self.spaceDef)
+		self.offset4 = self.offset3 + len(self.peopleDef)
+		self.recLen = self.offset4 # len of recommendation vector
+
 
 	def setup(self):
 		self.checkInterval = 10
@@ -176,6 +224,65 @@ class recommenderSystem:
 		self.x = len(self.locations)
 
 
+	def getSnapshot(self):
+		shot = cloudserver.db.snapshots_col_appliances.find().skip(cloudserver.db.snapshots_col_appliances.count()-1)
+		for room in self.spaces:
+			self.footprints[room] = 0 # shared energy (HVAC + Lights)
+		for p in self.personal:
+			self.personal[p] = 0 # personal energy (plugmeters)
+		for applianceName in shot["data"]:
+			appliance = shot["data"][applianceName]
+			rooms = appliance["rooms"]
+			t = appliance["type"]
+			if t == "Electrical":
+				if applianceName in self.personal:
+					self.personal[applianceName] = appliance["value"]
+				continue
+			numRooms = len(rooms)
+			for room in rooms:
+				if room not in self.footprints:
+					print "room " + room + " not in space database"
+					continue
+				if t == "HVAC":
+					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms#*self.multiplier/numRooms
+				elif t == "Light":
+					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms
+
+	def getState(self):
+		self.getSnapshot()
+		state = [0] * self.vecLen
+		shot = cloudserver.db.snapshots_col_users.find().skip(cloudserver.db.snapshots_col_users.count()-1)
+		locations = [0] * len(self.spaceDef) #array of number of people in each space
+		for ID in shot["data"]:
+			if ID not in self.peopleDef:
+				continue
+			IDnum = self.peopleDef[ID] #person number
+			loc = shot["data"][ID]["location"]
+			locnum = self.spaceDef[loc] #location number
+			locations[locnum] += 1
+			state[IDnum] = locnum #assign space to input vector
+
+		for room in self.footprints:
+			energy = self.footprints[room][index]
+			roomIndex = self.spaceDef[room]
+			offset = len(self.peopleDef)
+			state[roomIndex + offset] = energy
+		for device in self.personal:
+			energy = self.personal[device][index]
+			deviceIndex = self.deviceDef[device]
+			offset = len(self.peopleDef) + len(self.spaceDef)
+			state[deviceIndex + offset] = energy
+		state += locations
+		state.append(72) #just to keep the time
+		return state
+
+	def deepLearning(self):
+		state = self.getState()
+		#import the neural network
+
+
+
+
 
 
 	def runOptimization(self):
@@ -195,5 +302,8 @@ class recommenderSystem:
 			time.sleep(self.checkInterval)
 			self.getUserLocations()
 			self.loadBuildingParams()
+
+
+			self.deepLearning()
 			self.runOptimization()
 			print "Interval"
