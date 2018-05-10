@@ -58,11 +58,12 @@ class recommenderSystem:
 			self.personal[device] = []
 			self.deviceDef[device] = i
 			i += 1
-
+		self.deviceDefInv = {v: k for k, v in self.deviceDef.items()}
+		
 		self.deviceOwnership = {}
 		for device in self.personalDevices:
 			self.deviceOwnership[device] = "Peter"
-		self.deviceDefInv = {v: k for k, v in self.deviceDefInv.items()}
+		
 		self.offsetVec1 = len(self.peopleDef)
 		self.offsetVec2 = self.offsetVec1 + len(self.spaceDef)
 		self.offsetVec3 = self.offsetVec2 + len(self.deviceDef)
