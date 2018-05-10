@@ -313,7 +313,7 @@ class recommenderSystem:
 			#print(self.locations[user])
 			r = random.choice(list(self.spaceDef.keys()))
 			message = "{0}|{1}|{2}".format("move", user, r)
-			body = "Move to " + spaceName
+			body = "Move to " + r
 			rec = self.make_suggestion_item(1, "Move", body, reward, message, 0)
 			self.userRecommendations[user].append(suggestion)
 
