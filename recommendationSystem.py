@@ -391,8 +391,8 @@ class recommenderSystem:
 			time.sleep(self.checkInterval)
 			self.getUserLocations()
 			self.loadBuildingParams()
-			self.randomRecommendations()
 
 			#self.deepLearning()
 			self.runOptimization()
+			self.randomRecommendations()
 			print "Interval"
