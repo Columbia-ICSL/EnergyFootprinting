@@ -315,7 +315,7 @@ class recommenderSystem:
 			message = "{0}|{1}|{2}".format("move", user, r)
 			body = "Move to " + r
 			rec = self.make_suggestion_item(1, "Move", body, 3, message, 0)
-			self.userRecommendations[user].append(suggestion)
+			self.userRecommendations[user].append(rec)
 
 		return
 
