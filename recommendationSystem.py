@@ -307,6 +307,16 @@ class recommenderSystem:
 		return state
 
 	def randomRecommendations(self):
+		for user in self.locations:
+			if user not in self.userRecommendations:
+				continue
+			#print(self.locations[user])
+			r = random.choice(list(self.spaceDef.keys()))
+			message = "{0}|{1}|{2}".format("move", user, r)
+			body = "Move to " + spaceName
+			rec = self.make_suggestion_item(1, "Move", body, reward, message, 0)
+			self.userRecommendations[user].append(suggestion)
+
 		return
 
 	def deepLearning(self):
@@ -381,7 +391,7 @@ class recommenderSystem:
 			time.sleep(self.checkInterval)
 			self.getUserLocations()
 			self.loadBuildingParams()
-
+			self.randomRecommendations()
 
 			#self.deepLearning()
 			self.runOptimization()
