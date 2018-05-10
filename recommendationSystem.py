@@ -22,9 +22,9 @@ class recommenderSystem:
 	def initState(self):
 		self.footprints = {}
 		self.personal = {}
-		print("Found " + str(len(self.spaces)) + " spaces")
 		self.spaceDef = {}
 		self.spaces = S
+		print("Found " + str(len(self.spaces)) + " spaces")
 		self.personalDevices = P
 		self.peopleID = Jgroup+Bgroup+Tgroup
 		i = 0
