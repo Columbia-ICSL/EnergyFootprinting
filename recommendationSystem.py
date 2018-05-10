@@ -226,6 +226,8 @@ class recommenderSystem:
 
 	def getSnapshot(self):
 		shot = cloudserver.db.snapshots_col_appliances.find().skip(cloudserver.db.snapshots_col_appliances.count()-1)
+		shot = list(shot)
+		shot = shot[0]
 		for room in self.spaces:
 			self.footprints[room] = 0 # shared energy (HVAC + Lights)
 		for p in self.personal:
