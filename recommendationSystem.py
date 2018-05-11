@@ -395,7 +395,7 @@ class recommenderSystem:
 			self.getUserLocations()
 			self.loadBuildingParams()
 
-			self.deepLearning()
+			#self.deepLearning()
 			self.clearRecommendations()
 			self.runOptimization()
 			self.randomRecommendations()
