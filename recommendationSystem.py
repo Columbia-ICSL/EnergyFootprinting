@@ -356,7 +356,7 @@ class recommenderSystem:
 
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
-			actionNum = np.argmax(y_out[personNum*self.spaceDef:(personNum+1)*self.spaceDef])
+			actionNum = np.argmax(y_out[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
 			rec = self.interpretAction(actionNum, y_out[actionNum])
 			if rec is not None:
 				print("Got recommendation")
