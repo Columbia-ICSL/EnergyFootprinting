@@ -322,14 +322,18 @@ class recommenderSystem:
 			#print(self.locations[user])
 			r = random.choice(list(self.spaceDef.keys()))
 			message = "{0}|{1}|{2}".format("move", user, r)
-			body = "Move to " + self.realSDef[r]
-			rec = self.make_suggestion_item(1, "Move", body, 3, message, 0)
+			body = "Move to " + self.realSDef[r] + "."
+			rec = self.make_suggestion_item("move", "Move", body, 3, message, 0)
 			self.userRecommendations[user].append(rec)
 		for user in self.userRecommendations:
 			message = "{0}|{1}|{2}".format("shift", user, "XXXX")
-			body = "Come to lab now"
-			rec = self.make_suggestion_item(1, "Shift", body, 3, message, 0)
+			body = "Come to lab now to save energy."
+			rec = self.make_suggestion_item("shift", "Shift", body, 3, message, 0)
 			self.userRecommendations[user].append(rec)
+		for user in self.userRecommendations:
+			message = "{0}|{1}|{2}".format("shade", user, "XXXX")
+			body = "Lower shade on your window to save energy."
+			rec = self.make_suggestion_item("shade", "Shade", body, 1, message, 0)
 
 		return
 
