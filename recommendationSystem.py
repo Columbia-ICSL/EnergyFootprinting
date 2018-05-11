@@ -353,9 +353,11 @@ class recommenderSystem:
 		with tensf.Session() as sess:
 			sess.run(tensf.global_variables_initializer())
 			y_out = sess.run(y1, feed_dict = {x1:npState})
-
+			print("y_out length")
+			print(len(y_out))
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
+			print(personNum)
 			actionNum = np.argmax(y_out[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
 			rec = self.interpretAction(actionNum, y_out[actionNum])
 			if rec is not None:
