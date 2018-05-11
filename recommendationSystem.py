@@ -370,13 +370,13 @@ class recommenderSystem:
 			#import the neural network
 
 	def interpretAction(self, actionNum, reward):
-		reward = int(reward)
 		sign = 1
 		if (reward < 0):
 			sign = -1
 
 		reward = math.log10(reward*sign)
 		reward = reward * sign
+		reward = int(reward)
 		body = ""
 		rec = None
 		if actionNum < self.offset1:
