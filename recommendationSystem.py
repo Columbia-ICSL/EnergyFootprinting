@@ -354,11 +354,14 @@ class recommenderSystem:
 			sess.run(tensf.global_variables_initializer())
 			y_out = sess.run(y1, feed_dict = {x1:npState})
 
-		actionNum = np.argmax(y_out)
-		rec = self.interpretAction(actionNum, y_out[actionNum])
-		if rec is not None:
-			print("Got recommendation")
-		#import the neural network
+		for user in self.peopleDef:
+			personNum = self.peopleDef[user] #person number
+			actionNum = np.argmax(y_out[personNum*self.spaceDef:(personNum+1)*self.spaceDef])
+			rec = self.interpretAction(actionNum, y_out[actionNum])
+			if rec is not None:
+				print("Got recommendation")
+			self.userRecommendations[user].append(rec)
+			#import the neural network
 
 	def interpretAction(self, actionNum, reward):
 		body = ""
@@ -370,20 +373,20 @@ class recommenderSystem:
 			spaceName = self.spaceDefInv(space)
 			message = "{0}|{1}|{2}".format("move", personName, spaceName)
 			body = "Move to " + spaceName
-			rec = self.make_suggestion_item(1, "Move", body, reward, message, 0)
+			rec = self.make_suggestion_item("move", "Move", body, reward, message, 0)
 		if actionNum >= self.offset1 and actionNum < self.offset2:
 			device = actionNum - self.offset1
 			deviceName = self.deviceDefInv(device)
 			deviceOwner = self.deviceOwnership[deviceName]
 			message = "{0}|{1}|{2}".format("reduce", deviceOwner, deviceName)
 			body = "Reduce Power of " + deviceName
-			rec = self.make_suggestion_item(1, "Reduce", body, reward, message, 0)
+			rec = self.make_suggestion_item("reduce", "Reduce", body, reward, message, 0)
 		if actionNum >= self.offset2 and actionNum:
 			space = actionNum - self.offset2
 			spaceName = self.spaceDefInv(space)
 			message = "{0}|{1}|{2}".format("force", "BuildingManager", spaceName)
 			body = "Force People from " + spaceName
-			rec = self.make_suggestion_item(1, "Force", body, reward, message, 0)
+			rec = self.make_suggestion_item("force", "Force", body, reward, message, 0)
 		print(body)
 		return rec
 
