@@ -426,8 +426,8 @@ class recommenderSystem:
 		self.loadBuildingParams()
 		while True:
 			self.clearRecommendations()
-			self.runOptimization()
-			#self.randomRecommendations()
-			self.deepLearning()
+			#self.runOptimization()
+			self.randomRecommendations()
+			#self.deepLearning()
 			time.sleep(self.checkInterval)
 			print "Interval"
