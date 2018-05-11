@@ -15,6 +15,7 @@ from IDs import Tgroup
 from IDs import Bgroup
 import numpy as np
 import tensorflow as tensf
+import math
 
 class recommenderSystem:
 	def __init__(self):
@@ -369,6 +370,13 @@ class recommenderSystem:
 			#import the neural network
 
 	def interpretAction(self, actionNum, reward):
+		reward = int(reward)
+		sign = 1
+		if (reward < 0):
+			sign = -1
+
+		reward = math.log10(reward*sign)
+		reward = reward * sign
 		body = ""
 		rec = None
 		if actionNum < self.offset1:
