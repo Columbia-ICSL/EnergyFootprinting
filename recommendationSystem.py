@@ -354,7 +354,7 @@ class recommenderSystem:
 			sess.run(tensf.global_variables_initializer())
 			y_out = sess.run(y1, feed_dict = {x1:npState})
 			print("y_out length")
-			print(len(y_out))
+			print(str(y_out.shape))
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
 			print(personNum)
