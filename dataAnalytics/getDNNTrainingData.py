@@ -78,6 +78,7 @@ class getTrainingData:
 		self.offsetVec2 = self.offsetVec1 + len(self.spaceDef)
 		self.offsetVec3 = self.offsetVec2 + len(self.deviceDef)
 		self.vecLen = len(self.peopleDef) + len(self.spaceDef) + len(self.deviceDef)
+		self.inputLen = self.vecLen + len(self.spaceDef) + 1
 		# length of input vector: occupants, reducible shared energy, personal energy, room occupancy
 
 		self.offset1 = len(self.peopleDef) * len(self.spaceDef)
@@ -186,7 +187,7 @@ class getTrainingData:
 			state0[-1] = 72
 			self.saveToFile(state0, tempRecs, nextStates)
 			state0 = state1
-		print((self.vecLen, self.recLen))
+		print((self.inputLen, self.recLen))
 
 	def getNextState(self, state0, tempRecs):
 		nextStates = []
