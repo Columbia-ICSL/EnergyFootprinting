@@ -341,8 +341,8 @@ class recommenderSystem:
 	def deepLearning(self):
 		state = self.getState()
 		sess1 = tensf.Session()
-		saver = tensf.train.import_meta_graph('./model_5_10/model_5_10.meta', clear_devices=True)
-		saver.restore(sess1, tensf.train.latest_checkpoint('./model_5_10'))
+		saver = tensf.train.import_meta_graph('./model_5_11/model_5_11.meta', clear_devices=True)
+		saver.restore(sess1, tensf.train.latest_checkpoint('./model_5_11'))
 
 		graph = tensf.get_default_graph()
 		x1 = graph.get_tensor_by_name('s:0')
