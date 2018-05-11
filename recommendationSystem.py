@@ -8,12 +8,13 @@ from cvxopt import glpk
 import random
 from spaceNames import S
 from spaceNames import NS
+from spaceNames import realS
 from personal import P
 from IDs import Jgroup
 from IDs import Tgroup
 from IDs import Bgroup
 import numpy as np
-import tensorflow as tf
+import tensorflow
 
 class recommenderSystem:
 	def __init__(self):
@@ -26,8 +27,11 @@ class recommenderSystem:
 		self.personal = {}
 		self.spaceDef = {}
 		self.nonSpaceDef = {}
+		self.realSDef = {}
 		self.spaces = S
 		self.nonSpaces = NS
+		self.realS = realS
+
 		print("Found " + str(len(self.spaces)) + " spaces")
 		self.personalDevices = P
 		self.peopleID = Jgroup+Bgroup+Tgroup
@@ -37,6 +41,7 @@ class recommenderSystem:
 				assert(room == "outOfLab") #first room must be out of lab
 			self.footprints[room] = []
 			self.spaceDef[room] = i
+			self.realSDef[room] = self.realS[i]
 			i += 1
 		self.spaceDefInv = {v: k for k, v in self.spaceDef.items()}
 
@@ -191,7 +196,7 @@ class recommenderSystem:
 			#print(self.locations[user])
 			if (self.locations[user]) not in solutions:
 				r = random.choice(list(solutions))
-				suggestion = self.make_suggestion_item("move", "Move to " + r, "Move recommendation from " + self.locations[user] + " to " + r, 100, "Hello World", 1)
+				suggestion = self.make_suggestion_item("move", "Move to " + self.realSDef[r], "Move recommendation from " + self.locations[user] + " to " + r, 100, "Hello World", 1)
 				self.userRecommendations[user].append(suggestion)
 		return
 
@@ -316,7 +321,7 @@ class recommenderSystem:
 			#print(self.locations[user])
 			r = random.choice(list(self.spaceDef.keys()))
 			message = "{0}|{1}|{2}".format("move", user, r)
-			body = "Move to " + r
+			body = "Move to " + self.realSDef[r]
 			rec = self.make_suggestion_item(1, "Move", body, 3, message, 0)
 			self.userRecommendations[user].append(rec)
 
@@ -324,9 +329,9 @@ class recommenderSystem:
 
 	def deepLearning(self):
 		state = self.getState()
-		sess1 = tf.Session()
-		saver = tf.train.import_meta_graph('./model_5_10/model_5_10.meta')
-		saver.restore(sess1, tf.train.latest_checkpoint('./model_5_10'))
+		sess1 = tensorflow.Session()
+		saver = tensorflow.train.import_meta_graph('./model_5_10/model_5_10.meta')
+		saver.restore(sess1, tensorflow.train.latest_checkpoint('./model_5_10'))
 
 		graph = tf.get_default_graph()
 		x1 = graph.get_tensor_by_name('s:0')
