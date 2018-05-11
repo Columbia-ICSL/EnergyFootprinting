@@ -385,7 +385,7 @@ class recommenderSystem:
 			personName = self.peopleDefInv[person]
 			spaceName = self.spaceDefInv[space]
 			message = "{0}|{1}|{2}".format("move", personName, spaceName)
-			body = "Move to " + spaceName
+			body = "Move to " + self.realSDef[spaceName] + "."
 			rec = self.make_suggestion_item("move", "Move", body, reward, message, 0)
 		if actionNum >= self.offset1 and actionNum < self.offset2:
 			device = actionNum - self.offset1
@@ -398,7 +398,7 @@ class recommenderSystem:
 			space = actionNum - self.offset2
 			spaceName = self.spaceDefInv[space]
 			message = "{0}|{1}|{2}".format("force", "BuildingManager", spaceName)
-			body = "Force People from " + spaceName
+			body = "Force People from " + self.realSDef[spaceName]
 			rec = self.make_suggestion_item("force", "Force", body, reward, message, 0)
 		print(body)
 		return rec
