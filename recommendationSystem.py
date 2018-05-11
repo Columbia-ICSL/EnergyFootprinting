@@ -82,7 +82,7 @@ class recommenderSystem:
 
 
 	def setup(self):
-		self.checkInterval = 10
+		self.checkInterval = 60
 		self.users = None
 		self.userRecommendations = {}
 		self.locations = {}
@@ -323,6 +323,11 @@ class recommenderSystem:
 			message = "{0}|{1}|{2}".format("move", user, r)
 			body = "Move to " + self.realSDef[r]
 			rec = self.make_suggestion_item(1, "Move", body, 3, message, 0)
+			self.userRecommendations[user].append(rec)
+		for user in self.userRecommendations:
+			message = "{0}|{1}|{2}".format("shift", user, "XXXX")
+			body = "Come to lab now"
+			rec = self.make_suggestion_item(1, "Shift", body, 3, message, 0)
 			self.userRecommendations[user].append(rec)
 
 		return
