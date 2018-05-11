@@ -336,7 +336,6 @@ class recommenderSystem:
 			body = "Lower shade on your window to save energy."
 			rec = self.make_suggestion_item("shade", "Shade", body, 1, message, 0)
 			self.userRecommendations[user].append(rec)
-
 		return
 
 	def deepLearning(self):
