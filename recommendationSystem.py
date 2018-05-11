@@ -202,14 +202,14 @@ class recommenderSystem:
 		return
 
 	def make_suggestion_item(self, iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
-		Others.update({
+		Others = {
             "type":iType,
             "title":iTitle,
             "body":iBodyText,
             "reward":iReward,
             "notification":inotification,
             "messageID":messageID
-            })
+            }
 		return Others
 
 	def LPOptimization(self, spaces, a, b, z, x1):
@@ -401,13 +401,12 @@ class recommenderSystem:
 		t.start()
 
 	def _loopCheckDatabase(self):
+		self.getUserLocations()
+		self.loadBuildingParams()
 		while True:
-			time.sleep(self.checkInterval)
-			self.getUserLocations()
-			self.loadBuildingParams()
-
 			#self.deepLearning()
 			self.clearRecommendations()
 			self.runOptimization()
 			self.randomRecommendations()
+			time.sleep(self.checkInterval)
 			print "Interval"
