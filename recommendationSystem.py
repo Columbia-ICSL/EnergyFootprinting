@@ -179,6 +179,7 @@ class recommenderSystem:
 		if user in self.userRecommendations:	
 			for rec in self.userRecommendations[user]:
 				json_return["suggestions"].append(rec)
+				print(rec)
 		ret = cloudserver.db._encode(json_return,False)
 		return ret
 

@@ -1687,10 +1687,11 @@ class DBMgr(object):
 ## Machine Learning Functions, for self.suggestionsML ##############
 ####################################################################
 
-	def submitAcceptedSuggestion(self, deviceID, messageID):
+	def submitAcceptedSuggestion(self, deviceID, messageID, accepted=True):
 		self.suggestionsML.insert({
 			"deviceID":deviceID,
 			"messageID":messageID,
+			"accepted":accepted,
 			"timestamp":datetime.datetime.utcnow()
 			})
 
