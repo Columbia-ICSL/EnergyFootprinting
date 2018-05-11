@@ -374,21 +374,21 @@ class recommenderSystem:
 		if actionNum < self.offset1:
 			person = actionNum / len(self.spaceDef)
 			space = actionNum % len(self.spaceDef)
-			personName = self.peopleDefInv(person)
-			spaceName = self.spaceDefInv(space)
+			personName = self.peopleDefInv[person]
+			spaceName = self.spaceDefInv[space]
 			message = "{0}|{1}|{2}".format("move", personName, spaceName)
 			body = "Move to " + spaceName
 			rec = self.make_suggestion_item("move", "Move", body, reward, message, 0)
 		if actionNum >= self.offset1 and actionNum < self.offset2:
 			device = actionNum - self.offset1
-			deviceName = self.deviceDefInv(device)
+			deviceName = self.deviceDefInv[device]
 			deviceOwner = self.deviceOwnership[deviceName]
 			message = "{0}|{1}|{2}".format("reduce", deviceOwner, deviceName)
 			body = "Reduce Power of " + deviceName
 			rec = self.make_suggestion_item("reduce", "Reduce", body, reward, message, 0)
 		if actionNum >= self.offset2 and actionNum:
 			space = actionNum - self.offset2
-			spaceName = self.spaceDefInv(space)
+			spaceName = self.spaceDefInv[space]
 			message = "{0}|{1}|{2}".format("force", "BuildingManager", spaceName)
 			body = "Force People from " + spaceName
 			rec = self.make_suggestion_item("force", "Force", body, reward, message, 0)
