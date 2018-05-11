@@ -197,7 +197,8 @@ class recommenderSystem:
 			#print(self.locations[user])
 			if (self.locations[user]) not in solutions:
 				r = random.choice(list(solutions))
-				suggestion = self.make_suggestion_item("move", "Move to " + self.realSDef[r], "Move recommendation from " + self.locations[user] + " to " + r, 100, "Hello World", 1)
+				message = "{0}|{1}|{2}".format("move", user, r)
+				suggestion = self.make_suggestion_item("move", "Move", "Move to " + self.realSDef[r], 3, message, 1)
 				self.userRecommendations[user].append(suggestion)
 		return
 
@@ -409,9 +410,9 @@ class recommenderSystem:
 		self.getUserLocations()
 		self.loadBuildingParams()
 		while True:
-			#self.deepLearning()
 			self.clearRecommendations()
 			self.runOptimization()
 			self.randomRecommendations()
+			#self.deepLearning()
 			time.sleep(self.checkInterval)
 			print "Interval"
