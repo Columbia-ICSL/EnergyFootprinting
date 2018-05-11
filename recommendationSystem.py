@@ -14,7 +14,7 @@ from IDs import Jgroup
 from IDs import Tgroup
 from IDs import Bgroup
 import numpy as np
-import tensorflow
+import tensorflow as tensf
 
 class recommenderSystem:
 	def __init__(self):
@@ -341,18 +341,18 @@ class recommenderSystem:
 
 	def deepLearning(self):
 		state = self.getState()
-		sess1 = tensorflow.Session()
-		saver = tensorflow.train.import_meta_graph('./model_5_10/model_5_10.meta')
-		saver.restore(sess1, tensorflow.train.latest_checkpoint('./model_5_10'))
+		sess1 = tensf.Session()
+		saver = tensf.train.import_meta_graph('./model_5_10/model_5_10.meta', clear_devices=True)
+		saver.restore(sess1, tensf.train.latest_checkpoint('./model_5_10'))
 
-		graph = tf.get_default_graph()
+		graph = tensf.get_default_graph()
 		x1 = graph.get_tensor_by_name('s:0')
-		y1 = graph.get_tensor_by_name('output:0')
+		y1 = graph.get_tensor_by_name('eval_net/l3/output:0')
 
 		npState = np.array([state])
 
-		with tf.Session() as tf:
-			sess.run(tf.global_variables_initializer())
+		with tensf.Session() as sess:
+			sess.run(tensf.global_variables_initializer())
 			y_out = sess.run(y1, feed_dict = {x1:npState})
 
 		actionNum = np.argmax(y_out)
@@ -412,7 +412,7 @@ class recommenderSystem:
 		while True:
 			self.clearRecommendations()
 			self.runOptimization()
-			self.randomRecommendations()
-			#self.deepLearning()
+			#self.randomRecommendations()
+			self.deepLearning()
 			time.sleep(self.checkInterval)
 			print "Interval"
