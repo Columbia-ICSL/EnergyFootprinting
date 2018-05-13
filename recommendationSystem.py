@@ -83,7 +83,7 @@ class recommenderSystem:
 
 
 	def setup(self):
-		self.checkInterval = 60
+		self.checkInterval = 60*15 # 15 minutes
 		self.users = None
 		self.userRecommendations = {}
 		self.locations = {}
@@ -199,7 +199,7 @@ class recommenderSystem:
 			if (self.locations[user]) not in solutions:
 				r = random.choice(list(solutions))
 				message = "{0}|{1}|{2}".format("move", user, r)
-				suggestion = self.make_suggestion_item("move", "Move", "Move to " + self.realSDef[r], 3, message, 1)
+				suggestion = self.make_suggestion_item("move", "Move", "Move to " + self.realSDef[r], 3, message, 0)
 				self.userRecommendations[user].append(suggestion)
 		return
 
