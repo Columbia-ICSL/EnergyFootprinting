@@ -32,6 +32,7 @@ class recommenderSystem:
 		self.spaces = S
 		self.nonSpaces = NS
 		self.realS = realS
+		self.timeout = {}
 
 		print("Found " + str(len(self.spaces)) + " spaces")
 		self.personalDevices = P
@@ -54,6 +55,7 @@ class recommenderSystem:
 		self.peopleDef = {}
 		i = 0
 		for person in self.peopleID:
+			self.timeout[person] = 0
 			self.peopleDef[person] = i
 			i += 1
 		self.peopleDefInv = {v: k for k, v in self.peopleDef.items()}
@@ -183,6 +185,10 @@ class recommenderSystem:
 				print(rec)
 		ret = cloudserver.db._encode(json_return,False)
 		return ret
+
+	def decideNotification(self, deviceID):
+		if time.time() > self.timeout[deviceID] + 60*15:
+			self.timeout[deviceID] = time.time()
 
 	def clearRecommendations(self):
 		for user in self.userRecommendations:
