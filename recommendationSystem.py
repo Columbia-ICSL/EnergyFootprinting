@@ -364,16 +364,46 @@ class recommenderSystem:
 			print(str(y_out.shape))
 		y_new = y_out.flatten()
 
-		for user in self.peopleDef:
+		for user in self.peopleDef: #move recommendation
 			personNum = self.peopleDef[user] #person number
 			print(personNum)
 
-			actionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
-			rec = self.interpretAction(actionNum, y_new[actionNum])
-			if rec is not None:
-				print("Got recommendation")
+			################
+			## Kevin Chen
+			## Getting the group the person is in for future use
+			## 5.14.2018
+			group = 0
+			if personNum < 4
+				group = 1	  #icsl lab
+			elif personNum < 6
+				group = 2     #Burke lab
+			else 
+				group = 3     #Terhani lab
+			###############
+
+			personActions = y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)]
+			if random.random() > 0.1:
+				actionNum = np.argmax(personActions)
+				rec = self.interpretAction(actionNum, y_new[actionNum])
+				if rec is not None:
+					print("Got recommendation")
+			else:
+				print("Exploring")
+				
+				################
+				## Kevin Chen
+				## contextual postfiltering, assign different probabilities for each action
+				## 5.14.2018
+				actionNum = np.argmax(personActions)
+				if group == 1 # if the person is in icsl lab
+					if actionNum 
+
+
+				################
+
 			self.userRecommendations[user].append(rec)
 			#import the neural network
+
 
 	def interpretAction(self, actionNum, reward):
 		sign = 1
