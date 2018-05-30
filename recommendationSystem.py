@@ -481,10 +481,36 @@ class recommenderSystem:
 			print(" ")
 
 	def checkRecommendation(self, user, rec):
+		moveTime = 20*60
+		reduceTime = 10*60
+		forceTime = 30*60
+		shiftTime = 12*60*60
+		shadeTime = 60*60
 		if rec is None or "messageID" not in rec:
 			return
 		message = rec["messageID"]
-		self.userRecommendations[user].append(rec)
+		t = rec["type"]
+		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, moveTime)):
+        	self.userRecommendations[user].append(rec)
+        	cloudserver.db.submitRecommendationTimestamp(user, message)
+        	continue
+        if (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, reduceTime)):
+        	self.userRecommendations[user].append(rec)
+        	cloudserver.db.submitRecommendationTimestamp(user, message)
+        	continue
+        if (t == "force" and cloudserver.db.pushManagementDispCheck(message, forceTime)):
+        	self.userRecommendations[user].append(rec)
+        	cloudserver.db.submitRecommendationTimestamp(user, message)
+        	continue
+        if (t == "shift" and cloudserver.db.pushManagementDispCheck(message, shiftTime)):
+        	self.userRecommendations[user].append(rec)
+        	cloudserver.db.submitRecommendationTimestamp(user, message)
+        	continue
+        if (t == "shade" and cloudserver.db.pushManagementDispCheck(message, shadeTime)):
+        	self.userRecommendations[user].append(rec)
+        	cloudserver.db.submitRecommendationTimestamp(user, message)
+        	continue
+		#self.userRecommendations[user].append(rec)
 
 
 
