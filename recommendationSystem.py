@@ -493,23 +493,19 @@ class recommenderSystem:
 		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, moveTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-			continue
-		if (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, reduceTime)):
+		elif (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, reduceTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-			continue
-		if (t == "force" and cloudserver.db.pushManagementDispCheck(message, forceTime)):
+		elif (t == "force" and cloudserver.db.pushManagementDispCheck(message, forceTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-			continue
-		if (t == "shift" and cloudserver.db.pushManagementDispCheck(message, shiftTime)):
+		elif (t == "shift" and cloudserver.db.pushManagementDispCheck(message, shiftTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-			continue
-		if (t == "shade" and cloudserver.db.pushManagementDispCheck(message, shadeTime)):
+		elif (t == "shade" and cloudserver.db.pushManagementDispCheck(message, shadeTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-			continue
+		return
 		#self.userRecommendations[user].append(rec)
 
 
