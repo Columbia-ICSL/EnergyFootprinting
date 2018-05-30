@@ -186,6 +186,18 @@ class recommenderSystem:
 		ret = cloudserver.db._encode(json_return,False)
 		return ret
 
+	def clearRecs(self, user, messageID):
+		if user in self.userRecommendations:
+			recs = self.userRecommendations[user]
+			if recs is None:
+				return
+			for i in range(len(recs)):
+				rec = recs[i]
+				if messageID == rec["messageID"]:
+					r = self.userRecommendations[user].pop(i)
+					print("Removed recommendation " + messageID + " from user " + user + " recommendation list. (clearRecs method)")
+		return
+
 	def decideNotification(self, deviceID):
 		if time.time() > self.timeout[deviceID] + 60*15:
 			self.timeout[deviceID] = time.time()
@@ -419,7 +431,7 @@ class recommenderSystem:
 				personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*(self.spaceDef)])
 			
 			rec1 = self.interpretAction(personActionNum, y_new[personActionNum])
-			rec2 = self.interppretAction(personalNum, y_new[personalNum])
+			rec2 = self.interpretAction(personalNum, y_new[personalNum])
 			if rec1 is not None:
 				print("Got recommendation")
 				self.checkRecommendation(user, rec1)

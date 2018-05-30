@@ -27,6 +27,7 @@ class DecisionVals:
 			cloudserver.db.submitAcceptedSuggestion(deviceID, messageID)
 		cloudserver.db.recordEvent(user, "suggestion received", messageID)
 		cloudserver.db.pushManagementDispUpdate(messageID)
+		cloudserver.RS.clearRecs(user, messageID)
 		coins = int(data[2])
 		cloudserver.db.updateUserBalance(deviceID, coins)
 		return "success"
