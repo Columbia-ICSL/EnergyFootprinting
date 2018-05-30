@@ -76,15 +76,42 @@ def getTemp2(beginDay, endDay, month, year):
 				minutei = int(timei["date"]["min"])
 				temperature = float(timei["tempi"])
 
-				dewpoints.append(float(timei["dewpti"]))
-				humidity.append(float(timei["hum"]))
-				windspeed.append(float(timei["wspdi"]))
-				windgust.append(float(timei["wgusti"]))
-				visibility.append(float(timei["visi"]))
-				pressure.append(float(timei["pressurei"]))
-				windchill.append(float(timei["windchilli"]))
-				heatindex.append(float(timei["heatindexi"]))
-				precipitation.append(float(timei["precipi"]))
+				try:
+					dewpoints.append(float(timei["dewpti"]))
+				except:
+					dewpoints.append(0)
+				try:
+					humidity.append(float(timei["hum"]))
+				except:
+					humidity.append(0)
+				try:
+					windspeed.append(float(timei["wspdi"]))
+				except:
+					windspeed.append(0)
+				try:
+					windgust.append(float(timei["wgusti"]))
+				except:
+					windgust.append(0)
+				try:
+					visibility.append(float(timei["visi"]))
+				except:
+					visibility.append(0)
+				try:
+					pressure.append(float(timei["pressurei"]))
+				except:
+					pressure.append(0)
+				try:
+					windchill.append(float(timei["windchilli"]))
+				except:
+					windchill.append(0)
+				try:
+					heatindex.append(float(timei["heatindexi"]))
+				except:
+					heatindex.append(0)
+				try:
+					precipitation.append(float(timei["precipi"]))
+				except:
+					precipitation.append(0)
 
 				D = datetime.datetime(yeari, monthi, dayi, houri, minutei, 0)
 				timestamp = time.strftime("%d-%b-%Y %H:%M:%S", D.utctimetuple())
