@@ -400,10 +400,13 @@ class recommenderSystem:
 			## Intepret the group number to do filtering
 			groupNum = 0
 			if personNum < 3:
+				print("ICSL")
 				groupNum = 1
 			elif personNum < 6:
+				print("Teherani")
 				groupNum = 2
 			else:
+				print("Burke")
 				groupNum = 3
 			###############
 			## 10 percent exploring (delivering which ever has the largest reward)
