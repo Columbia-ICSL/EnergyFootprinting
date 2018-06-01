@@ -383,9 +383,9 @@ class recommenderSystem:
 			print(str(y_out.shape))
 		y_new = y_out.flatten()
 
-		icslSpace = [0, 1, 5, 7, 8, 9, 13, 14, 15, 16]
-		bSpace = [0, 1, 11, 12, 13, 14, 15, 16]
-		tSpace = [0, 1, 6, 10, 13, 14, 15, 16]
+		icslSpace = [0, 5, 7, 8, 9, 13, 14, 15, 16]
+		bSpace = [0, 1, 11, 12]
+		tSpace = [0, 1, 6, 10, 13, 14]
 
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
@@ -402,7 +402,7 @@ class recommenderSystem:
 			if personNum <= 3:
 				print("ICSL")
 				groupNum = 1
-			if personNum <= 6:
+			elif personNum > 3 and personNum <= 6:
 				print("Burke")
 				groupNum = 2
 			else:
