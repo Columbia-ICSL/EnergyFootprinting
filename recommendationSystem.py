@@ -520,6 +520,7 @@ class recommenderSystem:
 	def checkRecommendation(self, user, rec):
 		if user not in self.userRecommendations:
 			return
+		nowTime = cloudserver.db._now()
 		moveTime = 0#20*60
 		reduceTime = 0#10*60
 		forceTime = 0#30*60
@@ -530,19 +531,19 @@ class recommenderSystem:
 			return
 		message = rec["messageID"]
 		t = rec["type"]
-		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, moveTime)):
+		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, nowTime-moveTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-		elif (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, reduceTime)):
+		elif (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, nowTime-reduceTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-		elif (t == "force" and cloudserver.db.pushManagementDispCheck(message, forceTime)):
+		elif (t == "force" and cloudserver.db.pushManagementDispCheck(message, nowTime-forceTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-		elif (t == "shift" and cloudserver.db.pushManagementDispCheck(message, shiftTime)):
+		elif (t == "shift" and cloudserver.db.pushManagementDispCheck(message, nowTime-shiftTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-		elif (t == "shade" and cloudserver.db.pushManagementDispCheck(message, shadeTime)):
+		elif (t == "shade" and cloudserver.db.pushManagementDispCheck(message, nowTime-shadeTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
 		return
