@@ -416,7 +416,7 @@ class recommenderSystem:
 			if token < 0.9:
 				print("Exploiting")
 				#personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
-				if group == 1: ## icsl lab
+				if groupNum == 1: ## icsl lab
 					if personNum == 0: ## Fred, presumably only will work in his office
 						print("Fred")
 						personActionNum = 2
@@ -425,7 +425,7 @@ class recommenderSystem:
 					else: ## Kevin and Stephen, can work at any place available, other than professor's office
 						print("Kevin and Stephen")
 						personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+icslSpace])
-				elif group == 2: ## Burke lab, can work at any place available, other than professor's office
+				elif groupNum == 2: ## Burke lab, can work at any place available, other than professor's office
 					print("Burke Lab")
 					personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+bSpace])
 				else: #Teherani lab
