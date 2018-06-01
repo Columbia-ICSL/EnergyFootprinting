@@ -425,19 +425,20 @@ class recommenderSystem:
 					else: ## Kevin and Stephen, can work at any place available, other than professor's office
 						print("Kevin and Stephen")
 						lc = [y_new[x + personNum*len(self.spaceDef)] for x in icslSpace]
-						personActionNum = np.argmax(lc)#y_new[personNum*len(self.spaceDef)+icslSpace])
+						personActionNum = personNum*len(self.spaceDef) + icslSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+icslSpace])
 				elif groupNum == 2: ## Burke lab, can work at any place available, other than professor's office
 					print("Burke Lab")
 					lc = [y_new[x + personNum*len(self.spaceDef)] for x in bSpace]
-					personActionNum = np.argmax(lc)#y_new[personNum*len(self.spaceDef)+bSpace])
+					personActionNum = personNum*len(self.spaceDef) + bSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+bSpace])
 				else: #Teherani lab
 					print("Teherani lab")
 					lc = [y_new[x + personNum*len(self.spaceDef)] for x in tSpace]
-					personActionNum = np.argmax(lc)#y_new[personNum*len(self.spaceDef)+tSpace])
+					personActionNum = personNum*len(self.spaceDef) + tSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+tSpace])
 	
 			else: 
 				print("Exploring")
 				personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
+				personActionNum += personNum*len(self.spaceDef)
 			print(personActionNum)
 			rec1 = self.interpretAction(personActionNum, y_new[personActionNum])
 #			rec2 = self.interpretAction(personalNum, y_new[personalNum])
