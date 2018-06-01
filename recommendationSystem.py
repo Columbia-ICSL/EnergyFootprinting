@@ -497,7 +497,7 @@ class recommenderSystem:
 		if actionNum >= self.offset3:
 			person = actionNum - self.offset3
 			personName = self.peopleDefInv[person]
-			message = "{0}|{1}|{2}".format("shift", user, "XXXX")
+			message = "{0}|{1}|{2}".format("shift", personName, "XXXX")
 			body = "Come to lab now to save energy."
 			rec = self.make_suggestion_item("shift", "Shift", body, reward, message, 0)
 		return rec
