@@ -13,7 +13,7 @@ from personal import P
 from IDs import Jgroup
 from IDs import Tgroup
 from IDs import Bgroup
-import numpy as np
+import numpy as npn
 import tensorflow as tensf
 import math
 
@@ -364,8 +364,8 @@ class recommenderSystem:
 	def deepLearning(self):
 		state = self.getState()
 		sess1 = tensf.Session()
-		saver = tensf.train.import_meta_graph('./model_5_11/model_5_11.meta', clear_devices=True)
-		saver.restore(sess1, tensf.train.latest_checkpoint('./model_5_11'))
+		saver = tensf.train.import_meta_graph('./model_6_1/model_6_1.meta', clear_devices=True)
+		saver.restore(sess1, tensf.train.latest_checkpoint('./model_6_1'))
 
 		graph = tensf.get_default_graph()
 		x1 = graph.get_tensor_by_name('s:0')
@@ -382,7 +382,7 @@ class recommenderSystem:
 
 		icslSpace = [0, 1, 5, 7, 8, 9, 13, 14, 15, 16]
 		bSpace = [0, 1, 11, 12, 13, 14, 15, 16]
-		tSpace  [0, 1, 6, 10, 13, 14, 15, 16]
+		tSpace = [0, 1, 6, 10, 13, 14, 15, 16]
 
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
@@ -428,20 +428,20 @@ class recommenderSystem:
 	
 			else: 
 				print("Exploring")
-				personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*(self.spaceDef)])
+				personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
 			
 			rec1 = self.interpretAction(personActionNum, y_new[personActionNum])
-			rec2 = self.interpretAction(personalNum, y_new[personalNum])
+#			rec2 = self.interpretAction(personalNum, y_new[personalNum])
 			if rec1 is not None:
 				print("Got recommendation")
 				self.checkRecommendation(user, rec1)
 			else:
 				print("Recommendation is not found")
-			if rec2 is not None:
-				print("Got recommendation")
-				self.checkRecommendation(user, rec2)
-			else:
-				print("Recommendation is not found")
+#			if rec2 is not None:
+#				print("Got recommendation")
+#				self.checkRecommendation(user, rec2)
+#			else:
+#				print("Recommendation is not found")
 
 		deviceMinimum = 10
 
