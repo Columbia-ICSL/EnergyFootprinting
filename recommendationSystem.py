@@ -520,11 +520,11 @@ class recommenderSystem:
 	def checkRecommendation(self, user, rec):
 		if user not in self.userRecommendations:
 			return
-		moveTime = 20*60
-		reduceTime = 10*60
-		forceTime = 30*60
-		shiftTime = 12*60*60
-		shadeTime = 60*60
+		moveTime = 0#20*60
+		reduceTime = 0#10*60
+		forceTime = 0#30*60
+		shiftTime = 0#12*60*60
+		shadeTime = 0#60*60
 		if rec is None or "messageID" not in rec:
 			return
 		message = rec["messageID"]
