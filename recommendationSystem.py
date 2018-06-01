@@ -399,14 +399,14 @@ class recommenderSystem:
 			###############
 			## Intepret the group number to do filtering
 			groupNum = 0
-			if personNum < 3:
+			if personNum <= 3:
 				print("ICSL")
 				groupNum = 1
-			elif personNum < 6:
-				print("Teherani")
+			if personNum <= 6:
+				print("Burke")
 				groupNum = 2
 			else:
-				print("Burke")
+				print("Teherani")
 				groupNum = 3
 			###############
 			## 10 percent exploring (delivering which ever has the largest reward)
@@ -438,7 +438,7 @@ class recommenderSystem:
 			else: 
 				print("Exploring")
 				personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
-			
+			print(personActionNum)
 			rec1 = self.interpretAction(personActionNum, y_new[personActionNum])
 #			rec2 = self.interpretAction(personalNum, y_new[personalNum])
 			if rec1 is not None:
@@ -484,6 +484,7 @@ class recommenderSystem:
 		rec = None
 		if actionNum < self.offset1:
 			person = actionNum / len(self.spaceDef)
+			print(person)
 			space = actionNum % len(self.spaceDef)
 			personName = self.peopleDefInv[person]
 			spaceName = self.spaceDefInv[space]
