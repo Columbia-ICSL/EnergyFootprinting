@@ -525,6 +525,7 @@ class recommenderSystem:
 		forceTime = 0#30*60
 		shiftTime = 0#12*60*60
 		shadeTime = 0#60*60
+		print(rec["messageID"])
 		if rec is None or "messageID" not in rec:
 			return
 		message = rec["messageID"]
