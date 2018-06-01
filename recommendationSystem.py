@@ -510,7 +510,7 @@ class recommenderSystem:
 			print(" ")
 
 	def checkRecommendation(self, user, rec):
-		if user not in self.userRecomendations:
+		if user not in self.userRecommendations:
 			return
 		moveTime = 20*60
 		reduceTime = 10*60
