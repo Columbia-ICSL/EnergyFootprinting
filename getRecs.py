@@ -10,6 +10,7 @@ urls = ("/", "getRecs")
 class getRecs:
 	def GET(self):
 		data = web.input(id=None)
+		print("Device: " + data.id)
 		if cloudserver.db.userIDLookup(data.id) == None:
 			json_return={
             	"location":"Out of Lab",
