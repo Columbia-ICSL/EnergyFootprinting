@@ -567,7 +567,7 @@ class recommenderSystem:
 		while True:
 			self.clearRecommendations()
 			#self.runOptimization()
-			self.randomRecommendations()
+			#self.randomRecommendations()
 			self.deepLearning()
 			self.debugRecommendations()
 			# will print the recommendations to terminal, comment to disable
