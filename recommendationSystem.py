@@ -179,8 +179,9 @@ class recommenderSystem:
 			location = self.locations[user]
 		json_return["location_id"]=location
 		json_return["location"]=cloudserver.db.RoomIdToName(location)
+
 		for person in self.userRecommendations:
-			print(len(self.userRecommendations[person]))
+			print(str(len(self.userRecommendations[person])) + " " + person)
 		if user in self.userRecommendations:	
 			for rec in self.userRecommendations[user]:
 				json_return["suggestions"].append(rec)
