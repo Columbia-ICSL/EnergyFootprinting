@@ -424,13 +424,16 @@ class recommenderSystem:
 						## Add checking whether Fred's device has a positive reward		
 					else: ## Kevin and Stephen, can work at any place available, other than professor's office
 						print("Kevin and Stephen")
-						personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+icslSpace])
+						lc = [y_new[x + personNum*len(self.spaceDef)] for x in icslSpace]
+						personActionNum = np.argmax(lc)#y_new[personNum*len(self.spaceDef)+icslSpace])
 				elif groupNum == 2: ## Burke lab, can work at any place available, other than professor's office
 					print("Burke Lab")
-					personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+bSpace])
+					lc = [y_new[x + personNum*len(self.spaceDef)] for x in bSpace]
+					personActionNum = np.argmax(lc)#y_new[personNum*len(self.spaceDef)+bSpace])
 				else: #Teherani lab
 					print("Teherani lab")
-					personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+tSpace])
+					lc = [y_new[x + personNum*len(self.spaceDef)] for x in tSpace]
+					personActionNum = np.argmax(lc)#y_new[personNum*len(self.spaceDef)+tSpace])
 	
 			else: 
 				print("Exploring")
