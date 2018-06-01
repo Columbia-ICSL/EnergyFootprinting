@@ -382,7 +382,7 @@ class recommenderSystem:
 
 		icslSpace = [0, 1, 5, 7, 8, 9, 13, 14, 15, 16]
 		bSpace = [0, 1, 11, 12, 13, 14, 15, 16]
-		tSpace  [0, 1, 6, 10, 13, 14, 15, 16]
+		tSpace   [0, 1, 6, 10, 13, 14, 15, 16]
 
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
@@ -488,13 +488,18 @@ class recommenderSystem:
 			message = "{0}|{1}|{2}".format("reduce", deviceOwner, deviceName)
 			body = "Reduce Power of " + deviceName
 			rec = self.make_suggestion_item("reduce", "Reduce", body, reward, message, 0)
-		if actionNum >= self.offset2 and actionNum:
+		if actionNum >= self.offset2 and actionNum < self.offset3:
 			space = actionNum - self.offset2
 			spaceName = self.spaceDefInv[space]
 			message = "{0}|{1}|{2}".format("force", "BuildingManager", spaceName)
 			body = "Force People from " + self.realSDef[spaceName]
 			rec = self.make_suggestion_item("force", "Force", body, reward, message, 0)
-		print(body)
+		if actionNum >= self.offset3:
+			person = actionNum - self.offset3
+			personName = self.peopleDefInv[person]
+			message = "{0}|{1}|{2}".format("shift", user, "XXXX")
+			body = "Come to lab now to save energy."
+			rec = self.make_suggestion_item("shift", "Shift", body, reward, message, 0)
 		return rec
 
 	def debugRecommendations(self):
