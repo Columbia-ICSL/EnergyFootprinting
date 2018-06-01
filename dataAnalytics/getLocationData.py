@@ -23,8 +23,9 @@ class getLocationData:
 			print "Number of cumulative locations: " + str(totalLocations)
 			for snapshot in shots:
 				timestamp = snapshot["timestamp"]
+				timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")
 				pattern = '%Y-%m-%d %H:%M:%S'
-				epoch = int(time.mktime(time.strptime(date_time, pattern)))
+				epoch = int(time.mktime(time.strptime(str(timestamp), pattern)))
 				data = snapshot["data"]
 				totalLocations += len(data)
 				for user in data:

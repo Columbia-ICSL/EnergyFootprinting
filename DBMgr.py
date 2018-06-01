@@ -202,6 +202,9 @@ class DBMgr(object):
 
 		self.humanCentricZones=self.dbc.db.humanCentricZones
 		self.humanCentricZonesTesting=self.dbc.db.humanCentricZonesTesting
+		
+		self.recommendationTimestamps = self.dbc.db.recommendationTimestamps
+
 		self._latestSuccessShot=0
 
 
@@ -1695,6 +1698,12 @@ class DBMgr(object):
 			"timestamp":datetime.datetime.utcnow()
 			})
 
+	def submitRecommendationTimestamp(self, deviceID, messageID):
+		self.recommendationTimestamps.insert({
+			"deviceID":deviceID,
+			"messageID":messageID,
+			"timestamp":datetime.datetime.utcnow()
+			})
 ####################################################################
 
 	def addLocationSample(self, label, sample):

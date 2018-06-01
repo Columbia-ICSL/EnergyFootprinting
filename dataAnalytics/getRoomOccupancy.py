@@ -79,7 +79,7 @@ class getRoomOccupancy:
 
 
 G = getRoomOccupancy()
-G.getOccupancy(2017, 9, 1, 30)
+G.getOccupancy(2017, 9, 20, 10)
 G.saveData()
 G.saveTimestamps()
 

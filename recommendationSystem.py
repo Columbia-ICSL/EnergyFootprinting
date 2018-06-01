@@ -186,6 +186,18 @@ class recommenderSystem:
 		ret = cloudserver.db._encode(json_return,False)
 		return ret
 
+	def clearRecs(self, user, messageID):
+		if user in self.userRecommendations:
+			recs = self.userRecommendations[user]
+			if recs is None:
+				return
+			for i in range(len(recs)):
+				rec = recs[i]
+				if messageID == rec["messageID"]:
+					r = self.userRecommendations[user].pop(i)
+					print("Removed recommendation " + messageID + " from user " + user + " recommendation list. (clearRecs method)")
+		return
+
 	def decideNotification(self, deviceID):
 		if time.time() > self.timeout[deviceID] + 60*15:
 			self.timeout[deviceID] = time.time()
@@ -206,7 +218,7 @@ class recommenderSystem:
 				r = random.choice(list(solutions))
 				message = "{0}|{1}|{2}".format("move", user, r)
 				suggestion = self.make_suggestion_item("move", "Move", "Move to " + self.realSDef[r], 3, message, 0)
-				self.userRecommendations[user].append(suggestion)
+				self.checkRecommendation(user, suggestion)
 		return
 
 	def make_suggestion_item(self, iType, iTitle, iBodyText, iReward, messageID, inotification=0, Others={}):
@@ -324,25 +336,29 @@ class recommenderSystem:
 		return state
 
 	def randomRecommendations(self):
-		for user in self.locations:
-			if user not in self.userRecommendations:
-				continue
+#		for user in self.locations:
+		for user in self.userRecommendations:
+#			if user not in self.userRecommendations:
+#				continue
 			#print(self.locations[user])
 			r = random.choice(list(self.spaceDef.keys()))
 			message = "{0}|{1}|{2}".format("move", user, r)
 			body = "Move to " + self.realSDef[r] + "."
 			rec = self.make_suggestion_item("move", "Move", body, 3, message, 0)
-			self.userRecommendations[user].append(rec)
+			self.checkRecommendation(user, rec)
+#			self.userRecommendations[user].append(rec)
 		for user in self.userRecommendations:
 			message = "{0}|{1}|{2}".format("shift", user, "XXXX")
 			body = "Come to lab now to save energy."
 			rec = self.make_suggestion_item("shift", "Shift", body, 3, message, 0)
-			self.userRecommendations[user].append(rec)
+			self.checkRecommendation(user, rec)
+#			self.userRecommendations[user].append(rec)
 		for user in self.userRecommendations:
 			message = "{0}|{1}|{2}".format("shade", user, "XXXX")
 			body = "Lower shade on your window to save energy."
 			rec = self.make_suggestion_item("shade", "Shade", body, 1, message, 0)
-			self.userRecommendations[user].append(rec)
+			self.checkRecommendation(user, rec)
+#			self.userRecommendations[user].append(rec)
 		return
 
 	def deepLearning(self):
@@ -364,45 +380,68 @@ class recommenderSystem:
 			print(str(y_out.shape))
 		y_new = y_out.flatten()
 
-		for user in self.peopleDef: #move recommendation
+		icslSpace = [0, 1, 5, 7, 8, 9, 13, 14, 15, 16]
+		bSpace = [0, 1, 11, 12, 13, 14, 15, 16]
+		tSpace  [0, 1, 6, 10, 13, 14, 15, 16]
+
+		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
 			print(personNum)
-
+			
 			################
-			## Kevin Chen
-			## Getting the group the person is in for future use
-			## 5.14.2018
-			group = 0
-			if personNum < 4
-				group = 1	  #icsl lab
-			elif personNum < 6
-				group = 2     #Burke lab
-			else 
-				group = 3     #Terhani lab
+			## Kevin Chen 
+			## Contextual Post filtering 
 			###############
 
-			personActions = y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)]
-			if random.random() > 0.1:
-				actionNum = np.argmax(personActions)
-				rec = self.interpretAction(actionNum, y_new[actionNum])
-				if rec is not None:
-					print("Got recommendation")
+			###############
+			## Intepret the group number to do filtering
+			groupNum = 0
+			if personNum < 3:
+				groupNum = 1
+			elif personNum < 6:
+				groupNum = 2
 			else:
+				groupNum = 3
+			###############
+			## 10 percent exploring (delivering which ever has the largest reward)
+			## 90 percent exploiting (do filtering to give more reasonable recommendation)
+			token = random.Random()
+			personalNum = np.argmax(y_new[self.offset1:self.offset2])
+			if token < 0.9:
+				print("Exploiting")
+				#personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
+				if group == 1: ## icsl lab
+					if personNum == 0: ## Fred, presumably only will work in his office
+						print("Fred")
+						personActionNum = 2
+						
+						## Add checking whether Fred's device has a positive reward		
+					else: ## Kevin and Stephen, can work at any place available, other than professor's office
+						print("Kevin and Stephen")
+						personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+icslSpace])
+				elif group == 2: ## Burke lab, can work at any place available, other than professor's office
+					print("Burke Lab")
+					personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+bSpace])
+				else: #Teherani lab
+					print("Teherani lab")
+					personActionNum = np.argmax(y_new[personNum*len(self.spaceDef)+tSpace])
+	
+			else: 
 				print("Exploring")
-				
-				################
-				## Kevin Chen
-				## contextual postfiltering, assign different probabilities for each action
-				## 5.14.2018
-				actionNum = np.argmax(personActions)
-				if group == 1 # if the person is in icsl lab
-					if actionNum 
-
-
-				################
-
-			self.userRecommendations[user].append(rec)
-			#import the neural network
+				personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*(self.spaceDef)])
+			
+			rec1 = self.interpretAction(personActionNum, y_new[personActionNum])
+			rec2 = self.interpretAction(personalNum, y_new[personalNum])
+			if rec1 is not None:
+				print("Got recommendation")
+				self.checkRecommendation(user, rec1)
+			else:
+				print("Recommendation is not found")
+			if rec2 is not None:
+				print("Got recommendation")
+				self.checkRecommendation(user, rec2)
+			else:
+				print("Recommendation is not found")
 
 
 	def interpretAction(self, actionNum, reward):
@@ -439,9 +478,45 @@ class recommenderSystem:
 		print(body)
 		return rec
 
+	def debugRecommendations(self):
+		print("\n\nDEBUG RECOMMENDATIONS---" + str(len(self.userRecommendations)) + " Users\n")
+		for user in self.userRecommendations:
+			print("User " + user)
+			print("---------")
+			recList = self.userRecommendations[user]
+			for rec in recList:
+				print(rec["type"])
+				print(rec["title"])
+				print(rec["body"])
+			print(" ")
 
-
-
+	def checkRecommendation(self, user, rec):
+		moveTime = 20*60
+		reduceTime = 10*60
+		forceTime = 30*60
+		shiftTime = 12*60*60
+		shadeTime = 60*60
+		if rec is None or "messageID" not in rec:
+			return
+		message = rec["messageID"]
+		t = rec["type"]
+		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, moveTime)):
+			self.userRecommendations[user].append(rec)
+			cloudserver.db.submitRecommendationTimestamp(user, message)
+		elif (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, reduceTime)):
+			self.userRecommendations[user].append(rec)
+			cloudserver.db.submitRecommendationTimestamp(user, message)
+		elif (t == "force" and cloudserver.db.pushManagementDispCheck(message, forceTime)):
+			self.userRecommendations[user].append(rec)
+			cloudserver.db.submitRecommendationTimestamp(user, message)
+		elif (t == "shift" and cloudserver.db.pushManagementDispCheck(message, shiftTime)):
+			self.userRecommendations[user].append(rec)
+			cloudserver.db.submitRecommendationTimestamp(user, message)
+		elif (t == "shade" and cloudserver.db.pushManagementDispCheck(message, shadeTime)):
+			self.userRecommendations[user].append(rec)
+			cloudserver.db.submitRecommendationTimestamp(user, message)
+		return
+		#self.userRecommendations[user].append(rec)
 
 
 
@@ -465,5 +540,7 @@ class recommenderSystem:
 			#self.runOptimization()
 			self.randomRecommendations()
 			#self.deepLearning()
+			self.debugRecommendations()
+			# will print the recommendations to terminal, comment to disable
 			time.sleep(self.checkInterval)
 			print "Interval"
