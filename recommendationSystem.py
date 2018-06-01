@@ -479,7 +479,7 @@ class recommenderSystem:
 			sign = -1
 
 		reward = math.log10(reward*sign)
-		reward = reward * sign
+		#reward = reward * sign
 		reward = int(reward)
 		body = ""
 		rec = None
