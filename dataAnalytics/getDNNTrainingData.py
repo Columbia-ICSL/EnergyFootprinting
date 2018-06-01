@@ -152,8 +152,12 @@ class getTrainingData:
 				continue
 			IDnum = self.peopleDef[ID] #person number
 			loc = shot["data"][ID]["location"]
-			locnum = self.spaceDef[loc] #location number
-			locations[locnum] += 1
+			if loc in self.spaceDef:
+				locnum = self.spaceDef[loc] #location number
+				locations[locnum] += 1
+			else:
+				locnum = 0
+				locations[0] += 1
 			state[IDnum] = locnum #assign space to input vector
 
 		index = 0
