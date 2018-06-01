@@ -411,7 +411,7 @@ class recommenderSystem:
 			###############
 			## 10 percent exploring (delivering which ever has the largest reward)
 			## 90 percent exploiting (do filtering to give more reasonable recommendation)
-			token = random.Random()
+			token = random.random()
 			personalNum = np.argmax(y_new[self.offset1:self.offset2])
 			if token < 0.9:
 				print("Exploiting")
