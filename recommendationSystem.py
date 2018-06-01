@@ -443,6 +443,25 @@ class recommenderSystem:
 			else:
 				print("Recommendation is not found")
 
+		deviceMinimum = 10
+
+		for device in self.deviceDef:
+			deviceNum = self.deviceDef[device] + self.offset1
+			owner = self.deviceOwnership[device]
+			if y_new[deviceNum] > deviceMinimum:
+				rec1 = self.interpretAction(deviceNum, y_new[deviceNum])
+				self.checkRecommendation(owner, rec1)
+		
+
+		shiftMinimum = 10
+
+		for person in self.peopleDef:
+			personNum = self.peopleDef[person] + self.offset3
+			if y_new[personNum] > shiftMinimum:
+				rec1 = self.interpretAction(personNum, y_new[personNum])
+			if rec1 is not None:
+				print("Got shift recommendation")
+				self.checkRecommendation(person, rec1)
 
 	def interpretAction(self, actionNum, reward):
 		sign = 1
@@ -491,6 +510,8 @@ class recommenderSystem:
 			print(" ")
 
 	def checkRecommendation(self, user, rec):
+		if user not in self.userRecomendations:
+			return
 		moveTime = 20*60
 		reduceTime = 10*60
 		forceTime = 30*60
@@ -539,7 +560,7 @@ class recommenderSystem:
 			self.clearRecommendations()
 			#self.runOptimization()
 			self.randomRecommendations()
-			#self.deepLearning()
+			self.deepLearning()
 			self.debugRecommendations()
 			# will print the recommendations to terminal, comment to disable
 			time.sleep(self.checkInterval)
