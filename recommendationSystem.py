@@ -71,7 +71,7 @@ class recommenderSystem:
 		self.deviceDefInv = {v: k for k, v in self.deviceDef.items()}
 
 		self.deviceOwnership = {}
-		assert(len(self.personalDevices) == len(self.deviceowners))
+		assert(len(self.personalDevices) == len(self.owners))
 		for i in range(len(self.personalDevices)):
 			device = self.personalDevices[i]
 			self.deviceOwnership[device] = self.owners[i]
