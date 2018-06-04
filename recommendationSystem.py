@@ -10,7 +10,7 @@ from spaceNames import S
 from spaceNames import NS
 from spaceNames import realS
 from personal import P
-from personal import P0
+from personal import PO
 from IDs import Jgroup
 from IDs import Tgroup
 from IDs import Bgroup
@@ -37,7 +37,7 @@ class recommenderSystem:
 
 		print("Found " + str(len(self.spaces)) + " spaces")
 		self.personalDevices = P
-		self.owners = P0
+		self.owners = PO
 		self.peopleID = Jgroup+Bgroup+Tgroup
 		i = 0
 		for room in self.spaces:
