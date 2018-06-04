@@ -460,14 +460,18 @@ class recommenderSystem:
 
 		deviceMinimum = 1
 
-		for device in self.deviceDef:
-			deviceNum = self.deviceDef[device] + self.offset1
-			owner = self.deviceOwnership[device]
-			if owner is None:
-				continue
-			if y_new[deviceNum] > deviceMinimum:
-				rec1 = self.interpretAction(deviceNum, y_new[deviceNum])
-				self.checkRecommendation(owner, rec1)
+		for owner in self.userRecommendations:
+			rec1 = None
+			maxReward = deviceMinimum
+			for device in self.deviceDef:
+				deviceNum = self.deviceDef[device] + self.offset1
+				realOwner = self.deviceOwnership[device]
+				if realOwner is None or owner != realOwner:
+					continue
+				if y_new[deviceNum] > deviceMinimum and y_new[deviceNum] > maxReward:
+					rec1 = self.interpretAction(deviceNum, y_new[deviceNum])
+					maxReward = y_new[deviceNum]
+			self.checkRecommendation(owner, rec1)
 		
 
 		shiftMinimum = 1
