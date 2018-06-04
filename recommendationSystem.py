@@ -10,6 +10,7 @@ from spaceNames import S
 from spaceNames import NS
 from spaceNames import realS
 from personal import P
+from personal import P0
 from IDs import Jgroup
 from IDs import Tgroup
 from IDs import Bgroup
@@ -36,6 +37,7 @@ class recommenderSystem:
 
 		print("Found " + str(len(self.spaces)) + " spaces")
 		self.personalDevices = P
+		self.owners = P0
 		self.peopleID = Jgroup+Bgroup+Tgroup
 		i = 0
 		for room in self.spaces:
@@ -69,8 +71,12 @@ class recommenderSystem:
 		self.deviceDefInv = {v: k for k, v in self.deviceDef.items()}
 
 		self.deviceOwnership = {}
-		for device in self.personalDevices:
-			self.deviceOwnership[device] = "Peter"
+		assert(len(self.personalDevices) == len(self.deviceowners))
+		for i in range(len(self.personalDevices)):
+			device = self.personalDevices[i]
+			self.deviceOwnership[device] = self.owners[i]
+#		for device in self.personalDevices:
+#			self.deviceOwnership[device] = "Peter"
 		
 		self.offsetVec1 = len(self.peopleDef)
 		self.offsetVec2 = self.offsetVec1 + len(self.spaceDef)
@@ -452,17 +458,19 @@ class recommenderSystem:
 #			else:
 #				print("Recommendation is not found")
 
-		deviceMinimum = 10
+		deviceMinimum = 1
 
 		for device in self.deviceDef:
 			deviceNum = self.deviceDef[device] + self.offset1
 			owner = self.deviceOwnership[device]
+			if owner is None:
+				continue
 			if y_new[deviceNum] > deviceMinimum:
 				rec1 = self.interpretAction(deviceNum, y_new[deviceNum])
 				self.checkRecommendation(owner, rec1)
 		
 
-		shiftMinimum = 10
+		shiftMinimum = 1
 
 		for person in self.peopleDef:
 			rec1 = None
@@ -472,6 +480,12 @@ class recommenderSystem:
 			if rec1 is not None:
 				print("Got shift recommendation")
 				self.checkRecommendation(person, rec1)
+
+		for user in self.userRecommendations:
+			message = "{0}|{1}|{2}".format("shade", user, "XXXX")
+			body = "Lower shade on your window to save energy."
+			rec = self.make_suggestion_item("shade", "Shade", body, 1, message, 0)
+			self.checkRecommendation(user, rec)
 
 	def interpretAction(self, actionNum, reward):
 		sign = 1
