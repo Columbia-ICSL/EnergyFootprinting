@@ -472,8 +472,6 @@ class recommenderSystem:
 					rec1 = self.interpretAction(deviceNum, y_new[deviceNum])
 					maxReward = y_new[deviceNum]
 			self.checkRecommendation(owner, rec1)
-		
-
 		shiftMinimum = 1
 
 		for person in self.peopleDef:
@@ -552,9 +550,9 @@ class recommenderSystem:
 		forceTime = 0#30*60
 		shiftTime = 0#12*60*60
 		shadeTime = 0#60*60
-		print(rec["messageID"])
 		if rec is None or "messageID" not in rec:
 			return
+		print(rec["messageID"])
 		message = rec["messageID"]
 		t = rec["type"]
 		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, nowTime-moveTime)):
