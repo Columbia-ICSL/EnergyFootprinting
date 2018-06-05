@@ -95,6 +95,7 @@ class login:
 		deviceID = userData[0]
 		email = userData[1]
 		password = userData[2]
+		print("device ID is " + str(deviceID))
 		return cloudserver.db.login(deviceID, email, password)
 
 ##########################################
