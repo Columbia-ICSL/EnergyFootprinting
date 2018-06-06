@@ -391,7 +391,7 @@ class recommenderSystem:
 
 		icslSpace = [5, 7, 8, 9, 13, 14, 15, 16]
 		bSpace = [1, 11, 12]
-		tSpace = [1, 6, 10, 13, 14]
+		tSpace = [6, 10, 14]
 
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
