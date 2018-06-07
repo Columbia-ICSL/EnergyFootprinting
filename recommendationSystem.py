@@ -322,11 +322,12 @@ class recommenderSystem:
 			locnum = 0
 			if loc in self.spaceDef:
 				locnum = self.spaceDef[loc] #location number
-			elif loc in self.nonSpaceDef:
-				locnum = self.nonSpaceDef[loc]
-			locations[locnum] += 1
-			state[IDnum] = locnum #assign space to input vector
-
+			#elif loc in self.nonSpaceDef:
+			#	locnum = self.nonSpaceDef[loc]
+				locations[locnum] += 1
+				state[IDnum] = locnum #assign space to input vector
+			else:
+				continue
 		for room in self.footprints:
 			if room not in self.spaceDef:
 				continue
