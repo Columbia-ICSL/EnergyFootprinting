@@ -196,12 +196,15 @@ class recommenderSystem:
 		return ret
 
 	def clearRecs(self, user, messageID):
+		print("CLEAR RECOMMENDATION")
 		if user in self.userRecommendations:
 			recs = self.userRecommendations[user]
 			if recs is None:
 				return
 			for i in range(len(recs)):
 				rec = recs[i]
+				print(messageID)
+				print(rec["messageID"])
 				if messageID == rec["messageID"]:
 					r = self.userRecommendations[user].pop(i)
 					print("Removed recommendation " + messageID + " from user " + user + " recommendation list. (clearRecs method)")
@@ -545,11 +548,11 @@ class recommenderSystem:
 		if user not in self.userRecommendations:
 			return
 		nowTime = cloudserver.db._now()
-		moveTime = 0#20*60
-		reduceTime = 0#10*60
-		forceTime = 0#30*60
-		shiftTime = 0#12*60*60
-		shadeTime = 0#60*60
+		moveTime = 20*60
+		reduceTime = 10*60
+		forceTime = 30*60
+		shiftTime = 12*60*60
+		shadeTime = 60*60
 		if rec is None or "messageID" not in rec:
 			return
 		print(rec["messageID"])
