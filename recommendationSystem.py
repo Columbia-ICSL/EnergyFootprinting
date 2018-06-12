@@ -545,6 +545,10 @@ class recommenderSystem:
 				print(rec["body"])
 			print(" ")
 
+	def makeNewJSON(self, body):
+
+		return newRec
+
 	def checkRecommendation(self, user, rec):
 		if user not in self.userRecommendations:
 			return
@@ -562,6 +566,12 @@ class recommenderSystem:
 		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, nowTime-moveTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
+
+			body = rec["body"]
+			newRec = self.makeNewJSON(body)
+			ret = cloudserver.db._encode(newRec,False)
+			#POST
+
 		elif (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, nowTime-reduceTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
