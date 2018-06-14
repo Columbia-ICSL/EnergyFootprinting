@@ -17,6 +17,8 @@ from IDs import Bgroup
 import numpy as npn
 import tensorflow as tensf
 import math
+import requests
+import json
 
 class recommenderSystem:
 	def __init__(self):
@@ -545,9 +547,10 @@ class recommenderSystem:
 				print(rec["body"])
 			print(" ")
 
-	def makeNewJSON(self, body):
-
-		return newRec
+	def makeDataJSON(self, body):
+		newData = {"Text":body}
+		newDataJSON = json.loads(newData)
+		return newDataJSON
 
 	def checkRecommendation(self, user, rec):
 		if user not in self.userRecommendations:
@@ -566,12 +569,6 @@ class recommenderSystem:
 		if (t == "move" and cloudserver.db.pushManagementDispCheck(message, nowTime-moveTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
-
-			body = rec["body"]
-			newRec = self.makeNewJSON(body)
-			ret = cloudserver.db._encode(newRec,False)
-			#POST
-
 		elif (t == "reduce" and cloudserver.db.pushManagementDispCheck(message, nowTime-reduceTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
@@ -584,8 +581,18 @@ class recommenderSystem:
 		elif (t == "shade" and cloudserver.db.pushManagementDispCheck(message, nowTime-shadeTime)):
 			self.userRecommendations[user].append(rec)
 			cloudserver.db.submitRecommendationTimestamp(user, message)
+		
+		#POST the notification through Firebase
+		body = rec["body"]
+		#dataJSON = self.makeDataJSON(body)
+		payload = json.dumps({"to":"/topics/useApp", "data":{"Text":body}})
+		send_url = 'https://fcm.googleapis.com/fcm/send'
+		headers = {"content-type":"application/json", "Authorization": "key=AAAAiCJmlCI:APA91bGzlrEKerd_O3SFnhgZJPJGg7OeoKbQ-hqONN2aFml5_A9FHstb957zwa7S2pXQ6tlxs2YZVBbpPPSsaYVhWIGdVYZpyVVa6KzsntVWXAFeK2fpoz--raiRg8Hd0E-zfNEZ30Gx"}
+
+		if (user == "36cd923d8be79f40"):
+			r = requests.post(send_url, data=payload, headers=headers)
+			print("\nPost return is: " + r.text + "\n")
 		return
-		#self.userRecommendations[user].append(rec)
 
 
 
