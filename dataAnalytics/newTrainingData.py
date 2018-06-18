@@ -21,6 +21,18 @@ from IDs import Bgroup
 #self.spaceDictionary: dictionary of default spaces -> user ID -- default space
 #self.timestamps: list of timestamps
 #self.footprints: dictionary -> 
+
+print "This is the name of the script: ", sys.argv[0]
+print "Number of arguments: ", len(sys.argv)
+if len(sys.argv) != 9:
+	print "Supply arguments to this script. Example: python separateFootprint.py {beginYear} {beginMonth} {beginDay} {endYear} {endMonth} {endDay}"
+	assert(len(sys.argv) == 9)
+
+
+parameters = sys.argv[1:]
+for i in range(len(parameters)):
+	parameters[i] = int(parameters[i])
+
 class newTrainingData:
 	def __init__(self, spaces, personal, ids, startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour, verbose):
 		self.multiplier = 1.0
