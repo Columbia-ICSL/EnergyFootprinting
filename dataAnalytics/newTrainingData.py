@@ -217,7 +217,7 @@ class newTrainingData:
 		#for shot in shots:
 		for t1 in range(len(self.timestamps)):
 			#timestamp = shot["timestamp"]
-			timestamp = self.timestamps[t]
+			timestamp = self.timestamps[t1]
 			if timestamp <= targetTimestamp:
 				continue
 			if timestamp > endTime:
