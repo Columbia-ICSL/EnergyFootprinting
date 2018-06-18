@@ -232,7 +232,7 @@ class newTrainingData:
 		self.printC("Found " + str(len(shots)) + " snapshots")
 		i = 0
 		for shot in shots:
-			printC(str(i*1.0/len(shots)) + " percent complete")
+			self.printC(str(i*1.0/len(shots)) + " percent complete")
 			timestamp = shot["timestamp"]
 			pattern1 = '%Y-%m-%d %H:%M:%S.%f'
 			pattern2 = '%Y-%m-%d %H:%M:%S'
@@ -260,7 +260,7 @@ class newTrainingData:
 				numRooms = len(rooms)
 				for room in rooms:
 					if room not in self.footprints:
-						printC("room " + room + " not in space database")
+						self.printC("room " + room + " not in space database")
 						continue
 					if t == "HVAC":
 						self.footprints[room][-1] = self.footprints[room][-1] + appliance["value"]*self.multiplier/numRooms
