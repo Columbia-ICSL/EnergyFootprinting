@@ -176,7 +176,7 @@ class newTrainingData:
 				if user not in shot["data"]:
 					startLoc = self.defaultSpace(user)
 				else:
-					startLoc = shot["data"][ID]["location"]
+					startLoc = shot["data"][user]["location"]
 
 
 				for ID in shot["data"]:
