@@ -204,12 +204,19 @@ class newTrainingData:
 		shots = self.shots
 		if endTime - targetTimestamp < datetime.timedelta(hours=1):
 			endTime = targetTimestamp + datetime.timedelta(hours=1)
+		startTime = None
 		for shot in shots:
 			timestamp = shot["timestamp"]
 			if timestamp <= targetTimestamp:
 				continue
 			if timestamp > endTime:
 				break
+			if startTime is None:
+				startTime = timestamp
+				continue
+			p = timestamp - startTime
+			startTime = timestamp
+			p = p/datetime.timedelta(hours=1)
 			saved = 0
 			if space not in self.footprints:
 				saved = 0
@@ -224,7 +231,7 @@ class newTrainingData:
 				saved = 0
 			if occEnd >= 1:
 				lost = 0
-			energySaved += saved - lost
+			energySaved += (saved - lost)*p
 		return energySaved
 
 	def getSnapshots(self):
