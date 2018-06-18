@@ -216,7 +216,10 @@ class newTrainingData:
 				continue
 			p = timestamp - startTime
 			startTime = timestamp
-			p = p/datetime.timedelta(hours=1)
+			p1 = p.total_seconds()
+			p2 = datetime.timedelta(hours=1)
+			p2 = p2.total_seconds()
+			p = p1/p2
 			saved = 0
 			if space not in self.footprints:
 				saved = 0
