@@ -214,12 +214,12 @@ class newTrainingData:
 			if space not in self.footprints:
 				saved = 0
 			else:
-				saved = self.footprints[startLoc]
+				saved = self.footprints[startLoc][t]
 			lost = 0
 			if startLoc not in self.footprints:
 				lost = 0
 			else:
-				lost = self.footprints[space]
+				lost = self.footprints[space][t]
 			if occStart < 1:
 				saved = 0
 			if occEnd >= 1:
