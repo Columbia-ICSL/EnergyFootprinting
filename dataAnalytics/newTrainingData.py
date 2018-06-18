@@ -129,8 +129,8 @@ class newTrainingData:
 				numRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
 		if (numRecs > 0):
-			print("Average Energy Saved: " + str(energyRecs/float(numRecs)))
-			print("Total Energy Saved: " + str(energyRecs))
+			print("Average Energy Saved: " + str(energyRecs/float(numRecs)) + " Wh")
+			print("Total Energy Saved: " + str(energyRecs) + " Wh")
 			
 	def defaultSpace(self, user):
 		spaceName = self.spaceDictionary[user]
