@@ -138,9 +138,11 @@ class newTrainingData:
 				print("Energy Saved: " + str(energySaved) + " Wh")
 		if (numRecs > 0):
 			print("Average Energy Saved: " + str(energyRecs/float(numRecs)) + " Wh")
+			print("Number of Recommendations: " + str(numRecs))
 			print("Total Energy Saved: " + str(energyRecs) + " Wh")
 		if (PnumRecs > 0):
 			print("Potential Average Energy Saved: " + str(PenergyRecs/float(PnumRecs)) + " Wh")
+			print("Number of Recommendations: " + str(PnumRecs))
 			print("Potential Total Energy Saved: " + str(PenergyRecs) + " Wh")
 			
 	def defaultSpace(self, user):
