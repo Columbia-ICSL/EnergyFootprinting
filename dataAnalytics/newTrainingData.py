@@ -278,7 +278,7 @@ class newTrainingData:
 				lost = 0
 			else:
 				lost = self.footprints[space1][t1]
-			if occStart >= 1:
+			if occStart > 1:
 				saved = 0
 			if occEnd >= 1:
 				lost = 0
