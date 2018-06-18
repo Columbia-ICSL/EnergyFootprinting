@@ -35,7 +35,7 @@ for i in range(len(parameters)):
 
 class newTrainingData:
 	def __init__(self, spaces, nonSpaces, personal, ids, startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour, verbose):
-		self.multiplier = 0.3
+		self.multiplier = 0.2
 		self.setDefault()
 		self.data = []
 		self.databaseScrape = DBScrape.DBScrape()
@@ -103,6 +103,8 @@ class newTrainingData:
 	def generateData(self):
 		numRecs = 0
 		energyRecs = 0.0
+		PnumRecs = 0
+		PenergyRecs = 0.0
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
 			index = 0
@@ -112,6 +114,7 @@ class newTrainingData:
 					break
 			state = self.getState(self.shots[index])
 			newState = copy.copy(state)
+			accepted = feed["accepted"]
 			message = feed["messageID"]
 			messageSplit = message.split("|")
 			recType = messageSplit[0]
@@ -124,9 +127,15 @@ class newTrainingData:
 				personNum = self.peopleDef[device]
 				spaceNum = self.spaceDef[extra]
 				newState[personNum] = spaceNum
-				energySaved = self.getSpaceCons(device, extra, t)
-				energyRecs += energySaved
-				numRecs += 1
+				if accepted:
+					energySaved = self.getSpaceCons(device, extra, t)
+					energyRecs += energySaved
+					numRecs += 1
+				else:
+					PenergySaved = self.getSpaceCons(device, extra, t)
+					PenergyRecs += energySaved
+					PnumRecs += 1
+				
 				print("Energy Saved: " + str(energySaved) + " Wh")
 		if (numRecs > 0):
 			print("Average Energy Saved: " + str(energyRecs/float(numRecs)) + " Wh")
