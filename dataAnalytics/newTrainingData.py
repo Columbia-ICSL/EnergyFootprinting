@@ -241,6 +241,7 @@ class newTrainingData:
 
 		recTime = endTime-targetTimestamp
 		pHour = datetime.timedelta(hours=1)
+		pHour = pHour.total_seconds()
 		recTime = recTime.total_seconds()/pHour
 		#for shot in shots:
 		for t1 in range(len(self.timestamps)):
