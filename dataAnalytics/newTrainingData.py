@@ -109,6 +109,7 @@ class newTrainingData:
 		PenergyRecs = 0.0
 		PpSum = 0.0
 		PpxSum = 0.0
+		
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
 			index = 0
@@ -116,6 +117,7 @@ class newTrainingData:
 				if timestamp > self.timestamps[t] and timestamp <= self.timestamps[t+1]:
 					index = t
 					break
+
 			state = self.getState(self.shots[index])
 			newState = copy.copy(state)
 			accepted = feed["accepted"]
@@ -156,6 +158,8 @@ class newTrainingData:
 			print("Number of Recommendations: " + str(PnumRecs))
 			print("Average Rec Duration: " + str(PpSum/float(PnumRecs)*60.0) + " minutes" + ", EX: " + str(PpxSum/float(PnumRecs)))
 			print("Potential Total Energy Saved: " + str(PenergyRecs) + " Wh")
+
+		self.getSchedules()
 			
 	def defaultSpace(self, user):
 		spaceName = self.spaceDictionary[user]
@@ -189,6 +193,24 @@ class newTrainingData:
 			index = random.randint(0, len(tSpace)-1)
 			return tSpace[index]
 		return 0
+
+
+
+	def getSchedules(self):
+		shots = self.pShots
+		scheduleTimes = {}
+
+		startDate = shots[1]["timestamp"]
+		newStartDate = datetime.datetime(startDate.year, startDate.month, startDate.day)
+		newEndDate = newStartDate + datetime.timedelta(days=1)
+
+		print(newStartDate)
+		print(newEndDate)
+		#for shot in shots:
+		#	timestamp = shot["timestamp"]
+
+
+
 
 	def getSpaceCons(self, user, space, t):
 		space1 = space
@@ -346,6 +368,9 @@ class newTrainingData:
 				continue
 			IDnum = self.peopleDef[ID] #person number
 			loc = shot["data"][ID]["location"]
+#			if loc == "outOfLab":
+#				loc = self.defaultSpace(ID)
+
 			locnum = self.spaceDef[loc] #location number
 			locations[locnum] += 1
 			state[IDnum] = locnum #assign space to input vector
@@ -368,6 +393,24 @@ class newTrainingData:
 		state += locations
 		state.append(index) #just to keep the time
 		return state
+
+	def getMoveNextState(self, state0, startSpace, endSpace):
+		nextStates = []
+		stateSamples = 100
+		for sample in range(len(stateSamples)):
+			newNextState = copy.copy(state0)
+			for i in range(len(self.peopleDef)):
+				for j in range(len(self.spaceDef)):
+					newNextState = copy.copy(state0)
+					newNextState[i] = j
+					nextStates.append(newNextState)
+
+		for i in range(len(self.spaceDef)):
+			newNextState = copy.copy(state0)
+			newNextState[self.offsetVec1 + i] -= tempRecs[self.offset2 + i]
+			nextStates.append(newNextState)
+		return nextStates
+
 
 	def saveToFile(self, state, recs, nextStates):
 		with open("x.csv", "a") as trainingFile:
