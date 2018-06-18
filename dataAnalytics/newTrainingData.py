@@ -101,6 +101,8 @@ class newTrainingData:
 			print text
 
 	def generateData(self):
+		numRecs = 0
+		energyRecs = 0.0
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
 			index = 0
@@ -116,8 +118,7 @@ class newTrainingData:
 			device = messageSplit[1]
 			extra = messageSplit[2]
 
-			numRecs = 0
-			energyRecs = 0.0
+			
 			if (recType == "move"):
 				print("Recommendation: " + device + " move to " + extra)
 				personNum = self.peopleDef[device]
@@ -127,9 +128,10 @@ class newTrainingData:
 				energyRecs += energySaved
 				numRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
+		if (numRecs > 0):
 			print("Average Energy Saved: " + str(energyRecs/float(numRecs)))
 			print("Total Energy Saved: " + str(energyRecs))
-		
+			
 	def defaultSpace(self, user):
 		spaceName = self.spaceDictionary[user]
 		return spaceName#self.spaceDef[spaceName]
