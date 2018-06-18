@@ -166,6 +166,9 @@ class newTrainingData:
 		return 0
 
 	def getSpaceCons(self, user, space, t):
+		space1 = space
+		if (space1 == "nwc1003b_danino"):
+			space1 = "nwc1000m_a2"
 		shots = self.pShots
 		targetTimestamp = self.timestamps[t]
 		energySaved = 0.0
@@ -192,7 +195,7 @@ class newTrainingData:
 					loc = shot["data"][ID]["location"]
 					if loc == startLoc:
 						occStart += 1
-					if loc == space:
+					if loc == space1:
 						occEnd += 1
 
 
@@ -212,8 +215,8 @@ class newTrainingData:
 		if endTime - targetTimestamp < datetime.timedelta(hours=1):
 			endTime = targetTimestamp + datetime.timedelta(hours=1)
 		startTime = None
-		print("Start Location: " + startLoc + ", End Location: " + space)
-		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space][t]))
+		print("Start Location: " + startLoc + ", End Location: " + space1)
+		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
 		#for shot in shots:
 		for t1 in range(len(self.timestamps)):
 			#timestamp = shot["timestamp"]
@@ -232,7 +235,7 @@ class newTrainingData:
 			p2 = p2.total_seconds()
 			p = p1/p2
 			saved = 0
-			if space not in self.footprints:
+			if space1 not in self.footprints:
 				saved = 0
 			else:
 				saved = self.footprints[startLoc][t1]
@@ -240,7 +243,7 @@ class newTrainingData:
 			if startLoc not in self.footprints:
 				lost = 0
 			else:
-				lost = self.footprints[space][t1]
+				lost = self.footprints[space1][t1]
 			if occStart < 1:
 				saved = 0
 			if occEnd >= 1:
