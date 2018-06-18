@@ -295,6 +295,6 @@ class newTrainingData:
 
 
 peopleID = Jgroup + Bgroup + Tgroup
-GF = getNewData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], True)
+GF = newTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], True)
 GF.getSnapshots()
 GF.generateData()
