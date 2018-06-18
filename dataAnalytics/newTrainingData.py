@@ -145,6 +145,7 @@ class newTrainingData:
 			print("Number of Recommendations: " + str(numRecs))
 			print("Average Rec Duration: " + str(pSum/float(numRecs)*60.0) + " minutes")
 			print("Total Energy Saved: " + str(energyRecs) + " Wh")
+			print("\n")
 		if (PnumRecs > 0):
 			print("Potential Average Energy Saved: " + str(PenergyRecs/float(PnumRecs)) + " Wh")
 			print("Number of Recommendations: " + str(PnumRecs))
@@ -237,6 +238,10 @@ class newTrainingData:
 		print("Start Location: " + startLoc + ", End Location: " + space1)
 		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
 		print("Start Occupancy: " + str(occStart) + ", End Occupancy: " + str(occEnd))
+
+		recTime = endTime-targetTimestamp
+		pHour = datetime.timedelta(hours=1)
+		recTime = recTime.total_seconds()/pHour
 		#for shot in shots:
 		for t1 in range(len(self.timestamps)):
 			#timestamp = shot["timestamp"]
@@ -270,7 +275,7 @@ class newTrainingData:
 				lost = 0
 			energySaved += (saved - lost)*p
 
-		return (energySaved, p)
+		return (energySaved, recTime)
 
 	def getSnapshots(self):
 		shots = self.shots
