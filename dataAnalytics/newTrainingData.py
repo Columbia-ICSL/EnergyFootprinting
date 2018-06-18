@@ -132,10 +132,9 @@ class newTrainingData:
 					energyRecs += energySaved
 					numRecs += 1
 				else:
-					PenergySaved = self.getSpaceCons(device, extra, t)
+					energySaved = self.getSpaceCons(device, extra, t)
 					PenergyRecs += energySaved
 					PnumRecs += 1
-				
 				print("Energy Saved: " + str(energySaved) + " Wh")
 		if (numRecs > 0):
 			print("Average Energy Saved: " + str(energyRecs/float(numRecs)) + " Wh")
