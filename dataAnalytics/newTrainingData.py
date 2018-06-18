@@ -206,7 +206,7 @@ class newTrainingData:
 			endTime = targetTimestamp + datetime.timedelta(hours=1)
 		startTime = None
 		print("Start Location: " + startLoc + ", End Location: " + space)
-		print("Start Energy: " + self.footprints[startLoc][t] + ", End Energy: " + self.footprints[space][t])
+		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space][t]))
 		#for shot in shots:
 		for t1 in range(len(self.timestamps)):
 			#timestamp = shot["timestamp"]
