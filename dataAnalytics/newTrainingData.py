@@ -103,8 +103,10 @@ class newTrainingData:
 	def generateData(self):
 		numRecs = 0
 		energyRecs = 0.0
+		pSum = 0.0
 		PnumRecs = 0
 		PenergyRecs = 0.0
+		PpSum = 0.0
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
 			index = 0
@@ -128,21 +130,25 @@ class newTrainingData:
 				spaceNum = self.spaceDef[extra]
 				newState[personNum] = spaceNum
 				if accepted:
-					energySaved = self.getSpaceCons(device, extra, t)
+					(energySaved, p) = self.getSpaceCons(device, extra, t)
 					energyRecs += energySaved
+					pSum += p
 					numRecs += 1
 				else:
-					energySaved = self.getSpaceCons(device, extra, t)
+					(energySaved, p) = self.getSpaceCons(device, extra, t)
 					PenergyRecs += energySaved
+					PpSum += p
 					PnumRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
 		if (numRecs > 0):
 			print("Average Energy Saved: " + str(energyRecs/float(numRecs)) + " Wh")
 			print("Number of Recommendations: " + str(numRecs))
+			print("Average Rec Duration: " + str(pSum/float(numRecs)*60.0) + " minutes")
 			print("Total Energy Saved: " + str(energyRecs) + " Wh")
 		if (PnumRecs > 0):
 			print("Potential Average Energy Saved: " + str(PenergyRecs/float(PnumRecs)) + " Wh")
 			print("Number of Recommendations: " + str(PnumRecs))
+			print("Average Rec Duration: " + str(PpSum/float(PnumRecs)*60.0) + " minutes")
 			print("Potential Total Energy Saved: " + str(PenergyRecs) + " Wh")
 			
 	def defaultSpace(self, user):
@@ -264,7 +270,7 @@ class newTrainingData:
 				lost = 0
 			energySaved += (saved - lost)*p
 
-		return energySaved
+		return (energySaved, p)
 
 	def getSnapshots(self):
 		shots = self.shots
