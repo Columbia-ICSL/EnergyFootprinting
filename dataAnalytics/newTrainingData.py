@@ -118,11 +118,11 @@ class newTrainingData:
 			extra = message[2]
 
 			if (recType == "move"):
+				print("Recommendation: " + device + " move to " + extra)
 				personNum = self.peopleDef[device]
 				spaceNum = self.spaceDef[extra]
 				newState[personNum] = spaceNum
 				energySaved = self.getSpaceCons(device, extra, t)
-				print("Recommendation: " + device + " move to " + extra)
 				print("Energy Saved: " + str(energySaved) + " Wh")
 				
 		
@@ -312,6 +312,6 @@ class newTrainingData:
 
 
 peopleID = Jgroup + Bgroup + Tgroup
-GF = newTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], True)
+GF = newTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], False)
 GF.getSnapshots()
 GF.generateData()
