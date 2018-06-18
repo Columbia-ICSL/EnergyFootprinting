@@ -104,9 +104,11 @@ class newTrainingData:
 		numRecs = 0
 		energyRecs = 0.0
 		pSum = 0.0
+		pxSum = 0.0
 		PnumRecs = 0
 		PenergyRecs = 0.0
 		PpSum = 0.0
+		PpxSum = 0.0
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
 			index = 0
@@ -130,26 +132,28 @@ class newTrainingData:
 				spaceNum = self.spaceDef[extra]
 				newState[personNum] = spaceNum
 				if accepted:
-					(energySaved, p) = self.getSpaceCons(device, extra, t)
+					(energySaved, p, pX) = self.getSpaceCons(device, extra, t)
 					energyRecs += energySaved
 					pSum += p
+					pxSum += pX
 					numRecs += 1
 				else:
-					(energySaved, p) = self.getSpaceCons(device, extra, t)
+					(energySaved, p, pX) = self.getSpaceCons(device, extra, t)
 					PenergyRecs += energySaved
 					PpSum += p
+					PpxSum += pX
 					PnumRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
 		if (numRecs > 0):
 			print("Average Energy Saved: " + str(energyRecs/float(numRecs)) + " Wh")
 			print("Number of Recommendations: " + str(numRecs))
-			print("Average Rec Duration: " + str(pSum/float(numRecs)*60.0) + " minutes")
+			print("Average Rec Duration: " + str(pSum/float(numRecs)*60.0) + " minutes" + ", EX: " + str(pxSum/float(numRecs)))
 			print("Total Energy Saved: " + str(energyRecs) + " Wh")
 			print("\n")
 		if (PnumRecs > 0):
 			print("Potential Average Energy Saved: " + str(PenergyRecs/float(PnumRecs)) + " Wh")
 			print("Number of Recommendations: " + str(PnumRecs))
-			print("Average Rec Duration: " + str(PpSum/float(PnumRecs)*60.0) + " minutes")
+			print("Average Rec Duration: " + str(PpSum/float(PnumRecs)*60.0) + " minutes" + ", EX: " + str(PpxSum/float(PnumRecs)))
 			print("Potential Total Energy Saved: " + str(PenergyRecs) + " Wh")
 			
 	def defaultSpace(self, user):
@@ -232,6 +236,10 @@ class newTrainingData:
 					endTime = timestamp
 					break
 		shots = self.shots
+		recTimeExperiment = endTime-targetTimestamp
+		pHour = datetime.timedelta(hours=1)
+		pHour = pHour.total_seconds()
+		recTimeExperiment = recTimeExperiment.total_seconds()/pHour
 		if endTime - targetTimestamp < datetime.timedelta(hours=1):
 			endTime = targetTimestamp + datetime.timedelta(hours=1)
 		startTime = None
@@ -276,7 +284,7 @@ class newTrainingData:
 				lost = 0
 			energySaved += (saved - lost)*p
 
-		return (energySaved, recTime)
+		return (energySaved, recTime, recTimeExperiment)
 
 	def getSnapshots(self):
 		shots = self.shots
