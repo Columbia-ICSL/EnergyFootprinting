@@ -111,7 +111,7 @@ class newTrainingData:
 			state = self.getState(self.shots[index])
 			newState = copy.copy(state)
 			message = feed["messageID"]
-			nessageSplit = message.split("|")
+			messageSplit = message.split("|")
 			recType = messageSplit[0]
 			device = messageSplit[1]
 			extra = messageSplit[2]
