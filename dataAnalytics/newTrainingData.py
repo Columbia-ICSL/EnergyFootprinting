@@ -111,11 +111,10 @@ class newTrainingData:
 			state = self.getState(self.shots[index])
 			newState = copy.copy(state)
 			message = feed["messageID"]
-			print(message)
-			message.split("|")
-			recType = message[0]
-			device = message[1]
-			extra = message[2]
+			nessageSplit = message.split("|")
+			recType = messageSplit[0]
+			device = messageSplit[1]
+			extra = messageSplit[2]
 
 			if (recType == "move"):
 				print("Recommendation: " + device + " move to " + extra)
@@ -233,7 +232,7 @@ class newTrainingData:
 		self.printC("Found " + str(len(shots)) + " snapshots")
 		i = 0
 		for shot in shots:
-			print(str(i*1.0/len(shots)) + " percent complete")
+			printC(str(i*1.0/len(shots)) + " percent complete")
 			timestamp = shot["timestamp"]
 			pattern1 = '%Y-%m-%d %H:%M:%S.%f'
 			pattern2 = '%Y-%m-%d %H:%M:%S'
@@ -261,7 +260,7 @@ class newTrainingData:
 				numRooms = len(rooms)
 				for room in rooms:
 					if room not in self.footprints:
-						print "room " + room + " not in space database"
+						printC("room " + room + " not in space database")
 						continue
 					if t == "HVAC":
 						self.footprints[room][-1] = self.footprints[room][-1] + appliance["value"]*self.multiplier/numRooms
