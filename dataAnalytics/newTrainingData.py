@@ -96,6 +96,10 @@ class newTrainingData:
 		self.offset4 = self.offset3 + len(self.peopleDef)
 		self.recLen = self.offset4 # len of recommendation vector
 
+	def printC(self, text):
+		if self.verbose:
+			print text
+
 	def generateData(self):
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
