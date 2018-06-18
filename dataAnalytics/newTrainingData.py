@@ -124,7 +124,7 @@ class newTrainingData:
 			recType = messageSplit[0]
 			device = messageSplit[1]
 			extra = messageSplit[2]
-			if device not in self.peopleDef[device]:
+			if device not in self.peopleDef:
 				continue
 			
 			if (recType == "move"):
@@ -368,6 +368,21 @@ class newTrainingData:
 		state += locations
 		state.append(index) #just to keep the time
 		return state
+
+	def saveToFile(self, state, recs, nextStates):
+		with open("x.csv", "a") as trainingFile:
+			for i in range(len(nextStates)):
+				wr = csv.writer(trainingFile,delimiter=',')
+				wr.writerow(state)
+		with open("y.csv", "a") as labelFile:
+			for i in range(len(nextStates)):
+				wr = csv.writer(labelFile,delimiter=',')
+				wr.writerow([recs[i]])
+		with open("z.csv", "a") as nextFile:
+			for i in range(len(nextStates)):
+				nextStates[i][-1] = 72
+				wr = csv.writer(nextFile,delimiter=',')
+				wr.writerow(nextStates[i])
 
 
 peopleID = Jgroup + Bgroup + Tgroup
