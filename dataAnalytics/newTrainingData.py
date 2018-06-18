@@ -35,7 +35,7 @@ for i in range(len(parameters)):
 
 class newTrainingData:
 	def __init__(self, spaces, nonSpaces, personal, ids, startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour, verbose):
-		self.multiplier = 1.0
+		self.multiplier = 0.3
 		self.setDefault()
 		self.data = []
 		self.databaseScrape = DBScrape.DBScrape()
