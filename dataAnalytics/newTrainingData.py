@@ -116,14 +116,19 @@ class newTrainingData:
 			device = messageSplit[1]
 			extra = messageSplit[2]
 
+			numRecs = 0
+			energyRecs = 0.0
 			if (recType == "move"):
 				print("Recommendation: " + device + " move to " + extra)
 				personNum = self.peopleDef[device]
 				spaceNum = self.spaceDef[extra]
 				newState[personNum] = spaceNum
 				energySaved = self.getSpaceCons(device, extra, t)
+				energyRecs += energySaved
+				numRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
-				
+			print("Average Energy Saved: " + str(energyRecs/float(numRecs)))
+			print("Total Energy Saved: " + str(energyRecs))
 		
 	def defaultSpace(self, user):
 		spaceName = self.spaceDictionary[user]
@@ -173,7 +178,7 @@ class newTrainingData:
 			if startLoc is None:
 				if "data" not in shot:
 					continue
-				if user not in shot["data"]:
+				if user not in shot["data"] or shot["data"][user]["location"] == "outOfLab":
 					startLoc = self.defaultSpace(user)
 				else:
 					startLoc = shot["data"][user]["location"]
