@@ -108,14 +108,15 @@ class newTrainingData:
 				if timestamp > self.timestamps[t] and timestamp <= self.timestamps[t+1]:
 					index = t
 					break
-
 			state = self.getState(self.shots[index])
 			newState = copy.copy(state)
 			message = feed["messageID"]
+			print(message)
 			message.split("|")
 			recType = message[0]
 			device = message[1]
 			extra = message[2]
+
 			if (recType == "move"):
 				personNum = self.peopleDef[device]
 				spaceNum = self.spaceDef[extra]
