@@ -127,7 +127,7 @@ class newTrainingData:
 		
 	def defaultSpace(self, user):
 		spaceName = self.spaceDictionary[user]
-		return self.spaceDef[spaceName]
+		return spaceName#self.spaceDef[spaceName]
 
 	def setDefault(self):
 		self.spaceDictionary = {} #dictionary of default spaces -> user ID -- default space
@@ -174,7 +174,7 @@ class newTrainingData:
 				if "data" not in shot:
 					continue
 				if user not in shot["data"]:
-					startLoc = self.defaultSpace[user]
+					startLoc = self.defaultSpace(user)
 				else:
 					startLoc = shot["data"][ID]["location"]
 
