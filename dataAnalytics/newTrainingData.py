@@ -34,7 +34,7 @@ for i in range(len(parameters)):
 	parameters[i] = int(parameters[i])
 
 class newTrainingData:
-	def __init__(self, spaces, personal, ids, startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour, verbose):
+	def __init__(self, spaces, nonSpaces, personal, ids, startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour, verbose):
 		self.multiplier = 1.0
 		self.setDefault()
 		self.data = []
@@ -50,7 +50,7 @@ class newTrainingData:
 #		self.peopleLocations = {}
 
 		self.verbose = verbose
-		self.spaces = spaces
+		self.spaces = spaces + nonSpaces
 		self.personalDevices = personal
 		self.peopleID = ids
 
@@ -311,6 +311,6 @@ class newTrainingData:
 
 
 peopleID = Jgroup + Bgroup + Tgroup
-GF = newTrainingData(S, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], False)
+GF = newTrainingData(S, NS, P, peopleID, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], False)
 GF.getSnapshots()
 GF.generateData()
