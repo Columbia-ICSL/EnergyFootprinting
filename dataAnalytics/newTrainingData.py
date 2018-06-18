@@ -177,7 +177,6 @@ class newTrainingData:
 					startLoc = self.defaultSpace(user)
 				else:
 					startLoc = shot["data"][user]["location"]
-				print(startLoc)
 
 
 				for ID in shot["data"]:
@@ -206,8 +205,12 @@ class newTrainingData:
 		if endTime - targetTimestamp < datetime.timedelta(hours=1):
 			endTime = targetTimestamp + datetime.timedelta(hours=1)
 		startTime = None
-		for shot in shots:
-			timestamp = shot["timestamp"]
+		print("Start Location: " + startLoc + ", End Location: " + space)
+		print("Start Energy: " + self.footprints[startLoc][t] + ", End Energy: " + self.footprints[space][t])
+		#for shot in shots:
+		for t1 in range(len(self.timestamps)):
+			#timestamp = shot["timestamp"]
+			timestamp = self.timestamps[t]
 			if timestamp <= targetTimestamp:
 				continue
 			if timestamp > endTime:
@@ -225,17 +228,18 @@ class newTrainingData:
 			if space not in self.footprints:
 				saved = 0
 			else:
-				saved = self.footprints[startLoc][t]
+				saved = self.footprints[startLoc][t1]
 			lost = 0
 			if startLoc not in self.footprints:
 				lost = 0
 			else:
-				lost = self.footprints[space][t]
+				lost = self.footprints[space][t1]
 			if occStart < 1:
 				saved = 0
 			if occEnd >= 1:
 				lost = 0
 			energySaved += (saved - lost)*p
+
 		return energySaved
 
 	def getSnapshots(self):
