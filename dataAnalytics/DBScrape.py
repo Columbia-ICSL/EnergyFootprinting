@@ -11,6 +11,16 @@ class DBScrape():
 		self.dbc=pymongo.MongoClient()
 		return
 
+	def getFeedback(self, start, end):
+		recs = self.dbc.db.suggestionsML
+		condition = {
+			"timestamp":{
+				"$gte":datetime.datetime.utcfromtimestamp(start),
+				"$lt":datetime.datetime.utcfromtimestamp(end)
+			}
+		}
+		return list(recs.find(condition))
+
 	def registration_col1(self):
 		registration=self.dbc.db.registration_col1
 		return list(registration.find())
