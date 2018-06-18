@@ -124,7 +124,8 @@ class newTrainingData:
 			recType = messageSplit[0]
 			device = messageSplit[1]
 			extra = messageSplit[2]
-
+			if device not in self.peopleDef[device]:
+				continue
 			
 			if (recType == "move"):
 				print("Recommendation: " + device + " move to " + extra)
