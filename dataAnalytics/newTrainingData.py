@@ -204,10 +204,32 @@ class newTrainingData:
 		newStartDate = datetime.datetime(startDate.year, startDate.month, startDate.day)
 		newEndDate = newStartDate + datetime.timedelta(days=1)
 
+		for user in self.peopleDef:
+			scheduleTimes[user] = [(None, None)]
+
+
 		print(newStartDate)
 		print(newEndDate)
-		#for shot in shots:
-		#	timestamp = shot["timestamp"]
+
+		for shot in shots:
+			timestamp = shot["timestamp"]
+			if timestamp > newEndDate:
+				newStartDate = newEndDate
+				newEndDate = newEndDate + datetime.timedelta(days=1)
+				for user in scheduleTimes:
+					scheduleTimes[user].append((None, None))
+			if user in shot["data"]:
+				(l1, l2) = scheduleTimes[user][-1]
+				if l1 is None:
+					scheduleTimes[user][-1] = (timestamp, timestamp)
+				else:
+					scheduleTimes[user][-1] = (l1, timestamp)
+
+		for user in scheduleTimes:
+			print("Schedule for User: " + user)
+			for times in scheduleTimes[user]:
+				print("Start: " + str(times[0].hour) + ":" + str(times[0].minute) + 
+					", End: " + str(times[1].hour) + ":" + str(times[1].minute))
 
 
 
