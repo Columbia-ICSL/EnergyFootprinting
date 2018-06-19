@@ -228,8 +228,10 @@ class newTrainingData:
 		for user in scheduleTimes:
 			print("Schedule for User: " + user)
 			for times in scheduleTimes[user]:
-				print("Start: " + str(times[0].hour) + ":" + str(times[0].minute) + 
-					", End: " + str(times[1].hour) + ":" + str(times[1].minute))
+				st0 = times[0]
+				st1 = times[1]
+				print(st0)
+				print(st1)
 
 
 
