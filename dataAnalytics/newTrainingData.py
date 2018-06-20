@@ -112,7 +112,13 @@ class newTrainingData:
 		PpSum = 0.0
 		PpxSum = 0.0
 		
+		reduceRecs = 0.0
+		numReduce = 0
+		shiftRecs = 0.0
+		numShift = 0
 
+		forceRecs = 0.0
+		numForce = 0
 
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
@@ -130,6 +136,7 @@ class newTrainingData:
 			recType = messageSplit[0]
 			device = messageSplit[1]
 			extra = messageSplit[2]
+
 			if device not in self.peopleDef:
 				continue
 			
@@ -155,6 +162,20 @@ class newTrainingData:
 					PpxSum += pX
 					PnumRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
+			if (recType == "shift"):
+				(energySaved, p, pX) = self.getSpaceCons(device, "nwc1003b_a", t, 1)
+				shiftRecs += energySaved
+				numShift += 1
+			if (recType == "reduce"):
+				reduceRecs += 20
+				numReduce += 1
+
+		if (numShift > 0):
+			print("Average Shift Saved: " + str(shiftRecs/numShift) + " Wh")
+			print("Total Shift Saved: " + str(shiftRecs) + " Wh")
+		if (numReduce > 0):
+			print("Total Reduce Saved: " + str(reduceRecs) + " Wh")
+
 		if (numRecs > 0):
 			print("Average Energy Saved: " + str(energyRecs/float(numRecs)) + " Wh")
 			print("Number of Recommendations: " + str(numRecs))
