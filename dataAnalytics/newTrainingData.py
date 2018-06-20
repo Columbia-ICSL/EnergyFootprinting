@@ -236,17 +236,14 @@ class newTrainingData:
 		timeDictionary = self.occupancySimul()
 		for t in range(len(self.timestamps)):
 			timestamp = self.timestamps[t]
+			timeDiff = timestamp - oldTime
+			pHour = datetime.timedelta(hours=1)
+			pHour = pHour.total_seconds()
+			timefrac = timeDiff.total_seconds()/pHour
 			for room in self.footprints:
 				noSave = False
+				
 				cons = self.footprints[room][t]
-
-				timeDiff = timestamp - oldTime
-				pHour = datetime.timedelta(hours=1)
-				pHour = pHour.total_seconds()
-				timefrac = timeDiff.total_seconds()/pHour
-
-				totalEnergy += powerCurve[t] * timefrac
-
 				if room in timeDictionary:
 					times = timeDictionary[room]
 					for time in times:
@@ -256,6 +253,7 @@ class newTrainingData:
 
 				if noSave == False:
 					passiveEnergySaved += cons * timefrac
+			totalEnergy += powerCurve[t] * timefrac
 			oldTime = timestamp	
 		print("Passive Energy Saved: " + str(passiveEnergySaved) + " Wh")
 		print("Total Energy Consumption: " + str(totalEnergy) + " Wh")
