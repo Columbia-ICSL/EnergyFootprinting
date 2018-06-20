@@ -401,7 +401,7 @@ class newTrainingData:
 		shots = self.shots
 		powerCurve = []
 		for applianceName in shots[0]["data"]:
-			print('\"' + applianceName + '\"')
+			print('\"' + applianceName + '\",')
 		for shot in shots:
 			powerCurve.append(0.0)
 			for applianceName in shot["data"]:
