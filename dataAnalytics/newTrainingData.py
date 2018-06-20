@@ -230,6 +230,8 @@ class newTrainingData:
 	def getBaseline(self):
 		shots = self.shots
 		passiveEnergySaved = 0.0
+		totalEnergy = 0.0
+		powerCurve = self.getEnergy()
 		oldTime = self.timestamps[0]
 		timeDictionary = self.occupancySimul()
 		for t in range(len(self.timestamps)):
@@ -243,6 +245,8 @@ class newTrainingData:
 				pHour = pHour.total_seconds()
 				timefrac = timeDiff.total_seconds()/pHour
 
+				totalEnergy = powerCurve[t] * timefrac
+
 				if room in timeDictionary:
 					times = timeDictionary[room]
 					for time in times:
@@ -254,6 +258,9 @@ class newTrainingData:
 					passiveEnergySaved += cons * timefrac
 			oldTime = timestamp	
 		print("Passive Energy Saved: " + str(passiveEnergySaved) + " Wh")
+		print("Total Energy Consumption: " + str(totalEnergy) + " Wh")
+
+
 
 	def getSchedules(self):
 		shots = self.pShots
@@ -391,6 +398,16 @@ class newTrainingData:
 			energySaved += (saved - lost)*p
 
 		return (energySaved, recTime, recTimeExperiment)
+
+	def getEnergy(self):
+		shots = self.shots
+		powerCurve = []
+		for shot in shots:
+			powerCurve.append(0.0)
+			for applianceName in shot["data"]:
+				powerCurve[-1] += appliance["value"]
+		return powerCurve
+				
 
 	def getSnapshots(self):
 		shots = self.shots
