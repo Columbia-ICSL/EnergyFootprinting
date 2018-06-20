@@ -204,6 +204,8 @@ class newTrainingData:
 		Peter = []
 		Kevin = []
 		Stephen = []
+		LeiLei = []
+		randomPeople = []
 		for day in range(21, 32):
 			startTime = datetime.datetime(2018, 5, day, 11, 0, 0)
 			endTime = datetime.datetime(2018, 5, day, 19, 0, 0)
@@ -240,6 +242,7 @@ class newTrainingData:
 		timeDictionary["nwc1003b_b"] = Kevin
 		timeDictionary["nwc1003b_c"] = Stephen
 		timeDictionary["nwc1003b_danino"] = LeiLei
+		timeDictionary["nwc1003b_t"] = randomPeople
 		return timeDictionary
 
 	def getBaseline(self):
