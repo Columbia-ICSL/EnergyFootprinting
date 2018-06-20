@@ -405,6 +405,7 @@ class newTrainingData:
 		for shot in shots:
 			powerCurve.append(0.0)
 			for applianceName in shot["data"]:
+				appliance = shot["data"][applianceName]
 				powerCurve[-1] += appliance["value"]
 		return powerCurve
 				
