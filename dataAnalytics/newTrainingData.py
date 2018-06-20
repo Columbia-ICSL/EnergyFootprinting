@@ -240,7 +240,7 @@ class newTrainingData:
 			pHour = datetime.timedelta(hours=1)
 			pHour = pHour.total_seconds()
 			timefrac = timeDiff.total_seconds()/pHour
-			for room in self.footprints:
+			for room in ["nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]:#self.footprints:
 				noSave = False
 
 				cons = self.footprints[room][t]
