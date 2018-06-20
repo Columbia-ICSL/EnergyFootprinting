@@ -245,7 +245,7 @@ class newTrainingData:
 				pHour = pHour.total_seconds()
 				timefrac = timeDiff.total_seconds()/pHour
 
-				totalEnergy = powerCurve[t] * timefrac
+				totalEnergy += powerCurve[t] * timefrac
 
 				if room in timeDictionary:
 					times = timeDictionary[room]
