@@ -50,7 +50,8 @@ class newTrainingData:
 		self.timestamps = []
 #		self.peopleLocations = {}
 
-		self.banned = ["nwcM1_fcu", "nwcM2_fcu", "nwcM3_fcu", "nwcM4_fcu", "nwc1008_fcu"]
+		self.banned = ["nwcM1_fcu", "nwcM2_fcu", "nwcM3_fcu", "nwcM4_fcu", "nwc1008_fcu", "nwc1003A_vav",
+			"nwc10F_vav", "nwc1001L_vav"]
 		self.verbose = verbose
 		self.spaces = spaces + nonSpaces
 		self.personalDevices = personal
