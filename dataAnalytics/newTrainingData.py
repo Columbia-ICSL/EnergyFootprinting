@@ -402,9 +402,9 @@ class newTrainingData:
 	def getEnergy(self):
 		shots = self.shots
 		powerCurve = []
-		powers = {}
-		for applianceName in shots[0]["data"]:
-			powers[applianceName] = []
+		#powers = {}
+		#for applianceName in shots[0]["data"]:
+		#	powers[applianceName] = []
 		for shot in shots:
 			powerCurve.append(0.0)
 #			for applianceName in A:
@@ -414,7 +414,7 @@ class newTrainingData:
 					continue
 				appliance = shot["data"][applianceName]
 				powerCurve[-1] += appliance["value"]
-				powers[applianceName][-1] = appliance["value"]
+		#		powers[applianceName][-1] = appliance["value"]
 		#for applianceName in powers:
 		#	s = 0.0
 		#	for i in range(len(powers[applianceName])):
