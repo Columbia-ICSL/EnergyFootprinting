@@ -232,6 +232,7 @@ class newTrainingData:
 	def getBaseline(self):
 		shots = self.shots
 		passiveEnergySaved = 0.0
+		optimalEnergySaved = 0.0
 		totalEnergy = 0.0
 		powerCurve = self.getEnergy()
 		oldTime = self.timestamps[0]
@@ -255,9 +256,11 @@ class newTrainingData:
 
 				if noSave == False:
 					passiveEnergySaved += cons * timefrac
+				optimalEnergySaved += cons * timefrac
 			totalEnergy += powerCurve[t] * timefrac
-			oldTime = timestamp	
+			oldTime = timestamp
 		print("Passive Energy Saved: " + str(passiveEnergySaved) + " Wh")
+		print("Optimal Energy Saved: " + str(optimalEnergySaved) + " Wh")
 		print("Total Energy Consumption: " + str(totalEnergy) + " Wh")
 
 
