@@ -12,6 +12,7 @@ from personal import P
 from IDs import Jgroup
 from IDs import Tgroup
 from IDs import Bgroup
+from appliances import A
 
 #Glossary
 #self.spaceDef: dictionary -> space name (e.g. nwc1008) -- space number (e.g. 3)
@@ -400,13 +401,22 @@ class newTrainingData:
 	def getEnergy(self):
 		shots = self.shots
 		powerCurve = []
+		powers = {}
 		for applianceName in shots[0]["data"]:
-			print('\"' + applianceName + '\",')
+			powers[applianceName] = []
 		for shot in shots:
 			powerCurve.append(0.0)
+			for applianceName in A:
+				powers[applianceName].append(0.0)
 			for applianceName in shot["data"]:
 				appliance = shot["data"][applianceName]
 				powerCurve[-1] += appliance["value"]
+				powers[applianceName][-1] = appliance["value"]
+		for applianceName in powers:
+			s = 0.0
+			for i in range(len(powers[applianceName])):
+				s += powers[applianceName][i]
+			print("Appliance " + applianceName + str(s/len(powers[applianceName])))
 		return powerCurve
 				
 
