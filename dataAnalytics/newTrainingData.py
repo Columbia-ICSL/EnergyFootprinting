@@ -161,7 +161,7 @@ class newTrainingData:
 			print("Average Rec Duration: " + str(PpSum/float(PnumRecs)*60.0) + " minutes" + ", EX: " + str(PpxSum/float(PnumRecs)))
 			print("Potential Total Energy Saved: " + str(PenergyRecs) + " Wh")
 
-		self.getSchedules()
+		#self.getSchedules()
 		self.getBaseline()
 			
 	def defaultSpace(self, user):
@@ -242,7 +242,7 @@ class newTrainingData:
 			timefrac = timeDiff.total_seconds()/pHour
 			for room in self.footprints:
 				noSave = False
-				
+
 				cons = self.footprints[room][t]
 				if room in timeDictionary:
 					times = timeDictionary[room]
@@ -351,8 +351,8 @@ class newTrainingData:
 		pHour = datetime.timedelta(hours=1)
 		pHour = pHour.total_seconds()
 		recTimeExperiment = recTimeExperiment.total_seconds()/pHour
-		if endTime - targetTimestamp < datetime.timedelta(hours=1):
-			endTime = targetTimestamp + datetime.timedelta(hours=1)
+		if endTime - targetTimestamp < datetime.timedelta(hours=3):
+			endTime = targetTimestamp + datetime.timedelta(hours=3)
 		startTime = None
 		print("Start Location: " + startLoc + ", End Location: " + space1)
 		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
