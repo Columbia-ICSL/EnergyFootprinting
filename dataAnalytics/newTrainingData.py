@@ -214,6 +214,12 @@ class newTrainingData:
 			startTime = datetime.datetime(2018, 5, day, 8, 0, 0)
 			endTime = datetime.datetime(2018, 5, day, 18, 0, 0)
 			Stephen.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 5, day, 12, 0, 0)
+			endTime = datetime.datetime(2018, 5, day, 16, 0, 0)
+			LeiLei.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 5, day, 10, 0, 0)
+			endTime = datetime.datetime(2018, 5, day, 16, 0, 0)
+			randomPeople.append((startTime, endTime))
 		for day in range(1, 20):
 			startTime = datetime.datetime(2018, 6, day, 11, 0, 0)
 			endTime = datetime.datetime(2018, 6, day, 19, 0, 0)
@@ -224,9 +230,16 @@ class newTrainingData:
 			startTime = datetime.datetime(2018, 6, day, 8, 0, 0)
 			endTime = datetime.datetime(2018, 6, day, 18, 0, 0)
 			Stephen.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 6, day, 12, 0, 0)
+			endTime = datetime.datetime(2018, 6, day, 16, 0, 0)
+			LeiLei.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 6, day, 10, 0, 0)
+			endTime = datetime.datetime(2018, 6, day, 16, 0, 0)
+			randomPeople.append((startTime, endTime))
 		timeDictionary["nwc1003b_a"] = Peter
 		timeDictionary["nwc1003b_b"] = Kevin
 		timeDictionary["nwc1003b_c"] = Stephen
+		timeDictionary["nwc1003b_danino"] = LeiLei
 		return timeDictionary
 
 	def getBaseline(self):
@@ -360,8 +373,8 @@ class newTrainingData:
 		pHour = datetime.timedelta(hours=1)
 		pHour = pHour.total_seconds()
 		recTimeExperiment = recTimeExperiment.total_seconds()/pHour
-		if endTime - targetTimestamp < datetime.timedelta(hours=3):
-			endTime = targetTimestamp + datetime.timedelta(hours=3)
+		if endTime - targetTimestamp < datetime.timedelta(hours=5):
+			endTime = targetTimestamp + datetime.timedelta(hours=5)
 		startTime = None
 		print("Start Location: " + startLoc + ", End Location: " + space1)
 		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
