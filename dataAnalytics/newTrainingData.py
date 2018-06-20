@@ -110,6 +110,8 @@ class newTrainingData:
 		PpSum = 0.0
 		PpxSum = 0.0
 		
+
+
 		for feed in self.feedback:
 			timestamp = feed["timestamp"]
 			index = 0
@@ -160,6 +162,7 @@ class newTrainingData:
 			print("Potential Total Energy Saved: " + str(PenergyRecs) + " Wh")
 
 		self.getSchedules()
+		self.getBaseline()
 			
 	def defaultSpace(self, user):
 		spaceName = self.spaceDictionary[user]
@@ -194,7 +197,63 @@ class newTrainingData:
 			return tSpace[index]
 		return 0
 
+	def occupancySimul(self):
+		timeDictionary = {}
+		Peter = []
+		Kevin = []
+		Stephen = []
+		for day in range(21, 32):
+			startTime = datetime.datetime(2018, 5, day, 11, 0, 0)
+			endTime = datetime.datetime(2018, 5, day, 19, 0, 0)
+			Peter.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 5, day, 11, 0, 0)
+			endTime = datetime.datetime(2018, 5, day, 19, 0, 0)
+			Kevin.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 5, day, 8, 0, 0)
+			endTime = datetime.datetime(2018, 5, day, 18, 0, 0)
+			Stephen.append((startTime,endTime))
+		for day in range(1, 20):
+			startTime = datetime.datetime(2018, 6, day, 11, 0, 0)
+			endTime = datetime.datetime(2018, 6, day, 19, 0, 0)
+			Peter.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 6, day, 11, 0, 0)
+			endTime = datetime.datetime(2018, 6, day, 19, 0, 0)
+			Kevin.append((startTime,endTime))
+			startTime = datetime.datetime(2018, 6, day, 8, 0, 0)
+			endTime = datetime.datetime(2018, 6, day, 18, 0, 0)
+			Stephen.append((startTime,endTime))
+		timeDictionary["nwc1003b_a"] = Peter
+		timeDictionary["nwc1003b_b"] = Kevin
+		timeDictionary["nwc1003b_c"] = Stephen
+		return timeDictionary
 
+	def getBaseline(self):
+		shots = self.shots
+		passiveEnergySaved = 0.0
+		oldTime = self.timestamps[0]
+		timeDictionary = self.occupancySimul()
+		for t in self.timestamps:
+			timestamp = t
+			for room in self.footprints:
+				noSave = False
+				cons = self.footprints[room][t]
+
+				timeDiff = timestamp - oldTime
+				pHour = datetime.timedelta(hours=1)
+				pHour = pHour.total_seconds()
+				timefrac = timeDiff.total_seconds()/pHour
+
+				if room in timeDictionary:
+					times = timeDictionary[room]
+					for time in times:
+						if timestamp > time[0] and timestamp < time[1]:
+							noSave = True
+							break
+
+				if noSave == False:
+					passiveEnergySaved += cons * timefrac
+			oldTime = timestamp	
+		print("Passive Energy Saved: " + str(passiveEnergySaved) + " Wh")
 
 	def getSchedules(self):
 		shots = self.pShots
