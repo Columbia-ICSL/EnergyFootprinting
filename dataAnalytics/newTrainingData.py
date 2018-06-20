@@ -232,8 +232,8 @@ class newTrainingData:
 		passiveEnergySaved = 0.0
 		oldTime = self.timestamps[0]
 		timeDictionary = self.occupancySimul()
-		for t in self.timestamps:
-			timestamp = t
+		for t in range(len(self.timestamps)):
+			timestamp = self.timestamps[t]
 			for room in self.footprints:
 				noSave = False
 				cons = self.footprints[room][t]
