@@ -139,13 +139,15 @@ class newTrainingData:
 				spaceNum = self.spaceDef[extra]
 				newState[personNum] = spaceNum
 				if accepted:
-					(energySaved, p, pX) = self.getSpaceCons(device, extra, t)
+					(energySaved, p, pX) = self.getSpaceCons(device, extra, t, 5)
+					if energySaved < 0:
+						continue
 					energyRecs += energySaved
 					pSum += p
 					pxSum += pX
 					numRecs += 1
 				else:
-					(energySaved, p, pX) = self.getSpaceCons(device, extra, t)
+					(energySaved, p, pX) = self.getSpaceCons(device, extra, t, 5)
 					PenergyRecs += energySaved
 					PpSum += p
 					PpxSum += pX
@@ -325,7 +327,7 @@ class newTrainingData:
 
 
 
-	def getSpaceCons(self, user, space, t):
+	def getSpaceCons(self, user, space, t, limit):
 		space1 = space
 		if (space1 == "nwc1003b_danino"):
 			space1 = "nwc1000m_a2"
@@ -376,8 +378,8 @@ class newTrainingData:
 		pHour = datetime.timedelta(hours=1)
 		pHour = pHour.total_seconds()
 		recTimeExperiment = recTimeExperiment.total_seconds()/pHour
-		if endTime - targetTimestamp < datetime.timedelta(hours=5):
-			endTime = targetTimestamp + datetime.timedelta(hours=5)
+		if endTime - targetTimestamp < datetime.timedelta(hours=limit):
+			endTime = targetTimestamp + datetime.timedelta(hours=limit)
 		startTime = None
 		print("Start Location: " + startLoc + ", End Location: " + space1)
 		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
