@@ -163,7 +163,7 @@ class newTrainingData:
 					PnumRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
 			if (recType == "shift"):
-				(energySaved, p, pX) = self.getSpaceCons(device, "nwc1003b_a", t, 1)
+				(energySaved, p, pX) = self.getSpaceCons(device, "nwc1003b_a", t, 1, True)
 				shiftRecs += energySaved
 				numShift += 1
 			if (recType == "reduce"):
@@ -350,7 +350,7 @@ class newTrainingData:
 
 
 
-	def getSpaceCons(self, user, space, t, limit):
+	def getSpaceCons(self, user, space, t, limit, ONESIDE=False):
 		space1 = space
 		if (space1 == "nwc1003b_danino"):
 			space1 = "nwc1000m_a2"
@@ -439,6 +439,9 @@ class newTrainingData:
 				lost = 0
 			else:
 				lost = self.footprints[space1][t1]
+			if ONESIDE:
+				occStart = 0
+				occEnd = 1
 			if occStart > 1:
 				saved = 0
 			if occEnd >= 1:
