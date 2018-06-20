@@ -241,6 +241,7 @@ class newTrainingData:
 			timestamp = self.timestamps[t]
 
 			if timestamp.hour < 8 or timestamp.hour >= 20:
+				oldTime = timestamp
 				continue
 			timeDiff = timestamp - oldTime
 			pHour = datetime.timedelta(hours=1)
