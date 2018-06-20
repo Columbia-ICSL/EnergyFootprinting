@@ -239,6 +239,9 @@ class newTrainingData:
 		timeDictionary = self.occupancySimul()
 		for t in range(len(self.timestamps)):
 			timestamp = self.timestamps[t]
+
+			if timestamp.hour < 8 or timestamp.hour >= 20:
+				continue
 			timeDiff = timestamp - oldTime
 			pHour = datetime.timedelta(hours=1)
 			pHour = pHour.total_seconds()
