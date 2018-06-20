@@ -149,6 +149,8 @@ class newTrainingData:
 				else:
 					(energySaved, p, pX) = self.getSpaceCons(device, extra, t, 5)
 					PenergyRecs += energySaved
+					if energySaved < 0:
+						continue
 					PpSum += p
 					PpxSum += pX
 					PnumRecs += 1
