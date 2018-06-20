@@ -50,6 +50,7 @@ class newTrainingData:
 		self.timestamps = []
 #		self.peopleLocations = {}
 
+		self.banned = ["nwcM1_fcu", "nwcM2_fcu", "nwcM3_fcu", "nwcM4_fcu", "nwc1008_fcu"]
 		self.verbose = verbose
 		self.spaces = spaces + nonSpaces
 		self.personalDevices = personal
@@ -241,7 +242,7 @@ class newTrainingData:
 			pHour = datetime.timedelta(hours=1)
 			pHour = pHour.total_seconds()
 			timefrac = timeDiff.total_seconds()/pHour
-			for room in ["nwc1003b_a", "nwc1003b_b", "nwc1003b_c"]:#self.footprints:
+			for room in self.footprints:
 				noSave = False
 
 				cons = self.footprints[room][t]
@@ -406,17 +407,19 @@ class newTrainingData:
 			powers[applianceName] = []
 		for shot in shots:
 			powerCurve.append(0.0)
-			for applianceName in A:
-				powers[applianceName].append(0.0)
+#			for applianceName in A:
+#				powers[applianceName].append(0.0)
 			for applianceName in shot["data"]:
+				if applianceName in self.banned:
+					continue
 				appliance = shot["data"][applianceName]
 				powerCurve[-1] += appliance["value"]
 				powers[applianceName][-1] = appliance["value"]
-		for applianceName in powers:
-			s = 0.0
-			for i in range(len(powers[applianceName])):
-				s += powers[applianceName][i]
-			print("Appliance " + applianceName + str(s/len(powers[applianceName])))
+		#for applianceName in powers:
+		#	s = 0.0
+		#	for i in range(len(powers[applianceName])):
+		#		s += powers[applianceName][i]
+		#	print("Appliance " + applianceName + str(s/len(powers[applianceName])))
 		return powerCurve
 				
 
@@ -442,7 +445,10 @@ class newTrainingData:
 				self.footprints[room].append(0)
 			for p in self.personal:
 				self.personal[p].append(0)
+			
 			for applianceName in shot["data"]:
+				if applianceName in self.banned:
+					continue
 				appliance = shot["data"][applianceName]
 				rooms = appliance["rooms"]
 				t = appliance["type"]
