@@ -400,6 +400,8 @@ class newTrainingData:
 	def getEnergy(self):
 		shots = self.shots
 		powerCurve = []
+		for applianceName in shot["data"][0]:
+			print('"applianceName"')
 		for shot in shots:
 			powerCurve.append(0.0)
 			for applianceName in shot["data"]:
