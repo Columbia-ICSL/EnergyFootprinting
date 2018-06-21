@@ -473,6 +473,7 @@ class newTrainingData:
 					if space in self.bannedTimes:
 						for xtime in self.bannedTimes[space]:
 							if timestamp > xtime[0] and timestamp < xtime[1]:
+								print((xtime[0], xtime[1]))
 								found1 = True
 								break
 					print((found, found1))
