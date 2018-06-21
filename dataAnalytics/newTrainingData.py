@@ -187,6 +187,7 @@ class newTrainingData:
 					continue
 				(energySaved, p, pX) = self.getSpaceCons(device, space, newt, 6, False, True)
 				newBeginning = newBeginning + datetime.timedelta(hours=6)
+				print(energySaved)
 				if energySaved > 0:
 					forceRecs += energySaved
 					numForce += 1
@@ -488,7 +489,7 @@ class newTrainingData:
 					if found1:
 						continue
 					if found:
-						print("Found!")
+						#print("Found!")
 						energySaved += (saved)*p
 						continue
 
