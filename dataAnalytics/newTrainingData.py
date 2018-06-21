@@ -181,7 +181,7 @@ class newTrainingData:
 				newt = None
 				for i in range(len(self.timestamps)):
 					if newBeginning < self.timestamps[i]:
-						newt = self.timestamps[i]
+						newt = i
 						break
 				if newt is None:
 					continue
