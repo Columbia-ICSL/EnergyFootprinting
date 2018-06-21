@@ -52,6 +52,7 @@ class newTrainingData:
 
 		self.banned = ["nwcM1_fcu", "nwcM2_fcu", "nwcM3_fcu", "nwcM4_fcu", "nwc1008_fcu", "nwc1003A_vav",
 			"nwc10F_vav", "nwc1001L_vav"]
+		self.bannedTimes = {}
 		self.verbose = verbose
 		self.spaces = spaces + nonSpaces
 		self.personalDevices = personal
@@ -170,6 +171,22 @@ class newTrainingData:
 			if (recType == "reduce"):
 				reduceRecs += 20
 				numReduce += 1
+
+			#force for every space for all day
+		ex = self.occupancySimul()
+		beginning = self.timestamps[0]
+		newBeginning = datetime.datetime(beginning.year, beginning.month, beginning.day)
+		for space in ex:
+			while newBeginning < self.timestamps[-1]:
+				(energySaved, p, pX) = self.getSpaceCons(device, space, t, 6, False, True)
+				newBeginning = newBeginning + datetime.timedelta(hours=6)
+				if energySaved > 0:
+					forceRecs += energySaved
+					numForce += 1
+
+		if (numForce > 0):
+			print("Average Force Saved: " + str(forceRecs/numForce) + " Wh")
+			print("Total Force Saved: " + str(forceRecs) + " Wh")
 
 		if (numShift > 0):
 			print("Average Shift Saved: " + str(shiftRecs/numShift) + " Wh")
@@ -351,7 +368,7 @@ class newTrainingData:
 
 
 
-	def getSpaceCons(self, user, space, t, limit, ONESIDE=False):
+	def getSpaceCons(self, user, space, t, limit, ONESIDE=False, FORCE=False):
 		space1 = space
 		if (space1 == "nwc1003b_danino"):
 			space1 = "nwc1000m_a2"
@@ -362,6 +379,7 @@ class newTrainingData:
 		endTime = None
 		occStart = 0
 		occEnd = 0
+		timeDictionary = self.occupancySimul()
 		for shot in shots:
 			timestamp = shot["timestamp"]
 			if timestamp <= targetTimestamp:
@@ -379,6 +397,8 @@ class newTrainingData:
 					if ID not in self.peopleDef:
 						continue
 					loc = shot["data"][ID]["location"]
+
+
 					if loc == startLoc:
 						occStart += 1
 					if loc == space1:
@@ -408,7 +428,7 @@ class newTrainingData:
 		print("Start Location: " + startLoc + ", End Location: " + space1)
 		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
 		print("Start Occupancy: " + str(occStart) + ", End Occupancy: " + str(occEnd))
-
+		self.bannedTimes[space].append((targetTimestamp, endTime))
 		recTime = endTime-targetTimestamp
 		pHour = datetime.timedelta(hours=1)
 		pHour = pHour.total_seconds()
@@ -440,6 +460,25 @@ class newTrainingData:
 				lost = 0
 			else:
 				lost = self.footprints[space1][t1]
+			if FORCE:
+				found = False
+				if space in timeDictionary:
+					for ttuple in timeDictionary[space]:
+						if timestamp > ttuple[0] and timestamp < ttuple[1]:
+							found = True
+							break
+					found1 = False
+					if space in self.bannedTimes:
+						for xtime in self.bannedTimes[space]:
+							if timestamp > xtime[0] and timestamp < xtime[1]:
+								found1 = True
+								break
+					if found1:
+						continue
+					if found:
+						energySaved += (saved)*p
+						continue
+
 			if ONESIDE:
 				occStart = 0
 				occEnd = 1
