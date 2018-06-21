@@ -310,12 +310,21 @@ class recommenderSystem:
 		print("finished getting appliance data")
 
 	def getState(self):
+		t1 = time.time() * 1000
 		self.getSnapshot()
+		t2 = time.time() * 1000
+		t_snapshot = t2 - t1
 		state = [0] * self.vecLen
+		t3 = time.time()*1000
 		shot = cloudserver.db.snapshots_col_users.find().skip(cloudserver.db.snapshots_col_users.count()-1)
+		t4 = time.time()*1000
+		t_DB = t4 - t3
+		print("\n\n\n---Snapshot: {0}ms".format(t_snapshot))
+		print("---DB Query: {0}ms\n\n\n".format(t_DB))
 		shot = list(shot)
 		shot = shot[0]
 		locations = [0] * len(self.spaceDef) #array of number of people in each space
+		t5 = time.time()*1000
 		for ID in shot["data"]:
 			if ID not in self.peopleDef:
 				continue
@@ -330,6 +339,7 @@ class recommenderSystem:
 				state[IDnum] = locnum #assign space to input vector
 			else:
 				continue
+		t6 = time.time() * 1000
 		for room in self.footprints:
 			if room not in self.spaceDef:
 				continue
@@ -338,6 +348,7 @@ class recommenderSystem:
 			roomIndex = self.spaceDef[room]
 			offset = len(self.peopleDef)
 			state[roomIndex + offset] = energy
+		t7 = time.time() * 1000
 		for device in self.personal:
 			if device not in self.deviceDef:
 				continue
@@ -345,6 +356,14 @@ class recommenderSystem:
 			deviceIndex = self.deviceDef[device]
 			offset = len(self.peopleDef) + len(self.spaceDef)
 			state[deviceIndex + offset] = energy
+		t8 = time.time() * 1000
+		t_ID = t6 - t5
+		t_room = t7 - t6
+		t_device = t8 - t7
+		print("\n\n\n---List:{0}ms".format(t5-t4))
+		print("---ID Loop:{0}ms".format(t_ID))
+		print("---Room Loop:{0}ms".format(t_room))
+		print("---Device Loop:{0}ms\n\n\n".format(t_device))
 		state += locations
 		state.append(72) #just to keep the time
 		print("Finished getting state")
@@ -377,7 +396,10 @@ class recommenderSystem:
 		return
 
 	def deepLearning(self):
+		t1 = time.time()*1000
 		state = self.getState()
+		t2 = time.time()*1000
+		t_state = t2 - t1
 		sess1 = tensf.Session()
 		saver = tensf.train.import_meta_graph('./model_6_1/model_6_1.meta', clear_devices=True)
 		saver.restore(sess1, tensf.train.latest_checkpoint('./model_6_1'))
@@ -394,6 +416,8 @@ class recommenderSystem:
 			print("y_out length")
 			print(str(y_out.shape))
 		y_new = y_out.flatten()
+		t3 = time.time()*1000
+		t_NN = t3 - t2
 
 		icslSpace = [5, 7, 8, 9, 13, 14, 15, 16]
 		bSpace = [1, 11, 12]
@@ -404,7 +428,6 @@ class recommenderSystem:
 #			print(personNum)
 			
 			################
-			## Kevin Chen 
 			## Contextual Post filtering 
 			###############
 
@@ -495,6 +518,14 @@ class recommenderSystem:
 			rec = self.make_suggestion_item("shade", "Shade", body, 1, message, 0)
 			self.checkRecommendation(user, rec)
 
+		t4 = time.time()*1000
+		t_rec = t4 - t3
+
+		print("\n\n\nFinished time analysis:")
+		print("---Get States Time: {0}ms".format(t_state))
+		print("---DNN Computation: {0}ms".format(t_NN))
+		print("---Recommendations: {0}ms\n\n\n".format(t_rec))
+
 	def interpretAction(self, actionNum, reward):
 		sign = 1
 		if (reward < 0):
@@ -584,12 +615,14 @@ class recommenderSystem:
 		
 		#POST the notification through Firebase
 		body = rec["body"]
+		#if (t == "move"):
+			#body = "Please move to Lab Space A"
 		#dataJSON = self.makeDataJSON(body)
 		payload = json.dumps({"to":"/topics/useApp", "data":{"Text":body}})
 		send_url = 'https://fcm.googleapis.com/fcm/send'
 		headers = {"content-type":"application/json", "Authorization": "key=AAAAiCJmlCI:APA91bGzlrEKerd_O3SFnhgZJPJGg7OeoKbQ-hqONN2aFml5_A9FHstb957zwa7S2pXQ6tlxs2YZVBbpPPSsaYVhWIGdVYZpyVVa6KzsntVWXAFeK2fpoz--raiRg8Hd0E-zfNEZ30Gx"}
 
-		if (user == "36cd923d8be79f40"):
+		if (user == "36cd923d8be79f40" and t != "shade"):
 			r = requests.post(send_url, data=payload, headers=headers)
 			print("\nPost return is: " + r.text + "\n")
 		return
