@@ -492,15 +492,15 @@ class newTrainingData:
 						#print("Found!")
 						energySaved += (saved)*p
 						continue
-
-			if ONESIDE:
-				occStart = 0
-				occEnd = 1
-			if occStart > 1:
-				saved = 0
-			if occEnd >= 1:
-				lost = 0
-			energySaved += (saved - lost)*p
+			else:
+				if ONESIDE:
+					occStart = 0
+					occEnd = 1
+				if occStart > 1:
+					saved = 0
+				if occEnd >= 1:
+					lost = 0
+				energySaved += (saved - lost)*p
 
 		return (energySaved, recTime, recTimeExperiment)
 
