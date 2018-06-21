@@ -19,8 +19,8 @@ from testJSON import testshot
 from testJSON import S
 from testJSON import NS
 from testJSON import realS
-from testJSON import P
-from testJSON import PO
+from testJSON import D
+from testJSON import DO
 from testJSON import IDs
 from testJSON import testUserShot
 

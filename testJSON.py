@@ -12,6 +12,7 @@ D = []
 for i in range(numDevices):
 	newDevice = "D" + str(i)
 	D.append(newDevice)
+DO = []
 S = []
 for i in range(numSpaces):
 	newSpace = "S" + str(i)
@@ -35,10 +36,10 @@ for app in D:
 	space2 = random.randint(0, numSpaces)
 	parameters["rooms"] = ["S" + str(space1), "S" + str(space2)]
 	r = random.uniform(0, 1)
+	DO.append("P" + str(random.randint(0,numPeople)))
 	if r < 0.5:
 		parameters["type"] = "Electric"
-		P.append(app)
-		PO.append("P" + str(random.randint(0,numPeople)))
+		
 	elif r >= 0.5 and r < 0.75:
 		parameters["type"] = "Light"
 	elif r >= 0.75:
