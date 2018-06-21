@@ -178,7 +178,14 @@ class newTrainingData:
 		newBeginning = datetime.datetime(beginning.year, beginning.month, beginning.day)
 		for space in ex:
 			while newBeginning < self.timestamps[-1]:
-				(energySaved, p, pX) = self.getSpaceCons(device, space, newBeginning, 6, False, True)
+				newt = None
+				for i in range(len(self.timestamps)):
+					if newBeginning < self.timestamps[i]:
+						newt = self.timestamps[i]
+						break
+				if newt is None:
+					continue
+				(energySaved, p, pX) = self.getSpaceCons(device, space, newt, 6, False, True)
 				newBeginning = newBeginning + datetime.timedelta(hours=6)
 				if energySaved > 0:
 					forceRecs += energySaved
