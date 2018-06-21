@@ -118,6 +118,8 @@ class newTrainingData:
 		numReduce = 0
 		shiftRecs = 0.0
 		numShift = 0
+		PshiftRecs = 0.0
+		PnumShift = 0
 
 		forceRecs = 0.0
 		numForce = 0
@@ -165,9 +167,14 @@ class newTrainingData:
 					PnumRecs += 1
 				print("Energy Saved: " + str(energySaved) + " Wh")
 			if (recType == "shift"):
-				(energySaved, p, pX) = self.getSpaceCons(device, "nwc1003b_a", t, 1, True)
-				shiftRecs += energySaved
-				numShift += 1
+				if accepted:
+					(energySaved, p, pX) = self.getSpaceCons(device, "nwc1003b_a", t, 1, True)
+					shiftRecs += energySaved
+					numShift += 1
+				else:
+					(energySaved, p, pX) = self.getSpaceCons(device, "nwc1003b_a", t, 1, True)
+					PshiftRecs += energySaved
+					PnumShift += 1
 			if (recType == "reduce"):
 				reduceRecs += 20
 				numReduce += 1
@@ -199,6 +206,10 @@ class newTrainingData:
 		if (numShift > 0):
 			print("Average Shift Saved: " + str(shiftRecs/numShift) + " Wh")
 			print("Total Shift Saved: " + str(shiftRecs) + " Wh")
+
+		if (PnumShift > 0):
+			print("Potential Average Shift Saved: " + str(PshiftRecs/PnumShift) + " Wh")
+			print("Potential Total Shift Saved: " + str(PshiftRecs) + " Wh")
 		if (numReduce > 0):
 			print("Total Reduce Saved: " + str(reduceRecs) + " Wh")
 
