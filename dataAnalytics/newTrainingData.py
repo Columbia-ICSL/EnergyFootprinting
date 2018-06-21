@@ -229,6 +229,8 @@ class newTrainingData:
 		self.getBaseline()
 			
 	def defaultSpace(self, user):
+		if user not in self.spaceDictionary:
+			return "nwc1000m_a2"
 		spaceName = self.spaceDictionary[user]
 		return spaceName#self.spaceDef[spaceName]
 
