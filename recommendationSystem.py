@@ -318,6 +318,7 @@ class recommenderSystem:
 					continue
 				if t == "HVAC":
 					print(appliance["value"])
+					print(self.footprints[room])
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms#*self.multiplier/numRooms
 				elif t == "Light":
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms
