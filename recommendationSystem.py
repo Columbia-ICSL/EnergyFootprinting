@@ -50,8 +50,8 @@ class recommenderSystem:
 		self.testshot = testshot
 		self.testUserShot = testUserShot
 		print("Found " + str(len(self.spaces)) + " spaces")
-		self.personalDevices = P
-		self.owners = PO
+		self.personalDevices = D
+		self.owners = DO
 		self.peopleID = IDs#Jgroup+Bgroup+Tgroup
 		i = 0
 		for room in self.spaces:
