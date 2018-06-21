@@ -428,9 +428,10 @@ class newTrainingData:
 		#print("Start Location: " + startLoc + ", End Location: " + space1)
 		#print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
 		#print("Start Occupancy: " + str(occStart) + ", End Occupancy: " + str(occEnd))
-		if space not in self.bannedTimes:
-			self.bannedTimes[space] = []
-		self.bannedTimes[space].append((targetTimestamp, endTime))
+		if not FORCE:
+			if space not in self.bannedTimes:
+				self.bannedTimes[space] = []
+			self.bannedTimes[space].append((targetTimestamp, endTime))
 		recTime = endTime-targetTimestamp
 		pHour = datetime.timedelta(hours=1)
 		pHour = pHour.total_seconds()
