@@ -20,7 +20,7 @@ from testJSON import S
 from testJSON import NS
 from testJSON import realS
 from testJSON import P
-from testJSON import P0
+from testJSON import PO
 from testJSON import IDs
 from testJSON import testUserShot
 

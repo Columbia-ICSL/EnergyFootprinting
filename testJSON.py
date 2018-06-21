@@ -20,7 +20,7 @@ NS = []
 realS = copy.copy(S)
 
 P = []
-P0 = []
+PO = []
 
 import datetime
 import random
@@ -38,7 +38,7 @@ for app in D:
 	if r < 0.5:
 		parameters["type"] = "Electric"
 		P.append(app)
-		P0.append("P" + str(random.randint(0,numPeople)))
+		PO.append("P" + str(random.randint(0,numPeople)))
 	elif r >= 0.5 and r < 0.75:
 		parameters["type"] = "Lights"
 	elif r >= 0.75:
