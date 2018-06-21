@@ -299,7 +299,7 @@ class recommenderSystem:
 		#shot = list(shot)
 		#shot = shot[0]
 		shot = self.testshot
-		for room in self.spaces:
+		for room in self.footprints:
 			self.footprints[room] = 0 # shared energy (HVAC + Lights)
 		for p in self.personal:
 			self.personal[p] = 0 # personal energy (plugmeters)
