@@ -490,7 +490,7 @@ class newTrainingData:
 						continue
 					if found:
 						#print("Found!")
-						energySaved += (saved)*p
+						energySaved += (self.footprints[space][t1])*p
 						continue
 			else:
 				if ONESIDE:
