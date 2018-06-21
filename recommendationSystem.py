@@ -317,6 +317,7 @@ class recommenderSystem:
 					print "room " + room + " not in space database"
 					continue
 				if t == "HVAC":
+					print(appliance["value"])
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms#*self.multiplier/numRooms
 				elif t == "Light":
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms

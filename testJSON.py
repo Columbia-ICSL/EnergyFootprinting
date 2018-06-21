@@ -40,7 +40,7 @@ for app in D:
 		P.append(app)
 		PO.append("P" + str(random.randint(0,numPeople)))
 	elif r >= 0.5 and r < 0.75:
-		parameters["type"] = "Lights"
+		parameters["type"] = "Light"
 	elif r >= 0.75:
 		parameters["type"] = "HVAC"
 	parameters["value"] = random.uniform(0, 10000)
