@@ -425,9 +425,9 @@ class newTrainingData:
 		if endTime - targetTimestamp < datetime.timedelta(hours=limit):
 			endTime = targetTimestamp + datetime.timedelta(hours=limit)
 		startTime = None
-		print("Start Location: " + startLoc + ", End Location: " + space1)
-		print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
-		print("Start Occupancy: " + str(occStart) + ", End Occupancy: " + str(occEnd))
+		#print("Start Location: " + startLoc + ", End Location: " + space1)
+		#print("Start Energy: " + str(self.footprints[startLoc][t]) + ", End Energy: " + str(self.footprints[space1][t]))
+		#print("Start Occupancy: " + str(occStart) + ", End Occupancy: " + str(occEnd))
 		if space not in self.bannedTimes:
 			self.bannedTimes[space] = []
 		self.bannedTimes[space].append((targetTimestamp, endTime))
@@ -475,6 +475,7 @@ class newTrainingData:
 							if timestamp > xtime[0] and timestamp < xtime[1]:
 								found1 = True
 								break
+					print((found, found1))
 					if found1:
 						continue
 					if found:
