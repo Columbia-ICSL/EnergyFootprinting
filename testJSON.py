@@ -38,7 +38,7 @@ for app in D:
 	if r < 0.5:
 		parameters["type"] = "Electric"
 		P.append(app)
-		P0.append("P" + str(random.randint(numPeople)))
+		P0.append("P" + str(random.randint(0,numPeople)))
 	elif r >= 0.5 and r < 0.75:
 		parameters["type"] = "Lights"
 	elif r >= 0.75:
@@ -57,7 +57,7 @@ userDictionary = {}
 for user in IDs:
 	parameters = {}
 	parameters["consumptions"] = []
-	parameters["location"] = "S" + str(random.randint(0, numSpaces))
+	parameters["location"] = "S" + str(random.randint(0,numSpaces))
 	parameters["value"] = random.uniform(0, 3000)
 	userDictionary[user] = parameters
 testUserShot["data"] = userDictionary
