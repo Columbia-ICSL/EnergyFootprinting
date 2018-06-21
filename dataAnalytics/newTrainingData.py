@@ -484,10 +484,11 @@ class newTrainingData:
 								print((xtime[0], xtime[1]))
 								found1 = True
 								break
-					print((found, found1))
+					#print((found, found1))
 					if found1:
 						continue
 					if found:
+						print("Found!")
 						energySaved += (saved)*p
 						continue
 
