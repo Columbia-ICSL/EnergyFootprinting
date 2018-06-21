@@ -330,6 +330,7 @@ class recommenderSystem:
 		t2 = time.time() * 1000
 		t_snapshot = t2 - t1
 		state = [0] * self.vecLen
+		print(self.vecLen)
 		t3 = time.time()*1000
 		#shot = cloudserver.db.snapshots_col_users.find().skip(cloudserver.db.snapshots_col_users.count()-1)
 		t4 = time.time()*1000
@@ -379,6 +380,8 @@ class recommenderSystem:
 		print("---ID Loop:{0}ms".format(t_ID))
 		print("---Room Loop:{0}ms".format(t_room))
 		print("---Device Loop:{0}ms\n\n\n".format(t_device))
+		print(len(state))
+		print(len(locations))
 		state += locations
 		state.append(72) #just to keep the time
 		print("Finished getting state")
