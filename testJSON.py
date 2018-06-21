@@ -1,7 +1,7 @@
 SQFT = 10000
 numPeople = SQFT/250
 numDevices = numPeople*2
-numSpaces = SQFT/500-1
+numSpaces = SQFT/500
 
 import copy
 IDs = []
@@ -13,7 +13,6 @@ for i in range(numDevices):
 	newDevice = "D" + str(i)
 	D.append(newDevice)
 S = []
-S.append("outOfLab")
 for i in range(numSpaces):
 	newSpace = "S" + str(i)
 	S.append(newSpace)
