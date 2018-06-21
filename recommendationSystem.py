@@ -55,8 +55,8 @@ class recommenderSystem:
 		self.peopleID = IDs#Jgroup+Bgroup+Tgroup
 		i = 0
 		for room in self.spaces:
-			if (i == 0):
-				assert(room == "outOfLab") #first room must be out of lab
+			#if (i == 0):
+			#	assert(room == "outOfLab") #first room must be out of lab
 			self.footprints[room] = []
 			self.spaceDef[room] = i
 			self.realSDef[room] = self.realS[i]
