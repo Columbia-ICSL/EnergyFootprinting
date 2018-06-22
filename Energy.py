@@ -20,6 +20,8 @@ class Save:
             data=json.loads(raw_data)
         except ValueError:
             print("Invalid data")
+        if (data is None):
+            return "201 NOT OK"
         if ('raw' not in data):
             cloudserver.db.ReportEnergyValue(Id,data['energy'],None)
         else:
