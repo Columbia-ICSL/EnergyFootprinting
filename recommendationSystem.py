@@ -512,11 +512,11 @@ class recommenderSystem:
 				print("Got shift recommendation")
 				self.checkRecommendation(person, rec1)
 
-		for user in self.userRecommendations:
-			message = "{0}|{1}|{2}".format("shade", user, "XXXX")
-			body = "Lower shade on your window to save energy."
-			rec = self.make_suggestion_item("shade", "Shade", body, 1, message, 0)
-			self.checkRecommendation(user, rec)
+		#for user in self.userRecommendations:
+		#	message = "{0}|{1}|{2}".format("shade", user, "XXXX")
+		#	body = "Lower shade on your window to save energy."
+		#	rec = self.make_suggestion_item("shade", "Shade", body, 1, message, 0)
+		# 	self.checkRecommendation(user, rec)
 
 		t4 = time.time()*1000
 		t_rec = t4 - t3
