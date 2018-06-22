@@ -6,14 +6,24 @@ import numpy as np
 import cvxopt
 from cvxopt import glpk
 import random
-from spaceNames import S
-from spaceNames import NS
-from spaceNames import realS
-from personal import P
-from personal import PO
-from IDs import Jgroup
-from IDs import Tgroup
-from IDs import Bgroup
+#from spaceNames import S
+#from spaceNames import NS
+#from spaceNames import realS
+#from personal import P
+#from personal import PO
+#from IDs import Jgroup
+#from IDs import Tgroup
+#from IDs import Bgroup
+
+from testJSON import testshot
+from testJSON import S
+from testJSON import NS
+from testJSON import realS
+from testJSON import D
+from testJSON import DO
+from testJSON import IDs
+from testJSON import testUserShot
+
 import numpy as npn
 import tensorflow as tensf
 import math
@@ -37,14 +47,16 @@ class recommenderSystem:
 		self.realS = realS
 		self.timeout = {}
 
+		self.testshot = testshot
+		self.testUserShot = testUserShot
 		print("Found " + str(len(self.spaces)) + " spaces")
-		self.personalDevices = P
-		self.owners = PO
-		self.peopleID = Jgroup+Bgroup+Tgroup
+		self.personalDevices = D
+		self.owners = DO
+		self.peopleID = IDs#Jgroup+Bgroup+Tgroup
 		i = 0
 		for room in self.spaces:
-			if (i == 0):
-				assert(room == "outOfLab") #first room must be out of lab
+			#if (i == 0):
+			#	assert(room == "outOfLab") #first room must be out of lab
 			self.footprints[room] = []
 			self.spaceDef[room] = i
 			self.realSDef[room] = self.realS[i]
@@ -283,10 +295,11 @@ class recommenderSystem:
 
 
 	def getSnapshot(self):
-		shot = cloudserver.db.snapshots_col_appliances.find().skip(cloudserver.db.snapshots_col_appliances.count()-1)
-		shot = list(shot)
-		shot = shot[0]
-		for room in self.spaces:
+		#shot = cloudserver.db.snapshots_col_appliances.find().skip(cloudserver.db.snapshots_col_appliances.count()-1)
+		#shot = list(shot)
+		#shot = shot[0]
+		shot = self.testshot
+		for room in self.footprints:
 			self.footprints[room] = 0 # shared energy (HVAC + Lights)
 		for p in self.personal:
 			self.personal[p] = 0 # personal energy (plugmeters)
@@ -304,6 +317,8 @@ class recommenderSystem:
 					print "room " + room + " not in space database"
 					continue
 				if t == "HVAC":
+					print(appliance["value"])
+					print(self.footprints[room])
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms#*self.multiplier/numRooms
 				elif t == "Light":
 					self.footprints[room] += self.footprints[room] + appliance["value"]/numRooms
@@ -315,14 +330,15 @@ class recommenderSystem:
 		t2 = time.time() * 1000
 		t_snapshot = t2 - t1
 		state = [0] * self.vecLen
+		print(self.vecLen)
 		t3 = time.time()*1000
-		shot = cloudserver.db.snapshots_col_users.find().skip(cloudserver.db.snapshots_col_users.count()-1)
+		#shot = cloudserver.db.snapshots_col_users.find().skip(cloudserver.db.snapshots_col_users.count()-1)
 		t4 = time.time()*1000
 		t_DB = t4 - t3
 		print("\n\n\n---Snapshot: {0}ms".format(t_snapshot))
 		print("---DB Query: {0}ms\n\n\n".format(t_DB))
-		shot = list(shot)
-		shot = shot[0]
+		#shot = list(shot)
+		shot = self.testUserShot#shot[0]
 		locations = [0] * len(self.spaceDef) #array of number of people in each space
 		t5 = time.time()*1000
 		for ID in shot["data"]:
@@ -364,6 +380,8 @@ class recommenderSystem:
 		print("---ID Loop:{0}ms".format(t_ID))
 		print("---Room Loop:{0}ms".format(t_room))
 		print("---Device Loop:{0}ms\n\n\n".format(t_device))
+		print(len(state))
+		print(len(locations))
 		state += locations
 		state.append(72) #just to keep the time
 		print("Finished getting state")
@@ -419,9 +437,9 @@ class recommenderSystem:
 		t3 = time.time()*1000
 		t_NN = t3 - t2
 
-		icslSpace = [5, 7, 8, 9, 13, 14, 15, 16]
-		bSpace = [1, 11, 12]
-		tSpace = [6, 10, 14]
+		#icslSpace = [5, 7, 8, 9, 13, 14, 15, 16]
+		#bSpace = [1, 11, 12]
+		#tSpace = [6, 10, 14]
 
 		for user in self.peopleDef:
 			personNum = self.peopleDef[user] #person number
@@ -433,46 +451,46 @@ class recommenderSystem:
 
 			###############
 			## Intepret the group number to do filtering
-			groupNum = 0
-			if personNum <= 3:
+			#groupNum = 0
+			#if personNum <= 3:
 #				print("ICSL")
-				groupNum = 1
-			elif personNum > 3 and personNum <= 6:
+			#	groupNum = 1
+			#elif personNum > 3 and personNum <= 6:
 #				print("Burke")
-				groupNum = 2
-			else:
+			#	groupNum = 2
+			#else:
 #				print("Teherani")
-				groupNum = 3
+			#	groupNum = 3
 			###############
 			## 10 percent exploring (delivering which ever has the largest reward)
 			## 90 percent exploiting (do filtering to give more reasonable recommendation)
-			token = random.random()
-			personalNum = np.argmax(y_new[self.offset1:self.offset2])
-			if token < 0.9:
+			#token = random.random()
+			#personalNum = np.argmax(y_new[self.offset1:self.offset2])
+			#if token < 0.9:
 #				print("Exploiting")
 				#personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
-				if groupNum == 1: ## icsl lab
-					if personNum == 0: ## Fred, presumably only will work in his office
+			#	if groupNum == 1: ## icsl lab
+			#		if personNum == 0: ## Fred, presumably only will work in his office
 #						print("Fred")
-						personActionNum = 2
+			#			personActionNum = 2
 						
 						## Add checking whether Fred's device has a positive reward		
-					else: ## Kevin and Stephen, can work at any place available, other than professor's office
+			#		else: ## Kevin and Stephen, can work at any place available, other than professor's office
 #						print("Kevin and Stephen")
-						lc = [y_new[x + personNum*len(self.spaceDef)] for x in icslSpace]
-						personActionNum = personNum*len(self.spaceDef) + icslSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+icslSpace])
-				elif groupNum == 2: ## Burke lab, can work at any place available, other than professor's office
+			#			lc = [y_new[x + personNum*len(self.spaceDef)] for x in icslSpace]
+			#			personActionNum = personNum*len(self.spaceDef) + icslSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+icslSpace])
+			#	elif groupNum == 2: ## Burke lab, can work at any place available, other than professor's office
 #					print("Burke Lab")
-					lc = [y_new[x + personNum*len(self.spaceDef)] for x in bSpace]
-					personActionNum = personNum*len(self.spaceDef) + bSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+bSpace])
-				else: #Teherani lab
-					lc = [y_new[x + personNum*len(self.spaceDef)] for x in tSpace]
-					personActionNum = personNum*len(self.spaceDef) + tSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+tSpace])
+			#		lc = [y_new[x + personNum*len(self.spaceDef)] for x in bSpace]
+			#		personActionNum = personNum*len(self.spaceDef) + bSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+bSpace])
+			#	else: #Teherani lab
+			#		lc = [y_new[x + personNum*len(self.spaceDef)] for x in tSpace]
+			#		personActionNum = personNum*len(self.spaceDef) + tSpace[np.argmax(lc)]#y_new[personNum*len(self.spaceDef)+tSpace])
 	
-			else: 
-				print("Exploring")
-				personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
-				personActionNum += personNum*len(self.spaceDef)
+			#else: 
+			print("Exploring")
+			personActionNum = np.argmax(y_new[personNum*len(self.spaceDef):(personNum+1)*len(self.spaceDef)])
+			personActionNum += personNum*len(self.spaceDef)
 #			print(personActionNum)
 			rec1 = self.interpretAction(personActionNum, y_new[personActionNum])
 #			rec2 = self.interpretAction(personalNum, y_new[personalNum])
@@ -642,8 +660,8 @@ class recommenderSystem:
 		t.start()
 
 	def _loopCheckDatabase(self):
-		self.getUserLocations()
-		self.loadBuildingParams()
+		#self.getUserLocations()
+		#self.loadBuildingParams()
 		while True:
 			self.clearRecommendations()
 			#self.runOptimization()
