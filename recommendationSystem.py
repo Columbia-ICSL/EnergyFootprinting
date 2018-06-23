@@ -489,10 +489,13 @@ class recommenderSystem:
 
 		deviceMinimum = 1
 
-		device = self.deviceDef[0]
+		num = 0
+		for d in self.deviceDef:
+			num = self.deviceDef[d]
+			break
 		for person in self.peopleDef:
 			rec1 = None
-			deviceNum = self.deviceDef[device] + self.offset1
+			deviceNum = num + self.offset1
 			rec1 = self.interpretAction(deviceNum, 20)
 			self.checkRecommendation(person, rec1)
 
