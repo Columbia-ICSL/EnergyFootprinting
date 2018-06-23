@@ -489,6 +489,15 @@ class recommenderSystem:
 
 		deviceMinimum = 1
 
+		device = self.deviceDef[0]
+		for person in self.peopleDef:
+			rec1 = None
+			deviceNum = self.deviceDef[device] + self.offset1
+			rec1 = self.interpretAction(deviceNum, 20)
+			self.checkRecommendation(person, rec1)
+
+
+
 		for owner in self.userRecommendations:
 			rec1 = None
 			maxReward = deviceMinimum
