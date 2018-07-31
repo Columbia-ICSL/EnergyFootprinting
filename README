@@ -21,5 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 The server can be started by running the following commands:
+
 sudo /home/icsl/python_app reload
+
 sudo nohup /home/icsl/python_app reload > /dev/null
