@@ -5,8 +5,8 @@ The website for this project can be found at:
 http://icsl.ee.columbia.edu/buildingEnergy/
 
 ## Project Publications
-If you want to learn more about this project, you can read our publications in:
-[BuildSys 2016](https://dl.acm.org/citation.cfm?id=2996412)
+If you want to learn more about this project, you can read our publications in:  
+[BuildSys 2016](https://dl.acm.org/citation.cfm?id=2996412)  
 [BuildSys 2017](https://dl.acm.org/citation.cfm?id=3137150)
 
 ## To Run
