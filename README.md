@@ -8,6 +8,7 @@ http://icsl.ee.columbia.edu/buildingEnergy/
 If you want to learn more about this project, you can read our publications in:  
 [BuildSys 2016](https://dl.acm.org/citation.cfm?id=2996412)  
 [BuildSys 2017](https://dl.acm.org/citation.cfm?id=3137150)
+[ACM TOSN] (To Appear)
 
 ## To Run
 Navigate to the EnergyFootprinting/ directory and run the following commands:
