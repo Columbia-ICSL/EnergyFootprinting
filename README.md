@@ -2,13 +2,13 @@
 This is the project repository for the energy footprinting project from the Intelligent and Connected Systems Laboratory at Columbia University. For any questions, contact Peter Wei at pw2428@columbia.edu or Professor Xiaofan Jiang at xj2179@columbia.edu.
 
 Thanks to the following contributors:
-Peter Wei (Columbia University)
-Xiaoqi Chen (now at Princeton University)
-Jordan Vega (now at Goldman Sachs)
-Stephen Xia (Columbia University)
-Rishikanth Chandrasekaran (now at University of California, San Diego)
-Fengyi Song (now at Amazon)
-Professor Xiaofan Jiang (Columbia University)
+Peter Wei (Columbia University)  
+Xiaoqi Chen (now at Princeton University)  
+Jordan Vega (now at Goldman Sachs)  
+Stephen Xia (Columbia University)  
+Rishikanth Chandrasekaran (now at University of California, San Diego)  
+Fengyi Song (now at Amazon)  
+Professor Xiaofan Jiang (Columbia University)  
 
 The website for this project can be found at:
 http://icsl.ee.columbia.edu/buildingEnergy/
